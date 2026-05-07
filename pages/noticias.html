@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noticias Financieras — BB Financial</title>
+  <meta name="description" content="Últimas noticias de economía y finanzas de Argentina y el mundo. Mercados en tiempo real." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <style>
+    .beta-badge {
+      display: inline-flex; align-items: center;
+      background: rgba(50,130,210,0.12); color: #60a5fa;
+      border: 1px solid rgba(50,130,210,0.25); border-radius: 20px;
+      padding: 0.2rem 0.65rem; font-family: var(--font-mono);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      vertical-align: middle; margin-left: 0.4rem;
+    }
+    .nuevo-badge {
+      display: inline-flex; align-items: center;
+      background: rgba(74,222,154,0.12); color: var(--accent);
+      border: 1px solid rgba(74,222,154,0.25); border-radius: 20px;
+      padding: 0.2rem 0.65rem; font-family: var(--font-mono);
+      font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase;
+      vertical-align: middle; margin-left: 0.5rem;
+    }
+
+    /* ---- Market strip (below ticker) ---- */
+    .market-strip {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+    .market-strip-inner {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .market-strip-inner::-webkit-scrollbar { display: none; }
+    .mkt-card {
+      flex-shrink: 0;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1.1rem;
+      min-width: 130px;
+      text-align: center;
+    }
+    .mkt-card-label {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      color: var(--text-subtle); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 0.35rem;
+    }
+    .mkt-card-price {
+      font-family: var(--font-mono); font-size: 1rem;
+      color: var(--text); font-weight: 500;
+    }
+    .mkt-card-chg {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      margin-top: 0.2rem; font-weight: 600;
+    }
+    .mkt-card-chg.pos { color: var(--accent); }
+    .mkt-card-chg.neg { color: #f08080; }
+    .mkt-card-chg.neu { color: var(--text-subtle); }
+
+    /* ---- Filters ---- */
+    .filter-bar {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+      font-family: var(--font-body);
+      cursor: pointer;
+    }
+    .filter-btn:hover { border-color: var(--border-hover); color: var(--text); }
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: rgba(74,222,154,0.3);
+      color: var(--accent);
+    }
+
+    /* ---- News Grid ---- */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .news-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--transition), transform var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+    .news-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+    .news-card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: #1a1f2a;
+    }
+    .news-card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #1a1f2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-subtle);
+      font-size: 2rem;
+    }
+    .news-card-body {
+      padding: 1.1rem 1.25rem 1.3rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-cat {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border-radius: 20px;
+      padding: 0.15rem 0.6rem;
+      margin-bottom: 0.7rem;
+    }
+    .news-meta {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-bottom: 0.5rem;
+      font-family: var(--font-mono);
+    }
+    .news-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .news-source {
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      color: var(--text-subtle);
+      font-family: var(--font-mono);
+    }
+
+    /* ---- Loading / Error ---- */
+    .news-loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .news-loading .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---- Section header ---- */
+    .news-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .news-section-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+    }
+    .news-count {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+    }
+
+    @media (max-width: 600px) {
+      .news-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link active">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Market strip -->
+    <div class="market-strip">
+      <div class="container">
+        <div class="market-strip-inner" id="marketStrip">
+          <div class="mkt-card"><div class="mkt-card-label">Cargando…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page hero -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Noticias</p>
+        <h1 class="page-title">Noticias Financieras <span class="nuevo-badge">Nuevo</span></h1>
+        <p class="page-subtitle">Economía argentina y mercados internacionales. Datos en tiempo real.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:1.5rem;padding-bottom:6rem">
+
+      <!-- Filters -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-cat="all">Todas</button>
+        <button class="filter-btn" data-cat="economia">Economía</button>
+        <button class="filter-btn" data-cat="mercados">Mercados</button>
+        <button class="filter-btn" data-cat="empresas">Empresas</button>
+        <button class="filter-btn" data-cat="internacional">Internacional</button>
+      </div>
+
+      <!-- Section header -->
+      <div class="news-section-header">
+        <h2 class="news-section-title">Últimas noticias</h2>
+        <span class="news-count" id="newsCount"></span>
+      </div>
+
+      <!-- News grid -->
+      <div class="news-grid" id="newsGrid">
+        <div class="news-loading">
+          <div class="spinner"></div>
+          Cargando noticias…
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+        <ul>
+          <li><a href="calculadoras.html">Calculadoras</a></li>
+          <li><a href="guia-multiplos.html">Guía de Múltiplos</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/ticker.js"></script>
+  <script>
+  /* ============================================================
+     Noticias — market strip + news feed
+  ============================================================ */
+
+  /* ---- Market strip ---- */
+  const PROXY = 'https://api.allorigins.win/get?url=';
+
+  async function getYahooData(sym) {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=1d&range=1d`;
+    try {
+      let res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+      if (res.ok) {
+        const d = await res.json();
+        return extractMeta(d);
+      }
+    } catch {}
+    try {
+      const res = await fetch(PROXY + encodeURIComponent(url), { signal: AbortSignal.timeout(7000) });
+      const w = await res.json();
+      return extractMeta(JSON.parse(w.contents));
+    } catch {}
+    return null;
+  }
+  function extractMeta(d) {
+    const m = d?.chart?.result?.[0]?.meta;
+    if (!m) return null;
+    const p = m.regularMarketPrice, pr = m.chartPreviousClose;
+    return { price: p, chg: pr ? (p - pr) / pr * 100 : 0 };
+  }
+  function chgClass(c) { return c > 0 ? 'pos' : c < 0 ? 'neg' : 'neu'; }
+  function fmtN(n, pre = '') {
+    if (n == null) return '—';
+    return pre + new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+  }
+
+  async function loadMarketStrip() {
+    const strip = document.getElementById('marketStrip');
+    const [ndx, dji, gspc, gc, cl] = await Promise.all([
+      getYahooData('^NDX'), getYahooData('^DJI'), getYahooData('^GSPC'),
+      getYahooData('GC=F'), getYahooData('CL=F'),
+    ]);
+    const cards = [
+      { label: 'NASDAQ 100', ...ndx },
+      { label: 'DOW JONES',  ...dji },
+      { label: 'S&P 500',    ...gspc },
+      { label: 'ORO NY',     ...gc, pre: '$' },
+      { label: 'PETRÓLEO',   ...cl, pre: '$' },
+    ];
+    strip.innerHTML = cards.map(c => `
+      <div class="mkt-card">
+        <div class="mkt-card-label">${c.label}</div>
+        <div class="mkt-card-price">${fmtN(c.price, c.pre || '')}</div>
+        <div class="mkt-card-chg ${c.chg != null ? chgClass(c.chg) : 'neu'}">
+          ${c.chg != null ? (c.chg >= 0 ? '+' : '') + c.chg.toFixed(2) + '%' : '—'}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ---- News RSS ---- */
+  const RSS_SOURCES = [
+    { url: 'https://www.ambito.com/rss/economia.xml',       name: 'Ámbito',    cat: 'economia'      },
+    { url: 'https://www.cronista.com/files/rss/economia.xml',name: 'Cronista',  cat: 'economia'      },
+    { url: 'https://www.infobae.com/feeds/rss/economia/',    name: 'Infobae',   cat: 'economia'      },
+    { url: 'https://news.google.com/rss/search?q=bolsa+argentina+mercados&hl=es-419&gl=AR&ceid=AR:es-419',
+      name: 'Google News', cat: 'mercados' },
+    { url: 'https://news.google.com/rss/search?q=empresas+argentina+economia&hl=es-419&gl=AR&ceid=AR:es-419',
+      name: 'Google News', cat: 'empresas' },
+    { url: 'https://news.google.com/rss/search?q=wall+street+nasdaq+sp500&hl=es-419&gl=AR&ceid=AR:es-419',
+      name: 'Google News', cat: 'internacional' },
+  ];
+
+  function parseRSS(xmlStr, sourceName, cat) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlStr, 'text/xml');
+    const items = xml.querySelectorAll('item');
+    return Array.from(items).slice(0, 8).map(item => {
+      const title = item.querySelector('title')?.textContent?.trim() || '';
+      // Clean Google News title (removes source suffix)
+      const cleanTitle = title.replace(/\s+-\s+[\w\s]+$/, '').trim();
+      const link  = item.querySelector('link')?.textContent?.trim()
+                 || item.querySelector('link')?.nextSibling?.textContent?.trim()
+                 || '#';
+      const pubDate = item.querySelector('pubDate')?.textContent || '';
+      const desc  = item.querySelector('description')?.textContent || '';
+      const img   = item.querySelector('enclosure')?.getAttribute('url')
+                 || item.querySelector('media\\:content, content')?.getAttribute('url')
+                 || extractImgFromDesc(desc)
+                 || '';
+      return { title: cleanTitle || title, link, pubDate, img, cat, source: sourceName };
+    }).filter(i => i.title);
+  }
+
+  function extractImgFromDesc(desc) {
+    const match = desc.match(/<img[^>]+src=["']([^"']+)["']/i);
+    return match ? match[1] : '';
+  }
+
+  function fmtDate(str) {
+    if (!str) return '';
+    try {
+      const d = new Date(str);
+      return d.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { return ''; }
+  }
+
+  async function fetchSource(source) {
+    try {
+      const res = await fetch(PROXY + encodeURIComponent(source.url), { signal: AbortSignal.timeout(8000) });
+      const w = await res.json();
+      return parseRSS(w.contents, source.name, source.cat);
+    } catch { return []; }
+  }
+
+  let allNews = [];
+  let activeCat = 'all';
+
+  function renderNews(items) {
+    const grid = document.getElementById('newsGrid');
+    const count = document.getElementById('newsCount');
+    if (!items.length) {
+      grid.innerHTML = '<div class="news-loading">No se pudieron cargar las noticias en este momento. Intentá más tarde.</div>';
+      count.textContent = '';
+      return;
+    }
+    count.textContent = `${items.length} artículos`;
+    grid.innerHTML = '';
+    const safeUrl = url => url && /^https?:\/\//i.test(url) ? url : null;
+    items.forEach(item => {
+      const a = document.createElement('a');
+      a.className = 'news-card';
+      a.href = safeUrl(item.link) || '#';
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      const imgUrl = safeUrl(item.img);
+      if (imgUrl) {
+        const img = document.createElement('img');
+        img.className = 'news-card-img';
+        img.src = imgUrl;
+        img.alt = '';
+        img.loading = 'lazy';
+        img.onerror = () => { img.style.display = 'none'; };
+        a.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'news-card-img-placeholder';
+        ph.textContent = '📰';
+        a.appendChild(ph);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'news-card-body';
+
+      const cat = document.createElement('span');
+      cat.className = 'news-cat';
+      cat.textContent = item.cat.charAt(0).toUpperCase() + item.cat.slice(1);
+
+      const meta = document.createElement('div');
+      meta.className = 'news-meta';
+      meta.textContent = fmtDate(item.pubDate);
+
+      const title = document.createElement('div');
+      title.className = 'news-title';
+      title.textContent = item.title;
+
+      const source = document.createElement('div');
+      source.className = 'news-source';
+      source.textContent = `— ${item.source}`;
+
+      body.append(cat, meta, title, source);
+      a.appendChild(body);
+      grid.appendChild(a);
+    });
+  }
+
+  function filterNews(cat) {
+    activeCat = cat;
+    const filtered = cat === 'all' ? allNews : allNews.filter(n => n.cat === cat);
+    renderNews(filtered);
+  }
+
+  async function loadNews() {
+    const results = await Promise.all(RSS_SOURCES.map(fetchSource));
+    // Flatten and deduplicate by title similarity
+    const flat = results.flat();
+    const seen = new Set();
+    allNews = flat.filter(item => {
+      const key = item.title.toLowerCase().slice(0, 40);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+    filterNews(activeCat);
+  }
+
+  /* ---- Filter buttons ---- */
+  document.getElementById('filterBar').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterNews(btn.dataset.cat);
+  });
+
+  /* ---- Init ---- */
+  loadMarketStrip();
+  loadNews();
+  </script>
+</body>
+</html>

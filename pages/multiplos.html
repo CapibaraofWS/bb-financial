@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Múltiplos de Valuación — BB Financial</title>
+  <meta name="description" content="Calculá P/E, EV/EBITDA, P/B y P/S. Comparación con el sector, precio objetivo implícito y análisis de múltiplos para equity research." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .mult-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .mult-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;}
+    .mult-card .mc-name{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.35rem;}
+    .mult-card .mc-val{font-family:var(--font-display);font-size:1.5rem;letter-spacing:-0.01em;color:var(--text);}
+    .mult-card .mc-vs{font-size:0.72rem;font-family:var(--font-mono);margin-top:0.2rem;}
+    .mult-card.cheap .mc-val{color:var(--accent);}
+    .mult-card.expensive .mc-val{color:#ff6b6b;}
+    .mult-card.fair .mc-val{color:var(--gold);}
+    .targets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .target-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;}
+    .target-card .tc-mult{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem;}
+    .target-card .tc-price{font-family:var(--font-display);font-size:1.3rem;letter-spacing:-0.01em;}
+    .target-card .tc-updown{font-family:var(--font-mono);font-size:0.75rem;margin-top:0.2rem;}
+    .field-note{font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono);line-height:1.5;}
+    .sector-refs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.5rem;margin-top:0.75rem;}
+    .sr-item{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:0.5rem 0.65rem;cursor:pointer;transition:all 0.2s;}
+    .sr-item:hover{border-color:var(--accent);background:var(--accent-dim);}
+    .sr-item .sri-name{font-size:0.72rem;color:var(--text-muted);margin-bottom:0.2rem;}
+    .sr-item .sri-vals{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-subtle);}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <span class="nav-sep"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Múltiplos</p>
+        <h1 class="page-title">Múltiplos de Valuación 🔢</h1>
+        <p class="page-subtitle">P/E, EV/EBITDA, P/B y P/S. Calculá múltiplos de una empresa, comparalos con el sector y obtenés el precio objetivo implícito por cada métrica.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <strong style="color:var(--text)">¿Qué son los múltiplos?</strong> Son la forma más rápida de valuar una empresa comparándola con sus pares. El <strong style="color:var(--text)">P/E</strong> dice cuánto paga el mercado por cada dólar de ganancia. El <strong style="color:var(--text)">EV/EBITDA</strong> es más robusto porque es independiente de la estructura de capital. El <strong style="color:var(--text)">P/B</strong> compara precio de mercado con valor contable. La lógica: si el P/E del sector es 15x y la empresa cotiza a 10x, podría estar subvaluada — aunque siempre hay que entender <em>por qué</em> cotiza a descuento.
+      </div>
+
+      <div class="calc-layout">
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Datos de la empresa</p>
+
+            <div class="form-group">
+              <label for="precio-accion-m">Precio de la acción <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-accion-m" class="has-prefix" value="45" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <p class="field-note">Precio actual de mercado de la acción.</p>
+            </div>
+            <div class="form-group">
+              <label for="eps">EPS — Ganancia por acción (EPS) <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="eps" class="has-prefix" value="3.00" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <p class="field-note">Earnings Per Share. En Yahoo Finance: "EPS (TTM)" o "Diluted EPS". Estado de resultados: Net Income / Shares outstanding.</p>
+            </div>
+            <div class="form-group">
+              <label for="ebitda-ps">EBITDA por acción <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="ebitda-ps" class="has-prefix" value="6.50" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <p class="field-note">EBITDA total / acciones en circulación. O usá: EV / (precio × acciones) para el múltiplo EV/EBITDA directo.</p>
+            </div>
+            <div class="form-group">
+              <label for="book-ps">Valor libro por acción <span>(Book Value, USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="book-ps" class="has-prefix" value="20" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <p class="field-note">Equity total / acciones en circulación. En el balance sheet: "Total Stockholders' Equity" / shares.</p>
+            </div>
+            <div class="form-group">
+              <label for="sales-ps">Ventas por acción <span>(Revenue, USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="sales-ps" class="has-prefix" value="15" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <p class="field-note">Revenue total / acciones. Para P/S ratio. Útil en empresas sin ganancias aún.</p>
+            </div>
+            <div class="form-group">
+              <label for="deuda-ps">Deuda neta por acción <span>(para EV, USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="deuda-ps" class="has-prefix" value="5" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <p class="field-note">Deuda total − caja. EV = Market Cap + Deuda Neta. Necesario para EV/EBITDA.</p>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0"/>
+            <p class="panel-title" style="margin-bottom:0.75rem">Múltiplos del sector (referencia)</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Hacé click en un sector para cargar los múltiplos típicos:</p>
+            <div class="sector-refs" id="sector-refs"></div>
+            <div class="form-group" style="margin-top:1rem">
+              <label for="pe-sector">P/E del sector</label>
+              <div class="input-wrap"><input type="number" id="pe-sector" class="has-suffix" value="18" min="0" step="0.1" oninput="calcMultiplos()"/><span class="input-suffix">x</span></div>
+            </div>
+            <div class="form-group">
+              <label for="ebitda-sector">EV/EBITDA del sector</label>
+              <div class="input-wrap"><input type="number" id="ebitda-sector" class="has-suffix" value="12" min="0" step="0.1" oninput="calcMultiplos()"/><span class="input-suffix">x</span></div>
+            </div>
+            <div class="form-group">
+              <label for="pb-sector">P/B del sector</label>
+              <div class="input-wrap"><input type="number" id="pb-sector" class="has-suffix" value="3" min="0" step="0.1" oninput="calcMultiplos()"/><span class="input-suffix">x</span></div>
+            </div>
+            <button class="btn btn-primary" onclick="calcMultiplos()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Múltiplos de la empresa</p>
+            <div class="mult-grid" id="mult-grid"></div>
+
+            <p class="panel-title" style="margin-bottom:0.75rem">Precios objetivo implícitos</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.55">Si la empresa cotizara al mismo múltiplo que su sector, ¿cuánto debería valer cada acción?</p>
+            <div class="targets-grid" id="targets-grid"></div>
+
+            <div class="result-row"><span class="label">Precio de mercado</span><span class="value" id="r-pm">—</span></div>
+            <div class="result-row"><span class="label">Precio objetivo promedio</span><span class="value neutral" id="r-target-avg">—</span></div>
+            <div class="result-row"><span class="label">Upside / Downside promedio</span><span class="value" id="r-updown">—</span></div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Empresa vs sector — múltiplos comparados</p>
+              <canvas id="multChart" height="220"></canvas>
+            </div>
+
+            <div style="background:rgba(220,60,60,0.06);border:1px solid rgba(220,60,60,0.15);border-radius:8px;padding:0.85rem 1rem;margin-top:1rem;font-size:0.8rem;color:#f08080;line-height:1.55">
+              ⚠️ <strong>Los múltiplos son comparativos, no absolutos.</strong> Una empresa puede cotizar con descuento por razones válidas (menor crecimiento, más riesgo, problemas operativos). Siempre complementar con DCF y análisis cualitativo. No constituye recomendación de inversión.
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Equity Research</h3><ul>
+        <li><a href="multiplos.html">Múltiplos</a></li>
+        <li><a href="ddm.html">DDM</a></li>
+        <li><a href="wacc.html">WACC</a></li>
+        <li><a href="vpn.html">VPN / DCF</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let multChart = null;
+
+    const SECTORS = {
+      'Tecnología':     { pe:28, ev:20, pb:8,  ps:6 },
+      'Bancos':         { pe:12, ev:9,  pb:1.2, ps:3 },
+      'Utilities':      { pe:16, ev:10, pb:1.5, ps:2 },
+      'Consumo masivo': { pe:22, ev:15, pb:5,  ps:2.5 },
+      'Salud':          { pe:20, ev:14, pb:4,  ps:4 },
+      'Energía':        { pe:14, ev:8,  pb:2,  ps:1.5 },
+      'Industrial':     { pe:18, ev:12, pb:3,  ps:2 },
+      'Real Estate':    { pe:25, ev:18, pb:2,  ps:8 },
+    };
+
+    // Render sector buttons
+    document.getElementById('sector-refs').innerHTML = Object.entries(SECTORS).map(([s,v]) =>
+      `<div class="sr-item" onclick="loadSector('${s}')">
+        <div class="sri-name">${s}</div>
+        <div class="sri-vals">P/E ${v.pe}x · EV ${v.ev}x</div>
+      </div>`
+    ).join('');
+
+    function loadSector(s) {
+      const v = SECTORS[s];
+      document.getElementById('pe-sector').value    = v.pe;
+      document.getElementById('ebitda-sector').value= v.ev;
+      document.getElementById('pb-sector').value    = v.pb;
+      calcMultiplos();
+    }
+
+    function calcMultiplos() {
+      const pm      = parseFloat(document.getElementById('precio-accion-m').value) || 0;
+      const eps     = parseFloat(document.getElementById('eps').value)    || 0;
+      const ebitdaPS= parseFloat(document.getElementById('ebitda-ps').value) || 0;
+      const bookPS  = parseFloat(document.getElementById('book-ps').value) || 0;
+      const salesPS = parseFloat(document.getElementById('sales-ps').value) || 0;
+      const deudaPS = parseFloat(document.getElementById('deuda-ps').value) || 0;
+      const peSec   = parseFloat(document.getElementById('pe-sector').value) || 0;
+      const evSec   = parseFloat(document.getElementById('ebitda-sector').value) || 0;
+      const pbSec   = parseFloat(document.getElementById('pb-sector').value) || 0;
+
+      const ev = pm + deudaPS;
+      const pe    = eps   > 0 ? pm / eps    : null;
+      const evEb  = ebitdaPS > 0 ? ev / ebitdaPS : null;
+      const pb    = bookPS> 0 ? pm / bookPS : null;
+      const ps    = salesPS> 0 ? pm / salesPS : null;
+
+      const multData = [
+        { name:'P/E', val:pe,   sec:peSec,  label:'ganancia' },
+        { name:'EV/EBITDA', val:evEb, sec:evSec, label:'EBITDA' },
+        { name:'P/B', val:pb,   sec:pbSec,  label:'libro' },
+        { name:'P/S', val:ps,   sec:null,   label:'ventas' },
+      ];
+
+      const grid = document.getElementById('mult-grid');
+      grid.innerHTML = multData.map(m => {
+        if (!m.val) return `<div class="mult-card"><p class="mc-name">${m.name}</p><p class="mc-val">N/A</p></div>`;
+        const cls = m.sec ? (m.val < m.sec*0.85 ? 'cheap' : m.val > m.sec*1.15 ? 'expensive' : 'fair') : '';
+        const vsText = m.sec ? `vs sector ${m.sec}x` : '';
+        return `<div class="mult-card ${cls}">
+          <p class="mc-name">${m.name}</p>
+          <p class="mc-val">${m.val.toFixed(1)}x</p>
+          <p class="mc-vs" style="color:${cls==='cheap'?'var(--accent)':cls==='expensive'?'#ff6b6b':'var(--gold)'}">${vsText}</p>
+        </div>`;
+      }).join('');
+
+      // Target prices
+      const targets = [
+        { name:'Por P/E',       price: peSec > 0 && eps > 0   ? peSec*eps   : null },
+        { name:'Por EV/EBITDA', price: evSec > 0 && ebitdaPS>0? evSec*ebitdaPS - deudaPS : null },
+        { name:'Por P/B',       price: pbSec > 0 && bookPS>0  ? pbSec*bookPS  : null },
+      ];
+
+      const validTargets = targets.filter(t => t.price && t.price > 0);
+      const avgTarget = validTargets.length > 0 ? validTargets.reduce((s,t)=>s+t.price,0)/validTargets.length : 0;
+
+      document.getElementById('targets-grid').innerHTML = targets.map(t => {
+        if (!t.price || t.price <= 0) return `<div class="target-card"><p class="tc-mult">${t.name}</p><p class="tc-price" style="color:var(--text-muted)">N/A</p></div>`;
+        const updown = ((t.price - pm)/pm*100);
+        const cls = updown > 5 ? 'var(--accent)' : updown < -5 ? '#ff6b6b' : 'var(--gold)';
+        return `<div class="target-card">
+          <p class="tc-mult">${t.name}</p>
+          <p class="tc-price" style="color:${cls}">$${formatUSD(t.price)}</p>
+          <p class="tc-updown" style="color:${cls}">${updown>0?'+':''}${updown.toFixed(1)}% ${updown>0?'↑':'↓'}</p>
+        </div>`;
+      }).join('');
+
+      document.getElementById('r-pm').textContent         = '$' + formatUSD(pm);
+      document.getElementById('r-target-avg').textContent = avgTarget > 0 ? '$' + formatUSD(avgTarget) : '—';
+      if (avgTarget > 0) {
+        const avgUD = (avgTarget - pm)/pm*100;
+        document.getElementById('r-updown').textContent    = (avgUD>0?'+':'')+avgUD.toFixed(1)+'%';
+        document.getElementById('r-updown').style.color    = avgUD>0?'var(--accent)':'#ff6b6b';
+      }
+
+      // Chart
+      const labels = multData.filter(m=>m.val&&m.sec).map(m=>m.name);
+      const empresaVals = multData.filter(m=>m.val&&m.sec).map(m=>+m.val.toFixed(2));
+      const sectorVals  = multData.filter(m=>m.val&&m.sec).map(m=>m.sec);
+      if (multChart) multChart.destroy();
+      multChart = new Chart(document.getElementById('multChart'), {
+        type:'bar',
+        data:{ labels, datasets:[
+          { label:'Empresa',data:empresaVals, backgroundColor:'rgba(74,222,154,0.65)', borderRadius:5 },
+          { label:'Sector', data:sectorVals,  backgroundColor:'rgba(232,201,122,0.4)', borderRadius:5 },
+        ]},
+        options:{ responsive:true, plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10}}} },
+          scales:{ x:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>v+'x'},grid:{color:'rgba(255,255,255,0.04)'}} } }
+      });
+    }
+    calcMultiplos();
+  </script>
+</body>
+</html>

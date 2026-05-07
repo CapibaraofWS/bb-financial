@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Interés Compuesto — BB Financial</title>
+  <meta name="description" content="Calculá el interés compuesto de tu inversión. Ingresá capital inicial, aportes mensuales, tasa y plazo para ver cómo crece tu dinero exponencialmente." />
+  <meta name="keywords" content="calculadora interés compuesto, fórmula interés compuesto, capitalización, inversión a largo plazo" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/interes-compuesto.html" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Calculadora de Interés Compuesto","description":"Calculá el crecimiento de tu inversión con interés compuesto, incluyendo aportes periódicos.","url":"https://bb.app/pages/interes-compuesto.html","breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb.app"},{"@type":"ListItem","position":2,"name":"Interés Compuesto","item":"https://bb.app/pages/interes-compuesto.html"}]}}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+                                    <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Interés Compuesto</p>
+        <h1 class="page-title">Interés Compuesto ⬡</h1>
+        <p class="page-subtitle">El interés que genera interés. Calculá cómo crece tu dinero cuando los rendimientos se reinvierten período a período.</p>
+      </div>
+    </section>
+
+    <div class="container calc-layout">
+      <section aria-labelledby="inputs-title">
+        <div class="input-panel">
+          <p id="inputs-title" class="panel-title">Datos de la inversión</p>
+
+          <div class="form-group">
+            <label for="capital">Capital inicial <span>(USD)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" id="capital" class="has-prefix" value="10000" min="0" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="aporte">Aporte mensual <span>(opcional)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" id="aporte" class="has-prefix" value="500" min="0" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="tasa">Tasa anual <span>(%)</span></label>
+            <div class="input-wrap">
+              <input type="number" id="tasa" class="has-suffix" value="8" min="0" max="1000" step="0.1" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="plazo">Plazo <span>(años)</span></label>
+            <div class="input-wrap">
+              <input type="number" id="plazo" class="has-suffix" value="10" min="1" max="50" />
+              <span class="input-suffix">años</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="freq">Frecuencia de capitalización</label>
+            <select id="freq">
+              <option value="12">Mensual</option>
+              <option value="4">Trimestral</option>
+              <option value="2">Semestral</option>
+              <option value="1">Anual</option>
+              <option value="365">Diaria</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" onclick="calcularCompuesto()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+        </div>
+
+        <div style="padding:1.5rem 0">
+          <h2 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.75rem">¿Cómo funciona?</h2>
+          <p style="color:var(--text-muted);font-size:0.875rem;line-height:1.7">El interés compuesto se calcula no solo sobre el capital original, sino también sobre los intereses acumulados de períodos anteriores. Esto genera un crecimiento exponencial que, a largo plazo, supera ampliamente al interés simple.</p>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:0.75rem 0;font-family:var(--font-mono);font-size:0.82rem;color:var(--accent)">
+            A = P·(1 + r/n)^(n·t) + PMT·[((1 + r/n)^(n·t) − 1) / (r/n)]
+          </div>
+          <p style="color:var(--text-muted);font-size:0.82rem">P = capital, r = tasa anual, n = frecuencia, t = años, PMT = aporte periódico.</p>
+        </div>
+          <a href="meta-financiera.html" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;transition:all 0.25s;margin-top:1rem" onmouseover="this.style.borderColor='rgba(100,200,150,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+            <div>
+              <p style="font-size:0.875rem;color:var(--text);font-weight:500;margin-bottom:0.2rem">¿Cuánto tiempo para llegar a tu meta?</p>
+              <p style="font-size:0.8rem;color:var(--text-muted)">Usá estos datos en la calculadora de Meta Financiera →</p>
+            </div>
+            <span style="color:var(--accent);font-size:1.1rem">◇</span>
+          </a>
+      </section>
+
+      <section aria-labelledby="results-title" id="results">
+        <div class="result-panel">
+          <p id="results-title" class="panel-title">Resultado</p>
+          <div class="result-highlight">
+            <p class="result-label">Capital final</p>
+            <p class="result-value" id="res-total">$0</p>
+            <p class="result-sub" id="res-sub">—</p>
+          </div>
+          <div class="result-row"><span class="label">Capital inicial</span><span class="value" id="res-capital">—</span></div>
+          <div class="result-row"><span class="label">Total aportado</span><span class="value" id="res-aportado">—</span></div>
+          <div class="result-row"><span class="label">Intereses ganados</span><span class="value positive" id="res-intereses">—</span></div>
+          <div class="result-row"><span class="label">Multiplicador</span><span class="value neutral" id="res-mult">—</span></div>
+
+          <div class="chart-section">
+            <p class="chart-title">Crecimiento año a año</p>
+            <canvas id="compuestoChart" class="calc-chart" height="220"></canvas>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+                <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let chart = null;
+
+    function calcularCompuesto() {
+      const P   = parseFloat(document.getElementById('capital').value) || 0;
+      const PMT = parseFloat(document.getElementById('aporte').value)  || 0;
+      const r   = (parseFloat(document.getElementById('tasa').value)   || 0) / 100;
+      const t   = parseInt(document.getElementById('plazo').value)     || 1;
+      const n   = parseInt(document.getElementById('freq').value);
+
+      // Aporte por período de capitalización (PMT es mensual, agrupamos según n)
+      // n=12 → mensual: aporte=PMT | n=4 → trimestral: aporte=PMT*3 | n=1 → anual: aporte=PMT*12
+      const mesesPorPeriodo = 12 / n;
+      const PMT_per = PMT * mesesPorPeriodo;
+      const totalPeriodos = n * t;
+
+      const labels = [], dataPrincipal = [], dataAportes = [], dataIntereses = [];
+      let totalFinal = 0;
+
+      for (let y = 1; y <= t; y++) {
+        const periodos = n * y;
+        const total = r > 0
+          ? P * Math.pow(1 + r/n, periodos) + PMT_per * (Math.pow(1 + r/n, periodos) - 1) / (r/n)
+          : P + PMT * 12 * y;
+        labels.push(`Año ${y}`);
+        dataPrincipal.push(P);
+        dataAportes.push(PMT * 12 * y);
+        dataIntereses.push(Math.max(0, total - P - PMT*12*y));
+        if (y === t) totalFinal = total;
+      }
+
+      const totalAportado = P + PMT * 12 * t;
+      const intereses = totalFinal - totalAportado;
+
+      document.getElementById('res-total').textContent    = '$' + formatUSD(totalFinal);
+      document.getElementById('res-sub').textContent      = `En ${t} año${t !== 1 ? 's' : ''} al ${(r*100).toFixed(1)}% anual`;
+      document.getElementById('res-capital').textContent  = '$' + formatUSD(P);
+      document.getElementById('res-aportado').textContent = '$' + formatUSD(totalAportado);
+      document.getElementById('res-intereses').textContent= '$' + formatUSD(intereses);
+      document.getElementById('res-mult').textContent     = (totalFinal / (P || 1)).toFixed(2) + 'x';
+
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById('compuestoChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Capital',   data: dataPrincipal, backgroundColor: 'rgba(61,69,88,0.8)',   borderRadius: 4 },
+            { label: 'Aportes',   data: dataAportes,   backgroundColor: 'rgba(232,201,122,0.6)', borderRadius: 4 },
+            { label: 'Intereses', data: dataIntereses, backgroundColor: 'rgba(74,222,154,0.75)', borderRadius: 4 },
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#7a8599', font: { family: 'DM Mono', size: 11 } } } },
+          scales: {
+            x: { stacked: true, ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+            y: { stacked: true, ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 }, callback: v => '$'+(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1000).toFixed(0)+'k') }, grid: { color: 'rgba(255,255,255,0.04)' } }
+          }
+        }
+      });
+    }
+
+    calcularCompuesto();
+    ['capital','aporte','tasa','plazo','freq'].forEach(id =>
+      document.getElementById(id).addEventListener('input', calcularCompuesto)
+    );
+  </script>
+</body>
+</html>

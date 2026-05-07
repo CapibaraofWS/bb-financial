@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta Financiera: Ahorro vs Inversión — BB Financial</title>
+  <meta name="description" content="¿Cuánto tiempo necesitás para llegar a tu meta financiera? Compará ahorrar vs. invertir y descubrí cuántos años ganás poniendo tu dinero a trabajar." />
+  <meta name="keywords" content="financial goal, saving vs investing, time to reach goal, investment calculator" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/meta-financiera.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    .field-explainer {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--border-hover);
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1rem;
+      margin-top: -0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .field-explainer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 0.5rem;
+    }
+    .field-explainer p:last-child { margin-bottom: 0; }
+    .example-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .etag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+    }
+    .etag-green { color: var(--accent); background: var(--accent-dim); }
+    .etag-gold  { color: var(--gold);   background: var(--gold-dim); }
+    .result-panel-note {
+      font-size: 0.75rem;
+      color: var(--text-subtle);
+      font-family: var(--font-mono);
+      text-align: center;
+      margin-bottom: 1.1rem;
+    }
+    .result-panel-note span { color: var(--text-muted); }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+                                    <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Home</a><span>/</span>Meta Financiera</p>
+        <h1 class="page-title">Meta Financiera ◇</h1>
+        <p class="page-subtitle">Definí tu objetivo, cuánto podés aportar por mes, y mirá en tiempo real la diferencia en años entre <em style="color:var(--text-muted)">solo ahorrar</em> e <em style="color:var(--accent)">invertir</em>.</p>
+      </div>
+    </section>
+
+    <div class="container calc-layout">
+
+      <!-- ===== INPUTS ===== -->
+      <section>
+        <div class="input-panel">
+          <p class="panel-title">Tu objetivo</p>
+
+          <div class="form-group">
+            <label for="objetivo">Meta financiera <span>(monto total a alcanzar)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" id="objetivo" class="has-prefix" value="100000" min="1" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="aporte-mensual">Aporte mensual</label>
+            <div class="input-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" id="aporte-mensual" class="has-prefix" value="1000" min="1" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="capital-inicial">Capital inicial <span>(lo que ya tenés)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" id="capital-inicial" class="has-prefix" value="5000" min="0" />
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border);padding-top:1.4rem;margin-top:0.5rem">
+            <p class="panel-title">Escenario de inversión</p>
+          </div>
+
+          <!-- Investment rate field + explainer -->
+          <div class="form-group">
+            <label for="tasa-inversion">Tasa de retorno anual <span>(%)</span></label>
+            <div class="input-wrap">
+              <input type="number" id="tasa-inversion" class="has-suffix" value="8" min="0" max="100" step="0.5" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="field-explainer">
+            <p>El retorno anual esperado si <strong style="color:var(--text)">invertís</strong> tus aportes — por ejemplo en fondos índice, ETFs o una cuenta de inversión. Cada mes tu saldo crece a esta tasa antes de que se sume tu nuevo aporte.</p>
+            <div class="example-tags">
+              <span class="etag etag-green">S&P 500 hist. avg ≈ 10%/año</span>
+              <span class="etag etag-green">Cartera conservadora ≈ 5–6%</span>
+              <span class="etag etag-green">Bonds / Fixed income ≈ 3–5%</span>
+            </div>
+          </div>
+
+          <!-- Saving rate field + explainer -->
+          <div class="form-group">
+            <label for="tasa-ahorro-puro">Tasa de ahorro anual <span>(% · sin inversión)</span></label>
+            <div class="input-wrap">
+              <input type="number" id="tasa-ahorro-puro" class="has-suffix" value="0" min="0" max="20" step="0.5" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="field-explainer">
+            <p>Lo que gana tu dinero si <strong style="color:var(--text)">no invertís</strong> — por ejemplo una caja de ahorro, cuenta corriente, o simplemente guardar efectivo en casa. Este es el escenario "base" que se compara contra la inversión.</p>
+            <div class="example-tags">
+              <span class="etag etag-gold">Bajo el colchón = 0%</span>
+              <span class="etag etag-gold">Caja de ahorro ≈ 0.5–2%</span>
+            </div>
+            <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-subtle)">
+              💡 Poné <strong>0%</strong> para ver el máximo impacto de invertir vs. no hacer nada con tu dinero.
+            </p>
+          </div>
+
+          <button class="btn btn-primary" onclick="calcularMeta()" style="width:100%;justify-content:center;margin-top:0.25rem">
+            Calculate →
+          </button>
+        </div>
+
+        <!-- Quick presets -->
+        <div style="padding:1.5rem 0">
+          <p class="panel-title">Ejemplos rápidos</p>
+          <div style="display:flex;flex-direction:column;gap:0.5rem">
+            <button class="btn btn-ghost" style="font-size:0.82rem;justify-content:flex-start" onclick="setPreset(20000,500,0,8,0)">🚗 Auto nuevo ($20k · $500/mes · 8% inv. / 0% ahorro)</button>
+            <button class="btn btn-ghost" style="font-size:0.82rem;justify-content:flex-start" onclick="setPreset(60000,1000,5000,8,0)">🏠 Entrada para depto ($60k · $1k/mes · 8% inv. / 0% ahorro)</button>
+            <button class="btn btn-ghost" style="font-size:0.82rem;justify-content:flex-start" onclick="setPreset(1000000,2000,10000,10,1)">🌴 Retiro anticipado ($1M · $2k/mes · 10% inv. / 1% ahorro)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== RESULTS ===== -->
+      <section>
+        <div class="result-panel">
+          <p class="panel-title">Comparación</p>
+          <p class="result-panel-note">
+            invirtiendo al <span id="note-inv">—</span>%/año
+            &nbsp;vs.&nbsp;
+            ahorrando al <span id="note-save">—</span>%/año
+          </p>
+
+          <div class="dual-result">
+            <div class="dual-card dual-card--save">
+              <p class="d-label">💰 Solo ahorrando</p>
+              <p class="d-value" id="res-tiempo-ahorro">—</p>
+              <p class="d-sub"  id="res-sub-ahorro">—</p>
+            </div>
+            <div class="dual-card dual-card--invest">
+              <p class="d-label">📈 Invirtiendo</p>
+              <p class="d-value" id="res-tiempo-inversion">—</p>
+              <p class="d-sub"  id="res-sub-inversion">—</p>
+            </div>
+          </div>
+
+          <div class="savings-badge">
+            <span class="badge-icon" id="badge-icon">⚡</span>
+            <div class="badge-text">
+              <strong id="badge-title">—</strong>
+              <span id="badge-sub">—</span>
+            </div>
+          </div>
+
+          <div class="result-row"><span class="label">Meta</span><span class="value" id="res-meta">—</span></div>
+          <div class="result-row"><span class="label">Aporte mensual</span><span class="value" id="res-aporte">—</span></div>
+          <div class="result-row"><span class="label">Total aportado (escenario inversión)</span><span class="value" id="res-total-aportado">—</span></div>
+          <div class="result-row"><span class="label">Rendimiento generado invirtiendo</span><span class="value positive" id="res-rendimiento">—</span></div>
+          <div class="result-row"><span class="label">Aportes ahorrados vs. solo guardar</span><span class="value neutral" id="res-extra">—</span></div>
+
+          <div class="chart-section">
+            <p class="chart-title">Camino a tu meta — ahorro vs inversión</p>
+            <canvas id="metaChart" class="calc-chart" height="260"></canvas>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+                <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let chart = null;
+
+    function setPreset(objetivo, aporte, inicial, tInv, tSave) {
+      document.getElementById('objetivo').value       = objetivo;
+      document.getElementById('aporte-mensual').value = aporte;
+      document.getElementById('capital-inicial').value= inicial;
+      document.getElementById('tasa-inversion').value = tInv;
+      document.getElementById('tasa-ahorro-puro').value = tSave;
+      calcularMeta();
+    }
+
+    /**
+     * Months to accumulate `meta` starting from `inicial`,
+     * adding `mensual` each month, with monthly rate = tasaAnual/12.
+     * tasaAnual = 0  →  pure saving (no compounding).
+     */
+    function mesesHastaMeta(meta, inicial, mensual, tasaAnual) {
+      if (inicial >= meta) return 0;
+      if (mensual <= 0 && tasaAnual <= 0) return Infinity;
+
+      const rMes = tasaAnual / 12;
+
+      if (rMes === 0) {
+        // Linear: months = ceil((meta - inicial) / mensual)
+        return Math.ceil((meta - inicial) / mensual);
+      }
+
+      // Compound iteration (max 1200 months = 100 years)
+      let acc = inicial;
+      for (let m = 1; m <= 1200; m++) {
+        acc = acc * (1 + rMes) + mensual;
+        if (acc >= meta) return m;
+      }
+      return Infinity;
+    }
+
+    function calcularMeta() {
+      const meta    = parseFloat(document.getElementById('objetivo').value)        || 1;
+      const mensual = parseFloat(document.getElementById('aporte-mensual').value)  || 0;
+      const inicial = parseFloat(document.getElementById('capital-inicial').value) || 0;
+      const tInv    = (parseFloat(document.getElementById('tasa-inversion').value)   || 0) / 100;
+      const tSave   = (parseFloat(document.getElementById('tasa-ahorro-puro').value) || 0) / 100;
+
+      document.getElementById('note-inv').textContent  = (tInv  * 100).toFixed(1);
+      document.getElementById('note-save').textContent = (tSave * 100).toFixed(1);
+
+      const mSave = mesesHastaMeta(meta, inicial, mensual, tSave);
+      const mInv  = mesesHastaMeta(meta, inicial, mensual, tInv);
+
+      const fmt = m => m === 0 ? '¡Ya llegaste!' : m === Infinity ? '> 100 años' : formatYears(m);
+
+      document.getElementById('res-tiempo-ahorro').textContent    = fmt(mSave);
+      document.getElementById('res-sub-ahorro').textContent       = (mSave > 0 && mSave !== Infinity) ? `${mSave} meses` : '';
+      document.getElementById('res-tiempo-inversion').textContent = fmt(mInv);
+      document.getElementById('res-sub-inversion').textContent    = (mInv > 0 && mInv !== Infinity) ? `${mInv} meses` : '';
+
+      document.getElementById('res-meta').textContent   = '$' + formatUSD(meta);
+      document.getElementById('res-aporte').textContent = '$' + formatUSD(mensual) + '/mes';
+
+      if (mInv !== Infinity && mInv > 0) {
+        const totalContrib = inicial + mensual * mInv;
+        const returns      = meta - totalContrib;
+        document.getElementById('res-total-aportado').textContent = '$' + formatUSD(totalContrib);
+        document.getElementById('res-rendimiento').textContent    = '$' + formatUSD(Math.max(returns, 0));
+        if (mSave !== Infinity && mSave > mInv) {
+          const savedMoney = mensual * (mSave - mInv);
+          document.getElementById('res-extra').textContent = '$' + formatUSD(savedMoney) + ' menos aportado';
+        } else if (mSave === Infinity) {
+          document.getElementById('res-extra').textContent = '∞ (meta inalcanzable sin invertir)';
+        } else {
+          document.getElementById('res-extra').textContent = '—';
+        }
+      } else {
+        ['res-total-aportado','res-rendimiento','res-extra'].forEach(id =>
+          document.getElementById(id).textContent = '—'
+        );
+      }
+
+      // Badge
+      if (mSave === Infinity && mInv !== Infinity) {
+        document.getElementById('badge-icon').textContent  = '🚨';
+        document.getElementById('badge-title').textContent = 'Solo podés llegar a esta meta invirtiendo';
+        document.getElementById('badge-sub').textContent   = `Con ${(tSave*100).toFixed(1)}%/año de ahorro puro, nunca llegás. Invirtiendo al ${(tInv*100).toFixed(1)}%/año llegás en ${fmt(mInv)}.`;
+      } else if (mSave !== Infinity && mInv !== Infinity && mSave > mInv) {
+        const diff = mSave - mInv;
+        document.getElementById('badge-icon').textContent  = '⚡';
+        document.getElementById('badge-title').textContent = `⚡ Ganás ${formatYears(diff)} invirtiendo`;
+        document.getElementById('badge-sub').textContent   = `Llegás a tu meta ${formatYears(diff)} antes que solo ahorrando.`;
+      } else if (mInv === Infinity) {
+        document.getElementById('badge-icon').textContent  = '⚠️';
+        document.getElementById('badge-title').textContent = 'Meta inalcanzable — aumentá el aporte';
+        document.getElementById('badge-sub').textContent   = 'Probá con un aporte mensual mayor o una tasa de retorno más alta.';
+      } else {
+        document.getElementById('badge-icon').textContent  = '📊';
+        document.getElementById('badge-title').textContent = 'Tiempo de llegada similar';
+        document.getElementById('badge-sub').textContent   = 'Ambas tasas dan resultados similares. Probá poner la tasa de ahorro en 0% para ver el impacto real de invertir.';
+      }
+
+      // ---- Chart ----
+      const maxM = mSave === Infinity
+        ? Math.min(mInv * 3, 600)
+        : Math.min(Math.max(mSave, mInv, 12), 600);
+
+      const step = Math.max(1, Math.floor(maxM / 30));
+      const labels = [], dSave = [], dInv = [];
+      const rS = tSave / 12, rI = tInv / 12;
+
+      for (let m = 0; m <= maxM; m += step) {
+        if (m % 12 === 0) labels.push(m === 0 ? 'Hoy' : `Año ${m/12}`);
+        else labels.push(`M${m}`);
+
+        let s = inicial, v = inicial;
+        for (let i = 0; i < m; i++) { s = s*(1+rS)+mensual; v = v*(1+rI)+mensual; }
+        dSave.push(+s.toFixed(2));
+        dInv.push(+v.toFixed(2));
+      }
+
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById('metaChart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Invirtiendo', data: dInv,  borderColor: '#4ade9a', backgroundColor: 'rgba(74,222,154,0.07)', borderWidth: 2.5, fill: true, tension: 0.35, pointRadius: 0 },
+            { label: 'Solo ahorrando', data: dSave, borderColor: '#e8c97a', backgroundColor: 'transparent', borderWidth: 2, borderDash: [7,5], tension: 0.2, pointRadius: 0 },
+            { label: 'Meta', data: Array(labels.length).fill(meta), borderColor: 'rgba(255,255,255,0.15)', backgroundColor: 'transparent', borderWidth: 1, borderDash: [3,4], pointRadius: 0 }
+          ]
+        },
+        options: {
+          responsive: true,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: '#7a8599', font: { family: 'DM Mono', size: 11 } } },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': $' + formatUSD(ctx.parsed.y) } }
+          },
+          scales: {
+            x: { ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+            y: { ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 }, callback: v => '$'+(v>=1e6?(v/1e6).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'k':v) }, grid: { color: 'rgba(255,255,255,0.04)' } }
+          }
+        }
+      });
+    }
+
+    calcularMeta();
+    ['objetivo','aporte-mensual','capital-inicial','tasa-inversion','tasa-ahorro-puro'].forEach(id =>
+      document.getElementById(id).addEventListener('input', calcularMeta)
+    );
+  </script>
+</body>
+</html>

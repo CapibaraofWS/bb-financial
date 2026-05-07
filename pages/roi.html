@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de ROI — BB Financial</title>
+  <meta name="description" content="Calculá el retorno sobre la inversión (ROI) absoluto y anualizado. Comparás proyectos y evaluás rentabilidad en segundos." />
+  <meta name="keywords" content="calculadora ROI, retorno inversión, rentabilidad, ROI anualizado, análisis inversión" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .roi-gauge{text-align:center;padding:1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:1rem;}
+    .roi-gauge .rg-label{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.5rem;}
+    .roi-gauge .rg-value{font-family:var(--font-display);font-size:3rem;letter-spacing:-0.02em;line-height:1;}
+    .roi-gauge .rg-bar{height:8px;background:var(--border);border-radius:4px;margin:0.75rem auto;max-width:240px;overflow:hidden;}
+    .roi-gauge .rg-fill{height:100%;border-radius:4px;transition:width 0.5s;}
+    .comparador-table{width:100%;border-collapse:collapse;margin-top:0.75rem;}
+    .comparador-table th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);padding:0.6rem 0.75rem;border-bottom:1px solid var(--border);}
+    .comparador-table td{padding:0.6rem 0.75rem;font-family:var(--font-mono);font-size:0.82rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+    .comparador-table td:first-child{color:var(--text-muted);}
+    .comparador-table td.highlight{color:var(--accent);}
+    .period-btns{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.75rem;}
+    .period-btn{padding:0.35rem 0.75rem;border-radius:6px;font-size:0.78rem;font-weight:500;border:1px solid var(--border);color:var(--text-muted);background:var(--bg);cursor:pointer;transition:all var(--transition);}
+    .period-btn:hover,.period-btn.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.25);}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>ROI</p>
+        <h1 class="page-title">Calculadora de ROI 📈</h1>
+        <p class="page-subtitle">Retorno sobre la inversión: absoluto, anualizado y comparado contra benchmarks. Para inversiones, negocios o cualquier proyecto.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65">
+        <strong style="color:var(--text)">¿Qué es el ROI?</strong> El Return on Investment mide cuánto ganaste (o perdiste) en relación a lo que invertiste. ROI = (Ganancia − Inversión) / Inversión × 100. Un ROI del 20% significa que ganaste $20 por cada $100 invertidos. El <strong style="color:var(--text)">ROI anualizado</strong> (CAGR) es más preciso porque permite comparar inversiones de distintos plazos: no es lo mismo 20% en 1 año que en 10 años.
+      </div>
+
+      <div class="calc-layout">
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Datos de la inversión</p>
+            <div class="form-group">
+              <label for="inv-inicial">Capital total invertido <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-inicial" class="has-prefix" value="10000" min="0" oninput="calcROI()"/></div>
+              <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Suma de todo lo que pusiste: precio de compra, comisiones, costos de entrada.</p>
+            </div>
+            <div class="form-group">
+              <label for="inv-final">Capital total final <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-final" class="has-prefix" value="14500" min="0" oninput="calcROI()"/></div>
+              <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Lo que recibís al final: precio de venta + dividendos + cualquier ingreso generado.</p>
+            </div>
+            <div class="form-group">
+              <label>Período de la inversión</label>
+              <div class="period-btns">
+                <button class="period-btn" onclick="setPeriod(0,1,0,this)">1 mes</button>
+                <button class="period-btn" onclick="setPeriod(0,6,0,this)">6 meses</button>
+                <button class="period-btn active" onclick="setPeriod(1,0,0,this)">1 año</button>
+                <button class="period-btn" onclick="setPeriod(2,0,0,this)">2 años</button>
+                <button class="period-btn" onclick="setPeriod(5,0,0,this)">5 años</button>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem">
+                <div class="input-wrap"><input type="number" id="p-anios" class="has-suffix" value="1" min="0" oninput="calcROI()"/><span class="input-suffix">años</span></div>
+                <div class="input-wrap"><input type="number" id="p-meses" class="has-suffix" value="0" min="0" max="11" oninput="calcROI()"/><span class="input-suffix">meses</span></div>
+                <div class="input-wrap"><input type="number" id="p-dias"  class="has-suffix" value="0" min="0" max="30" oninput="calcROI()"/><span class="input-suffix">días</span></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inflacion-roi">Inflación anual <span>(% — para ROI real)</span></label>
+              <div class="input-wrap"><input type="number" id="inflacion-roi" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcROI()"/><span class="input-suffix">%</span></div>
+              <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Para calcular el retorno real (descontando inflación). Usá 120% para Argentina.</p>
+            </div>
+            <button class="btn btn-primary" onclick="calcROI()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+            <div class="roi-gauge">
+              <p class="rg-label">ROI Total</p>
+              <p class="rg-value" id="roi-total">0%</p>
+              <div class="rg-bar"><div class="rg-fill" id="roi-bar" style="width:0%;background:var(--accent)"></div></div>
+              <p style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono)" id="roi-interp">—</p>
+            </div>
+
+            <div class="result-row"><span class="label">Ganancia / Pérdida</span><span class="value" id="r-ganancia">—</span></div>
+            <div class="result-row"><span class="label">ROI anualizado (CAGR)</span><span class="value positive" id="r-cagr">—</span></div>
+            <div class="result-row"><span class="label">ROI real (vs inflación)</span><span class="value neutral" id="r-real">—</span></div>
+            <div class="result-row"><span class="label">Período</span><span class="value" id="r-periodo">—</span></div>
+            <div class="result-row"><span class="label">Multiplicador de capital</span><span class="value neutral" id="r-mult">—</span></div>
+
+            <p class="panel-title" style="margin-top:1.5rem;margin-bottom:0.75rem">Comparativa vs benchmarks</p>
+            <table class="comparador-table">
+              <thead><tr><th>Benchmark</th><th>ROI anual est.</th><th>Tu inversión</th></tr></thead>
+              <tbody id="bench-body"></tbody>
+            </table>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Crecimiento comparado</p>
+              <canvas id="roiChart" class="calc-chart" height="200"></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Calculadoras</h3><ul>
+        <li><a href="calculadoras.html">Todas las calculadoras</a></li>
+        <li><a href="roi.html">ROI</a></li>
+        <li><a href="vpn.html">Valor Presente (VPN)</a></li>
+        <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let roiChart = null;
+
+    function setPeriod(a, m, d, btn) {
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('p-anios').value = a;
+      document.getElementById('p-meses').value = m;
+      document.getElementById('p-dias').value  = d;
+      calcROI();
+    }
+
+    function calcROI() {
+      const ini  = parseFloat(document.getElementById('inv-inicial').value) || 0;
+      const fin  = parseFloat(document.getElementById('inv-final').value)   || 0;
+      const pa   = parseInt(document.getElementById('p-anios').value)  || 0;
+      const pm   = parseInt(document.getElementById('p-meses').value) || 0;
+      const pd   = parseInt(document.getElementById('p-dias').value)  || 0;
+      const inf  = (parseFloat(document.getElementById('inflacion-roi').value) || 0) / 100;
+      const años = pa + pm/12 + pd/365;
+
+      const ganancia  = fin - ini;
+      const roi       = ini > 0 ? ganancia / ini * 100 : 0;
+      const cagr      = ini > 0 && años > 0 ? (Math.pow(fin/ini, 1/años) - 1) * 100 : roi;
+      const roiReal   = ((1 + cagr/100) / (1 + inf) - 1) * 100;
+      const mult      = ini > 0 ? fin/ini : 0;
+
+      document.getElementById('roi-total').textContent = (roi >= 0 ? '+' : '') + roi.toFixed(2) + '%';
+      document.getElementById('roi-total').style.color = roi >= 0 ? 'var(--accent)' : '#ff6b6b';
+      const barW = Math.min(Math.abs(roi)/2, 100);
+      document.getElementById('roi-bar').style.width = barW + '%';
+      document.getElementById('roi-bar').style.background = roi >= 0 ? 'var(--accent)' : '#ff6b6b';
+
+      const interp = roi > 50 ? '🚀 Excelente retorno' : roi > 20 ? '✅ Muy buen retorno' : roi > 10 ? '👍 Buen retorno' : roi > 0 ? '📊 Retorno positivo' : '⚠️ Pérdida';
+      document.getElementById('roi-interp').textContent = interp;
+      document.getElementById('r-ganancia').textContent = (ganancia >= 0 ? '+$' : '−$') + formatUSD(Math.abs(ganancia));
+      document.getElementById('r-ganancia').style.color = ganancia >= 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('r-cagr').textContent     = (cagr >= 0 ? '+' : '') + cagr.toFixed(2) + '% anual';
+      document.getElementById('r-real').textContent     = (roiReal >= 0 ? '+' : '') + roiReal.toFixed(2) + '% real anual';
+      document.getElementById('r-real').style.color     = roiReal >= 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('r-periodo').textContent  = `${pa}a ${pm}m ${pd}d (${años.toFixed(2)} años)`;
+      document.getElementById('r-mult').textContent     = mult.toFixed(2) + 'x';
+
+      // Benchmarks
+      const benchmarks = [
+        { name: 'Plazo fijo arg. (est.)', anual: 70 },
+        { name: 'S&P 500 (hist. real)',   anual: 7 },
+        { name: 'Bonos EEUU (10y)',       anual: 4.5 },
+        { name: 'Inflación global (est.)',anual: 3 },
+      ];
+      document.getElementById('bench-body').innerHTML = benchmarks.map(b => {
+        const diff = cagr - b.anual;
+        const cls  = diff >= 0 ? 'highlight' : '';
+        const sgn  = diff >= 0 ? '+' : '';
+        return `<tr><td>${b.name}</td><td>${b.anual}%/año</td><td class="${cls}">${sgn}${diff.toFixed(1)} pp</td></tr>`;
+      }).join('');
+
+      // Chart: crecimiento de $1000 comparado
+      const maxAños = Math.max(Math.ceil(años), 1);
+      const labels = [], dMia = [], dSP500 = [], dPF = [];
+      for (let y = 0; y <= maxAños; y++) {
+        labels.push(y === 0 ? 'Inicio' : `Año ${y}`);
+        dMia.push(+(1000 * Math.pow(1 + cagr/100, y)).toFixed(2));
+        dSP500.push(+(1000 * Math.pow(1.07, y)).toFixed(2));
+        dPF.push(+(1000 * Math.pow(1.70, y)).toFixed(2));
+      }
+      if (roiChart) roiChart.destroy();
+      roiChart = new Chart(document.getElementById('roiChart'), {
+        type: 'line',
+        data: { labels, datasets: [
+          { label:'Tu inversión (CAGR)', data:dMia,   borderColor:'#4ade9a', backgroundColor:'rgba(74,222,154,0.07)', borderWidth:2.5, fill:true, tension:0.3, pointRadius:2 },
+          { label:'S&P 500 (7% est.)',   data:dSP500, borderColor:'#e8c97a', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
+          { label:'Plazo fijo AR (70%)', data:dPF,    borderColor:'#8899ee', borderDash:[3,3], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
+        ]},
+        options: {
+          responsive:true, interaction:{mode:'index',intersect:false},
+          plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10}}},
+            tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+formatUSD(ctx.parsed.y)}} },
+          scales:{
+            x:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1000?(v/1000).toFixed(1)+'k':v)},grid:{color:'rgba(255,255,255,0.04)'}}
+          }
+        }
+      });
+    }
+    calcROI();
+  </script>
+</body>
+</html>

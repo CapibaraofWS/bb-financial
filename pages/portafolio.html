@@ -1,0 +1,602 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador de Portafolio — BB Financial</title>
+  <meta name="description" content="Simulá tu cartera de inversión. Rendimiento ponderado, Ratio de Sharpe, volatilidad por clase de activo, comisiones y tres escenarios." />
+  <meta name="keywords" content="simulador portafolio, cartera inversión, ratio sharpe, diversificación, rendimiento ponderado" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/portafolio.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* Asset table */
+    .asset-table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+    .asset-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+    .asset-table th {
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-subtle);
+      padding: 0.6rem 0.5rem; text-align: left;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .asset-table td { padding: 0.45rem 0.5rem; vertical-align: middle; }
+    .asset-table input[type="text"],
+    .asset-table input[type="number"],
+    .asset-table select {
+      width: 100%; padding: 0.45rem 0.6rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text);
+      font-family: var(--font-mono); font-size: 0.82rem;
+      transition: border-color var(--transition);
+    }
+    .asset-table input:focus, .asset-table select:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .asset-table input[type="text"] { font-family: var(--font-body); }
+    .asset-table .td-peso { width: 70px; }
+    .asset-table .td-rend { width: 80px; }
+    .asset-table .td-del  { width: 36px; text-align: center; }
+    .del-btn {
+      background: rgba(220,60,60,0.1); border: 1px solid rgba(220,60,60,0.2);
+      border-radius: 5px; color: #ff7a7a; cursor: pointer;
+      padding: 0.3rem 0.5rem; font-size: 0.8rem; transition: all var(--transition);
+    }
+    .del-btn:hover { background: rgba(220,60,60,0.7); color: #fff; }
+
+    .peso-bar { height: 4px; border-radius: 2px; background: var(--accent); margin-top: 3px; transition: width 0.3s; }
+    .peso-total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0.5rem; font-family: var(--font-mono); font-size: 0.82rem;
+      border-top: 1px solid var(--border); margin-top: 0.25rem;
+    }
+    .peso-ok   { color: var(--accent); }
+    .peso-warn { color: #ff6b6b; }
+    .peso-total-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 0.75rem; }
+    .peso-total-fill { height: 100%; background: var(--accent); transition: width 0.3s, background 0.3s; border-radius: 3px; }
+    .peso-total-fill.over { background: #ff6b6b; }
+
+    /* Volatility reference */
+    .vol-ref {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap: 0.5rem; margin-bottom: 1rem;
+    }
+    .vol-item {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+    }
+    .vol-item .vi-name { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+    .vol-item .vi-val  { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text); }
+
+    /* Alerts */
+    .alert-box { border-radius: 9px; padding: 0.8rem 1rem; font-size: 0.82rem; line-height: 1.55; margin-bottom: 0.75rem; display: none; }
+    .alert-box.visible { display: flex; align-items: flex-start; gap: 0.6rem; }
+    .alert-danger  { background: rgba(220,60,60,0.08);  border: 1px solid rgba(220,60,60,0.2);  color: #f08080; }
+    .alert-warning { background: var(--gold-dim);       border: 1px solid rgba(232,201,122,0.2); color: var(--gold); }
+    .alert-info    { background: rgba(100,120,200,0.08);border: 1px solid rgba(100,120,200,0.2); color: #8899ee; }
+
+    /* Sharpe badge */
+    .sharpe-badge {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+    }
+    .sb-left .sb-label { font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-subtle); margin-bottom:0.3rem; }
+    .sb-left .sb-value { font-family:var(--font-display); font-size:1.6rem; letter-spacing:-0.02em; }
+    .sb-right { font-size:0.78rem; color:var(--text-muted); max-width:160px; text-align:right; line-height:1.5; }
+
+    /* Contribution table */
+    .contrib-table { width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:0.75rem; }
+    .contrib-table th { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-subtle); padding:0.5rem 0.5rem; border-bottom:1px solid var(--border); text-align:left; }
+    .contrib-table td { padding:0.5rem 0.5rem; font-family:var(--font-mono); color:var(--text-muted); border-bottom:1px solid rgba(255,255,255,0.03); }
+    .contrib-table td:first-child { color:var(--text); }
+    .contrib-table td.pos { color:var(--accent); }
+    .contrib-table td.neg { color:#ff6b6b; }
+
+    /* Scenario cards */
+    .scenario-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; margin-bottom:1rem; }
+    .sc-card { border-radius:10px; padding:1rem; text-align:center; border:1px solid; }
+    .sc-pes  { background:rgba(220,60,60,0.06);  border-color:rgba(220,60,60,0.15); }
+    .sc-base { background:var(--accent-dim);     border-color:rgba(74,222,154,0.2); }
+    .sc-opt  { background:var(--gold-dim);       border-color:rgba(232,201,122,0.2); }
+    .sc-card .sc-lbl { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.4rem; }
+    .sc-pes .sc-lbl  { color:#f08080; }
+    .sc-base .sc-lbl { color:var(--accent); }
+    .sc-opt .sc-lbl  { color:var(--gold); }
+    .sc-card .sc-val { font-family:var(--font-display); font-size:1.2rem; letter-spacing:-0.01em; color:var(--text); margin-bottom:0.2rem; }
+    .sc-card .sc-sub { font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono); }
+
+    @media(max-width:600px){ .scenario-row{grid-template-columns:1fr;} }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+            <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Portafolio</p>
+        <h1 class="page-title">Simulador de Portafolio 📊</h1>
+        <p class="page-subtitle">Armá tu cartera, calculá el rendimiento ponderado, el Ratio de Sharpe y proyectá tres escenarios. Con impacto de comisiones y alertas de correlación.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+
+      <!-- Volatility reference -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem">
+        <p class="panel-title" style="margin-bottom:1rem">Referencia de volatilidad y escenarios por clase de activo</p>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.55">La diversificación no es solo tener muchos activos — es que no se muevan igual. Cada clase tiene una caída típica en escenario pesimista distinta.</p>
+        <div class="vol-ref">
+          <div class="vol-item"><div class="vi-name">Acciones (índice)</div><div class="vi-val">Pesimista: −30%</div></div>
+          <div class="vol-item"><div class="vi-name">Acciones Tech</div><div class="vi-val">Pesimista: −45%</div></div>
+          <div class="vol-item"><div class="vi-name">Bonos soberanos</div><div class="vi-val">Pesimista: −10%</div></div>
+          <div class="vol-item"><div class="vi-name">Real Estate / REITs</div><div class="vi-val">Pesimista: −25%</div></div>
+          <div class="vol-item"><div class="vi-name">Efectivo / Money Market</div><div class="vi-val">Pesimista: 0%</div></div>
+          <div class="vol-item"><div class="vi-name">Cripto</div><div class="vi-val">Pesimista: −75%</div></div>
+          <div class="vol-item"><div class="vi-name">Commodities</div><div class="vi-val">Pesimista: −20%</div></div>
+          <div class="vol-item"><div class="vi-name">Acciones EM</div><div class="vi-val">Pesimista: −40%</div></div>
+        </div>
+      </div>
+
+      <div class="calc-layout">
+        <!-- INPUTS -->
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Tu cartera</p>
+
+            <!-- Asset rows -->
+            <div class="asset-table-wrap">
+              <table class="asset-table" id="asset-table">
+                <thead>
+                  <tr>
+                    <th>Activo</th>
+                    <th>Clase</th>
+                    <th class="td-peso">Peso %</th>
+                    <th class="td-rend">Rend. %</th>
+                    <th class="td-del"></th>
+                  </tr>
+                </thead>
+                <tbody id="asset-body"></tbody>
+              </table>
+            </div>
+
+            <!-- Peso total bar -->
+            <div class="peso-total-bar"><div class="peso-total-fill" id="peso-fill" style="width:0%"></div></div>
+            <div class="peso-total-row">
+              <span>Total pesos:</span>
+              <span id="peso-total-txt" class="peso-ok">0%</span>
+            </div>
+
+            <button class="btn btn-ghost" onclick="addAsset()" style="width:100%;justify-content:center;font-size:0.85rem;margin-bottom:1.25rem">
+              + Agregar activo
+            </button>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin-bottom:1.25rem" />
+            <p class="panel-title" style="margin-bottom:1rem">Parámetros</p>
+
+            <div class="form-group">
+              <label for="capital-port">Capital inicial <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="capital-port" class="has-prefix" value="50000" min="1" oninput="calcularPortafolio()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="aporte-port">Aporte mensual <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="aporte-port" class="has-prefix" value="1000" min="0" oninput="calcularPortafolio()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="horizonte-port">Horizonte temporal <span>(años)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="horizonte-port" class="has-suffix" value="10" min="1" max="50" oninput="calcularPortafolio()" />
+                <span class="input-suffix">años</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inflacion-port">Inflación anual <span>(%)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="inflacion-port" class="has-suffix" value="3" min="0" max="100" step="0.5" oninput="calcularPortafolio()" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="comision-port">Fricción operativa anual <span>(comisiones, mantenimiento)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="comision-port" class="has-suffix" value="0.5" min="0" max="5" step="0.1" oninput="calcularPortafolio()" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:-0.75rem;margin-bottom:1rem;font-family:var(--font-mono);line-height:1.5">ETFs baratos: ~0.1–0.3% · Fondos activos: ~1–2% · Broker + impuestos: +0.5%</p>
+
+            <div class="form-group">
+              <label for="rf-port">Tasa libre de riesgo <span>(para Sharpe, ej: bono EEUU)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="rf-port" class="has-suffix" value="4.5" min="0" max="20" step="0.1" oninput="calcularPortafolio()" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="calcularPortafolio()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+
+            <!-- Alerts -->
+            <div id="alert-peso" class="alert-box alert-danger"></div>
+            <div id="alert-concentracion" class="alert-box alert-warning"></div>
+            <div id="alert-correlacion" class="alert-box alert-info"></div>
+
+            <!-- Main result -->
+            <div class="result-highlight">
+              <p class="result-label">Capital proyectado (escenario base)</p>
+              <p class="result-value" id="res-capital-final">$0</p>
+              <p class="result-sub" id="res-capital-sub">—</p>
+            </div>
+
+            <!-- Rendimiento ponderado -->
+            <div class="result-row"><span class="label">Rendimiento ponderado bruto</span><span class="value neutral" id="res-rend-pond">—</span></div>
+            <div class="result-row"><span class="label">Fricción operativa</span><span class="value" style="color:#ff9999" id="res-comision">—</span></div>
+            <div class="result-row"><span class="label">Rendimiento neto de comisiones</span><span class="value positive" id="res-rend-neto">—</span></div>
+            <div class="result-row"><span class="label">Rendimiento real (vs inflación)</span><span class="value positive" id="res-rend-real">—</span></div>
+            <div class="result-row"><span class="label">Total aportado</span><span class="value" id="res-total-aportado">—</span></div>
+            <div class="result-row"><span class="label">Rendimientos generados</span><span class="value positive" id="res-rendimientos">—</span></div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0" />
+
+            <!-- Sharpe ratio -->
+            <div class="sharpe-badge">
+              <div class="sb-left">
+                <p class="sb-label">Ratio de Sharpe</p>
+                <p class="sb-value" id="sharpe-value">—</p>
+              </div>
+              <div class="sb-right" id="sharpe-desc">—</div>
+            </div>
+
+            <!-- 3 scenarios -->
+            <p class="panel-title" style="margin-bottom:0.75rem">Tres escenarios</p>
+            <div class="scenario-row">
+              <div class="sc-card sc-pes">
+                <p class="sc-lbl">Pesimista</p>
+                <p class="sc-val" id="sc-pes-val">—</p>
+                <p class="sc-sub" id="sc-pes-sub">—</p>
+              </div>
+              <div class="sc-card sc-base">
+                <p class="sc-lbl">Base</p>
+                <p class="sc-val" id="sc-base-val">—</p>
+                <p class="sc-sub">Rend. estimado</p>
+              </div>
+              <div class="sc-card sc-opt">
+                <p class="sc-lbl">Optimista</p>
+                <p class="sc-val" id="sc-opt-val">—</p>
+                <p class="sc-sub" id="sc-opt-sub">—</p>
+              </div>
+            </div>
+
+            <!-- Contribution by asset -->
+            <p class="panel-title" style="margin-bottom:0.5rem">Contribución al rendimiento por activo</p>
+            <table class="contrib-table">
+              <thead><tr><th>Activo</th><th>Peso</th><th>Rend.</th><th>Contribución</th></tr></thead>
+              <tbody id="contrib-body"></tbody>
+            </table>
+
+            <!-- Charts -->
+            <div class="chart-section" style="margin-top:1.5rem">
+              <p class="chart-title">Distribución de la cartera</p>
+              <canvas id="donutChart" class="calc-chart" height="200"></canvas>
+            </div>
+
+            <div class="chart-section">
+              <p class="chart-title">Proyección del capital — tres escenarios</p>
+              <canvas id="lineChart" class="calc-chart" height="220"></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Calculadoras</h3>
+        <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="salario.html">Salario Real</a></li>
+          <li><a href="mis-portafolios.html">Portafolio (Beta)</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let donutChart = null, lineChart = null;
+
+    // Volatility by asset class: [optimista multiplier, pesimista multiplier]
+    const CLASES = {
+      'acciones':       { label: 'Acciones (índice)',     opt: 1.30, pes: -0.30, vol: 0.18 },
+      'acciones_tech':  { label: 'Acciones Tech',         opt: 1.50, pes: -0.45, vol: 0.28 },
+      'bonos':          { label: 'Bonos soberanos',       opt: 1.08, pes: -0.10, vol: 0.06 },
+      'real_estate':    { label: 'Real Estate / REITs',   opt: 1.25, pes: -0.25, vol: 0.15 },
+      'cash':           { label: 'Efectivo / Money Market',opt:1.02, pes:  0.00, vol: 0.01 },
+      'cripto':         { label: 'Cripto',                opt: 2.50, pes: -0.75, vol: 0.75 },
+      'commodities':    { label: 'Commodities',           opt: 1.20, pes: -0.20, vol: 0.20 },
+      'acciones_em':    { label: 'Acciones emergentes',   opt: 1.40, pes: -0.40, vol: 0.25 },
+    };
+
+    // Color palette for assets
+    const COLORES = ['#4ade9a','#e8c97a','#8899ee','#ff7a7a','#5dcaa5','#f09b50','#c084fc','#60a5fa'];
+
+    let assets = [];
+    let nextId = 0;
+
+    function addAsset(nombre='', clase='acciones', peso=25, rend=8) {
+      const id = nextId++;
+      assets.push({ id, nombre, clase, peso, rend });
+      renderTable();
+      calcularPortafolio();
+    }
+
+    function removeAsset(id) {
+      assets = assets.filter(a => a.id !== id);
+      renderTable();
+      calcularPortafolio();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('asset-body');
+      tbody.innerHTML = assets.map((a, idx) => `
+        <tr data-id="${a.id}">
+          <td><input type="text" placeholder="Ej: S&P 500" value="${a.nombre}"
+            oninput="updateAsset(${a.id},'nombre',this.value)" /></td>
+          <td>
+            <select onchange="updateAsset(${a.id},'clase',this.value)">
+              ${Object.entries(CLASES).map(([k,v]) =>
+                `<option value="${k}" ${k===a.clase?'selected':''}>${v.label}</option>`
+              ).join('')}
+            </select>
+          </td>
+          <td class="td-peso">
+            <input type="number" value="${a.peso}" min="0" max="100" step="1"
+              oninput="updateAsset(${a.id},'peso',parseFloat(this.value)||0)" />
+            <div class="peso-bar" style="width:${Math.min(a.peso,100)}%"></div>
+          </td>
+          <td class="td-rend">
+            <input type="number" value="${a.rend}" min="-50" max="100" step="0.5"
+              oninput="updateAsset(${a.id},'rend',parseFloat(this.value)||0)" />
+          </td>
+          <td class="td-del"><button class="del-btn" onclick="removeAsset(${a.id})">✕</button></td>
+        </tr>`).join('');
+
+      // Update peso total
+      const total = assets.reduce((s,a) => s+a.peso, 0);
+      const fill = document.getElementById('peso-fill');
+      const txt  = document.getElementById('peso-total-txt');
+      fill.style.width = Math.min(total, 100) + '%';
+      fill.classList.toggle('over', total > 100);
+      txt.textContent = total.toFixed(1) + '%';
+      txt.className = Math.abs(total - 100) < 0.1 ? 'peso-ok' : 'peso-warn';
+    }
+
+    function updateAsset(id, field, value) {
+      const a = assets.find(a => a.id === id);
+      if (a) { a[field] = value; renderTable(); calcularPortafolio(); }
+    }
+
+    function calcularPortafolio() {
+      if (assets.length === 0) return;
+
+      const capital    = parseFloat(document.getElementById('capital-port').value)   || 0;
+      const aporte     = parseFloat(document.getElementById('aporte-port').value)    || 0;
+      const horizonte  = parseInt(document.getElementById('horizonte-port').value)   || 10;
+      const infAnual   = (parseFloat(document.getElementById('inflacion-port').value)|| 0) / 100;
+      const comision   = (parseFloat(document.getElementById('comision-port').value) || 0) / 100;
+      const rf         = (parseFloat(document.getElementById('rf-port').value)       || 0) / 100;
+
+      const totalPeso  = assets.reduce((s,a) => s+a.peso, 0);
+
+      // Alerts
+      const alertPeso  = document.getElementById('alert-peso');
+      if (Math.abs(totalPeso - 100) > 0.5) {
+        alertPeso.classList.add('visible');
+        alertPeso.textContent = `⚠️ Los pesos suman ${totalPeso.toFixed(1)}%. Deben sumar exactamente 100% para un cálculo correcto.`;
+      } else {
+        alertPeso.classList.remove('visible');
+      }
+
+      // Concentración: algún activo > 60%
+      const alertConc = document.getElementById('alert-concentracion');
+      const maxAsset  = assets.reduce((m,a) => a.peso > m.peso ? a : m, assets[0]);
+      if (maxAsset && maxAsset.peso > 60) {
+        alertConc.classList.add('visible');
+        alertConc.textContent = `⚠️ "${maxAsset.nombre || CLASES[maxAsset.clase].label}" representa el ${maxAsset.peso.toFixed(0)}% de la cartera. Alta concentración aumenta el riesgo. Considerá diversificar.`;
+      } else {
+        alertConc.classList.remove('visible');
+      }
+
+      // Correlación: múltiples activos de alta correlación
+      const alertCorr  = document.getElementById('alert-correlacion');
+      const highCorr   = ['acciones_tech','cripto'];
+      const highCorrAssets = assets.filter(a => highCorr.includes(a.clase));
+      if (highCorrAssets.length >= 2) {
+        alertCorr.classList.add('visible');
+        alertCorr.textContent = `ℹ️ Tenés múltiples activos de alta correlación (${highCorrAssets.map(a => CLASES[a.clase].label).join(', ')}). En una caída del mercado tienden a bajar juntos — no te protegen entre sí.`;
+      } else {
+        alertCorr.classList.remove('visible');
+      }
+
+      // Rendimiento ponderado
+      const rendPond = assets.reduce((s,a) => s + (a.peso/100) * (a.rend/100), 0);
+      const rendNeto = rendPond - comision;
+      const rendReal = ((1 + rendNeto) / (1 + infAnual)) - 1;
+
+      // Volatilidad ponderada (simple, no covarianza)
+      const volPond = assets.reduce((s,a) => s + (a.peso/100) * CLASES[a.clase].vol, 0);
+      const sharpe  = volPond > 0 ? (rendNeto - rf) / volPond : 0;
+
+      // Proyección base
+      const rMes = rendNeto / 12;
+      let acc = capital;
+      for (let m = 0; m < horizonte * 12; m++) acc = acc*(1+rMes)+aporte;
+      const capitalFinal = acc;
+      const totalAportado = capital + aporte * horizonte * 12;
+
+      // Escenario pesimista: cada activo con su factor pesimista
+      const rendPes = assets.reduce((s,a) => {
+        const pesFactor = CLASES[a.clase].pes; // negative number
+        const rendPesAct = (a.rend/100) + pesFactor * 0.5; // blend
+        return s + (a.peso/100) * rendPesAct;
+      }, 0) - comision;
+
+      // Escenario optimista
+      const rendOpt = assets.reduce((s,a) => {
+        const optFactor = (CLASES[a.clase].opt - 1);
+        const rendOptAct = (a.rend/100) + optFactor * 0.3;
+        return s + (a.peso/100) * rendOptAct;
+      }, 0) - comision;
+
+      let accPes = capital, accOpt = capital;
+      for (let m = 0; m < horizonte*12; m++) {
+        accPes = accPes*(1+rendPes/12)+aporte;
+        accOpt = accOpt*(1+rendOpt/12)+aporte;
+      }
+
+      // UI
+      document.getElementById('res-capital-final').textContent = '$' + formatUSD(capitalFinal);
+      document.getElementById('res-capital-sub').textContent   = `En ${horizonte} años · rend. neto ${(rendNeto*100).toFixed(2)}%`;
+      document.getElementById('res-rend-pond').textContent     = (rendPond*100).toFixed(2) + '% anual';
+      document.getElementById('res-comision').textContent      = '−' + (comision*100).toFixed(2) + '% anual';
+      document.getElementById('res-rend-neto').textContent     = (rendNeto*100).toFixed(2) + '% anual';
+      document.getElementById('res-rend-real').textContent     = (rendReal*100).toFixed(2) + '% real anual';
+      document.getElementById('res-total-aportado').textContent= '$' + formatUSD(totalAportado);
+      document.getElementById('res-rendimientos').textContent  = '$' + formatUSD(Math.max(0, capitalFinal - totalAportado));
+
+      // Sharpe
+      const sharpeEl = document.getElementById('sharpe-value');
+      sharpeEl.textContent = sharpe.toFixed(2);
+      sharpeEl.style.color = sharpe >= 1 ? 'var(--accent)' : sharpe >= 0.5 ? 'var(--gold)' : '#ff6b6b';
+      document.getElementById('sharpe-desc').textContent =
+        sharpe >= 1.5 ? 'Excelente — buen rendimiento por unidad de riesgo' :
+        sharpe >= 1.0 ? 'Bueno — rendimiento superior al riesgo tomado' :
+        sharpe >= 0.5 ? 'Aceptable — podría mejorar la relación riesgo/retorno' :
+        sharpe >= 0   ? 'Bajo — considerá rebalancear la cartera' :
+        'Negativo — el retorno no compensa el riesgo';
+
+      // Scenarios
+      document.getElementById('sc-pes-val').textContent = '$' + formatUSD(accPes);
+      document.getElementById('sc-pes-sub').textContent = 'Rend. ' + (rendPes*100).toFixed(1) + '%';
+      document.getElementById('sc-base-val').textContent= '$' + formatUSD(capitalFinal);
+      document.getElementById('sc-opt-val').textContent = '$' + formatUSD(accOpt);
+      document.getElementById('sc-opt-sub').textContent = 'Rend. ' + (rendOpt*100).toFixed(1) + '%';
+
+      // Contribution table
+      const tbody = document.getElementById('contrib-body');
+      tbody.innerHTML = assets.map(a => {
+        const contrib = (a.peso/100) * (a.rend/100) / rendPond;
+        const contribPct = isFinite(contrib) ? (contrib*100).toFixed(1)+'%' : '—';
+        return `<tr>
+          <td>${a.nombre || CLASES[a.clase].label}</td>
+          <td>${a.peso.toFixed(1)}%</td>
+          <td>${a.rend.toFixed(1)}%</td>
+          <td class="${a.rend >= 0 ? 'pos' : 'neg'}">${contribPct}</td>
+        </tr>`;
+      }).join('');
+
+      // Donut chart
+      if (donutChart) donutChart.destroy();
+      donutChart = new Chart(document.getElementById('donutChart'), {
+        type: 'doughnut',
+        data: {
+          labels: assets.map(a => a.nombre || CLASES[a.clase].label),
+          datasets: [{ data: assets.map(a => a.peso), backgroundColor: COLORES.slice(0, assets.length), borderColor: 'var(--bg-card)', borderWidth: 2 }]
+        },
+        options: {
+          responsive: true, cutout: '62%',
+          plugins: { legend: { position:'bottom', labels:{color:'#7a8599',font:{family:'DM Mono',size:10},padding:10} },
+            tooltip: { callbacks: { label: ctx => ctx.label+': '+ctx.parsed+'%' } } }
+        }
+      });
+
+      // Line chart: 3 scenarios year by year
+      const labels = ['Hoy'];
+      const dBase = [capital], dPes = [capital], dOpt = [capital];
+      let b = capital, p = capital, o = capital;
+      for (let y = 1; y <= Math.min(horizonte, 40); y++) {
+        for (let m = 0; m < 12; m++) {
+          b = b*(1+rendNeto/12)+aporte;
+          p = p*(1+rendPes/12)+aporte;
+          o = o*(1+rendOpt/12)+aporte;
+        }
+        labels.push(`Año ${y}`);
+        dBase.push(+b.toFixed(0));
+        dPes.push(+Math.max(0,p).toFixed(0));
+        dOpt.push(+o.toFixed(0));
+      }
+
+      if (lineChart) lineChart.destroy();
+      lineChart = new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: { labels, datasets: [
+          { label:'Optimista', data:dOpt, borderColor:'#e8c97a', borderDash:[4,3], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
+          { label:'Base',      data:dBase, borderColor:'#4ade9a', backgroundColor:'rgba(74,222,154,0.06)', borderWidth:2.5, pointRadius:0, fill:true, tension:0.3 },
+          { label:'Pesimista', data:dPes, borderColor:'#ff6b6b', borderDash:[4,3], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
+        ]},
+        options: {
+          responsive: true,
+          interaction: { mode:'index', intersect:false },
+          plugins: { legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10},boxWidth:20}},
+            tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+formatUSD(ctx.parsed.y)}} },
+          scales: {
+            x:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:'rgba(255,255,255,0.04)'}}
+          }
+        }
+      });
+    }
+
+    // Init with 3 default assets
+    addAsset('S&P 500',     'acciones',    60, 10);
+    addAsset('Bonos EEUU',  'bonos',       30, 4.5);
+    addAsset('Efectivo',    'cash',        10, 2);
+  </script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cartera Avanzada — Modelo de Markowitz — BB Financial</title>
+  <meta name="description" content="Analizá tu cartera con el Modelo de Markowitz. Frontera eficiente, correlación entre activos, Ratio de Sharpe y diversificación óptima." />
+  <meta name="keywords" content="modelo markowitz, frontera eficiente, cartera diversificada, ratio sharpe, correlación activos, teoría moderna de portafolio" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .asset-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;}
+    .asset-card .ac-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;}
+    .asset-card .ac-num{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-subtle);}
+    .asset-card .ac-del{background:rgba(220,60,60,0.1);border:1px solid rgba(220,60,60,0.2);border-radius:5px;color:#ff7a7a;cursor:pointer;padding:0.2rem 0.45rem;font-size:0.75rem;transition:all 0.2s;}
+    .asset-card .ac-del:hover{background:rgba(220,60,60,0.7);color:#fff;}
+    .asset-card label{display:block;font-size:0.75rem;color:var(--text-subtle);margin-bottom:0.25rem;font-family:var(--font-mono);}
+    .asset-card input,.asset-card select{width:100%;padding:0.4rem 0.6rem;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-mono);font-size:0.82rem;margin-bottom:0.6rem;}
+    .asset-card input:focus,.asset-card select:focus{outline:none;border-color:var(--accent);}
+    .corr-matrix{overflow-x:auto;margin-bottom:1.5rem;}
+    .corr-table{border-collapse:collapse;font-size:0.78rem;font-family:var(--font-mono);}
+    .corr-table th,.corr-table td{padding:0.45rem 0.6rem;border:1px solid var(--border);text-align:center;min-width:70px;}
+    .corr-table th{background:var(--bg-card);color:var(--text-subtle);font-size:0.68rem;letter-spacing:0.06em;text-transform:uppercase;}
+    .corr-table td.self{background:rgba(74,222,154,0.1);color:var(--accent);}
+    .corr-table td.high-corr{background:rgba(220,60,60,0.12);color:#f08080;}
+    .corr-table td.low-corr{background:rgba(74,222,154,0.06);color:var(--text-muted);}
+    .corr-table td.mid-corr{color:var(--gold);}
+    .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.5rem;}
+    .metric-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem 1rem;}
+    .metric-card .mc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.35rem;}
+    .metric-card .mc-value{font-family:var(--font-display);font-size:1.3rem;letter-spacing:-0.01em;}
+    .metric-card .mc-sub{font-size:0.72rem;color:var(--text-muted);font-family:var(--font-mono);margin-top:0.2rem;}
+    .alert-box{border-radius:9px;padding:0.8rem 1rem;font-size:0.82rem;line-height:1.55;margin-bottom:0.75rem;display:none;}
+    .alert-box.visible{display:flex;align-items:flex-start;gap:0.6rem;}
+    .alert-danger{background:rgba(220,60,60,0.08);border:1px solid rgba(220,60,60,0.2);color:#f08080;}
+    .alert-warning{background:var(--gold-dim);border:1px solid rgba(232,201,122,0.2);color:var(--gold);}
+    .peso-bar-container{height:6px;background:var(--border);border-radius:3px;margin-bottom:1rem;overflow:hidden;}
+    .peso-bar-fill{height:100%;border-radius:3px;transition:width 0.3s,background 0.3s;}
+    .charts-2col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1.5rem;}
+    .chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;}
+    @media(max-width:700px){.charts-2col{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <span class="nav-sep"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Cartera Avanzada</p>
+        <h1 class="page-title">Cartera Avanzada — Markowitz 🎯</h1>
+        <p class="page-subtitle">Analizá tu cartera con la Teoría Moderna de Portafolio. Correlación entre activos, frontera eficiente, Ratio de Sharpe y diversificación óptima.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <!-- Explainer -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem">
+        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem">¿Qué es el Modelo de Markowitz?</p>
+        <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.7;margin-bottom:0.75rem">Harry Markowitz demostró en 1952 que el riesgo de una cartera <strong style="color:var(--text)">no es la suma del riesgo de cada activo</strong>, sino que depende de cómo se correlacionan entre sí. Dos activos que se mueven en direcciones opuestas pueden combinar y reducir el riesgo total — esto es la <strong style="color:var(--text)">diversificación real</strong>.</p>
+        <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.7;margin-bottom:0.75rem">Una cartera <strong style="color:var(--text)">bien diversificada</strong> no es solo "tener muchos activos" — es que esos activos tengan <strong style="color:var(--accent)">baja correlación</strong> entre sí. Ocho acciones tecnológicas tienen correlación alta (~0.8+) y ofrecen poca diversificación real. Una mezcla de acciones, bonos, commodities y cash tiene correlaciones bajas y reduce el riesgo sin sacrificar retorno.</p>
+        <div style="background:rgba(220,60,60,0.06);border:1px solid rgba(220,60,60,0.15);border-radius:8px;padding:0.75rem 1rem;font-size:0.8rem;color:#f08080;margin-top:0.5rem">
+          ⚠️ <strong>Esta calculadora usa correlaciones estimadas por clase de activo</strong>, basadas en datos históricos conocidos. No usa precios en tiempo real. Los resultados son orientativos y no constituyen recomendación de inversión.
+        </div>
+      </div>
+
+      <!-- Assets input -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem">
+        <p class="panel-title" style="margin:0">Tu cartera</p>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <span id="peso-total-txt" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Total: 0%</span>
+          <button class="btn btn-ghost" onclick="addAsset()" style="font-size:0.82rem;padding:0.4rem 0.9rem">+ Activo</button>
+          <button class="btn btn-primary" onclick="calcularMarkowitz()" style="font-size:0.82rem;padding:0.4rem 0.9rem">Analizar →</button>
+        </div>
+      </div>
+
+      <div class="peso-bar-container"><div class="peso-bar-fill" id="peso-bar" style="width:0%"></div></div>
+      <div class="asset-grid" id="asset-grid"></div>
+
+      <!-- Alerts -->
+      <div id="alert-conc" class="alert-box alert-warning"></div>
+      <div id="alert-corr" class="alert-box alert-danger"></div>
+      <div id="alert-peso" class="alert-box alert-danger"></div>
+
+      <!-- Metrics -->
+      <div class="metric-grid" id="metrics-grid" style="display:none">
+        <div class="metric-card"><p class="mc-label">Retorno esperado</p><p class="mc-value" id="m-retorno" style="color:var(--accent)">—</p></div>
+        <div class="metric-card"><p class="mc-label">Volatilidad cartera</p><p class="mc-value" id="m-vol">—</p></div>
+        <div class="metric-card"><p class="mc-label">Ratio de Sharpe</p><p class="mc-value" id="m-sharpe">—</p><p class="mc-sub" id="m-sharpe-desc">—</p></div>
+        <div class="metric-card"><p class="mc-label">Beta vs mercado</p><p class="mc-value" id="m-beta">—</p><p class="mc-sub" id="m-beta-desc">—</p></div>
+        <div class="metric-card"><p class="mc-label">Correlación promedio</p><p class="mc-value" id="m-corr-avg">—</p><p class="mc-sub" id="m-corr-desc">—</p></div>
+        <div class="metric-card"><p class="mc-label">Diversificación</p><p class="mc-value" id="m-div-score">—</p><p class="mc-sub" id="m-div-desc">—</p></div>
+      </div>
+
+      <!-- Correlation matrix -->
+      <div id="corr-section" style="display:none">
+        <p class="panel-title" style="margin-bottom:0.75rem">Matriz de correlación estimada</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">
+          <span style="display:inline-flex;align-items:center;gap:0.3rem;margin-right:1rem"><span style="width:12px;height:12px;background:rgba(220,60,60,0.4);border-radius:2px;display:inline-block"></span>Alta correlación (&gt;0.6) — poca diversificación</span>
+          <span style="display:inline-flex;align-items:center;gap:0.3rem;margin-right:1rem"><span style="width:12px;height:12px;background:var(--gold-dim);border-radius:2px;display:inline-block"></span>Correlación media (0.3–0.6)</span>
+          <span style="display:inline-flex;align-items:center;gap:0.3rem"><span style="width:12px;height:12px;background:rgba(74,222,154,0.1);border-radius:2px;display:inline-block"></span>Baja correlación (&lt;0.3) — buena diversificación</span>
+        </p>
+        <div class="corr-matrix"><table class="corr-table" id="corr-table"></table></div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-2col" id="charts-section" style="display:none">
+        <div class="chart-card">
+          <p class="chart-title" style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:1rem">Distribución de la cartera</p>
+          <canvas id="donutChart" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <p class="chart-title" style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:1rem">Retorno esperado vs Volatilidad por activo</p>
+          <canvas id="scatterChart" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card" id="frontier-section" style="display:none;margin-top:1.25rem">
+        <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.5rem">Frontera eficiente simplificada</p>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.55">Cada punto representa una cartera con distinto mix de activos. La curva superior izquierda es la "frontera eficiente" — máximo retorno para cada nivel de riesgo.</p>
+        <canvas id="frontierChart" height="220"></canvas>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Calculadoras</h3><ul>
+        <li><a href="calculadoras.html">Todas las calculadoras</a></li>
+        <li><a href="markowitz.html">Cartera Avanzada</a></li>
+        <li><a href="portafolio.html">Simulador de Portafolio</a></li>
+        <li><a href="wacc.html">WACC</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · No constituye recomendación de inversión. Solo fines educativos.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Correlation matrix by asset class pair (historical estimates)
+    // 1 = perfect positive, -1 = perfect negative, 0 = uncorrelated
+    const CORR = {
+      acciones:     { acciones:1.00, tech:0.85, emergentes:0.75, bonos:-0.15, real_estate:0.55, cripto:0.25, commodities:0.10, cash:-0.05 },
+      tech:         { acciones:0.85, tech:1.00, emergentes:0.70, bonos:-0.20, real_estate:0.45, cripto:0.50, commodities:0.05, cash:-0.05 },
+      emergentes:   { acciones:0.75, tech:0.70, emergentes:1.00, bonos:-0.10, real_estate:0.50, cripto:0.35, commodities:0.25, cash:-0.05 },
+      bonos:        { acciones:-0.15, tech:-0.20, emergentes:-0.10, bonos:1.00, real_estate:0.20, cripto:-0.10, commodities:-0.05, cash:0.30 },
+      real_estate:  { acciones:0.55, tech:0.45, emergentes:0.50, bonos:0.20, real_estate:1.00, cripto:0.15, commodities:0.30, cash:0.05 },
+      cripto:       { acciones:0.25, tech:0.50, emergentes:0.35, bonos:-0.10, real_estate:0.15, cripto:1.00, commodities:0.20, cash:-0.05 },
+      commodities:  { acciones:0.10, tech:0.05, emergentes:0.25, bonos:-0.05, real_estate:0.30, cripto:0.20, commodities:1.00, cash:0.05 },
+      cash:         { acciones:-0.05, tech:-0.05, emergentes:-0.05, bonos:0.30, real_estate:0.05, cripto:-0.05, commodities:0.05, cash:1.00 },
+    };
+    // Default vol and beta by class
+    const CLASS_DATA = {
+      acciones:   { label:'Acciones (índice)',   vol:0.16, beta:1.00, retRef:9 },
+      tech:       { label:'Acciones Tech',        vol:0.28, beta:1.25, retRef:12 },
+      emergentes: { label:'Acciones emergentes',  vol:0.22, beta:1.10, retRef:10 },
+      bonos:      { label:'Bonos soberanos',       vol:0.06, beta:0.05, retRef:4 },
+      real_estate:{ label:'Real Estate/REITs',     vol:0.15, beta:0.70, retRef:8 },
+      cripto:     { label:'Cripto',                vol:0.75, beta:1.50, retRef:20 },
+      commodities:{ label:'Commodities',           vol:0.18, beta:0.30, retRef:5 },
+      cash:       { label:'Efectivo/MM',           vol:0.01, beta:0.00, retRef:2 },
+    };
+    const COLORS = ['#4ade9a','#e8c97a','#8899ee','#ff7a7a','#5dcaa5','#f09b50','#c084fc','#60a5fa','#fb923c','#a3e635'];
+
+    let assets = [];
+    let nextId = 0;
+    let donutChart = null, scatterChart = null, frontierChart = null;
+
+    function addAsset(nombre='', clase='acciones', peso=25) {
+      const id = nextId++;
+      const cd = CLASS_DATA[clase];
+      assets.push({ id, nombre, clase, peso, retorno: cd.retRef, vol: +(cd.vol*100).toFixed(1) });
+      renderAssets();
+    }
+
+    function removeAsset(id) {
+      if (assets.length <= 2) return alert('Mínimo 2 activos para el análisis');
+      assets = assets.filter(a => a.id !== id);
+      renderAssets();
+    }
+
+    function updateAsset(id, field, val) {
+      const a = assets.find(x => x.id === id);
+      if (!a) return;
+      a[field] = field === 'nombre' ? val : (parseFloat(val) || 0);
+      if (field === 'clase') {
+        const cd = CLASS_DATA[val] || CLASS_DATA.acciones;
+        a.retorno = cd.retRef;
+        a.vol = +(cd.vol*100).toFixed(1);
+      }
+      updatePesoBar();
+    }
+
+    function updatePesoBar() {
+      const total = assets.reduce((s,a) => s+a.peso, 0);
+      const bar = document.getElementById('peso-bar');
+      const txt = document.getElementById('peso-total-txt');
+      bar.style.width = Math.min(total,100)+'%';
+      bar.style.background = Math.abs(total-100)<0.5 ? 'var(--accent)' : total>100 ? '#ff6b6b' : 'var(--gold)';
+      txt.textContent = `Total: ${total.toFixed(1)}%`;
+      txt.style.color = Math.abs(total-100)<0.5 ? 'var(--accent)' : '#ff6b6b';
+    }
+
+    function renderAssets() {
+      const grid = document.getElementById('asset-grid');
+      grid.innerHTML = assets.map((a,i) => `
+        <div class="asset-card" style="border-left:3px solid ${COLORS[i%COLORS.length]}">
+          <div class="ac-header">
+            <span class="ac-num">Activo ${i+1}</span>
+            <button class="ac-del" onclick="removeAsset(${a.id})">✕</button>
+          </div>
+          <label>Nombre</label>
+          <input type="text" value="${a.nombre}" placeholder="Ej: S&P 500 ETF"
+            onchange="updateAsset(${a.id},'nombre',this.value)"
+            onblur="updateAsset(${a.id},'nombre',this.value)" />
+          <label>Clase de activo</label>
+          <select onchange="updateAsset(${a.id},'clase',this.value); this.closest('.asset-card').querySelector('input[data-ret]').value=assets.find(x=>x.id==${a.id}).retorno; this.closest('.asset-card').querySelector('input[data-vol]').value=assets.find(x=>x.id==${a.id}).vol;">
+            ${Object.entries(CLASS_DATA).map(([k,v])=>`<option value="${k}" ${k===a.clase?'selected':''}>${v.label}</option>`).join('')}
+          </select>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem">
+            <div><label>Peso %</label><input type="number" value="${a.peso}" min="0" max="100" step="1" oninput="updateAsset(${a.id},'peso',this.value);updatePesoBar()"/></div>
+            <div><label>Retorno % est.</label><input type="number" data-ret value="${a.retorno}" min="-50" max="100" step="0.5" oninput="updateAsset(${a.id},'retorno',this.value)"/></div>
+            <div><label>Volatilidad %</label><input type="number" data-vol value="${a.vol}" min="0" max="200" step="0.5" oninput="updateAsset(${a.id},'vol',this.value)"/></div>
+          </div>
+        </div>`).join('');
+      updatePesoBar();
+    }
+
+    function getCorrValue(clase1, clase2) {
+      const r = CORR[clase1];
+      return r ? (r[clase2] !== undefined ? r[clase2] : 0.5) : 0.5;
+    }
+
+    function calcularMarkowitz() {
+      const totalPeso = assets.reduce((s,a)=>s+a.peso,0);
+
+      // Alerts
+      const alertPeso = document.getElementById('alert-peso');
+      if (Math.abs(totalPeso-100)>0.5) {
+        alertPeso.classList.add('visible');
+        alertPeso.textContent = `⚠️ Los pesos suman ${totalPeso.toFixed(1)}%. Deben sumar 100% para el cálculo.`;
+        return;
+      }
+      alertPeso.classList.remove('visible');
+
+      const n = assets.length;
+      const w = assets.map(a => a.peso/100);
+      const r = assets.map(a => a.retorno/100);
+      const v = assets.map(a => a.vol/100);
+
+      // Portfolio expected return
+      const retPort = w.reduce((s,wi,i) => s + wi*r[i], 0);
+
+      // Portfolio variance: σ²_p = Σ_i Σ_j w_i * w_j * σ_i * σ_j * ρ_ij
+      let varPort = 0;
+      for (let i=0; i<n; i++) {
+        for (let j=0; j<n; j++) {
+          const corr = i===j ? 1.0 : getCorrValue(assets[i].clase, assets[j].clase);
+          varPort += w[i] * w[j] * v[i] * v[j] * corr;
+        }
+      }
+      const volPort = Math.sqrt(varPort);
+
+      // Beta portfolio (weighted avg of class betas vs market)
+      const betaPort = w.reduce((s,wi,i) => s + wi*(CLASS_DATA[assets[i].clase]?.beta||1.0), 0);
+
+      // Average pairwise correlation
+      let corrSum = 0, corrCount = 0;
+      for (let i=0; i<n; i++) for (let j=i+1; j<n; j++) {
+        corrSum += getCorrValue(assets[i].clase, assets[j].clase);
+        corrCount++;
+      }
+      const corrAvg = corrCount > 0 ? corrSum/corrCount : 1;
+
+      // Sharpe (rf = 4.5% est.)
+      const rf = 0.045;
+      const sharpe = volPort > 0 ? (retPort - rf) / volPort : 0;
+
+      // Diversification score: 1 - corrAvg (mapped to 0-100)
+      const divScore = Math.max(0, Math.min(100, (1 - corrAvg) * 100));
+
+      // Show metrics
+      document.getElementById('metrics-grid').style.display = 'grid';
+      document.getElementById('m-retorno').textContent = (retPort*100).toFixed(2)+'%';
+      document.getElementById('m-vol').textContent     = (volPort*100).toFixed(2)+'%';
+      const sharpeEl = document.getElementById('m-sharpe');
+      sharpeEl.textContent = sharpe.toFixed(2);
+      sharpeEl.style.color = sharpe>=1 ? 'var(--accent)' : sharpe>=0.5 ? 'var(--gold)' : '#ff6b6b';
+      document.getElementById('m-sharpe-desc').textContent = sharpe>=1.5?'Excelente':sharpe>=1?'Bueno':sharpe>=0.5?'Aceptable':'Bajo/Negativo';
+      document.getElementById('m-beta').textContent    = betaPort.toFixed(2);
+      document.getElementById('m-beta-desc').textContent = betaPort>1.2?'Agresiva':betaPort>0.8?'Similar al mercado':'Defensiva';
+      document.getElementById('m-corr-avg').textContent= corrAvg.toFixed(2);
+      document.getElementById('m-corr-desc').textContent= corrAvg>0.6?'Alta — poca diversificación':corrAvg>0.3?'Media':'Baja — bien diversificada';
+      document.getElementById('m-div-score').textContent= divScore.toFixed(0)+'/100';
+      document.getElementById('m-div-score').style.color= divScore>65?'var(--accent)':divScore>40?'var(--gold)':'#ff6b6b';
+      document.getElementById('m-div-desc').textContent= divScore>65?'Bien diversificada':divScore>40?'Diversificación media':'Concentrada';
+
+      // Concentration alert
+      const maxAsset = assets.reduce((m,a) => a.peso>m.peso?a:m, assets[0]);
+      const alertConc = document.getElementById('alert-conc');
+      if (maxAsset.peso > 50) {
+        alertConc.classList.add('visible');
+        alertConc.textContent = `⚠️ "${maxAsset.nombre||CLASS_DATA[maxAsset.clase].label}" representa el ${maxAsset.peso}% de la cartera. Alta concentración aumenta el riesgo específico.`;
+      } else alertConc.classList.remove('visible');
+
+      // High correlation alert
+      const alertCorr = document.getElementById('alert-corr');
+      let highCorrPairs = [];
+      for (let i=0; i<n; i++) for (let j=i+1; j<n; j++) {
+        const c = getCorrValue(assets[i].clase, assets[j].clase);
+        if (c > 0.7) highCorrPairs.push(`${assets[i].nombre||CLASS_DATA[assets[i].clase].label} & ${assets[j].nombre||CLASS_DATA[assets[j].clase].label} (ρ=${c.toFixed(2)})`);
+      }
+      if (highCorrPairs.length > 0) {
+        alertCorr.classList.add('visible');
+        alertCorr.textContent = `⚠️ Pares con alta correlación (diversificación limitada): ${highCorrPairs.join(' · ')}`;
+      } else alertCorr.classList.remove('visible');
+
+      // Correlation matrix
+      document.getElementById('corr-section').style.display = 'block';
+      const names = assets.map((a,i)=>a.nombre||(CLASS_DATA[a.clase].label.split(' ')[0]));
+      let tableHTML = '<tr><th></th>' + names.map(n=>`<th>${n}</th>`).join('') + '</tr>';
+      for (let i=0; i<n; i++) {
+        tableHTML += `<tr><th>${names[i]}</th>`;
+        for (let j=0; j<n; j++) {
+          const c = getCorrValue(assets[i].clase, assets[j].clase);
+          const cls = i===j ? 'self' : c>0.6 ? 'high-corr' : c>0.3 ? 'mid-corr' : 'low-corr';
+          tableHTML += `<td class="${cls}">${i===j?'1.00':c.toFixed(2)}</td>`;
+        }
+        tableHTML += '</tr>';
+      }
+      document.getElementById('corr-table').innerHTML = tableHTML;
+
+      // Charts
+      document.getElementById('charts-section').style.display = 'grid';
+      if (donutChart) donutChart.destroy();
+      donutChart = new Chart(document.getElementById('donutChart'), {
+        type:'doughnut',
+        data:{ labels:assets.map((a,i)=>a.nombre||CLASS_DATA[a.clase].label.split(' ')[0]),
+          datasets:[{ data:assets.map(a=>a.peso), backgroundColor:COLORS.slice(0,n), borderColor:'var(--bg-card)', borderWidth:2 }] },
+        options:{ cutout:'60%', plugins:{ legend:{position:'bottom',labels:{color:'#7a8599',font:{family:'DM Mono',size:10},padding:8}} } }
+      });
+
+      if (scatterChart) scatterChart.destroy();
+      scatterChart = new Chart(document.getElementById('scatterChart'), {
+        type:'scatter',
+        data:{ datasets: assets.map((a,i)=>({
+          label: a.nombre || CLASS_DATA[a.clase].label,
+          data:[{ x:a.vol, y:a.retorno }],
+          backgroundColor: COLORS[i%COLORS.length],
+          pointRadius:8, pointHoverRadius:10
+        })).concat([{
+          label:'Cartera',
+          data:[{ x:+(volPort*100).toFixed(2), y:+(retPort*100).toFixed(2) }],
+          backgroundColor:'#fff', borderColor:'var(--accent)', borderWidth:2,
+          pointRadius:12, pointStyle:'star'
+        }]) },
+        options:{ plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10}}} },
+          scales:{
+            x:{title:{display:true,text:'Volatilidad (%)',color:'#7a8599',font:{family:'DM Mono',size:10}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{title:{display:true,text:'Retorno esperado (%)',color:'#7a8599',font:{family:'DM Mono',size:10}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}}
+          }
+        }
+      });
+
+      // Efficient frontier (Monte Carlo simplified: 200 random portfolios)
+      document.getElementById('frontier-section').style.display = 'block';
+      const frontierPoints = [];
+      for (let sim=0; sim<300; sim++) {
+        const rw = Array.from({length:n},()=>Math.random());
+        const rwSum = rw.reduce((s,x)=>s+x,0);
+        const ww = rw.map(x=>x/rwSum);
+        const rr = ww.reduce((s,wi,i)=>s+wi*r[i],0);
+        let vv=0;
+        for(let i=0;i<n;i++) for(let j=0;j<n;j++) {
+          const c = i===j?1:getCorrValue(assets[i].clase,assets[j].clase);
+          vv += ww[i]*ww[j]*v[i]*v[j]*c;
+        }
+        const sv = Math.sqrt(vv);
+        const sh = sv>0?(rr-rf)/sv:0;
+        frontierPoints.push({ x:+(sv*100).toFixed(2), y:+(rr*100).toFixed(2), sh });
+      }
+      if (frontierChart) frontierChart.destroy();
+      frontierChart = new Chart(document.getElementById('frontierChart'), {
+        type:'scatter',
+        data:{ datasets:[
+          { label:'Carteras simuladas', data:frontierPoints,
+            backgroundColor: frontierPoints.map(p=>p.sh>1?'rgba(74,222,154,0.5)':p.sh>0?'rgba(232,201,122,0.4)':'rgba(255,100,100,0.3)'),
+            pointRadius:3 },
+          { label:'Tu cartera', data:[{x:+(volPort*100).toFixed(2),y:+(retPort*100).toFixed(2)}],
+            backgroundColor:'#fff', borderColor:'var(--accent)', borderWidth:2, pointRadius:12, pointStyle:'star' }
+        ] },
+        options:{ plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10}}} },
+          scales:{
+            x:{title:{display:true,text:'Riesgo / Volatilidad (%)',color:'#7a8599',font:{family:'DM Mono',size:10}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{title:{display:true,text:'Retorno esperado (%)',color:'#7a8599',font:{family:'DM Mono',size:10}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}}
+          }
+        }
+      });
+    }
+
+    // Init with 4 default assets
+    addAsset('S&P 500','acciones',50);
+    addAsset('Bonos EEUU 10y','bonos',30);
+    addAsset('Commodities','commodities',10);
+    addAsset('Efectivo','cash',10);
+  </script>
+</body>
+</html>

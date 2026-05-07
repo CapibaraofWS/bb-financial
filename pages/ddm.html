@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DDM — Valuación por Dividendos — BB Financial</title>
+  <meta name="description" content="Dividend Discount Model (DDM): calculá el precio intrínseco de una acción a partir de sus dividendos futuros descontados. Gordon Growth Model y DDM multietapa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .price-comparison{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+    .price-card{border-radius:var(--radius);padding:1.25rem;text-align:center;border:1px solid;}
+    .pc-intrin{background:rgba(74,222,154,0.07);border-color:rgba(74,222,154,0.2);}
+    .pc-market{background:var(--bg);border-color:var(--border);}
+    .pc-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
+    .pc-intrin .pc-label{color:var(--accent);}
+    .pc-market .pc-label{color:var(--text-subtle);}
+    .pc-value{font-family:var(--font-display);font-size:1.8rem;letter-spacing:-0.02em;color:var(--text);}
+    .safety-badge{border-radius:8px;padding:0.75rem 1.1rem;text-align:center;margin-bottom:1rem;font-family:var(--font-mono);font-size:0.85rem;}
+    .safety-buy{background:rgba(74,222,154,0.1);border:1px solid rgba(74,222,154,0.25);color:var(--accent);}
+    .safety-sell{background:rgba(220,60,60,0.1);border:1px solid rgba(220,60,60,0.2);color:#ff6b6b;}
+    .safety-neutral{background:var(--gold-dim);border:1px solid rgba(232,201,122,0.2);color:var(--gold);}
+    .tab-bar{display:flex;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.35rem;margin-bottom:1.75rem;}
+    .tab-btn{flex:1;padding:0.6rem 0.5rem;border-radius:7px;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all 0.25s;background:transparent;border:none;text-align:center;}
+    .tab-btn.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+    .field-note{font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono);line-height:1.5;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <span class="nav-sep"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>DDM</p>
+        <h1 class="page-title">DDM — Valuación por Dividendos 📊</h1>
+        <p class="page-subtitle">Dividend Discount Model. Calculá el precio intrínseco de una acción descontando sus dividendos futuros. Gordon Growth Model y DDM de dos etapas.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <strong style="color:var(--text)">¿Qué es el DDM?</strong> El Dividend Discount Model dice que el valor de una acción es el valor presente de todos sus dividendos futuros. Es ideal para empresas maduras con dividendos estables y crecientes (bancos, utilities, "Dividend Aristocrats"). <strong style="color:var(--text)">No aplica</strong> a empresas que no pagan dividendos (Amazon, Berkshire, Tesla).<br/>
+        El <strong style="color:var(--text)">Gordon Growth Model</strong> asume crecimiento perpetuo constante: <span style="font-family:var(--font-mono);color:var(--accent)">P = D₁ / (Ke − g)</span>. El DDM de dos etapas permite un período de alto crecimiento seguido de crecimiento perpetuo estable.
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('gordon',this)">Gordon Growth (1 etapa)</button>
+        <button class="tab-btn" onclick="switchTab('dos-etapas',this)">DDM 2 etapas</button>
+      </div>
+
+      <!-- TAB 1: Gordon -->
+      <div id="tab-gordon">
+        <div class="calc-layout">
+          <section>
+            <div class="input-panel">
+              <p class="panel-title">Datos de la empresa</p>
+              <div class="form-group">
+                <label for="d0">Dividendo actual por acción (D₀)</label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="d0" class="has-prefix" value="3.00" min="0" step="0.01" oninput="calcGordon()"/></div>
+                <p class="field-note">El dividendo que acaba de pagar la empresa. En Yahoo Finance: "Forward Dividend" o "TTM Dividend".</p>
+              </div>
+              <div class="form-group">
+                <label for="g-gordon">Tasa de crecimiento del dividendo <span>(g, %)</span></label>
+                <div class="input-wrap"><input type="number" id="g-gordon" class="has-suffix" value="4" min="0" max="20" step="0.1" oninput="calcGordon()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">Crecimiento anual esperado del dividendo en perpetuidad. Debe ser menor que Ke. Referencia: promedio histórico de crecimiento de la empresa (5y CAGR del dividendo).</p>
+              </div>
+              <div class="form-group">
+                <label for="ke-gordon">Costo del equity requerido <span>(Ke, %)</span></label>
+                <div class="input-wrap"><input type="number" id="ke-gordon" class="has-suffix" value="10" min="0" max="30" step="0.1" oninput="calcGordon()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">El retorno que exigen los inversores. Calculalo con la herramienta <a href="wacc.html" style="color:var(--accent)">WACC/CAPM</a>. Si β=1.2 y rm=9.5%, Ke ≈ 11.4%.</p>
+              </div>
+              <div class="form-group">
+                <label for="precio-mercado">Precio de mercado actual</label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-mercado" class="has-prefix" value="50" min="0" step="0.01" oninput="calcGordon()"/></div>
+                <p class="field-note">Precio actual de la acción en el mercado. Para comparar con el intrínseco y calcular margen de seguridad.</p>
+              </div>
+              <button class="btn btn-primary" onclick="calcGordon()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+            </div>
+          </section>
+          <section>
+            <div class="result-panel">
+              <p class="panel-title">Valuación Gordon Growth</p>
+              <div class="price-comparison">
+                <div class="price-card pc-intrin"><p class="pc-label">Precio intrínseco</p><p class="pc-value" id="gg-intrinsic">$0</p></div>
+                <div class="price-card pc-market"><p class="pc-label">Precio mercado</p><p class="pc-value" id="gg-market">$0</p></div>
+              </div>
+              <div class="safety-badge" id="gg-safety-badge">—</div>
+              <div class="result-row"><span class="label">D₁ (próximo dividendo)</span><span class="value" id="gg-d1">—</span></div>
+              <div class="result-row"><span class="label">Precio intrínseco P = D₁/(Ke−g)</span><span class="value positive" id="gg-price">—</span></div>
+              <div class="result-row"><span class="label">Margen de seguridad</span><span class="value neutral" id="gg-margin">—</span></div>
+              <div class="result-row"><span class="label">Dividend yield implícito</span><span class="value" id="gg-yield">—</span></div>
+              <div class="result-row"><span class="label">P/E implícito (si payout=70%)</span><span class="value" id="gg-pe">—</span></div>
+              <div id="gg-warning" style="display:none;background:rgba(220,60,60,0.08);border:1px solid rgba(220,60,60,0.2);border-radius:8px;padding:0.75rem;font-size:0.8rem;color:#f08080;margin-top:0.75rem"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- TAB 2: Dos etapas -->
+      <div id="tab-dos-etapas" style="display:none">
+        <div class="calc-layout">
+          <section>
+            <div class="input-panel">
+              <p class="panel-title">DDM de dos etapas</p>
+              <div class="form-group">
+                <label for="d0-2">Dividendo actual (D₀)</label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="d0-2" class="has-prefix" value="2.00" min="0" step="0.01" oninput="calcDDM2()"/></div>
+              </div>
+              <div class="form-group">
+                <label for="g1-2">Crecimiento alto — Etapa 1 <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="g1-2" class="has-suffix" value="12" min="0" max="50" step="0.1" oninput="calcDDM2()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">Tasa de crecimiento del dividendo durante la fase de alto crecimiento (empresa en expansión).</p>
+              </div>
+              <div class="form-group">
+                <label for="n1-2">Años de alto crecimiento</label>
+                <div class="input-wrap"><input type="number" id="n1-2" class="has-suffix" value="5" min="1" max="20" oninput="calcDDM2()"/><span class="input-suffix">años</span></div>
+              </div>
+              <div class="form-group">
+                <label for="g2-2">Crecimiento estable — Etapa 2 <span>(% perpetuo)</span></label>
+                <div class="input-wrap"><input type="number" id="g2-2" class="has-suffix" value="3.5" min="0" max="15" step="0.1" oninput="calcDDM2()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">Tasa de crecimiento perpetuo después de la fase de alto crecimiento. Suele estar entre 2% y 4%.</p>
+              </div>
+              <div class="form-group">
+                <label for="ke-2">Costo del equity (Ke) <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="ke-2" class="has-suffix" value="10" min="0" max="30" step="0.1" oninput="calcDDM2()"/><span class="input-suffix">%</span></div>
+              </div>
+              <div class="form-group">
+                <label for="pm-2">Precio de mercado actual</label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pm-2" class="has-prefix" value="45" min="0" step="0.01" oninput="calcDDM2()"/></div>
+              </div>
+              <button class="btn btn-primary" onclick="calcDDM2()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+            </div>
+          </section>
+          <section>
+            <div class="result-panel">
+              <p class="panel-title">Valuación 2 etapas</p>
+              <div class="price-comparison">
+                <div class="price-card pc-intrin"><p class="pc-label">Precio intrínseco</p><p class="pc-value" id="d2-intrinsic">$0</p></div>
+                <div class="price-card pc-market"><p class="pc-label">Precio mercado</p><p class="pc-value" id="d2-market">$0</p></div>
+              </div>
+              <div class="safety-badge" id="d2-safety-badge">—</div>
+              <div class="result-row"><span class="label">VP dividendos etapa 1</span><span class="value" id="d2-vp1">—</span></div>
+              <div class="result-row"><span class="label">VP precio terminal (etapa 2)</span><span class="value" id="d2-vp2">—</span></div>
+              <div class="result-row"><span class="label">Precio intrínseco total</span><span class="value positive" id="d2-price">—</span></div>
+              <div class="result-row"><span class="label">Margen de seguridad</span><span class="value neutral" id="d2-margin">—</span></div>
+
+              <div class="chart-section" style="margin-top:1.25rem">
+                <p class="chart-title">Dividendos proyectados por año</p>
+                <canvas id="ddmChart" height="200"></canvas>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Equity Research</h3><ul>
+        <li><a href="ddm.html">DDM</a></li>
+        <li><a href="wacc.html">WACC</a></li>
+        <li><a href="multiplos.html">Múltiplos</a></li>
+        <li><a href="vpn.html">VPN / DCF</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let ddmChart = null;
+
+    function switchTab(name, btn) {
+      ['gordon','dos-etapas'].forEach(t => document.getElementById('tab-'+t).style.display='none');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-'+name).style.display='block';
+      btn.classList.add('active');
+      if(name==='gordon') calcGordon();
+      else calcDDM2();
+    }
+
+    function safetyBadge(intrinsic, market, elId) {
+      if (intrinsic <= 0 || market <= 0) return;
+      const pct = (intrinsic - market) / intrinsic * 100;
+      const el = document.getElementById(elId);
+      if (pct > 15) {
+        el.className = 'safety-badge safety-buy';
+        el.textContent = `✅ SUBVALUADA — Margen de seguridad del ${pct.toFixed(1)}%. Precio de mercado por debajo del intrínseco.`;
+      } else if (pct < -10) {
+        el.className = 'safety-badge safety-sell';
+        el.textContent = `⚠️ SOBREVALUADA — El mercado paga ${Math.abs(pct).toFixed(1)}% más que el valor intrínseco calculado.`;
+      } else {
+        el.className = 'safety-badge safety-neutral';
+        el.textContent = `🟡 PRECIO JUSTO — Cotiza cerca del valor intrínseco estimado (±${Math.abs(pct).toFixed(1)}%).`;
+      }
+    }
+
+    function calcGordon() {
+      const d0 = parseFloat(document.getElementById('d0').value) || 0;
+      const g  = (parseFloat(document.getElementById('g-gordon').value) || 0) / 100;
+      const ke = (parseFloat(document.getElementById('ke-gordon').value) || 0) / 100;
+      const pm = parseFloat(document.getElementById('precio-mercado').value) || 0;
+
+      const warn = document.getElementById('gg-warning');
+      if (g >= ke) {
+        warn.style.display='block';
+        warn.textContent='⚠️ El modelo de Gordon requiere que g < Ke. Con g ≥ Ke el precio se vuelve infinito o negativo. Reducí g o aumentá Ke.';
+        return;
+      }
+      warn.style.display='none';
+
+      const d1 = d0 * (1 + g);
+      const P  = d1 / (ke - g);
+      const margin = ((P - pm) / P * 100);
+
+      document.getElementById('gg-intrinsic').textContent = '$' + formatUSD(P);
+      document.getElementById('gg-market').textContent    = '$' + formatUSD(pm);
+      document.getElementById('gg-d1').textContent        = '$' + formatUSD(d1);
+      document.getElementById('gg-price').textContent     = '$' + formatUSD(P);
+      document.getElementById('gg-margin').textContent    = (margin >= 0 ? '+' : '') + margin.toFixed(1) + '%';
+      document.getElementById('gg-margin').style.color    = margin > 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('gg-yield').textContent     = pm > 0 ? (d1/pm*100).toFixed(2)+'%' : '—';
+      document.getElementById('gg-pe').textContent        = (P / (d1/0.7)).toFixed(1) + 'x';
+      safetyBadge(P, pm, 'gg-safety-badge');
+    }
+
+    function calcDDM2() {
+      const d0 = parseFloat(document.getElementById('d0-2').value) || 0;
+      const g1 = (parseFloat(document.getElementById('g1-2').value) || 0) / 100;
+      const n1 = parseInt(document.getElementById('n1-2').value) || 5;
+      const g2 = (parseFloat(document.getElementById('g2-2').value) || 0) / 100;
+      const ke = (parseFloat(document.getElementById('ke-2').value) || 0) / 100;
+      const pm = parseFloat(document.getElementById('pm-2').value) || 0;
+
+      if (g2 >= ke) return;
+
+      // Stage 1: discount dividends growing at g1
+      let vp1 = 0, d = d0;
+      const labels = [], divData = [], vpData = [];
+      for (let t = 1; t <= n1; t++) {
+        d = d * (1 + g1);
+        const vp = d / Math.pow(1 + ke, t);
+        vp1 += vp;
+        labels.push(`Año ${t}`);
+        divData.push(+d.toFixed(4));
+        vpData.push(+vp.toFixed(4));
+      }
+
+      // Stage 2: terminal value at year n1 using Gordon on d_{n1+1}
+      const dN1 = d * (1 + g2);
+      const tv  = dN1 / (ke - g2);
+      const vp2 = tv / Math.pow(1 + ke, n1);
+      const P   = vp1 + vp2;
+      const margin = ((P - pm) / P * 100);
+
+      document.getElementById('d2-intrinsic').textContent = '$' + formatUSD(P);
+      document.getElementById('d2-market').textContent    = '$' + formatUSD(pm);
+      document.getElementById('d2-vp1').textContent       = '$' + formatUSD(vp1);
+      document.getElementById('d2-vp2').textContent       = '$' + formatUSD(vp2);
+      document.getElementById('d2-price').textContent     = '$' + formatUSD(P);
+      document.getElementById('d2-margin').textContent    = (margin >= 0 ? '+' : '') + margin.toFixed(1) + '%';
+      document.getElementById('d2-margin').style.color    = margin > 0 ? 'var(--accent)' : '#ff6b6b';
+      safetyBadge(P, pm, 'd2-safety-badge');
+
+      if (ddmChart) ddmChart.destroy();
+      ddmChart = new Chart(document.getElementById('ddmChart'), {
+        type:'bar',
+        data:{ labels, datasets:[
+          { label:'Dividendo nominal', data:divData, backgroundColor:'rgba(74,222,154,0.5)', borderRadius:3 },
+          { label:'VP del dividendo',  data:vpData,  backgroundColor:'rgba(232,201,122,0.6)', borderRadius:3 },
+        ]},
+        options:{ responsive:true, plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10}}} },
+          scales:{ x:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+v.toFixed(2)},grid:{color:'rgba(255,255,255,0.04)'}} } }
+      });
+    }
+
+    calcGordon();
+  </script>
+</body>
+</html>

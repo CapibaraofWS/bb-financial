@@ -1,0 +1,258 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Dividendos — BB Financial</title>
+  <meta name="description" content="Proyectá ingresos por dividendos: dividend yield, DRIP, crecimiento del dividendo y proyección a largo plazo." />
+  <meta name="keywords" content="calculadora dividendos, dividend yield, DRIP, reinversión dividendos, ingresos pasivos acciones" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .field-note{font-size:0.75rem;color:var(--text-subtle);margin-top:0.35rem;font-family:var(--font-mono);line-height:1.5;}
+    .adv-toggle{display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;color:var(--text-muted);margin:0.5rem 0 1rem;user-select:none;}
+    .adv-toggle span{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);}
+    .adv-section{display:none;}
+    .adv-section.open{display:block;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Dividendos</p>
+        <h1 class="page-title">Calculadora de Dividendos 💵</h1>
+        <p class="page-subtitle">Proyectá cuánto generás en dividendos a lo largo del tiempo, con o sin reinversión, crecimiento del precio y del dividendo.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65">
+        <strong style="color:var(--text)">¿Qué es un dividendo?</strong> Es la porción de las ganancias que una empresa decide distribuir entre sus accionistas. No todas las empresas pagan dividendos (las de crecimiento generalmente no). El <strong style="color:var(--text)">Dividend Yield</strong> es el dividendo anual dividido el precio de la acción — mide cuánto rinde la acción solo en dividendos. El <strong style="color:var(--text)">DRIP</strong> (Dividend Reinvestment Plan) consiste en usar cada dividendo recibido para comprar más acciones, potenciando el interés compuesto.
+      </div>
+
+      <div class="calc-layout">
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Detalles de la inversión</p>
+            <div class="form-group">
+              <label for="capital-div">Capital inicial <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="capital-div" class="has-prefix" value="10000" min="0" oninput="calcDiv()"/></div>
+              <p class="field-note">Cuánto invertís en total en esta acción/ETF.</p>
+            </div>
+            <div class="form-group">
+              <label for="precio-accion">Precio de la acción <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-accion" class="has-prefix" value="50" min="0.01" step="0.01" oninput="calcDiv()"/></div>
+              <p class="field-note">Precio actual de mercado. Sirve para calcular la cantidad de acciones que comprás.</p>
+            </div>
+            <div class="form-group">
+              <label for="div-anual">Dividendo anual por acción <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="div-anual" class="has-prefix" value="2" min="0" step="0.01" oninput="calcDiv()"/></div>
+              <p class="field-note">Dividendo total que paga la empresa en un año. Lo encontrás en Yahoo Finance o el sitio de la empresa.</p>
+            </div>
+            <div class="form-group">
+              <label for="freq-div">Frecuencia de pago</label>
+              <select id="freq-div" onchange="calcDiv()">
+                <option value="12">Mensual</option>
+                <option value="4" selected>Trimestral</option>
+                <option value="2">Semestral</option>
+                <option value="1">Anual</option>
+              </select>
+              <p class="field-note">La mayoría de las acciones estadounidenses pagan trimestralmente.</p>
+            </div>
+            <div class="form-group">
+              <label for="plazo-div">Horizonte <span>(años)</span></label>
+              <div class="input-wrap"><input type="number" id="plazo-div" class="has-suffix" value="10" min="1" max="50" oninput="calcDiv()"/><span class="input-suffix">años</span></div>
+            </div>
+            <div class="form-group">
+              <label for="aporte-div">Aporte mensual adicional <span>(USD, opcional)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="aporte-div" class="has-prefix" value="0" min="0" oninput="calcDiv()"/></div>
+              <p class="field-note">Si comprás más acciones cada mes, el dividendo total crece.</p>
+            </div>
+
+            <div class="adv-toggle" onclick="toggleAdv(this)">
+              <span id="adv-arrow2">▶</span> Opciones avanzadas
+            </div>
+            <div class="adv-section" id="adv2">
+              <div class="form-group">
+                <label for="reinvertir">¿Reinvertir dividendos? (DRIP)</label>
+                <select id="reinvertir" onchange="calcDiv()">
+                  <option value="si">Sí — comprar más acciones</option>
+                  <option value="no" selected>No — cobrar en efectivo</option>
+                </select>
+                <p class="field-note">Con DRIP, cada dividendo compra más acciones, que generan más dividendos — efecto compuesto.</p>
+              </div>
+              <div class="form-group">
+                <label for="crec-precio">Crecimiento anual del precio <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="crec-precio" class="has-suffix" value="5" min="-20" max="50" step="0.5" oninput="calcDiv()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">Apreciación esperada del precio de la acción por año. El S&P 500 histórico: ~7% real.</p>
+              </div>
+              <div class="form-group">
+                <label for="crec-div">Crecimiento anual del dividendo <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="crec-div" class="has-suffix" value="3" min="-10" max="30" step="0.5" oninput="calcDiv()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">Muchas empresas "Dividend Aristocrats" aumentan su dividendo cada año. Ej: Coca-Cola, Johnson & Johnson.</p>
+              </div>
+              <div class="form-group">
+                <label for="impuesto-div">Impuesto sobre dividendos <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="impuesto-div" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcDiv()"/><span class="input-suffix">%</span></div>
+                <p class="field-note">EEUU retiene ~15% para no residentes. Argentina: variable. Dejá en 0 si operás en cuenta exenta.</p>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="calcDiv()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+            <div class="result-highlight">
+              <p class="result-label">Total dividendos acumulados</p>
+              <p class="result-value" id="rd-total-div">$0</p>
+              <p class="result-sub" id="rd-sub">—</p>
+            </div>
+            <div class="result-row"><span class="label">Acciones iniciales</span><span class="value" id="rd-acciones">—</span></div>
+            <div class="result-row"><span class="label">Dividend Yield inicial</span><span class="value neutral" id="rd-yield">—</span></div>
+            <div class="result-row"><span class="label">Dividendo del 1er año</span><span class="value" id="rd-div-y1">—</span></div>
+            <div class="result-row"><span class="label">Dividendo del último año</span><span class="value positive" id="rd-div-last">—</span></div>
+            <div class="result-row"><span class="label">Valor final del portfolio</span><span class="value positive" id="rd-valor-final">—</span></div>
+            <div class="result-row"><span class="label">Retorno total (div + apreciación)</span><span class="value neutral" id="rd-retorno-total">—</span></div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Dividendos y valor del portfolio año a año</p>
+              <canvas id="divChart" class="calc-chart" height="230"></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Calculadoras</h3><ul>
+        <li><a href="calculadoras.html">Todas las calculadoras</a></li>
+        <li><a href="dividendos.html">Dividendos</a></li>
+        <li><a href="roi.html">ROI</a></li>
+        <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let divChart = null;
+    function toggleAdv(el) {
+      const sec = document.getElementById('adv2');
+      const arrow = document.getElementById('adv-arrow2');
+      sec.classList.toggle('open');
+      arrow.textContent = sec.classList.contains('open') ? '▼' : '▶';
+    }
+
+    function calcDiv() {
+      const capital    = parseFloat(document.getElementById('capital-div').value)    || 0;
+      const precio     = parseFloat(document.getElementById('precio-accion').value)  || 1;
+      const divAnual   = parseFloat(document.getElementById('div-anual').value)      || 0;
+      const freqDiv    = parseInt(document.getElementById('freq-div').value);
+      const plazo      = parseInt(document.getElementById('plazo-div').value)        || 1;
+      const aporte     = parseFloat(document.getElementById('aporte-div').value)     || 0;
+      const reinvertir = document.getElementById('reinvertir').value === 'si';
+      const crecPrecio = (parseFloat(document.getElementById('crec-precio').value)   || 0) / 100;
+      const crecDiv    = (parseFloat(document.getElementById('crec-div').value)      || 0) / 100;
+      const impDiv     = (parseFloat(document.getElementById('impuesto-div').value)  || 0) / 100;
+
+      let acciones       = capital / precio;
+      let precioActual   = precio;
+      let divActual      = divAnual;
+      let totalDividendos= 0;
+      let accionesFinal  = acciones;
+
+      const labels = [], dDivAnual = [], dValorPort = [];
+
+      for (let y = 1; y <= plazo; y++) {
+        // Aportes compran acciones al precio actual
+        const accionesAporte = (aporte * 12) / precioActual;
+        acciones += accionesAporte;
+
+        // Dividendo bruto del año
+        const divBruto = acciones * divActual;
+        const divNeto  = divBruto * (1 - impDiv);
+        totalDividendos += divNeto;
+
+        // DRIP: reinvertir compra más acciones al precio actual
+        if (reinvertir) acciones += divNeto / precioActual;
+
+        // Actualizar precio y dividendo para el año siguiente
+        precioActual *= (1 + crecPrecio);
+        divActual    *= (1 + crecDiv);
+
+        labels.push(`Año ${y}`);
+        dDivAnual.push(+divNeto.toFixed(2));
+        dValorPort.push(+(acciones * precioActual).toFixed(2));
+        if (y === plazo) accionesFinal = acciones;
+      }
+
+      const valorFinal      = accionesFinal * precioActual;
+      const inversionTotal  = capital + aporte * 12 * plazo;
+      const retornoTotal    = valorFinal + totalDividendos - inversionTotal;
+      const yieldInicial    = precio > 0 ? (divAnual / precio * 100) : 0;
+      const divY1           = (capital / precio) * divAnual * (1 - impDiv);
+      const divLast         = dDivAnual[dDivAnual.length - 1];
+
+      document.getElementById('rd-total-div').textContent   = '$' + formatUSD(totalDividendos);
+      document.getElementById('rd-sub').textContent         = `En ${plazo} años · ${reinvertir ? 'con DRIP' : 'sin reinversión'}`;
+      document.getElementById('rd-acciones').textContent    = (capital / precio).toFixed(2) + ' acc.';
+      document.getElementById('rd-yield').textContent       = yieldInicial.toFixed(2) + '%';
+      document.getElementById('rd-div-y1').textContent      = '$' + formatUSD(divY1) + '/año';
+      document.getElementById('rd-div-last').textContent    = '$' + formatUSD(divLast) + '/año';
+      document.getElementById('rd-valor-final').textContent = '$' + formatUSD(valorFinal);
+      document.getElementById('rd-retorno-total').textContent= '$' + formatUSD(retornoTotal);
+
+      if (divChart) divChart.destroy();
+      divChart = new Chart(document.getElementById('divChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Dividendos anuales', data: dDivAnual, backgroundColor: 'rgba(74,222,154,0.65)', borderRadius: 3, yAxisID: 'y' },
+            { label: 'Valor portfolio',    data: dValorPort, type: 'line', borderColor: '#e8c97a', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 2, tension: 0.3, yAxisID: 'y2' },
+          ]
+        },
+        options: {
+          responsive: true,
+          interaction: { mode:'index', intersect:false },
+          plugins: { legend:{ labels:{color:'#7a8599',font:{family:'DM Mono',size:10}} },
+            tooltip:{ callbacks:{ label:ctx => ctx.dataset.label+': $'+formatUSD(ctx.parsed.y) } } },
+          scales: {
+            x:  { ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}}, grid:{color:'rgba(255,255,255,0.04)'} },
+            y:  { position:'left',  ticks:{color:'#4ade9a',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)}, grid:{color:'rgba(255,255,255,0.04)'} },
+            y2: { position:'right', ticks:{color:'#e8c97a',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'k':v)}, grid:{drawOnChartArea:false} }
+          }
+        }
+      });
+    }
+    calcDiv();
+  </script>
+</body>
+</html>

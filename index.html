@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BB Financial — Calculadoras Financieras Gratuitas</title>
+
+  <meta name="description" content="Calculadoras financieras gratuitas: interés compuesto, interés simple, ahorro y planificador de metas. Compará ahorrar vs. invertir y tomá mejores decisiones." />
+  <meta name="keywords" content="calculadora interés compuesto, calculadora ahorro, calculadora financiera, interés simple, inversión, metas financieras, modelado financiero" />
+  <meta name="author" content="Bruno Behr" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="BB — Calculadoras Financieras" />
+  <meta property="og:description" content="Herramientas financieras gratuitas para calcular interés, ahorro e inversión. Tomá mejores decisiones con tu dinero." />
+  <meta property="og:url" content="https://bb.app/" />
+  <meta property="og:locale" content="es_AR" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "BB Financial",
+    "author": { "@type": "Person", "name": "Bruno Behr" },
+    "description": "Calculadoras financieras gratuitas para interés compuesto, simple, ahorro y metas de inversión.",
+    "url": "https://bb.app",
+    "applicationCategory": "FinanceApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <style>
+    /* Contact section on homepage */
+    .contact-strip {
+      padding: 5rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .contact-strip-inner {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .contact-strip-text h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.2rem); letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .contact-strip-text p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; }
+    .contact-links { display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+    .contact-link-item:hover { border-color: var(--border-hover); transform: translateX(4px); }
+    .cli-icon {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .cli-mail { background: var(--accent-dim); }
+    .cli-ig   { background: rgba(220,80,150,0.12); }
+    .cli-li   { background: rgba(50,130,210,0.12); }
+    .cli-label { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-subtle); letter-spacing: 0.08em; text-transform: uppercase; }
+    .cli-value { font-size: 0.875rem; color: var(--text); font-weight: 500; margin-top: 0.1rem; }
+    @media (max-width: 800px) {
+      .contact-strip-inner { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+
+  <!-- Ticker script auto-injects the bar above the header -->
+
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="index.html" class="logo" aria-label="BB Financial - Inicio"><img src="assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+                              <nav class="main-nav" role="navigation" aria-label="Navegación principal">
+        <a href="index.html" class="nav-link active">Inicio</a>
+        <a href="pages/calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="pages/guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="pages/mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="pages/noticias.html" class="nav-link">Noticias</a>
+        <a href="pages/datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="pages/proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-bg">
+        <div class="grid-overlay"></div>
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+      </div>
+      <div class="container hero-content">
+        <p class="hero-eyebrow">Herramientas financieras gratuitas</p>
+        <h1 id="hero-title" class="hero-title">
+          Tu dinero,<br /><em>calculado con precisión</em>
+        </h1>
+        <p class="hero-subtitle">
+          Tomá decisiones financieras inteligentes. Calculá intereses, planificá tu ahorro
+          y descubrí el poder de invertir en lugar de solo guardar.
+        </p>
+        <div class="hero-cta">
+          <a href="pages/meta-financiera.html" class="btn btn-primary">Planificar mi meta →</a>
+          <a href="#calculadoras" class="btn btn-ghost">Ver calculadoras</a>
+        </div>
+        <div class="hero-stats" role="list">
+          <div class="stat" role="listitem"><span class="stat-number">8</span><span class="stat-label">Calculadoras</span></div>
+          <div class="stat" role="listitem"><span class="stat-number">100%</span><span class="stat-label">Gratuito</span></div>
+          <div class="stat" role="listitem"><span class="stat-number">∞</span><span class="stat-label">Simulaciones</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TOOLS GRID ===== -->
+    <section id="calculadoras" class="tools-section" aria-labelledby="tools-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="tools-title" class="section-title">Calculadoras</h2>
+          <p class="section-sub">Herramientas simples para decisiones inteligentes</p>
+        </div>
+        <div class="tools-grid">
+
+          <article class="tool-card tool-card--featured" aria-labelledby="card-compuesto">
+            <div class="card-badge">Más popular</div>
+            <div class="card-icon" aria-hidden="true">⬡</div>
+            <h3 id="card-compuesto" class="card-title">Interés Compuesto</h3>
+            <p class="card-desc">La octava maravilla del mundo. Calculá cómo tu dinero crece exponencialmente cuando los intereses generan más intereses.</p>
+            <ul class="card-features">
+              <li>Capital inicial + aportes periódicos</li>
+              <li>Frecuencia de capitalización ajustable</li>
+              <li>Gráfico de crecimiento visual</li>
+            </ul>
+            <a href="pages/interes-compuesto.html" class="card-link">Calcular →</a>
+          </article>
+
+          <article class="tool-card" aria-labelledby="card-simple">
+            <div class="card-icon" aria-hidden="true">◎</div>
+            <h3 id="card-simple" class="card-title">Interés Simple y Ahorro</h3>
+            <p class="card-desc">Calculá el rendimiento de plazos fijos y préstamos con tasa lineal, y proyectá tu ahorro mensual a 1, 5 o 20 años.</p>
+            <ul class="card-features">
+              <li>Interés simple con comparativa de plazos</li>
+              <li>Proyección de ahorro a largo plazo</li>
+              <li>Tasa de ahorro sobre ingresos</li>
+            </ul>
+            <a href="pages/interes-simple.html" class="card-link">Calcular →</a>
+          </article>
+
+          <article class="tool-card tool-card--highlight" aria-labelledby="card-meta">
+            <div class="card-icon" aria-hidden="true">◇</div>
+            <h3 id="card-meta" class="card-title">Meta Financiera</h3>
+            <p class="card-desc">¿Cuánto tiempo necesitás para llegar a tu objetivo? Compará ahorro puro vs. inversión y descubrí cuántos años ganás.</p>
+            <ul class="card-features">
+              <li>Objetivo en USD</li>
+              <li>Comparación ahorro vs. inversión</li>
+              <li>Diferencia de años visualizada</li>
+            </ul>
+            <a href="pages/meta-financiera.html" class="card-link">Calcular →</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY SECTION ===== -->
+    <section class="why-section" aria-labelledby="why-title">
+      <div class="container why-inner">
+        <div class="why-text">
+          <h2 id="why-title" class="section-title">¿Por qué importa calcular?</h2>
+          <p>La diferencia entre ahorrar e invertir puede significar años de libertad financiera. Una persona que invierte <strong>$1.000 mensuales al 8% anual</strong> durante 20 años acumula casi 4 veces más que alguien que solo guarda debajo del colchón.</p>
+          <p>Las calculadoras de BB te muestran ese impacto en números reales, con tu plata y en tiempo real.</p>
+          <a href="pages/meta-financiera.html" class="btn btn-primary">Ver la diferencia →</a>
+        </div>
+        <div class="why-visual" aria-hidden="true">
+          <div class="comparison-bars">
+            <div class="bar-group">
+              <div class="bar bar--save" style="--h: 35%">
+                <span class="bar-label">Solo ahorro</span>
+                <span class="bar-amount">$240k</span>
+              </div>
+              <div class="bar bar--invest" style="--h: 100%">
+                <span class="bar-label">Inversión</span>
+                <span class="bar-amount">$589k</span>
+              </div>
+            </div>
+            <p class="bar-caption">Ejemplo: $1.000/mes · 20 años · 8% anual</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROJECTS TEASER ===== -->
+    <section class="tools-section" style="padding-top:4rem;padding-bottom:4rem" aria-labelledby="proyectos-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="proyectos-title" class="section-title">Proyectos Financieros</h2>
+          <p class="section-sub">Modelos, valuaciones y DCF desarrollados con metodología profesional</p>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap">
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem">PRÓXIMAMENTE</p>
+            <h3 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:0.5rem;letter-spacing:-0.01em">Modelos de Excel para descargar</h3>
+            <p style="color:var(--text-muted);font-size:0.875rem;max-width:480px;line-height:1.65">DCF, valuaciones por múltiplos y modelos de proyección financiera. Disponibles próximamente al finalizar la certificación.</p>
+          </div>
+          <a href="pages/proyectos.html" class="btn btn-secondary" style="white-space:nowrap">Ver proyectos →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEWS CAROUSEL ===== -->
+    <section class="tools-section" style="padding-top:0;padding-bottom:4rem" aria-labelledby="noticias-title">
+      <div class="container">
+        <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias</h2>
+            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">NUEVO</span>
+          </div>
+          <a href="pages/noticias.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);display:flex;align-items:center;gap:0.3rem">Ver todas &rsaquo;</a>
+        </div>
+
+        <!-- Carousel wrapper -->
+        <div style="position:relative">
+          <div id="newsCarousel" style="display:flex;gap:1rem;overflow:hidden;scroll-behavior:smooth"></div>
+          <!-- Arrow buttons -->
+          <button id="newsPrev" aria-label="Anterior" style="position:absolute;top:50%;left:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">‹</button>
+          <button id="newsNext" aria-label="Siguiente" style="position:absolute;top:50%;right:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">›</button>
+        </div>
+
+        <!-- Loading state -->
+        <div id="newsCarouselLoader" style="text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <section class="contact-strip" id="contacto" aria-labelledby="contact-title">
+      <div class="container contact-strip-inner">
+        <div class="contact-strip-text">
+          <h2 id="contact-title">Contacto</h2>
+          <p>¿Tenés alguna consulta o sugerencia? Encontrá a Bruno Behr en:</p>
+        </div>
+        <div class="contact-links">
+          <a href="https://www.instagram.com/behrbruno_" target="_blank" rel="noopener noreferrer" class="contact-link-item" aria-label="Instagram de Bruno Behr">
+            <div class="cli-icon cli-ig">📸</div>
+            <div>
+              <p class="cli-label">Instagram</p>
+              <p class="cli-value">@behrbruno_</p>
+            </div>
+          </a>
+          <a href="https://www.linkedin.com/in/bruno-behr/" target="_blank" rel="noopener noreferrer" class="contact-link-item" aria-label="LinkedIn de Bruno Behr">
+            <div class="cli-icon cli-li">💼</div>
+            <div>
+              <p class="cli-label">LinkedIn</p>
+              <p class="cli-value">Bruno Behr</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo" aria-label="BB Financial - Inicio"><img src="assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas de Bruno Behr para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Navegación del pie">
+        <h3>Secciones</h3>
+                        <ul>
+          <li><a href="pages/interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="pages/interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="pages/inflacion.html">Inflación</a></li>
+          <li><a href="pages/prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="pages/fire.html">Regla del 4%</a></li>
+          <li><a href="pages/salario.html">Salario Real</a></li>
+          <li><a href="pages/mis-portafolios.html">Portafolio (Beta)</a></li>
+          <li><a href="pages/meta-financiera.html">Meta Financiera</a></li>
+          <li><a href="pages/datos.html">Datos Macro</a></li>
+          <li><a href="pages/proyectos.html">Proyectos</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/ticker.js"></script>
+  <script>
+  /* ---- Homepage news carousel ---- */
+  (function () {
+    const PROXY = 'https://api.allorigins.win/get?url=';
+    const RSS_SOURCES = [
+      { url: 'https://www.ambito.com/rss/economia.xml',       name: 'Ámbito'    },
+      { url: 'https://www.cronista.com/files/rss/economia.xml',name: 'Cronista'  },
+      { url: 'https://news.google.com/rss/search?q=economia+finanzas+argentina&hl=es-419&gl=AR&ceid=AR:es-419',
+        name: 'Google News' },
+    ];
+
+    function fmtDate(str) {
+      if (!str) return '';
+      try { return new Date(str).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+      catch { return ''; }
+    }
+
+    function parseRSS(xml, name) {
+      const doc = new DOMParser().parseFromString(xml, 'text/xml');
+      return Array.from(doc.querySelectorAll('item')).slice(0, 6).map(item => {
+        const title = (item.querySelector('title')?.textContent || '').replace(/\s+-\s+[\w\s]+$/, '').trim();
+        const link  = item.querySelector('link')?.textContent?.trim()
+                   || item.querySelector('link')?.nextSibling?.textContent?.trim() || '#';
+        const date  = item.querySelector('pubDate')?.textContent || '';
+        const desc  = item.querySelector('description')?.textContent || '';
+        const img   = item.querySelector('enclosure')?.getAttribute('url')
+                   || (desc.match(/<img[^>]+src=["']([^"']+)["']/i) || [])[1] || '';
+        return { title, link, date, img, source: name };
+      }).filter(i => i.title);
+    }
+
+    const carousel  = document.getElementById('newsCarousel');
+    const loader    = document.getElementById('newsCarouselLoader');
+    const prevBtn   = document.getElementById('newsPrev');
+    const nextBtn   = document.getElementById('newsNext');
+
+    const CARD_W    = 300; // px per card
+    const VISIBLE   = 3;
+    let offset      = 0;
+    let items       = [];
+
+    function safeUrl(url) {
+      return url && /^https?:\/\//i.test(url) ? url : null;
+    }
+
+    function buildCard(item) {
+      const div = document.createElement('a');
+      div.href = safeUrl(item.link) || '#';
+      div.target = '_blank';
+      div.rel = 'noopener noreferrer';
+      div.style.cssText = `
+        flex:0 0 ${CARD_W}px;min-width:${CARD_W}px;
+        background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+        overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+        transition:border-color 0.25s,transform 0.25s;
+      `;
+      div.addEventListener('mouseenter', () => { div.style.borderColor = 'rgba(255,255,255,0.12)'; div.style.transform = 'translateY(-2px)'; });
+      div.addEventListener('mouseleave', () => { div.style.borderColor = ''; div.style.transform = ''; });
+
+      const imgUrl = safeUrl(item.img);
+      if (imgUrl) {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = '';
+        img.style.cssText = 'width:100%;aspect-ratio:16/9;object-fit:cover;background:#1a1f2a';
+        img.loading = 'lazy';
+        img.onerror = () => { img.style.display = 'none'; };
+        div.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.style.cssText = 'width:100%;aspect-ratio:16/9;background:#1a1f2a;display:flex;align-items:center;justify-content:center;color:#3d4558;font-size:1.8rem';
+        ph.textContent = '📰';
+        div.appendChild(ph);
+      }
+
+      const body = document.createElement('div');
+      body.style.cssText = 'padding:1rem 1.1rem 1.2rem;flex:1;display:flex;flex-direction:column';
+
+      const badge = document.createElement('span');
+      badge.style.cssText = 'display:inline-block;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border-radius:20px;padding:0.12rem 0.55rem;margin-bottom:0.6rem';
+      badge.textContent = 'Economía';
+
+      const meta = document.createElement('div');
+      meta.style.cssText = 'font-size:0.7rem;color:var(--text-subtle);font-family:var(--font-mono);margin-bottom:0.4rem';
+      meta.textContent = fmtDate(item.date);
+
+      const title = document.createElement('div');
+      title.style.cssText = 'font-size:0.875rem;font-weight:600;color:var(--text);line-height:1.5;flex:1';
+      title.textContent = item.title;
+
+      const source = document.createElement('div');
+      source.style.cssText = 'margin-top:0.65rem;font-size:0.68rem;color:var(--text-subtle);font-family:var(--font-mono)';
+      source.textContent = `— ${item.source}`;
+
+      body.append(badge, meta, title, source);
+      div.appendChild(body);
+      return div;
+    }
+
+    function updateArrows() {
+      const maxOffset = Math.max(0, items.length - VISIBLE);
+      prevBtn.style.opacity = offset === 0 ? '0.3' : '1';
+      nextBtn.style.opacity = offset >= maxOffset ? '0.3' : '1';
+    }
+
+    function slide(dir) {
+      const maxOffset = Math.max(0, items.length - VISIBLE);
+      offset = Math.max(0, Math.min(maxOffset, offset + dir));
+      carousel.style.transform = `translateX(-${offset * (CARD_W + 16)}px)`;
+      carousel.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      updateArrows();
+    }
+
+    prevBtn.addEventListener('click', () => slide(-1));
+    nextBtn.addEventListener('click', () => slide(1));
+
+    // Auto-advance
+    let autoTimer = setInterval(() => slide(1), 5000);
+    carousel.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    carousel.addEventListener('mouseleave', () => { autoTimer = setInterval(() => slide(1), 5000); });
+
+    // Overflow container
+    carousel.parentElement.style.overflow = 'hidden';
+
+    async function loadCarousel() {
+      const results = await Promise.all(
+        RSS_SOURCES.map(async s => {
+          try {
+            const res = await fetch(PROXY + encodeURIComponent(s.url), { signal: AbortSignal.timeout(8000) });
+            const w = await res.json();
+            return parseRSS(w.contents, s.name);
+          } catch { return []; }
+        })
+      );
+      const seen = new Set();
+      items = results.flat().filter(i => {
+        const k = i.title.toLowerCase().slice(0, 35);
+        if (seen.has(k)) return false;
+        seen.add(k); return true;
+      }).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 12);
+
+      loader.remove();
+      if (!items.length) {
+        carousel.innerHTML = `<div style="padding:2rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">No se pudieron cargar las noticias en este momento.</div>`;
+        return;
+      }
+      items.forEach(item => carousel.appendChild(buildCard(item)));
+      updateArrows();
+    }
+
+    loadCarousel();
+  })();
+  </script>
+</body>
+</html>

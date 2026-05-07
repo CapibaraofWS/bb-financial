@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Bruno\\\\OneDrive\\\\Desktop\\\\Uade\\\\Aa Pagina Web\\\\Pagina web\\\\finanzas-web\" -Recurse -Force -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Initial commit: BB Financial calculators with security hardening *)",
+      "Bash(git config *)"
+    ]
+  }
+}

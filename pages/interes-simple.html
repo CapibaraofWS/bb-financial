@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interés Simple y Ahorro — BB Financial</title>
+  <meta name="description" content="Calculá el interés simple de plazos fijos y préstamos, y proyectá tu ahorro a largo plazo. Dos herramientas en una para tu planificación financiera." />
+  <meta name="keywords" content="calculadora interés simple, calculadora ahorro, proyección ahorro, plazo fijo, tasa lineal" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/interes-simple.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .tab-bar { display:flex; gap:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0.35rem; margin-bottom:2rem; }
+    .tab-btn { flex:1; padding:0.6rem 1rem; border-radius:7px; font-family:var(--font-body); font-size:0.875rem; font-weight:500; color:var(--text-muted); cursor:pointer; transition:all var(--transition); background:transparent; border:none; text-align:center; }
+    .tab-btn.active { background:var(--bg); color:var(--text); border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+                                    <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Interés Simple y Ahorro</p>
+        <h1 class="page-title">Interés Simple y Ahorro ◎</h1>
+        <p class="page-subtitle">Dos herramientas en una: calculá el rendimiento lineal de cualquier instrumento financiero y proyectá tu ahorro mes a mes a lo largo del tiempo.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('simple',this)">◎ Interés Simple</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('ahorro',this)">◈ Proyección de Ahorro</button>
+      </div>
+
+      <!-- TAB 1: INTERÉS SIMPLE -->
+      <div id="tab-simple" class="tab-panel active">
+        <div class="calc-layout">
+          <section>
+            <div class="input-panel">
+              <p class="panel-title">Datos del instrumento</p>
+              <div class="form-group">
+                <label for="s-capital">Capital <span>(monto inicial)</span></label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="s-capital" class="has-prefix" value="10000" min="0" /></div>
+              </div>
+              <div class="form-group">
+                <label for="s-tasa">Tasa de interés <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="s-tasa" class="has-suffix" value="8" min="0" max="2000" step="0.1" /><span class="input-suffix">%</span></div>
+              </div>
+              <div class="form-group">
+                <label for="s-tipo-tasa">Tipo de tasa</label>
+                <select id="s-tipo-tasa">
+                  <option value="anual">Anual (TNA)</option>
+                  <option value="mensual">Mensual (TEM)</option>
+                  <option value="diaria">Diaria</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="s-plazo">Plazo <span>(en días)</span></label>
+                <div class="input-wrap"><input type="number" id="s-plazo" class="has-suffix" value="365" min="1" /><span class="input-suffix">días</span></div>
+              </div>
+              <button class="btn btn-primary" onclick="calcularSimple()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+            </div>
+            <div style="padding:1.5rem 0">
+              <h2 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.75rem">¿Cómo funciona el interés simple?</h2>
+              <p style="color:var(--text-muted);font-size:0.875rem;line-height:1.7">El interés simple se calcula siempre sobre el capital original, sin reinversión. Es el tipo más común en plazos fijos a corto plazo y préstamos personales.</p>
+              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:0.75rem 0;font-family:var(--font-mono);font-size:0.82rem;color:var(--accent)">
+                I = C · r · t &nbsp;&nbsp;→&nbsp;&nbsp; A = C + I
+              </div>
+              <p style="color:var(--text-muted);font-size:0.82rem">C = capital, r = tasa (en fracción), t = tiempo en la unidad de la tasa.</p>
+            </div>
+          </section>
+          <section>
+            <div class="result-panel">
+              <p class="panel-title">Resultado</p>
+              <div class="result-highlight">
+                <p class="result-label">Monto final</p>
+                <p class="result-value" id="s-res-total">$0</p>
+                <p class="result-sub" id="s-res-sub">—</p>
+              </div>
+              <div class="result-row"><span class="label">Capital inicial</span><span class="value" id="s-res-capital">—</span></div>
+              <div class="result-row"><span class="label">Interés ganado</span><span class="value positive" id="s-res-interes">—</span></div>
+              <div class="result-row"><span class="label">Tasa efectiva anual</span><span class="value neutral" id="s-res-tea">—</span></div>
+              <div class="result-row"><span class="label">Rendimiento diario</span><span class="value" id="s-res-diario">—</span></div>
+              <div class="chart-section">
+                <p class="chart-title">Crecimiento lineal</p>
+                <canvas id="simpleChart" class="calc-chart" height="200"></canvas>
+              </div>
+              <div style="margin-top:1.5rem">
+                <p class="panel-title">Comparativa de plazos</p>
+                <table class="comparison-table">
+                  <thead><tr><th>Plazo</th><th>Interés</th><th>Total</th></tr></thead>
+                  <tbody id="s-tabla-plazos"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- TAB 2: AHORRO -->
+      <div id="tab-ahorro" class="tab-panel">
+        <div class="calc-layout">
+          <section>
+            <div class="input-panel">
+              <p class="panel-title">Tus datos financieros</p>
+              <div class="form-group">
+                <label for="a-ingresos">Ingresos mensuales <span>(opcional)</span></label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-ingresos" class="has-prefix" value="5000" min="0" /></div>
+              </div>
+              <div class="form-group">
+                <label for="a-mensual">Ahorro mensual</label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-mensual" class="has-prefix" value="1000" min="0" /></div>
+              </div>
+              <div class="form-group">
+                <label for="a-inicial">Ahorro inicial acumulado</label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-inicial" class="has-prefix" value="0" min="0" /></div>
+              </div>
+              <div class="form-group">
+                <label for="a-rendimiento">Rendimiento anual <span>(%)</span></label>
+                <div class="input-wrap"><input type="number" id="a-rendimiento" class="has-suffix" value="0" min="0" max="500" step="0.5" /><span class="input-suffix">%</span></div>
+              </div>
+              <div class="form-group">
+                <label for="a-plazo">Proyección</label>
+                <select id="a-plazo">
+                  <option value="1">1 año</option>
+                  <option value="3">3 años</option>
+                  <option value="5" selected>5 años</option>
+                  <option value="10">10 años</option>
+                  <option value="20">20 años</option>
+                  <option value="30">30 años</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="calcularAhorro()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+            </div>
+            <div style="padding:1.5rem 0">
+              <h2 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.75rem">La regla del 20%</h2>
+              <p style="color:var(--text-muted);font-size:0.875rem;line-height:1.7">La recomendación clásica de finanzas personales es ahorrar al menos el <strong style="color:var(--accent)">20%</strong> de tus ingresos. Si además obtenés un rendimiento sobre ese ahorro, tu dinero trabaja para vos incluso mientras dormís.</p>
+            </div>
+          </section>
+          <section>
+            <div class="result-panel">
+              <p class="panel-title">Proyección</p>
+              <div class="result-highlight">
+                <p class="result-label">Total acumulado</p>
+                <p class="result-value" id="a-res-total">$0</p>
+                <p class="result-sub" id="a-res-sub">—</p>
+              </div>
+              <div class="result-row"><span class="label">Tasa de ahorro</span><span class="value neutral" id="a-res-tasa">—</span></div>
+              <div class="result-row"><span class="label">Total ahorrado (sin rendimiento)</span><span class="value" id="a-res-bruto">—</span></div>
+              <div class="result-row"><span class="label">Rendimiento generado</span><span class="value positive" id="a-res-rend">—</span></div>
+              <div class="result-row"><span class="label">Equivale a meses de gastos</span><span class="value" id="a-res-meses">—</span></div>
+              <div class="chart-section">
+                <p class="chart-title">Evolución anual</p>
+                <canvas id="ahorroChart" class="calc-chart" height="200"></canvas>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+                <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let chartSimple = null, chartAhorro = null;
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      document.getElementById('tab-' + name).classList.add('active');
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      if (name === 'simple') calcularSimple();
+      if (name === 'ahorro') calcularAhorro();
+    }
+
+    function getTasaDiaria() {
+      const tasa = parseFloat(document.getElementById('s-tasa').value) / 100;
+      const tipo = document.getElementById('s-tipo-tasa').value;
+      if (tipo === 'anual') return tasa / 365;
+      if (tipo === 'mensual') return tasa / 30;
+      return tasa;
+    }
+
+    function calcularSimple() {
+      const C = parseFloat(document.getElementById('s-capital').value) || 0;
+      const plazo = parseInt(document.getElementById('s-plazo').value) || 1;
+      const td = getTasaDiaria();
+      const I = C * td * plazo, A = C + I;
+      document.getElementById('s-res-total').textContent = '$' + formatUSD(A);
+      document.getElementById('s-res-sub').textContent = `En ${plazo} día${plazo !== 1 ? 's' : ''} de plazo`;
+      document.getElementById('s-res-capital').textContent = '$' + formatUSD(C);
+      document.getElementById('s-res-interes').textContent = '$' + formatUSD(I);
+      document.getElementById('s-res-tea').textContent = (td * 365 * 100).toFixed(2) + '%';
+      document.getElementById('s-res-diario').textContent = '$' + formatUSD(C * td);
+
+      const step = Math.max(1, Math.floor(plazo / 30));
+      const labels = [], data = [];
+      for (let d = 0; d <= plazo; d += step) { labels.push(`Día ${d}`); data.push(C + C * td * d); }
+
+      if (chartSimple) chartSimple.destroy();
+      chartSimple = new Chart(document.getElementById('simpleChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Monto', data, borderColor: '#4ade9a', backgroundColor: 'rgba(74,222,154,0.08)', borderWidth: 2, pointRadius: 2, tension: 0 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 }, callback: v => '$'+(v/1000).toFixed(1)+'k' }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+      });
+
+      document.getElementById('s-tabla-plazos').innerHTML = [30,60,90,180,365,730].map(d => {
+        const i = C * td * d;
+        return `<tr><td>${d} días</td><td class="highlight">$${formatUSD(i)}</td><td>$${formatUSD(C+i)}</td></tr>`;
+      }).join('');
+    }
+
+    function calcularAhorro() {
+      const ingresos = parseFloat(document.getElementById('a-ingresos').value) || 0;
+      const mensual  = parseFloat(document.getElementById('a-mensual').value) || 0;
+      const inicial  = parseFloat(document.getElementById('a-inicial').value) || 0;
+      const r = (parseFloat(document.getElementById('a-rendimiento').value) || 0) / 100;
+      const años = parseInt(document.getElementById('a-plazo').value);
+      const rM = r / 12, gastos = ingresos - mensual;
+      let total = inicial;
+      const labels = ['Inicio'], dT = [inicial], dB = [inicial];
+      for (let m = 1; m <= años*12; m++) {
+        total = total*(1+rM)+mensual;
+        if (m%12===0) { labels.push(`Año ${m/12}`); dT.push(total); dB.push(inicial+mensual*m); }
+      }
+      const bruto = inicial+mensual*años*12;
+      document.getElementById('a-res-total').textContent = '$'+formatUSD(total);
+      document.getElementById('a-res-sub').textContent = `En ${años} año${años!==1?'s':''} ahorrando $${formatUSD(mensual)}/mes`;
+      document.getElementById('a-res-tasa').textContent = ingresos>0?(mensual/ingresos*100).toFixed(1)+'%':'Sin ingresos';
+      document.getElementById('a-res-bruto').textContent = '$'+formatUSD(bruto);
+      document.getElementById('a-res-rend').textContent = '$'+formatUSD(total-bruto);
+      document.getElementById('a-res-meses').textContent = gastos>0?(total/gastos).toFixed(1)+' meses':'—';
+
+      if (chartAhorro) chartAhorro.destroy();
+      chartAhorro = new Chart(document.getElementById('ahorroChart'), {
+        type: 'line',
+        data: { labels, datasets: [
+          { label: 'Con rendimiento', data: dT, borderColor: '#4ade9a', backgroundColor: 'rgba(74,222,154,0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 3 },
+          { label: 'Solo ahorro', data: dB, borderColor: '#e8c97a', backgroundColor: 'transparent', borderWidth: 2, borderDash: [5,4], tension: 0, pointRadius: 0 }
+        ]},
+        options: { responsive: true, plugins: { legend: { labels: { color: '#7a8599', font: { family: 'DM Mono', size: 11 } } } }, scales: { x: { ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 10 }, callback: v => '$'+(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1000).toFixed(0)+'k') }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+      });
+    }
+
+    calcularSimple();
+    ['s-capital','s-tasa','s-tipo-tasa','s-plazo'].forEach(id => document.getElementById(id).addEventListener('input', calcularSimple));
+    ['a-ingresos','a-mensual','a-inicial','a-rendimiento','a-plazo'].forEach(id => document.getElementById(id).addEventListener('input', calcularAhorro));
+  </script>
+</body>
+</html>

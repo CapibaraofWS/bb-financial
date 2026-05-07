@@ -1,0 +1,409 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Portafolios — BB Financial</title>
+  <meta name="description" content="Gestioná tus portafolios de inversión. Creá carteras, seguí el rendimiento de cada activo y visualizá tu diversificación." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(50,130,210,0.12); color: #60a5fa;
+      border: 1px solid rgba(50,130,210,0.25); border-radius: 20px;
+      padding: 0.2rem 0.65rem; font-family: var(--font-mono);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      vertical-align: middle; margin-left: 0.5rem;
+    }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .portfolio-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .portfolio-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+    .portfolio-card .pc-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4rem;
+    }
+    .portfolio-card .pc-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-bottom: 1.25rem;
+    }
+    .portfolio-card .pc-value {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .portfolio-card .pc-change {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .pc-change.positive { color: var(--accent); }
+    .pc-change.negative { color: #ff6b6b; }
+    .pc-change.neutral  { color: var(--text-muted); }
+    .portfolio-card .pc-mini-chart { height: 50px; margin-bottom: 1rem; }
+    .portfolio-card .pc-assets-count {
+      font-size: 0.78rem; color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .portfolio-card .pc-delete {
+      position: absolute; top: 1rem; right: 1rem;
+      opacity: 0; transition: opacity 0.2s;
+      background: rgba(220,60,60,0.1); border: 1px solid rgba(220,60,60,0.2);
+      border-radius: 6px; padding: 0.3rem 0.5rem;
+      color: #ff7a7a; font-size: 0.75rem; cursor: pointer;
+    }
+    .portfolio-card:hover .pc-delete { opacity: 1; }
+
+    .new-portfolio-card {
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.75rem; min-height: 200px;
+      color: var(--text-subtle);
+    }
+    .new-portfolio-card:hover {
+      border-color: rgba(74,222,154,0.3);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+    .new-portfolio-card .plus-icon { font-size: 2rem; line-height: 1; }
+    .new-portfolio-card p { font-size: 0.875rem; font-weight: 500; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 500;
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem; width: 100%; max-width: 480px;
+    }
+    .modal h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem; margin-bottom: 1.5rem;
+    }
+    .modal .form-group { margin-bottom: 1.1rem; }
+    .modal label {
+      display: block; font-size: 0.85rem; font-weight: 500;
+      color: var(--text-muted); margin-bottom: 0.5rem;
+    }
+    .modal input[type="text"], .modal input[type="number"], .modal select, .modal textarea {
+      width: 100%; padding: 0.7rem 1rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      font-family: var(--font-body); font-size: 0.9rem;
+      transition: border-color var(--transition);
+    }
+    .modal input:focus, .modal select:focus, .modal textarea:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    .modal textarea { height: 70px; resize: vertical; }
+    .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+    /* Summary bar */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .summary-stat {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.25rem;
+    }
+    .summary-stat .ss-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 0.4rem; }
+    .summary-stat .ss-value { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: -0.02em; color: var(--text); }
+    .summary-stat .ss-sub { font-size: 0.75rem; font-family: var(--font-mono); margin-top: 0.2rem; }
+
+    .empty-state { text-align: center; padding: 4rem 2rem; }
+    .empty-state .es-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+    .empty-state p { color: var(--text-muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+            <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Mis Portafolios</p>
+        <h1 class="page-title">Mis Portafolios <span class="beta-badge" style="font-size:0.7rem;vertical-align:middle">Beta</span></h1>
+        <p class="page-subtitle">Creá carteras, seguí el precio de cada activo manualmente y visualizá cómo está distribuida tu inversión. Los datos se guardan en tu navegador.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <!-- HOW IT WORKS -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;margin-bottom:2rem">
+        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.75rem">¿Cómo usar esta sección?</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem">
+          <div>
+            <p style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">1. Creá tus portafolios</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6">Organizá tus inversiones en grupos: por estrategia, tipo de activo o cuenta. Ej: "ETFs Energía", "Acciones Tech", "Cripto".</p>
+          </div>
+          <div>
+            <p style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">2. Cargá tus activos</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6">Dentro de cada portafolio agregá tus activos: símbolo (ej: AAPL), cantidad de acciones y precio de compra. El precio actual lo podés cargar manualmente.</p>
+          </div>
+          <div>
+            <p style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">3. Actualizá los precios</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6">Cuando quieras ver cómo está tu cartera, actualizá el precio actual de cada activo. El historial queda guardado y podés ver la variación.</p>
+          </div>
+          <div>
+            <p style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">4. Visualizá tu distribución</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6">Gráficos de torta con la distribución por activo y por clase. Ganancia/pérdida total y por posición individual.</p>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid var(--border);display:flex;align-items:flex-start;gap:0.6rem">
+          <span style="font-size:1rem">💾</span>
+          <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.55"><strong style="color:var(--text)">Almacenamiento local:</strong> todos tus datos se guardan en tu navegador (<code style="font-family:var(--font-mono);background:var(--bg);padding:0.1rem 0.35rem;border-radius:4px;font-size:0.75rem">localStorage</code>). No se envían a ningún servidor. Si borrás la caché del navegador, perdés los datos — exportar próximamente.</p>
+        </div>
+      </div>
+
+
+      <!-- Summary bar -->
+      <div class="summary-bar" id="summary-bar" style="display:none">
+        <div class="summary-stat">
+          <p class="ss-label">Portafolios</p>
+          <p class="ss-value" id="sum-portfolios">0</p>
+        </div>
+        <div class="summary-stat">
+          <p class="ss-label">Valor total</p>
+          <p class="ss-value" id="sum-total">$0</p>
+          <p class="ss-sub" id="sum-total-sub"></p>
+        </div>
+        <div class="summary-stat">
+          <p class="ss-label">Ganancia / Pérdida total</p>
+          <p class="ss-value" id="sum-pnl">—</p>
+          <p class="ss-sub" id="sum-pnl-sub"></p>
+        </div>
+        <div class="summary-stat">
+          <p class="ss-label">Activos totales</p>
+          <p class="ss-value" id="sum-activos">0</p>
+        </div>
+      </div>
+
+      <!-- Portfolio grid -->
+      <div class="portfolio-grid" id="portfolio-grid">
+        <div class="new-portfolio-card" onclick="openNewModal()">
+          <div class="plus-icon">＋</div>
+          <p>Crear nuevo portafolio</p>
+        </div>
+      </div>
+
+      <div class="empty-state" id="empty-state">
+        <div class="es-icon">📂</div>
+        <p>Todavía no tenés portafolios.<br>Hacé click en "Crear nuevo portafolio" para empezar.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal: crear portafolio -->
+  <div class="modal-overlay" id="modal-nuevo">
+    <div class="modal">
+      <h3>Nuevo portafolio</h3>
+      <div class="form-group">
+        <label>Nombre del portafolio</label>
+        <input type="text" id="nuevo-nombre" placeholder="Ej: ETFs Energía, Acciones Tech..." />
+      </div>
+      <div class="form-group">
+        <label>Descripción <span style="opacity:0.5">(opcional)</span></label>
+        <textarea id="nuevo-desc" placeholder="Estrategia, objetivo, notas..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('modal-nuevo')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearPortafolio()">Crear →</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+        <ul>
+          <li><a href="mis-portafolios.html">Mis Portafolios (Beta)</a></li>
+          <li><a href="portafolio.html">Simulador de Portafolio</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Los datos se guardan solo en tu navegador.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // ---- LocalStorage data model ----
+    // portfolios: [{ id, nombre, desc, creadoEn, activos: [...] }]
+    // activo: { id, simbolo, nombre, clase, shares, precioCompra, precioActual, ultimaActualizacion }
+
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem('bb_portfolios') || '[]'); } catch { return []; }
+    }
+    function saveData(data) {
+      localStorage.setItem('bb_portfolios', JSON.stringify(data));
+    }
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+    function getPortfolioValue(p) {
+      return p.activos.reduce((s, a) => s + (a.shares * a.precioActual), 0);
+    }
+    function getPortfolioCost(p) {
+      return p.activos.reduce((s, a) => s + (a.shares * a.precioCompra), 0);
+    }
+
+    function renderPortfolios() {
+      const data = loadData();
+      const grid = document.getElementById('portfolio-grid');
+      const empty = document.getElementById('empty-state');
+      const summaryBar = document.getElementById('summary-bar');
+
+      // Summary
+      if (data.length > 0) {
+        summaryBar.style.display = 'grid';
+        empty.style.display = 'none';
+        const totalVal  = data.reduce((s, p) => s + getPortfolioValue(p), 0);
+        const totalCost = data.reduce((s, p) => s + getPortfolioCost(p), 0);
+        const totalPnl  = totalVal - totalCost;
+        const totalAct  = data.reduce((s, p) => s + p.activos.length, 0);
+        document.getElementById('sum-portfolios').textContent = data.length;
+        document.getElementById('sum-total').textContent = '$' + formatUSD(totalVal);
+        document.getElementById('sum-total-sub').textContent = `Costo base: $${formatUSD(totalCost)}`;
+        document.getElementById('sum-pnl').textContent = (totalPnl >= 0 ? '+' : '') + '$' + formatUSD(totalPnl);
+        document.getElementById('sum-pnl').style.color = totalPnl >= 0 ? 'var(--accent)' : '#ff6b6b';
+        document.getElementById('sum-pnl-sub').textContent = totalCost > 0 ? ((totalPnl/totalCost*100).toFixed(2) + '%') : '';
+        document.getElementById('sum-activos').textContent = totalAct;
+      } else {
+        summaryBar.style.display = 'none';
+        empty.style.display = 'block';
+      }
+
+      // Cards
+      grid.innerHTML = data.map(p => {
+        const val  = getPortfolioValue(p);
+        const cost = getPortfolioCost(p);
+        const pnl  = val - cost;
+        const pnlPct = cost > 0 ? (pnl/cost*100) : 0;
+        const changeClass = pnl > 0 ? 'positive' : pnl < 0 ? 'negative' : 'neutral';
+        const changeSign  = pnl > 0 ? '+' : '';
+        return `
+        <div class="portfolio-card" onclick="openPortfolio('${p.id}')">
+          <button class="pc-delete" onclick="event.stopPropagation(); deletePortfolio('${p.id}')">✕ Eliminar</button>
+          <p class="pc-name">${p.nombre}</p>
+          <p class="pc-meta">${p.activos.length} activo${p.activos.length !== 1 ? 's' : ''} · Creado ${new Date(p.creadoEn).toLocaleDateString('es-AR')}</p>
+          <p class="pc-value">$${formatUSD(val)}</p>
+          <p class="pc-change ${changeClass}">${changeSign}$${formatUSD(pnl)} (${changeSign}${pnlPct.toFixed(2)}%)</p>
+          ${p.desc ? `<p style="font-size:0.78rem;color:var(--text-subtle);margin-bottom:0.5rem">${p.desc}</p>` : ''}
+          <p class="pc-assets-count">Valor de compra: $${formatUSD(cost)}</p>
+        </div>`;
+      }).join('') + `
+      <div class="new-portfolio-card" onclick="openNewModal()">
+        <div class="plus-icon">＋</div>
+        <p>Crear nuevo portafolio</p>
+      </div>`;
+    }
+
+    function openNewModal() {
+      document.getElementById('nuevo-nombre').value = '';
+      document.getElementById('nuevo-desc').value = '';
+      document.getElementById('modal-nuevo').classList.add('open');
+      setTimeout(() => document.getElementById('nuevo-nombre').focus(), 100);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function crearPortafolio() {
+      const nombre = document.getElementById('nuevo-nombre').value.trim();
+      if (!nombre) { alert('Por favor ingresá un nombre'); return; }
+      const data = loadData();
+      data.push({ id: genId(), nombre, desc: document.getElementById('nuevo-desc').value.trim(), creadoEn: Date.now(), activos: [] });
+      saveData(data);
+      closeModal('modal-nuevo');
+      renderPortfolios();
+    }
+
+    function deletePortfolio(id) {
+      if (!confirm('¿Eliminar este portafolio y todos sus activos?')) return;
+      const data = loadData().filter(p => p.id !== id);
+      saveData(data);
+      renderPortfolios();
+    }
+
+    function openPortfolio(id) {
+      window.location.href = `portfolio-detalle.html?id=${id}`;
+    }
+
+    // Close modal on overlay click
+    document.getElementById('modal-nuevo').addEventListener('click', function(e) {
+      if (e.target === this) closeModal('modal-nuevo');
+    });
+
+    // Enter key to create
+    document.getElementById('nuevo-nombre').addEventListener('keydown', e => {
+      if (e.key === 'Enter') crearPortafolio();
+    });
+
+    renderPortfolios();
+  </script>
+</body>
+</html>

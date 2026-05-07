@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Caución Bursátil — BB Financial</title>
+  <meta name="description" content="Calculá tus ganancias en una caución colocadora. Ingresá monto, plazo, TNA, comisión del broker, derechos de mercado e IVA." />
+  <meta name="keywords" content="caución bursátil, caución colocadora, BYMA, rendimiento caución, plazo fijo bursátil Argentina" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+    .cost-breakdown{background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1.25rem;}
+    .cb-header{padding:0.6rem 1rem;background:var(--bg-card);font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);border-bottom:1px solid var(--border);}
+    .cb-row{display:flex;justify-content:space-between;align-items:center;padding:0.55rem 1rem;font-size:0.83rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+    .cb-row:last-child{border-bottom:none;}
+    .cb-label{color:var(--text-muted);}
+    .cb-amount{font-family:var(--font-mono);}
+    .cb-amount.neg{color:#ff9999;}
+    .cb-amount.pos{color:var(--accent);}
+    .cb-row.total .cb-label{color:var(--text);font-weight:600;}
+    .cb-row.total .cb-amount{color:var(--accent);font-weight:600;}
+    .plazo-btns{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+    .plazo-btn{padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;font-weight:500;border:1px solid var(--border);color:var(--text-muted);background:var(--bg);cursor:pointer;transition:all var(--transition);}
+    .plazo-btn:hover,.plazo-btn.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.25);}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Caución Bursátil</p>
+        <h1 class="page-title">Caución Bursátil 🏛</h1>
+        <p class="page-subtitle">Calculá cuánto recibís en una caución colocadora, neto de todos los costos: comisión del broker, derechos de mercado e IVA.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <div class="info-box">
+        <strong>¿Qué es una caución bursátil?</strong> Es una operación de préstamo garantizado en el mercado de capitales, similar a un plazo fijo pero con rendimientos generalmente más altos. Vos prestás dinero (<em>colocador</em>) a otro participante del mercado (<em>tomador</em>) que deja sus acciones como garantía. El tomador te devuelve el capital más los intereses al vencimiento del plazo. En Argentina operan en BYMA y el plazo más común es 1, 7, 14 o 30 días.
+      </div>
+
+      <div class="calc-layout">
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Datos de la caución</p>
+
+            <div class="form-group">
+              <label for="monto">Monto a caucionar <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="monto" class="has-prefix" value="1000000" min="0" oninput="calcular()"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Plazo</label>
+              <div class="plazo-btns">
+                <button class="plazo-btn" onclick="setPlazo(1,this)">1 día</button>
+                <button class="plazo-btn active" onclick="setPlazo(7,this)">7 días</button>
+                <button class="plazo-btn" onclick="setPlazo(14,this)">14 días</button>
+                <button class="plazo-btn" onclick="setPlazo(30,this)">30 días</button>
+                <button class="plazo-btn" onclick="setPlazo(60,this)">60 días</button>
+              </div>
+              <div class="input-wrap">
+                <input type="number" id="plazo" class="has-suffix" value="7" min="1" max="365" oninput="calcular()"/>
+                <span class="input-suffix">días</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tna">TNA de la caución <span>(%)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="tna" class="has-suffix" value="70" min="0" max="500" step="0.1" oninput="calcular()"/>
+                <span class="input-suffix">%</span>
+              </div>
+              <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.35rem;font-family:var(--font-mono)">La TNA la ves en tu plataforma al momento de operar (InvertirOnline, PPI, Balanz, etc.)</p>
+            </div>
+
+            <div style="border-top:1px solid var(--border);padding-top:1.25rem;margin-top:0.5rem">
+              <p class="panel-title" style="margin-bottom:1rem">Costos operativos</p>
+
+              <div class="form-group">
+                <label for="comision">Comisión del broker <span>(% anual sobre el monto)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="comision" class="has-suffix" value="0.5" min="0" max="5" step="0.01" oninput="calcular()"/>
+                  <span class="input-suffix">%</span>
+                </div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.35rem;font-family:var(--font-mono)">Brokers como IOL cobran ~0% en cauciones propias; otros hasta 0.5–1% anual.</p>
+              </div>
+
+              <div class="form-group">
+                <label for="derechos">Derechos de mercado BYMA <span>(% anual)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="derechos" class="has-suffix" value="0.06" min="0" max="1" step="0.01" oninput="calcular()"/>
+                  <span class="input-suffix">%</span>
+                </div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.35rem;font-family:var(--font-mono)">Derecho de mercado BYMA: ~0.06% anual sobre el monto nominal.</p>
+              </div>
+
+              <div class="form-group">
+                <label for="iva">IVA sobre comisiones <span>(%)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="iva" class="has-suffix" value="21" min="0" max="30" step="1" oninput="calcular()"/>
+                  <span class="input-suffix">%</span>
+                </div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.35rem;font-family:var(--font-mono)">IVA Argentina: 21% sobre comisiones y derechos de mercado.</p>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="calcular()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+
+            <div class="result-highlight">
+              <p class="result-label">Capital a recibir al vencimiento</p>
+              <p class="result-value" id="res-capital-final">$0</p>
+              <p class="result-sub" id="res-sub">—</p>
+            </div>
+
+            <div class="cost-breakdown">
+              <div class="cb-header">Desglose</div>
+              <div class="cb-row"><span class="cb-label">Capital inicial colocado</span><span class="cb-amount" id="cb-capital">—</span></div>
+              <div class="cb-row"><span class="cb-label">Intereses brutos</span><span class="cb-amount pos" id="cb-int-bruto">—</span></div>
+              <div class="cb-row"><span class="cb-label">Comisión broker (prorrateada)</span><span class="cb-amount neg" id="cb-comision">—</span></div>
+              <div class="cb-row"><span class="cb-label">Derechos BYMA (prorrateados)</span><span class="cb-amount neg" id="cb-derechos">—</span></div>
+              <div class="cb-row"><span class="cb-label">IVA sobre costos</span><span class="cb-amount neg" id="cb-iva">—</span></div>
+              <div class="cb-row total"><span class="cb-label">Intereses netos a recibir</span><span class="cb-amount" id="cb-int-neto">—</span></div>
+            </div>
+
+            <div class="result-row"><span class="label">TNA bruta</span><span class="value" id="res-tna-bruta">—</span></div>
+            <div class="result-row"><span class="label">TNA neta (después de costos)</span><span class="value positive" id="res-tna-neta">—</span></div>
+            <div class="result-row"><span class="label">TEA equivalente (neta)</span><span class="value neutral" id="res-tea-neta">—</span></div>
+            <div class="result-row"><span class="label">Rendimiento en el período</span><span class="value positive" id="res-rend-periodo">—</span></div>
+            <div class="result-row"><span class="label">Costos totales</span><span class="value" style="color:#ff9999" id="res-costos">—</span></div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Comparativa por plazo (misma TNA)</p>
+              <canvas id="caucionChart" class="calc-chart" height="200"></canvas>
+            </div>
+
+            <div style="background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:1rem 1.1rem;margin-top:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
+              <strong style="color:var(--gold)">💡 Tip:</strong> A mayor plazo, mayor rendimiento acumulado (con la misma TNA). Pero en Argentina, renovar cauciones cortas permite adaptar la tasa si el mercado sube. Evaluá según tu horizonte y expectativa de tasas.
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Calculadoras</h3><ul>
+        <li><a href="calculadoras.html">Todas las calculadoras</a></li>
+        <li><a href="caucion.html">Caución Bursátil</a></li>
+        <li><a href="conversion-tasas.html">Conversión de Tasas</a></li>
+        <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let chart = null;
+
+    function setPlazo(dias, btn) {
+      document.querySelectorAll('.plazo-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('plazo').value = dias;
+      calcular();
+    }
+
+    function calcularCaucion(monto, plazo, tna, comPct, derPct, ivaPct) {
+      const r = tna / 100;
+      const intBruto  = monto * r * plazo / 365;
+      const comCosto  = monto * (comPct/100) * plazo / 365;
+      const derCosto  = monto * (derPct/100) * plazo / 365;
+      const ivaTotal  = (comCosto + derCosto) * (ivaPct/100);
+      const costoTotal= comCosto + derCosto + ivaTotal;
+      const intNeto   = intBruto - costoTotal;
+      const capitalFinal = monto + intNeto;
+      const tnaNeta   = intNeto / monto * 365 / plazo * 100;
+      const teaNeta   = (Math.pow(1 + intNeto/monto, 365/plazo) - 1) * 100;
+      const rendPer   = intNeto / monto * 100;
+      return { intBruto, comCosto, derCosto, ivaTotal, costoTotal, intNeto, capitalFinal, tnaNeta, teaNeta, rendPer };
+    }
+
+    function calcular() {
+      const monto  = parseFloat(document.getElementById('monto').value)    || 0;
+      const plazo  = parseInt(document.getElementById('plazo').value)      || 1;
+      const tna    = parseFloat(document.getElementById('tna').value)      || 0;
+      const com    = parseFloat(document.getElementById('comision').value) || 0;
+      const der    = parseFloat(document.getElementById('derechos').value) || 0;
+      const iva    = parseFloat(document.getElementById('iva').value)      || 0;
+
+      const r = calcularCaucion(monto, plazo, tna, com, der, iva);
+
+      document.getElementById('res-capital-final').textContent = '$' + formatUSD(r.capitalFinal);
+      document.getElementById('res-sub').textContent = `En ${plazo} día${plazo!==1?'s':''} al ${tna.toFixed(1)}% TNA`;
+      document.getElementById('cb-capital').textContent   = '$' + formatUSD(monto);
+      document.getElementById('cb-int-bruto').textContent = '+$' + formatUSD(r.intBruto);
+      document.getElementById('cb-comision').textContent  = '−$' + formatUSD(r.comCosto);
+      document.getElementById('cb-derechos').textContent  = '−$' + formatUSD(r.derCosto);
+      document.getElementById('cb-iva').textContent       = '−$' + formatUSD(r.ivaTotal);
+      document.getElementById('cb-int-neto').textContent  = '$' + formatUSD(r.intNeto);
+      document.getElementById('res-tna-bruta').textContent   = tna.toFixed(2) + '%';
+      document.getElementById('res-tna-neta').textContent    = r.tnaNeta.toFixed(2) + '%';
+      document.getElementById('res-tea-neta').textContent    = r.teaNeta.toFixed(2) + '%';
+      document.getElementById('res-rend-periodo').textContent= r.rendPer.toFixed(4) + '%';
+      document.getElementById('res-costos').textContent      = '$' + formatUSD(r.costoTotal);
+
+      // Chart: comparativa por plazo
+      const plazos = [1,7,14,30,60,90];
+      const labels = plazos.map(p => p + 'd');
+      const dBruto = plazos.map(p => calcularCaucion(monto, p, tna, com, der, iva).intBruto);
+      const dNeto  = plazos.map(p => calcularCaucion(monto, p, tna, com, der, iva).intNeto);
+
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById('caucionChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Interés bruto', data: dBruto, backgroundColor: 'rgba(74,222,154,0.25)', borderRadius: 4 },
+            { label: 'Interés neto',  data: dNeto,  backgroundColor: 'rgba(74,222,154,0.75)', borderRadius: 4 },
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color:'#7a8599', font:{family:'DM Mono',size:10} } },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label+': $'+formatUSD(ctx.parsed.y) } } },
+          scales: {
+            x: { ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+            y: { ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0))}, grid:{color:'rgba(255,255,255,0.04)'} }
+          }
+        }
+      });
+    }
+
+    calcular();
+  </script>
+</body>
+</html>

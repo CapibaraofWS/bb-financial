@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Valor Presente Neto (VPN/DCF) — BB Financial</title>
+  <meta name="description" content="Calculá el Valor Presente Neto (VPN/DCF). Ingresá flujos de caja futuros, tasa de descuento y obtené VPN, TIR y período de repago." />
+  <meta name="keywords" content="VPN, valor presente neto, DCF, flujo de fondos descontado, TIR, payback, tasa de descuento, WACC" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .flujos-table{width:100%;border-collapse:collapse;margin-bottom:0.75rem;}
+    .flujos-table th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);padding:0.55rem 0.5rem;border-bottom:1px solid var(--border);}
+    .flujos-table td{padding:0.4rem 0.5rem;vertical-align:middle;}
+    .flujos-table input{width:100%;padding:0.4rem 0.6rem;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-mono);font-size:0.82rem;transition:border-color 0.2s;}
+    .flujos-table input:focus{outline:none;border-color:var(--accent);}
+    .flujos-table td.periodo{font-family:var(--font-mono);font-size:0.82rem;color:var(--text-muted);text-align:center;width:60px;}
+    .flujos-table .del-btn{background:rgba(220,60,60,0.1);border:1px solid rgba(220,60,60,0.2);border-radius:5px;color:#ff7a7a;cursor:pointer;padding:0.25rem 0.45rem;font-size:0.75rem;transition:all 0.2s;}
+    .flujos-table .del-btn:hover{background:rgba(220,60,60,0.7);color:#fff;}
+    .vpn-badge{border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-bottom:1rem;}
+    .vpn-badge.positive{background:rgba(74,222,154,0.08);border:1px solid rgba(74,222,154,0.2);}
+    .vpn-badge.negative{background:rgba(220,60,60,0.07);border:1px solid rgba(220,60,60,0.18);}
+    .vpn-badge .vb-label{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;}
+    .vpn-badge.positive .vb-label{color:var(--accent);}
+    .vpn-badge.negative .vb-label{color:#ff6b6b;}
+    .vpn-badge .vb-value{font-family:var(--font-display);font-size:2.5rem;letter-spacing:-0.02em;line-height:1;}
+    .vpn-badge .vb-interp{font-size:0.82rem;color:var(--text-muted);margin-top:0.4rem;font-family:var(--font-mono);}
+    .flujos-result-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+    .flujos-result-table th{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;}
+    .flujos-result-table th:first-child{text-align:left;}
+    .flujos-result-table td{padding:0.5rem 0.6rem;font-family:var(--font-mono);border-bottom:1px solid rgba(255,255,255,0.03);text-align:right;color:var(--text-muted);}
+    .flujos-result-table td:first-child{text-align:left;color:var(--text);}
+    .flujos-result-table td.pos{color:var(--accent);}
+    .flujos-result-table td.neg{color:#ff6b6b;}
+    .flujos-result-table tfoot td{font-weight:600;color:var(--text);border-top:1px solid var(--border);}
+    .adv-toggle{display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;color:var(--text-muted);margin:0.5rem 0 1rem;user-select:none;}
+    .adv-section{display:none;}
+    .adv-section.open{display:block;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Valor Presente (VPN)</p>
+        <h1 class="page-title">Valor Presente Neto ⏳</h1>
+        <p class="page-subtitle">Traé flujos de caja futuros al presente usando una tasa de descuento. Calculá VPN, TIR y período de repago para evaluar proyectos e inversiones.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <strong style="color:var(--text)">¿Qué es el VPN?</strong> El Valor Presente Neto responde: si tengo que pagar $X hoy para recibir flujos de caja en el futuro, ¿vale la pena? Un dinero futuro vale <em>menos</em> que ese mismo dinero hoy, porque hoy podría invertirlo. La tasa de descuento (normalmente el WACC o el costo de oportunidad) refleja ese costo del tiempo.<br/><br/>
+        <strong style="color:var(--text)">Regla de decisión:</strong> <span style="color:var(--accent)">VPN &gt; 0</span> → el proyecto crea valor, conviene. <span style="color:#ff6b6b">VPN &lt; 0</span> → destruye valor, no conviene. La <strong style="color:var(--text)">TIR</strong> es la tasa a la que el VPN = 0: si la TIR supera tu tasa de descuento, el proyecto es rentable.
+      </div>
+
+      <div class="calc-layout">
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Parámetros</p>
+
+            <div class="form-group">
+              <label for="inv-vpn">Inversión inicial <span>(flujo en período 0)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-vpn" class="has-prefix" value="50000" min="0" oninput="calcVPN()"/></div>
+              <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Lo que invertís hoy. Se trata como flujo negativo en período 0.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="tasa-desc">Tasa de descuento <span>(%)</span></label>
+              <div class="input-wrap"><input type="number" id="tasa-desc" class="has-suffix" value="10" min="0" max="200" step="0.5" oninput="calcVPN()"/><span class="input-suffix">%</span></div>
+              <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Tu costo de oportunidad o WACC. Si podrías invertir en otra cosa al 10%, usá 10%. Refleja el valor del tiempo y el riesgo.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="unidad-tiempo">Unidad de tiempo</label>
+              <select id="unidad-tiempo" onchange="updateLabels()">
+                <option value="años" selected>Años</option>
+                <option value="trimestres">Trimestres</option>
+                <option value="meses">Meses</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:1rem">
+              <label style="display:block;font-size:0.85rem;font-weight:500;color:var(--text-muted);margin-bottom:0.75rem">Flujos de caja futuros</label>
+              <div style="overflow-x:auto">
+                <table class="flujos-table">
+                  <thead><tr><th style="text-align:center">Período</th><th>Flujo de caja ($)</th><th style="width:36px"></th></tr></thead>
+                  <tbody id="flujos-body"></tbody>
+                </table>
+              </div>
+              <button class="btn btn-ghost" onclick="addFlujo()" style="width:100%;justify-content:center;font-size:0.82rem">+ Agregar período</button>
+            </div>
+
+            <div class="adv-toggle" onclick="toggleAdv()">
+              <span id="adv-arrow-vpn">▶</span> Opciones avanzadas
+            </div>
+            <div class="adv-section" id="adv-vpn">
+              <div class="form-group">
+                <label for="valor-terminal">Valor terminal <span>(al final del último período)</span></label>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="valor-terminal" class="has-prefix" value="0" min="0" oninput="calcVPN()"/></div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Valor de venta del activo al final (ej: empresa, inmueble, equipo). Se suma al último flujo.</p>
+              </div>
+              <div class="form-group">
+                <label for="crec-terminal">Tasa de crecimiento perpetua <span>(% para Gordon Model)</span></label>
+                <div class="input-wrap"><input type="number" id="crec-terminal" class="has-suffix" value="0" min="0" max="20" step="0.5" oninput="calcVPN()"/><span class="input-suffix">%</span></div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Si los flujos crecen perpetuamente al g%, el valor terminal = FCF_n × (1+g) / (WACC − g). Dejá en 0 para ignorar.</p>
+              </div>
+              <div class="form-group">
+                <label for="inflacion-vpn">Inflación <span>(% para VPN real)</span></label>
+                <div class="input-wrap"><input type="number" id="inflacion-vpn" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcVPN()"/><span class="input-suffix">%</span></div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="calcVPN()" style="width:100%;justify-content:center">Calcular →</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+
+            <div class="vpn-badge positive" id="vpn-badge">
+              <p class="vb-label" id="vb-label">VPN</p>
+              <p class="vb-value" id="vpn-value">$0</p>
+              <p class="vb-interp" id="vpn-interp">—</p>
+            </div>
+
+            <div class="result-row"><span class="label">Inversión inicial</span><span class="value" id="rv-inversion">—</span></div>
+            <div class="result-row"><span class="label">Suma de flujos nominales</span><span class="value" id="rv-suma-nom">—</span></div>
+            <div class="result-row"><span class="label">Suma de flujos descontados</span><span class="value positive" id="rv-suma-desc">—</span></div>
+            <div class="result-row"><span class="label">VPN</span><span class="value" id="rv-vpn">—</span></div>
+            <div class="result-row"><span class="label">TIR (aprox.)</span><span class="value neutral" id="rv-tir">—</span></div>
+            <div class="result-row"><span class="label">Período de repago (payback)</span><span class="value" id="rv-payback">—</span></div>
+            <div class="result-row"><span class="label">Índice de rentabilidad</span><span class="value neutral" id="rv-ir">—</span></div>
+
+            <p class="panel-title" style="margin-top:1.5rem;margin-bottom:0.75rem">Flujos descontados por período</p>
+            <div style="overflow-x:auto">
+              <table class="flujos-result-table">
+                <thead><tr><th>Período</th><th>Flujo nominal</th><th>Factor desc.</th><th>VP del flujo</th><th>VP acumulado</th></tr></thead>
+                <tbody id="flujos-result-body"></tbody>
+                <tfoot><tr id="flujos-result-foot"></tr></tfoot>
+              </table>
+            </div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">VPN acumulado por período</p>
+              <canvas id="vpnChart" class="calc-chart" height="200"></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Calculadoras</h3><ul>
+        <li><a href="calculadoras.html">Todas las calculadoras</a></li>
+        <li><a href="vpn.html">Valor Presente (VPN)</a></li>
+        <li><a href="roi.html">ROI</a></li>
+        <li><a href="proyectos.html">Proyectos / DCF</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let vpnChart = null;
+    let flujos = [15000, 18000, 20000, 22000, 25000];
+
+    function updateLabels() { renderFlujos(); calcVPN(); }
+    function toggleAdv() {
+      const sec = document.getElementById('adv-vpn');
+      const arrow = document.getElementById('adv-arrow-vpn');
+      sec.classList.toggle('open');
+      arrow.textContent = sec.classList.contains('open') ? '▼' : '▶';
+    }
+
+    function renderFlujos() {
+      const unidad = document.getElementById('unidad-tiempo').value;
+      document.getElementById('flujos-body').innerHTML = flujos.map((f, i) => `
+        <tr>
+          <td class="periodo">${unidad.slice(0,-1)} ${i+1}</td>
+          <td><input type="number" value="${f}" step="100" oninput="flujos[${i}]=parseFloat(this.value)||0; calcVPN()" /></td>
+          <td><button class="del-btn" onclick="removeFlujo(${i})">✕</button></td>
+        </tr>`).join('');
+    }
+
+    function addFlujo() {
+      flujos.push(flujos[flujos.length-1] || 10000);
+      renderFlujos(); calcVPN();
+    }
+    function removeFlujo(i) {
+      if (flujos.length <= 1) return;
+      flujos.splice(i, 1);
+      renderFlujos(); calcVPN();
+    }
+
+    function calcTIR(flujosTodos) {
+      let lo = -0.9999, hi = 10;
+      for (let iter = 0; iter < 100; iter++) {
+        const mid = (lo+hi)/2;
+        let npv = flujosTodos[0];
+        for (let k = 1; k < flujosTodos.length; k++) npv += flujosTodos[k] / Math.pow(1+mid, k);
+        if (npv > 0) lo = mid; else hi = mid;
+      }
+      return (lo+hi)/2;
+    }
+
+    function calcVPN() {
+      const inv0   = parseFloat(document.getElementById('inv-vpn').value)     || 0;
+      const tasa   = (parseFloat(document.getElementById('tasa-desc').value)  || 0) / 100;
+      const vt     = parseFloat(document.getElementById('valor-terminal').value) || 0;
+      const g      = (parseFloat(document.getElementById('crec-terminal').value) || 0) / 100;
+      const inf    = (parseFloat(document.getElementById('inflacion-vpn').value) || 0) / 100;
+
+      // Build adjusted cash flows
+      let fc = [...flujos];
+
+      // Terminal value: add to last period SEPARATELY (not modify the flow)
+      let tvAmount = 0;
+      if (g > 0 && tasa > g && fc.length > 0) {
+        // Gordon Growth Model: TV = FCF_last * (1+g) / (WACC - g)
+        tvAmount = fc[fc.length-1] * (1 + g) / (tasa - g);
+      } else if (vt > 0) {
+        tvAmount = vt;
+      }
+
+      // Inflation adjustment: if inf > 0, deflate each nominal flow to real terms
+      // Real flow_k = Nominal_k / (1+inf)^k
+      const fcReal = fc.map((f, i) => inf > 0 ? f / Math.pow(1 + inf, i + 1) : f);
+      const tvReal = tvAmount > 0 ? (inf > 0 ? tvAmount / Math.pow(1 + inf, fc.length) : tvAmount) : 0;
+
+      // For TIR calculation use original nominal flows + TV
+      const fcForTIR = [...fc];
+      if (tvAmount > 0) fcForTIR[fcForTIR.length - 1] = fcForTIR[fcForTIR.length - 1] + tvAmount;
+      const allFlows = [-inv0, ...fcForTIR];
+
+      // Discount real (inflation-adjusted) flows at tasa
+      let vpn = -inv0, sumaNom = 0, sumaDesc = 0;
+      let vpnAcum = -inv0, payback = null;
+      let accNom = -inv0;
+      const tableRows = [{ p:0, nom:-inv0, factor:'1.0000', vp:-inv0, vpAcum:-inv0, tv:0 }];
+
+      for (let k = 1; k <= fcReal.length; k++) {
+        const flujoNom = fc[k-1];
+        const flujoReal = fcReal[k-1];
+        const tvEste = k === fcReal.length ? tvReal : 0;
+        const flujoTotal = flujoReal + tvEste;
+        const factor = Math.pow(1 + tasa, k);
+        const vp = flujoTotal / factor;
+        sumaNom  += flujoNom + (k === fc.length ? tvAmount : 0);
+        sumaDesc += vp;
+        vpn      += vp;
+        vpnAcum  += vp;
+        accNom   += flujoNom;
+        if (payback === null && accNom >= 0) payback = k;
+        tableRows.push({ p:k, nom:flujoNom, tv:k===fc.length?tvAmount:0, factor:factor.toFixed(4), vp, vpAcum:vpnAcum });
+      }
+
+      const tir = calcTIR(allFlows);
+      const ir  = inv0 > 0 ? (vpn + inv0) / inv0 : 0;
+
+      // UI
+      const vpnBadge = document.getElementById('vpn-badge');
+      vpnBadge.className = 'vpn-badge ' + (vpn >= 0 ? 'positive' : 'negative');
+      document.getElementById('vb-label').textContent  = 'VPN';
+      document.getElementById('vpn-value').textContent = (vpn >= 0 ? '+$' : '−$') + formatUSD(Math.abs(vpn));
+      document.getElementById('vpn-value').style.color = vpn >= 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('vpn-interp').textContent= vpn > 0 ? '✅ El proyecto crea valor — conviene invertir' : vpn < 0 ? '❌ El proyecto destruye valor — no conviene' : '🟡 VPN neutro — igual al costo de oportunidad';
+
+      document.getElementById('rv-inversion').textContent  = '$' + formatUSD(inv0);
+      document.getElementById('rv-suma-nom').textContent   = '$' + formatUSD(sumaNom) + (tvAmount>0 ? ` (incl. TV $${formatUSD(tvAmount)})` : '');
+      document.getElementById('rv-suma-desc').textContent  = '$' + formatUSD(sumaDesc) + (inf>0 ? ` (flujos reales)` : '');
+      document.getElementById('rv-vpn').textContent        = (vpn >= 0 ? '+$' : '−$') + formatUSD(Math.abs(vpn));
+      document.getElementById('rv-vpn').style.color        = vpn >= 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('rv-tir').textContent        = isFinite(tir) && tir < 100 ? (tir*100).toFixed(2)+'%' : isFinite(tir) ? '> 100%' : 'No convergió';
+      document.getElementById('rv-payback').textContent    = payback !== null ? `Período ${payback}` : 'No recupera en el horizonte';
+      document.getElementById('rv-ir').textContent         = ir.toFixed(3) + (ir >= 1 ? ' ✅' : ' ❌');
+
+      // Table
+      const unidad = document.getElementById('unidad-tiempo').value.slice(0,-1);
+      document.getElementById('flujos-result-body').innerHTML = tableRows.map(r => {
+        const nomTotal = r.nom + (r.tv || 0);
+        return `<tr>
+          <td>${r.p === 0 ? 'Inversión (0)' : unidad+' '+r.p}${r.tv>0?' <span style="color:var(--gold);font-size:0.7rem">(+TV)</span>':''}</td>
+          <td class="${r.nom>=0?'pos':'neg'}">${r.nom>=0?'$':'-$'}${formatUSD(Math.abs(r.nom))}${r.tv>0?`<span style="color:var(--gold)"> +$${formatUSD(r.tv)}</span>`:''}</td>
+          <td>${r.factor}</td>
+          <td class="${r.vp>=0?'pos':'neg'}">${r.vp>=0?'$':'-$'}${formatUSD(Math.abs(r.vp))}</td>
+          <td class="${r.vpAcum>=0?'pos':'neg'}">${r.vpAcum>=0?'$':'-$'}${formatUSD(Math.abs(r.vpAcum))}</td>
+        </tr>`;
+      }).join('');
+      document.getElementById('flujos-result-foot').innerHTML = `
+        <td>Total</td><td class="${sumaNom>=0?'pos':'neg'}">${sumaNom>=0?'$':'-$'}${formatUSD(Math.abs(sumaNom))}</td>
+        <td>—</td><td class="${sumaDesc>=0?'pos':'neg'}">${sumaDesc>=0?'$':'-$'}${formatUSD(Math.abs(sumaDesc))}</td>
+        <td class="${vpn>=0?'pos':'neg'}">${vpn>=0?'$':'-$'}${formatUSD(Math.abs(vpn))}</td>`;
+
+      // Chart
+      const labels = tableRows.map(r => r.p===0?'Inv.':unidad+' '+r.p);
+      const dVpAcum = tableRows.map(r => +r.vpAcum.toFixed(2));
+      const dVp     = tableRows.map(r => +r.vp.toFixed(2));
+      if (vpnChart) vpnChart.destroy();
+      vpnChart = new Chart(document.getElementById('vpnChart'), {
+        type: 'bar',
+        data: { labels, datasets: [
+          { label:'VP por período', data:dVp, backgroundColor:dVp.map(v=>v>=0?'rgba(74,222,154,0.6)':'rgba(220,60,60,0.5)'), borderRadius:3 },
+          { label:'VPN acumulado', data:dVpAcum, type:'line', borderColor:'#e8c97a', backgroundColor:'transparent', borderWidth:2, pointRadius:3, tension:0.2 }
+        ]},
+        options: {
+          responsive:true, interaction:{mode:'index',intersect:false},
+          plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10}}},
+            tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+formatUSD(ctx.parsed.y)}} },
+          scales:{
+            x:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v.toFixed(0))},grid:{color:'rgba(255,255,255,0.04)'},border:{dash:[3,3]}}
+          }
+        }
+      });
+    }
+
+    renderFlujos();
+    calcVPN();
+  </script>
+</body>
+</html>

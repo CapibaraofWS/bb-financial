@@ -1,0 +1,916 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía de Múltiplos Financieros — BB Financial</title>
+  <meta name="description" content="Guía completa de múltiplos financieros: P/E, EV/EBITDA, P/B, FCF Yield, ROE, ROIC, Beta y más. Fórmulas, ejemplos reales y reglas de lectura." />
+  <meta name="keywords" content="múltiplos financieros, P/E ratio, EV EBITDA, ROE, ROIC, FCF yield, beta, valuación acciones, análisis fundamental" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bbfinancial.app/pages/guia-multiplos.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <style>
+    /* ---- Beta badge ---- */
+    .beta-badge {
+      display: inline-flex; align-items: center;
+      background: rgba(50,130,210,0.12); color: #60a5fa;
+      border: 1px solid rgba(50,130,210,0.25); border-radius: 20px;
+      padding: 0.2rem 0.65rem; font-family: var(--font-mono);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      vertical-align: middle; margin-left: 0.4rem;
+    }
+
+    /* ---- Disclaimer ---- */
+    .disclaimer {
+      background: rgba(232,201,122,0.06);
+      border: 1px solid rgba(232,201,122,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .disclaimer strong { color: var(--gold); }
+
+    /* ---- Tab navigation ---- */
+    .guide-tabs {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0.4rem;
+    }
+    .guide-tab {
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      background: transparent;
+      border: none;
+      font-family: var(--font-body);
+      white-space: nowrap;
+    }
+    .guide-tab:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .guide-tab.active {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    /* ---- Multiplo card ---- */
+    .mult-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.25rem;
+      transition: border-color var(--transition);
+    }
+    .mult-card:hover { border-color: rgba(255,255,255,0.12); }
+    .mult-card-header { margin-bottom: 1.5rem; }
+    .mult-card-name {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+    .mult-card-subtitle {
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 500;
+      font-family: var(--font-mono);
+    }
+
+    /* ---- Section label ---- */
+    .sec-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin: 1.1rem 0 0.5rem;
+    }
+
+    /* ---- Formula box ---- */
+    .formula-box {
+      background: var(--bg);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.83rem;
+      color: var(--text);
+      line-height: 1.85;
+    }
+
+    /* ---- Example box ---- */
+    .example-box {
+      background: rgba(74,180,245,0.05);
+      border: 1px solid rgba(74,180,245,0.15);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.85;
+    }
+    .example-box strong { color: var(--text); }
+
+    /* ---- Rules ---- */
+    .rule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      margin-bottom: 0.4rem;
+    }
+    .rule-ok   { background: rgba(74,222,154,0.06); border: 1px solid rgba(74,222,154,0.15); }
+    .rule-warn { background: rgba(232,201,122,0.07); border: 1px solid rgba(232,201,122,0.15); }
+    .rule-bad  { background: rgba(220,60,60,0.07);  border: 1px solid rgba(220,60,60,0.15); }
+    .rule-icon { font-weight: 700; flex-shrink: 0; font-family: var(--font-mono); font-size: 0.8rem; }
+    .rule-ok   .rule-icon { color: var(--accent); }
+    .rule-warn .rule-icon { color: var(--gold); }
+    .rule-bad  .rule-icon { color: #f08080; }
+    .rule-ok   .rule-text { color: var(--text-muted); }
+    .rule-warn .rule-text { color: var(--text-muted); }
+    .rule-bad  .rule-text { color: var(--text-muted); }
+
+    /* ---- Application box ---- */
+    .app-box {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .app-box strong { color: var(--text); }
+
+    /* ---- Analogy ---- */
+    .analogy-text {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      padding: 0.6rem 0 0;
+    }
+
+    /* ---- Reference table ---- */
+    .ref-table-wrap { overflow-x: auto; }
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    .ref-table thead th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .ref-table tbody td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      color: var(--text-muted);
+      vertical-align: middle;
+    }
+    .ref-table tbody tr:last-child td { border-bottom: none; }
+    .ref-table tbody td:first-child {
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+    .ref-table tbody td:last-child { font-size: 0.75rem; color: var(--text-subtle); }
+    .cheap  { color: var(--accent) !important; font-weight: 600; }
+    .fair   { color: var(--gold) !important;   font-weight: 600; }
+    .exp    { color: #f08080 !important;        font-weight: 600; }
+
+    /* ---- Orden de análisis ---- */
+    .order-list { list-style: none; counter-reset: steps; }
+    .order-item {
+      counter-increment: steps;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .order-item:last-child { border-bottom: none; }
+    .order-num {
+      background: var(--accent);
+      color: #0a0c0f;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .order-item strong { color: var(--text); display: block; margin-bottom: 0.25rem; }
+
+    /* ---- Tab panels ---- */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    @media (max-width: 600px) {
+      .mult-card { padding: 1.25rem; }
+      .guide-tabs { gap: 0.3rem; }
+      .guide-tab { padding: 0.45rem 0.75rem; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link active">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Guía de Múltiplos</p>
+        <h1 class="page-title">Guía de Múltiplos Financieros 📐</h1>
+        <p class="page-subtitle">Fórmulas, reglas de lectura, ejemplos reales y aplicación práctica para análisis fundamental de acciones.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <!-- DISCLAIMER -->
+      <div class="disclaimer">
+        <strong>⚠️ Disclaimer importante:</strong> Cada empresa es un caso particular y requiere análisis individual. Los rangos y parámetros presentados en esta guía son <strong>referencias orientativas</strong> basadas en promedios históricos del mercado estadounidense. Sectores distintos, geografías distintas y ciclos económicos distintos justifican múltiplos distintos. <strong>Todo inversor es dueño de su análisis y responsable de sus propias decisiones de inversión.</strong> Esta guía tiene fines exclusivamente educativos y no constituye recomendación de compra o venta de ningún activo financiero.
+      </div>
+
+      <!-- TABS -->
+      <div class="guide-tabs" role="tablist">
+        <button class="guide-tab active" onclick="showTab('ganancias',this)">📊 Ganancias</button>
+        <button class="guide-tab" onclick="showTab('empresa',this)">🏭 Empresa</button>
+        <button class="guide-tab" onclick="showTab('valor',this)">💎 Valor</button>
+        <button class="guide-tab" onclick="showTab('retorno',this)">⚙️ Retorno</button>
+        <button class="guide-tab" onclick="showTab('mercado',this)">📈 Mercado</button>
+        <button class="guide-tab" onclick="showTab('referencia',this)">⚡ Tabla rápida</button>
+        <button class="guide-tab" onclick="showTab('orden',this)">🔬 Orden de análisis</button>
+      </div>
+
+      <!-- ===== GANANCIAS ===== -->
+      <div id="tab-ganancias" class="tab-panel active">
+
+        <!-- EPS -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">EPS — Earnings Per Share</p>
+            <p class="mult-card-subtitle">La base de todo. ¿Cuánto gana la empresa por cada acción?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">EPS = Ganancia Neta ÷ Acciones en circulación</div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT</strong> ganó $8.88bn en 2025 con 465M acciones → EPS = $19.06<br/>
+            Si comprás 1 acción de CAT a $698, "comprás" $19.06 de ganancia anual.<br/>
+            MSFT EPS ≈ $13.1 &nbsp;·&nbsp; GOOGL EPS ≈ $8.9 &nbsp;·&nbsp; KO EPS = $3.04
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">EPS creciente año tras año = empresa sana y en expansión</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Comparar EPS TTM (últimos 12 meses reales) vs Forward (estimado próximo año)</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">EPS puede inflarse con recompras de acciones (menos acciones → más EPS sin crecer ganancias reales)</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">EPS negativo = empresa con pérdidas — no usar P/E en ese caso</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">MSFT cotiza a $388 con EPS $13.1 → pagás $29.6 por cada $1 de ganancia (P/E 29.6x). GOOGL cotiza a $281 con EPS $8.9 → pagás $31.6. La comparación directa muestra cuál es más caro por dólar de ganancia.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🍕 Una pizzería vende 100 porciones/día y tiene 10 dueños → cada dueño "gana" 10 porciones/día. Eso es el EPS.</p>
+        </div>
+
+        <!-- P/E TTM -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">P/E TTM — Price to Earnings Trailing</p>
+            <p class="mult-card-subtitle">¿Cuántos años de ganancias PASADAS (reales) estás pagando hoy?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">P/E TTM = Precio actual ÷ EPS de los últimos 12 meses reales</div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> $698 ÷ $18.81 = 37.1x → pagás 37 años de ganancias actuales<br/>
+            <strong>KO:</strong> $75.87 ÷ $3.04 = 24.9x<br/>
+            S&P 500 histórico promedio: 15–18x &nbsp;·&nbsp; Hoy el S&P está en ~22x
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">P/E bajo (8–15x en industriales) = potencialmente barato o negocio de bajo crecimiento</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">P/E alto (25–40x) = mercado espera crecimiento futuro fuerte — pagás expectativa</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">P/E TTM puede distorsionarse por eventos únicos. Siempre mirar también el Forward P/E</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Comparar siempre contra el mismo sector — tech tiene P/E estructuralmente más alto que industriales</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box"><strong>CAT P/E 37x vs. peers industriales (DE, CMI) a 18x</strong> → CAT cotiza con prima del 100% sobre pares. La pregunta es: ¿está justificada? En un cíclico en pico de ciclo, generalmente no.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏠 Un depto renta $1.000/mes ($12.000/año) y cuesta $444.000 → P/E implícito de 37x (igual que CAT). ¿Es caro o barato? Depende del barrio (sector) y si sube la renta (crecimiento).</p>
+        </div>
+
+        <!-- P/E Forward -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">P/E Forward</p>
+            <p class="mult-card-subtitle">¿Cuántos años de ganancias ESTIMADAS pagás hoy?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">P/E Forward = Precio actual ÷ EPS estimado próximos 12 meses</div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> $698 ÷ $23.2 (estimado analistas 2026) = 30.1x<br/>
+            <strong>KO:</strong> $75.87 ÷ $3.28 (estimado 2026) = 23.1x<br/>
+            El Forward siempre es menor al TTM cuando la empresa crece.
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Si Forward &lt; TTM → analistas esperan crecimiento de ganancias → señal positiva</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">El Forward depende de estimaciones — pueden estar equivocadas. Tratar con escepticismo en contextos de incertidumbre macro</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Para comparar empresas de distinto tamaño, el Forward es más útil que el TTM</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">En recesiones el Forward "se rompe" — los analistas ajustan estimados a la baja rápidamente</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box"><strong>GOOGL Forward P/E ~20x vs MSFT ~28x</strong> con crecimiento similar → GOOGL es más barato por ganancia futura. Eso puede justificar sobreponderarlo en cartera.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">📅 Es como pagar por lo que va a ganar el año que viene, no por lo que ya ganó. Útil para empresas en crecimiento donde el pasado no refleja el futuro.</p>
+        </div>
+
+      </div><!-- /tab-ganancias -->
+
+      <!-- ===== EMPRESA ===== -->
+      <div id="tab-empresa" class="tab-panel">
+
+        <!-- QUÉ ES EL EBITDA -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">EBITDA — ¿Qué es exactamente?</p>
+            <p class="mult-card-subtitle">La medida de rentabilidad operativa más usada en finanzas corporativas e IB.</p>
+          </div>
+          <p class="sec-label">Definición</p>
+          <div class="formula-box">
+            EBITDA = Earnings Before Interest, Taxes, Depreciation &amp; Amortization<br/>
+            EBITDA = Resultado Operativo + Depreciación + Amortización<br/>
+            o equivalente:<br/>
+            EBITDA = Ingresos − Costo de ventas − Gastos operativos (sin D&amp;A)
+          </div>
+          <p class="sec-label">¿Para qué sirve?</p>
+          <div class="app-box">
+            El EBITDA es un <strong>proxy del flujo operativo de caja antes de la estructura financiera</strong>. Al excluir intereses (deuda), impuestos (país/estructura legal), depreciación y amortización (decisiones contables/contables), permite <strong>comparar empresas independientemente de cómo están financiadas o en qué país operan</strong>. Es el denominador clave en EV/EBITDA y Deuda Neta/EBITDA.
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT 2025:</strong><br/>
+            Resultado Operativo: $10.8bn<br/>
+            + Depreciación y Amortización: $2.6bn<br/>
+            → EBITDA = $13.4bn<br/>
+            <strong>KO:</strong> EBITDA ≈ $13.1bn &nbsp;·&nbsp; <strong>MELI:</strong> EBITDA ≈ $3.2bn
+          </div>
+          <p class="sec-label">Limitaciones importantes</p>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Ignora el CapEx — una empresa que requiere mucha inversión para funcionar puede tener EBITDA alto pero poco FCF real</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Buffett lo llama "ganancias antes de cosas malas" — la D&amp;A es un costo real de largo plazo aunque no sea caja</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Ideal para comparar empresas de distintos países, sectores con alta D&amp;A (telecoms, industriales) y en procesos de M&amp;A</span></div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏭 Tenés una fábrica que genera $1M de ventas, gasta $600k en costos operativos y $100k en depreciación de maquinaria. EBITDA = $400k (ignora que la máquina se desgasta). FCF sería menor porque eventualmente tenés que reemplazarla.</p>
+        </div>
+
+        <!-- EV/SALES -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">EV/Sales — Enterprise Value / Ventas</p>
+            <p class="mult-card-subtitle">Cuánto paga el mercado por cada dólar de ingresos. Útil cuando no hay EBITDA positivo.</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            EV = Market Cap + Deuda Neta<br/>
+            EV/Sales = Enterprise Value ÷ Ingresos Totales (Revenue TTM)
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>MELI:</strong> EV ≈ $120bn · Revenue $21bn → EV/Sales ≈ 5.7x<br/>
+            <strong>KO:</strong> EV ≈ $250bn · Revenue $47bn → EV/Sales ≈ 5.3x<br/>
+            <strong>CAT:</strong> EV ≈ $340bn · Revenue $64bn → EV/Sales ≈ 5.3x<br/>
+            Startups tech en early stage: pueden cotizar a 15–30x sales
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Esencial para empresas en crecimiento con EBITDA negativo — cuando no hay ganancias, se valúa por revenue</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Regla general: &lt;1x = muy barato; 1–3x = razonable para industriales/consumo; &gt;5x = premium de crecimiento</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">El revenue por sí solo no dice nada del margen — una empresa con EV/Sales bajo pero márgenes negativos puede ser una trampa</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">No comparar entre sectores: un EV/Sales 2x es bajo para SaaS pero alto para distribución/retail con márgenes del 2%</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">Se usa especialmente para <strong>empresas de software SaaS y growth</strong> (Salesforce, Snowflake, MELI) donde el EBITDA es bajo o negativo porque reinvierten todo. También útil en M&amp;A cuando se compara el precio de adquisición como múltiplo de las ventas del target.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏪 Comprás un local que vende $500k por año y pagás $2.5M → EV/Sales 5x. No sabés si es rentable, pero pagás porque creés que el volumen de negocio va a seguir creciendo.</p>
+        </div>
+
+        <!-- DEUDA NETA / EBITDA -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Deuda Neta / EBITDA — Apalancamiento financiero</p>
+            <p class="mult-card-subtitle">¿Cuántos años de EBITDA necesitaría la empresa para pagar toda su deuda neta?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            Deuda Neta = Deuda Total (corto + largo plazo) − Efectivo y equivalentes<br/>
+            Deuda Neta / EBITDA = Deuda Neta ÷ EBITDA
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> Deuda total $35bn − Efectivo $7.2bn = Deuda Neta $27.8bn · EBITDA $13.4bn → 2.1x<br/>
+            <strong>KO:</strong> Deuda Neta ≈ $35bn · EBITDA $13.1bn → 2.7x<br/>
+            <strong>MSFT:</strong> Deuda Neta negativa (más efectivo que deuda) → ratio no aplica / 0x<br/>
+            Investment Grade típico: &lt;3x &nbsp;·&nbsp; High Yield: 4–6x
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">&lt;2x = muy conservador — empresa con bajo riesgo financiero, puede tomar más deuda si quiere crecer</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">2–3x = razonable para empresas maduras con flujo estable (consumo, industriales, utilities)</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">3–5x = apalancamiento elevado — vulnerable a subas de tasa o caída de EBITDA en recesión</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">&gt;5x = zona de riesgo — típico de LBOs en private equity o empresas en dificultades financieras</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">Los bancos usan este ratio como <strong>covenant de deuda</strong>: si la empresa supera X veces el ratio acordado, el banco puede exigir el pago anticipado. También usado en rating crediticio: S&amp;P/Moody's consideran &gt;4x como factor negativo para el grado de inversión. Mirá el ratio en el contexto del ciclo: en pico de ciclo con EBITDA alto, el ratio puede parecer bajo artificialmente.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">💳 Ganás $100k/año y debés $300k (neto de ahorros) → ratio 3x. No es dramático si tu trabajo es estable. Si ganás $100k pero tu empleo es inestable, 3x ya es problemático. El contexto del negocio importa tanto como el número.</p>
+        </div>
+
+        <!-- EV/EBITDA -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">EV/EBITDA — Enterprise Value / EBITDA</p>
+            <p class="mult-card-subtitle">El múltiplo favorito de bancos de inversión. Valúa toda la empresa, no solo el equity.</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            EV = Market Cap + Deuda Neta<br/>
+            EBITDA = Ganancias antes de intereses, impuestos, depreciación y amortización<br/>
+            EV/EBITDA = EV ÷ EBITDA
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> EV ≈ $340bn · EBITDA $13.4bn → EV/EBITDA 25.4x<br/>
+            Mediana industriales: 12–14x &nbsp;·&nbsp; Tech: 18–25x<br/>
+            <strong>KO:</strong> EV/EBITDA ≈ 19.2x &nbsp;·&nbsp; BRK/B: no aplica (holding)
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Ignora diferencias de estructura de capital — más comparable entre empresas con distinto nivel de deuda</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Ignora impuestos — útil para comparar empresas de distintos países</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">No funciona bien para bancos/aseguradoras donde la deuda es parte del negocio</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Regla general: &lt;8x = barato; 10–15x = razonable; &gt;20x = caro (para industriales/consumo)</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">En M&A (fusiones y adquisiciones), el precio de compra <strong>SIEMPRE se expresa en múltiplos de EBITDA</strong>. "Compraron la empresa a 12x EBITDA" es el lenguaje estándar en IB y private equity.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏭 EV es el precio real de comprar una fábrica incluyendo sus deudas. EBITDA es la ganancia operativa bruta. EV/EBITDA = cuántos años de ganancia operativa tardás en recuperar la inversión total.</p>
+        </div>
+
+        <!-- FCF Yield -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">FCF Yield — Free Cash Flow Yield</p>
+            <p class="mult-card-subtitle">¿Qué % del precio de mercado genera la empresa en caja libre real?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            FCF = Flujo de Caja Operativo − CapEx<br/>
+            FCF Yield = FCF ÷ Market Cap × 100
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> FCF $7.45bn · Market Cap $325bn → FCF Yield 2.7%<br/>
+            <strong>KO:</strong> FCF $11.4bn · Market Cap $328bn → FCF Yield 3.5%<br/>
+            Bono del Tesoro USA 10Y: ~4.3% — benchmark de comparación
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">FCF Yield &gt; 5% = empresa genera caja generosamente respecto a su precio de mercado</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">FCF Yield &lt; tasa libre de riesgo (~4.3% USA) = pagás prima de crecimiento o calidad de marca</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">FCF es más difícil de "maquillar" que el EPS — es caja real, no contabilidad creativa</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">FCF negativo no siempre es malo — puede ser inversión en crecimiento (Amazon en sus primeros años)</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">Para comparar en cartera: <strong>MSFT FCF yield ~2.8%</strong> (bajo, justificado por crecimiento Azure) vs <strong>KO FCF yield 3.5%</strong> (mejor para defensivo). El FCF es la "caja que podría usarse para dividendos, recompras o inversión".</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">💰 Comprás un negocio en $1.000.000 que genera $35.000 de caja libre por año → FCF yield 3.5%. Es la "renta real" de tu inversión después de mantener los activos.</p>
+        </div>
+
+      </div><!-- /tab-empresa -->
+
+      <!-- ===== VALOR ===== -->
+      <div id="tab-valor" class="tab-panel">
+
+        <!-- P/B -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">P/B — Price to Book Value</p>
+            <p class="mult-card-subtitle">¿Cuántas veces el valor contable neto de la empresa estás pagando?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            Book Value = Activos Totales − Pasivos Totales<br/>
+            P/B = Precio por acción ÷ Valor Libro por acción
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>BRK/B:</strong> Precio $474 · Book Value ~$306/acción → P/B 1.55x<br/>
+            <strong>CAT:</strong> P/B 13.6x (intangibles y ROE muy alto inflan el gap)<br/>
+            S&P 500 histórico promedio: P/B ~2.5–3x
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Especialmente útil para bancos, aseguradoras y holdings con activos tangibles claros</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Para tech/marcas, P/B puede ser muy alto (MSFT ~12x) porque el valor real son intangibles no registrados en libros</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">P/B &lt; 1x puede significar que el mercado cree que la empresa destruye valor o sus activos están sobrevaluados</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Buffett recompra BRK cuando P/B &lt; 1.2–1.4x → señal explícita de que la acción está barata</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">Para bancos argentinos como GGAL: un banco cotizando a P/B 0.8x puede estar barato (mercado penaliza riesgo país). <strong>GGAL hoy ~1.2x P/B</strong> — razonable en el ciclo actual de recuperación.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏦 Una empresa tiene $100 en activos, debe $40 → "valor libro" = $60. Si la acción cotiza a $90 total, P/B = 1.5x. Pagás 1.5 veces lo que teóricamente valen los activos netos.</p>
+        </div>
+
+        <!-- DCF / Valor Intrínseco -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Valor Intrínseco — DCF</p>
+            <p class="mult-card-subtitle">El valor "real" de una empresa según sus flujos de caja futuros descontados.</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            Valor Intrínseco = Σ (FCF futuro ÷ (1+WACC)^año) + Valor Terminal<br/>
+            WACC = Costo promedio ponderado del capital<br/>
+            Valor Terminal = FCF último año × (1+g) ÷ (WACC−g)
+          </div>
+          <p class="sec-label">Ejemplo simplificado</p>
+          <div class="example-box">
+            <strong>KO simplificado:</strong><br/>
+            FCF año 1: $11.4bn · WACC: 7.5% · Crecimiento 5 años: 5%<br/>
+            FCF descontados años 1–5: ~$51bn<br/>
+            Valor Terminal: ~$220bn<br/>
+            Equity Value total: ~$271bn → Por acción: ~$68 vs precio $75.87 → prima del 10%
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">El DCF es muy sensible al WACC y al crecimiento terminal — pequeños cambios dan resultados muy distintos</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">"Mejor estar aproximadamente correcto que exactamente equivocado" — el DCF da rango, no número exacto</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">Si el 80% del valor viene del Valor Terminal, el modelo no dice mucho — demasiada incertidumbre compuesta</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Margen de seguridad Buffett/Graham: comprar a 30–40% de descuento sobre el valor intrínseco estimado</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box"><strong>CAT DCF</strong> → ~$520 vs precio $698 = pagás 35% de prima. <strong>KO DCF</strong> → ~$68 vs precio $75 = prima 10%. La prima en KO es razonable para un consumer staple; en CAT cíclico en pico de ciclo, no lo es. Usá la calculadora de <a href="vpn.html" style="color:var(--accent)">VPN/DCF →</a></div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">⏱ Calcular cuánto vale hoy recibir plata en el futuro. $100 dentro de 10 años no valen $100 hoy (inflación + riesgo). El WACC es la tasa que "trae" ese dinero futuro al presente.</p>
+        </div>
+
+      </div><!-- /tab-valor -->
+
+      <!-- ===== RETORNO ===== -->
+      <div id="tab-retorno" class="tab-panel">
+
+        <!-- ROE -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">ROE — Return on Equity</p>
+            <p class="mult-card-subtitle">¿Qué tan eficientemente genera ganancias con el dinero de los accionistas?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">ROE = Ganancia Neta ÷ Patrimonio Neto (Equity) × 100</div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> ROE 43.5% → $43.5 de ganancia neta por cada $100 de equity<br/>
+            <strong>KO:</strong> ROE 40.7% &nbsp;·&nbsp; MELI: ROE 36% &nbsp;·&nbsp; BRK/B: ROE 14.3%<br/>
+            S&P 500 mediana: ~15–18%
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">ROE &gt; 15% sostenido por 5+ años = empresa con ventaja competitiva real (moat)</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">ROE muy alto (&gt;50%) puede ser artificial por deuda excesiva — siempre verificar D/E ratio</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">ROE puede inflarse con recompras de acciones (reduce el equity denominador sin crecer ganancias reales)</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Buffett: busca ROE &gt; 15% consistente por 10 años como señal de ventaja competitiva duradera</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box"><strong>KO con ROE 40.7% y PEP con ROE 52%</strong> — ambas con ventaja de marca muy fuerte. GGAL tiene ROE ~30% en el contexto bancario argentino, alto pero influenciado por el ciclo de tasas real positivas.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏦 Tenés un negocio con $100.000 invertidos y genera $20.000 de ganancia neta → ROE 20%. Es el rendimiento sobre tu capital propio como dueño del negocio.</p>
+        </div>
+
+        <!-- ROIC -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">ROIC — Return on Invested Capital</p>
+            <p class="mult-card-subtitle">El más riguroso. ¿La empresa crea o destruye valor versus su costo de capital?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            ROIC = NOPAT ÷ Capital Invertido × 100<br/>
+            NOPAT = Ganancia operativa neta después de impuestos<br/>
+            Capital Invertido = Equity + Deuda − Efectivo
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT:</strong> ROIC 16.1% · WACC ~9% → spread +7.1% → CREA VALOR<br/>
+            <strong>MELI:</strong> ROIC 20.8% · WACC ~11% → spread +9.8% → CREA MUCHO VALOR<br/>
+            <strong>MSFT:</strong> ROIC ~35% · WACC ~8% → spread +27% → EXCEPCIONAL
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">ROIC &gt; WACC = empresa crea valor genuino para accionistas. El SPREAD es lo que importa.</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">ROIC &lt; WACC = destruye valor aunque tenga ganancias contables positivas</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">ROIC creciente en el tiempo = ventaja competitiva mejorando o escala de negocio compoundando</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Más complejo de calcular que ROE — en empresas con muchos intangibles puede ser difícil de interpretar</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">McKinsey comprobó que el <strong>ROIC es el factor que mejor predice el retorno de largo plazo</strong> de una acción. Para MSFT: ROIC ~35% vs WACC ~8% → spread de 27%. Por eso justifica un múltiplo elevado. Calculá el WACC con la herramienta <a href="wacc.html" style="color:var(--accent)">WACC →</a></div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">⚖️ Pedís $100.000 al banco al 9% e invertís en negocio que genera 16% → spread de 7%. Si tu negocio solo genera 7% y el banco cobra 9%, estás perdiendo plata aunque "seas rentable" contablemente.</p>
+        </div>
+
+        <!-- MARGEN OPERATIVO -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Margen Operativo — Operating Margin</p>
+            <p class="mult-card-subtitle">¿Qué porcentaje de sus ingresos se convierte en ganancia operativa real?</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            EBIT = Earnings Before Interest &amp; Taxes (= Resultado Operativo)<br/>
+            Margen Operativo = EBIT ÷ Ingresos Totales × 100
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>MSFT:</strong> EBIT $130bn · Revenue $245bn → Margen Operativo 53%<br/>
+            <strong>CAT:</strong> EBIT $10.8bn · Revenue $64bn → Margen Operativo 16.9%<br/>
+            <strong>KO:</strong> Margen Operativo ≈ 21% &nbsp;·&nbsp; <strong>MELI:</strong> Margen Operativo ≈ 11%<br/>
+            Distribución/retail: 2–5% &nbsp;·&nbsp; SaaS maduro: 20–40% &nbsp;·&nbsp; Industriales: 10–18%
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Margen creciente en el tiempo = ventaja competitiva expandiéndose o escalado eficiente del negocio</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Compará siempre contra el sector: un margen 5% es excelente en supermercados, malo en software</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Puede comprimirse en expansión agresiva (más costos fijos) aunque el negocio sea sano — mirá la tendencia, no solo el punto actual</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">Margen operativo decreciente con revenue creciente = costos crecen más rápido que las ventas → señal de alerta</span></div>
+          <p class="sec-label">Diferencia vs Margen Neto</p>
+          <div class="app-box">El Margen Operativo mide la eficiencia del <strong>negocio puro</strong> (antes de intereses e impuestos). El Margen Neto incluye la estructura financiera y fiscal. Dos empresas idénticas operativamente pueden tener márgenes netos muy distintos si una tiene mucha deuda. Por eso el margen operativo es más comparable entre empresas.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🍔 Un restaurante factura $1.000.000. Paga $400k en comida, $350k en sueldos y alquiler. Gana $250k antes de pagar el crédito del horno y los impuestos → Margen Operativo 25%. Eso mide qué tan bien administra el negocio en sí.</p>
+        </div>
+
+        <!-- WACC -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">WACC — Costo Promedio Ponderado del Capital</p>
+            <p class="mult-card-subtitle">La tasa mínima de retorno que una empresa debe generar para crear valor para sus inversores.</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            WACC = (E/V × Ke) + (D/V × Kd × (1 − T))<br/>
+            E = Valor del Equity &nbsp;·&nbsp; D = Valor de la Deuda &nbsp;·&nbsp; V = E + D<br/>
+            Ke = Costo del equity (via CAPM) = Rf + β × (Rm − Rf)<br/>
+            Kd = Costo de la deuda (tasa de interés promedio)<br/>
+            T = Tasa impositiva efectiva
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>CAT simplificado:</strong><br/>
+            Ke = 4.3% (Rf) + 1.53 (β) × 5.5% (prima de riesgo) = 12.7%<br/>
+            Kd after-tax = 4.8% × (1 − 21%) = 3.8%<br/>
+            Estructura: 70% equity / 30% deuda<br/>
+            WACC = 0.70 × 12.7% + 0.30 × 3.8% = <strong>10%</strong><br/>
+            <strong>MSFT WACC ≈ 8%</strong> &nbsp;·&nbsp; <strong>MELI WACC ≈ 11%</strong> (mercado emergente)
+          </div>
+          <p class="sec-label">¿Para qué se usa?</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Tasa de descuento en el DCF — "trae" los flujos futuros al valor presente</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Benchmark del ROIC: si ROIC &gt; WACC → crea valor; si ROIC &lt; WACC → destruye valor</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">El WACC más alto = empresa más riesgosa = menor valuación (mismo FCF descontado a tasa más alta vale menos)</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">Pequeños cambios en WACC (+1%) pueden cambiar el valor intrínseco un 15–25% — es muy sensible</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">Una empresa con WACC 8% que genera ROIC 35% (como MSFT) crea un <strong>spread de +27%</strong> — justifica múltiplos altos porque cada dólar invertido genera valor muy por encima del costo. En cambio, una empresa con WACC 10% y ROIC 9% destruye valor aunque sea "rentable". Calculá el WACC exacto con la herramienta <a href="wacc.html" style="color:var(--accent)">WACC →</a></div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">⚖️ Tu negocio se financia mitad con plata propia (que exige 12% de retorno) y mitad con deuda bancaria al 6% (neto de impuestos 4.7%). El WACC es el promedio ponderado: ~8.3%. Si el negocio rinde menos que eso, estás destruyendo tu capital aunque no lo notes en el balance.</p>
+        </div>
+
+      </div><!-- /tab-retorno -->
+
+      <!-- ===== MERCADO ===== -->
+      <div id="tab-mercado" class="tab-panel">
+
+        <!-- Beta -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Beta — Sensibilidad al mercado</p>
+            <p class="mult-card-subtitle">Mide cuánto se mueve una acción respecto al mercado total. La medida de riesgo sistemático.</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">
+            Beta = Covarianza(acción, mercado) ÷ Varianza(mercado)<br/>
+            Beta = 1 → se mueve igual que el S&P 500<br/>
+            Beta &gt; 1 → amplifica movimientos del mercado<br/>
+            Beta &lt; 1 → amortigua movimientos del mercado
+          </div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            Si el S&P cae 10%:<br/>
+            · NVDA (Beta 1.85) → cae ~18.5%<br/>
+            · CAT (Beta 1.53) → cae ~15.3%<br/>
+            · MSFT (Beta 0.90) → cae ~9%<br/>
+            · KO (Beta 0.55) → cae ~5.5%<br/>
+            · BRK/B (Beta 0.87) → cae ~8.7%<br/>
+            · GLD (Beta −0.05) → sube o queda igual
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Beta &lt; 0.8: activo defensivo — ideal para reducir riesgo en mercados volátiles</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Beta 0.8–1.2: en línea con el mercado — ni defensivo ni agresivo</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Beta &gt; 1.2: activo agresivo — amplifica movimientos en AMBAS direcciones (subida y caída)</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">Beta negativo (GLD ~−0.05): se mueve contra el mercado — cobertura/hedge natural ante stress</span></div>
+          <p class="sec-label">¿Dónde encontrarlo?</p>
+          <div class="app-box">Yahoo Finance (sección Summary, <strong>"Beta 5Y Monthly"</strong>) · TradingView (Statistics) · Bloomberg. El Beta se calcula contra el S&P 500 usando 5 años de datos mensuales. No es fijo — se actualiza periódicamente.</div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🎢 Si el mercado es una montaña rusa que sube/baja 10%, un Beta 2 es una montaña rusa que sube/baja 20%. KO con Beta 0.55 es como un ascensor lento — se mueve, pero mucho menos.</p>
+        </div>
+
+        <!-- Dividend Yield -->
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Dividend Yield — Rendimiento del Dividendo</p>
+            <p class="mult-card-subtitle">El "interés" que te paga la empresa por ser accionista, como % del precio actual.</p>
+          </div>
+          <p class="sec-label">Fórmula</p>
+          <div class="formula-box">Dividend Yield = Dividendo anual por acción ÷ Precio por acción × 100</div>
+          <p class="sec-label">Ejemplo real</p>
+          <div class="example-box">
+            <strong>KO:</strong> dividendo $1.94/acción · precio $75.87 → Yield 2.8%<br/>
+            <strong>VZ (Verizon):</strong> dividendo $2.66 · precio $43 → Yield 6.2%<br/>
+            <strong>CAT:</strong> dividendo $6.04 · precio $698 → Yield 0.9%<br/>
+            Bono Tesoro USA 10Y: 4.3% → benchmark de referencia
+          </div>
+          <p class="sec-label">Reglas de lectura</p>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Yield 2–4% con crecimiento del dividendo = ideal para ingreso + revalorización de capital</span></div>
+          <div class="rule-item rule-warn"><span class="rule-icon">⚠</span><span class="rule-text">Yield muy alto (&gt;7%) puede ser "yield trap" — el mercado teme que se corte el dividendo</span></div>
+          <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Dividend Aristocrats: empresas que aumentaron dividendo 25+ años consecutivos. KO lleva 62 años.</span></div>
+          <div class="rule-item rule-bad"><span class="rule-icon">✕</span><span class="rule-text">Yield &lt; 1% en un stock sin alto crecimiento = pagás caro y no recibís nada a cambio</span></div>
+          <p class="sec-label">Aplicación práctica</p>
+          <div class="app-box">Para CEDEARs en Argentina: el dividendo se cobra en <strong>"dólar cable"</strong> directo en tu cuenta comitente. KO paga trimestralmente: marzo, junio, septiembre, diciembre. Calculá tus ingresos por dividendos con la <a href="dividendos.html" style="color:var(--accent)">calculadora de dividendos →</a></div>
+          <p class="sec-label">Analogía</p>
+          <p class="analogy-text">🏘 Comprás una propiedad en $100.000 que alquila $2.800/año → rental yield 2.8%. El Dividend Yield es exactamente eso pero para acciones. Diferencia: las acciones también pueden subir de precio.</p>
+        </div>
+
+      </div><!-- /tab-mercado -->
+
+      <!-- ===== TABLA RÁPIDA ===== -->
+      <div id="tab-referencia" class="tab-panel">
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Tabla de referencia rápida</p>
+            <p class="mult-card-subtitle">¿Qué es barato, razonable o caro? — Referencia general (varía por sector)</p>
+          </div>
+          <div class="ref-table-wrap">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th>Múltiplo</th>
+                  <th>Barato / Bueno</th>
+                  <th>Razonable</th>
+                  <th>Caro / Bajo</th>
+                  <th>Nota clave</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>P/E TTM</td><td class="cheap">&lt; 12x</td><td class="fair">15–22x</td><td class="exp">&gt; 30x</td><td>Varía mucho por sector</td></tr>
+                <tr><td>P/E Forward</td><td class="cheap">&lt; 10x</td><td class="fair">15–20x</td><td class="exp">&gt; 28x</td><td>Tech puede justificar más</td></tr>
+                <tr><td>EV/EBITDA</td><td class="cheap">&lt; 7x</td><td class="fair">10–14x</td><td class="exp">&gt; 20x</td><td>Industriales/consumo</td></tr>
+                <tr><td>EV/Sales</td><td class="cheap">&lt; 1x</td><td class="fair">1–3x</td><td class="exp">&gt; 5x</td><td>Varía mucho por sector/márgenes</td></tr>
+                <tr><td>Deuda Neta/EBITDA</td><td class="cheap">&lt; 2x</td><td class="fair">2–3x</td><td class="exp">&gt; 5x</td><td>Contexto de ciclo económico</td></tr>
+                <tr><td>Margen Operativo</td><td class="cheap">&gt; 25%</td><td class="fair">10–20%</td><td class="exp">&lt; 5%</td><td>Comparar contra el sector</td></tr>
+                <tr><td>WACC</td><td class="cheap">&lt; 7%</td><td class="fair">8–10%</td><td class="exp">&gt; 12%</td><td>Lower WACC = mayor valuación DCF</td></tr>
+                <tr><td>FCF Yield</td><td class="cheap">&gt; 6%</td><td class="fair">3–5%</td><td class="exp">&lt; 2%</td><td>vs tasa libre de riesgo ~4.3%</td></tr>
+                <tr><td>P/B</td><td class="cheap">&lt; 1.0x</td><td class="fair">1.5–3x</td><td class="exp">&gt; 5x</td><td>Depende de intangibles</td></tr>
+                <tr><td>ROE</td><td class="cheap">&gt; 20%</td><td class="fair">12–18%</td><td class="exp">&lt; 8%</td><td>Consistente 5+ años</td></tr>
+                <tr><td>ROIC vs WACC</td><td class="cheap">WACC + 5%+</td><td class="fair">WACC + 2%</td><td class="exp">&lt; WACC</td><td>El spread es lo que importa</td></tr>
+                <tr><td>Beta</td><td class="cheap">&lt; 0.7 (defensivo)</td><td class="fair">0.8–1.1</td><td class="exp">&gt; 1.4 (agresivo)</td><td>Depende del perfil de riesgo</td></tr>
+                <tr><td>Dividend Yield</td><td class="cheap">&gt; 4% con crecimiento</td><td class="fair">2–3%</td><td class="exp">&lt; 1%</td><td>Con crecimiento del dividendo</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:1.25rem;padding:0.85rem 1rem;background:rgba(220,60,60,0.05);border:1px solid rgba(220,60,60,0.12);border-radius:8px;font-size:0.78rem;color:var(--text-muted);line-height:1.65">
+            ⚠️ <strong style="color:#f08080">Todos los rangos son orientativos.</strong> Siempre comparar contra peers del mismo sector y contexto macroeconómico. Una empresa con P/E 35x puede ser barata si crece al 30% anual; una con P/E 10x puede ser cara si está en declive estructural. Los múltiplos son herramientas de comparación relativa, no verdades absolutas.
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ORDEN DE ANÁLISIS ===== -->
+      <div id="tab-orden" class="tab-panel">
+        <div class="mult-card">
+          <div class="mult-card-header">
+            <p class="mult-card-name">Orden de análisis institucional</p>
+            <p class="mult-card-subtitle">Cómo usar los múltiplos en secuencia lógica antes de tomar una decisión de inversión</p>
+          </div>
+          <ul class="order-list">
+            <li class="order-item">
+              <span class="order-num">1</span>
+              <div>
+                <strong>EPS y su tendencia</strong>
+                ¿La empresa gana más cada año? Si sí, continúo. Si el EPS decrece sin causa justificada, descarto salvo tesis especial de recuperación. Mirá el histórico de 5–10 años.
+              </div>
+            </li>
+            <li class="order-item">
+              <span class="order-num">2</span>
+              <div>
+                <strong>ROIC vs WACC</strong>
+                ¿Crea o destruye valor genuino? Si el ROIC está consistentemente por encima del costo de capital, tengo evidencia de ventaja competitiva real. Este es el filtro más importante de largo plazo. Calculá el WACC con la <a href="wacc.html" style="color:var(--accent)">herramienta →</a>
+              </div>
+            </li>
+            <li class="order-item">
+              <span class="order-num">3</span>
+              <div>
+                <strong>P/E Forward vs peers del mismo sector</strong>
+                ¿Pago más o menos que por negocios comparables? Si pago más, necesito justificación explícita en crecimiento superior o calidad diferencial. Nunca comparar entre sectores distintos.
+              </div>
+            </li>
+            <li class="order-item">
+              <span class="order-num">4</span>
+              <div>
+                <strong>FCF Yield vs tasa libre de riesgo</strong>
+                ¿El negocio rinde más que un bono del Tesoro? Si no, necesito argumento de crecimiento muy sólido y cuantificable. La tasa libre de riesgo es el "piso mínimo" implícito de cualquier inversión.
+              </div>
+            </li>
+            <li class="order-item">
+              <span class="order-num">5</span>
+              <div>
+                <strong>DCF para rango de valor intrínseco</strong>
+                Construir escenario base, optimista y pesimista. El valor intrínseco es un rango, nunca un número exacto. Margen de seguridad mínimo del 20–30%. Usá la <a href="vpn.html" style="color:var(--accent)">calculadora VPN/DCF →</a>
+              </div>
+            </li>
+            <li class="order-item">
+              <span class="order-num">6</span>
+              <div>
+                <strong>Beta y Dividend Yield</strong>
+                Entender el perfil de riesgo del activo y la renta que recibo mientras espero la apreciación. El Beta es clave para calcular el impacto en la cartera total. Analizá el yield con la <a href="dividendos.html" style="color:var(--accent)">calculadora de dividendos →</a>
+              </div>
+            </li>
+          </ul>
+
+          <div style="margin-top:1.5rem;background:var(--accent-dim);border:1px solid rgba(74,222,154,0.2);border-radius:10px;padding:1.1rem 1.25rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+            <strong style="color:var(--accent)">Principio Buffett:</strong> "Prefiero tener una idea aproximadamente correcta que una precisamente equivocada." El análisis fundamental da un marco de referencia, no certezas. <strong style="color:var(--text)">La calidad del negocio y el precio pagado son los únicos determinantes reales del retorno de largo plazo.</strong>
+          </div>
+
+          <div style="margin-top:1rem;background:rgba(220,60,60,0.05);border:1px solid rgba(220,60,60,0.12);border-radius:10px;padding:1.1rem 1.25rem;font-size:0.82rem;color:var(--text-muted);line-height:1.7">
+            ⚠️ <strong style="color:#f08080">Disclaimer:</strong> Esta guía es de carácter educativo. Cada empresa es un caso particular que requiere análisis individual. Los parámetros presentados son referencias orientativas y no constituyen recomendación de compra o venta de ningún activo financiero. Todo inversor es dueño de su análisis y responsable de sus propias decisiones de inversión.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /container -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Equity Research</h3>
+        <ul>
+          <li><a href="guia-multiplos.html">Guía de Múltiplos</a></li>
+          <li><a href="multiplos.html">Calculadora Múltiplos</a></li>
+          <li><a href="wacc.html">WACC</a></li>
+          <li><a href="ddm.html">DDM</a></li>
+          <li><a href="vpn.html">VPN / DCF</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function showTab(name, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.guide-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

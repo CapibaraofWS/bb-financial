@@ -1,0 +1,499 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Préstamo y Cuota — BB Financial</title>
+  <meta name="description" content="Calculá la cuota de tu préstamo. Sistemas francés, alemán y americano. Incluye TNA, TEA y CFTEA. Tabla de amortización completa." />
+  <meta name="keywords" content="calculadora préstamo, cuota préstamo, sistema francés, sistema alemán, TNA, TEA, CFTEA, amortización" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/prestamo.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .rates-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .rate-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .rate-card .r-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 0.35rem;
+    }
+    .rate-card .r-value {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+    }
+    .rate-card .r-desc {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-top: 0.2rem;
+      font-family: var(--font-mono);
+    }
+
+    .explain-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .explain-box h4 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 0.5rem;
+    }
+    .explain-box p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Amortization table */
+    .amort-wrap {
+      max-height: 340px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-top: 1.25rem;
+    }
+    .amort-wrap::-webkit-scrollbar { width: 4px; }
+    .amort-wrap::-webkit-scrollbar-track { background: transparent; }
+    .amort-wrap::-webkit-scrollbar-thumb { background: var(--text-subtle); border-radius: 2px; }
+    .amort-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .amort-table thead { position: sticky; top: 0; background: var(--bg-card); z-index: 1; }
+    .amort-table th {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      padding: 0.65rem 0.75rem;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    .amort-table th:first-child { text-align: left; }
+    .amort-table td {
+      padding: 0.55rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      text-align: right;
+    }
+    .amort-table td:first-child { text-align: left; color: var(--text); }
+    .amort-table td.col-interes { color: #ff9999; }
+    .amort-table td.col-capital { color: var(--accent); }
+    .amort-table tfoot td {
+      font-weight: 600;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    .sistema-tabs { display:flex; gap:0.5rem; margin-bottom:1rem; }
+    .sistema-tab {
+      flex:1; padding:0.55rem 0.5rem;
+      border-radius:7px; font-size:0.8rem; font-weight:500;
+      color:var(--text-muted); background:var(--bg);
+      border:1px solid var(--border); cursor:pointer;
+      transition:all var(--transition); text-align:center;
+    }
+    .sistema-tab.active { color:var(--accent); background:var(--accent-dim); border-color:rgba(74,222,154,0.25); }
+
+    @media(max-width:600px){ .rates-grid{grid-template-columns:1fr 1fr;} }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+                              <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Préstamo / Cuota</p>
+        <h1 class="page-title">Calculadora de Préstamo 💳</h1>
+        <p class="page-subtitle">Calculá tu cuota mensual, el costo total del crédito y la tabla de amortización completa. Sistemas francés, alemán y americano.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+
+      <!-- TNA/TEA/CFTEA explanation -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2.5rem">
+        <div class="explain-box">
+          <h4>TNA — Tasa Nominal Anual</h4>
+          <p>Es la tasa que se anuncia en el préstamo. No refleja la capitalización. Si la TNA es 60% con cuotas mensuales, la tasa mensual es 60%/12 = 5%. <strong style="color:var(--text)">Es el dato que te dan, pero no el costo real.</strong></p>
+        </div>
+        <div class="explain-box">
+          <h4>TEA — Tasa Efectiva Anual</h4>
+          <p>Refleja el efecto de la capitalización mensual. TEA = (1 + TNA/12)¹² − 1. <strong style="color:var(--text)">Es el costo real del crédito en términos anuales, sin otros cargos.</strong></p>
+        </div>
+        <div class="explain-box">
+          <h4>CFTEA — Costo Financiero Total</h4>
+          <p>Incluye todo: tasa + gastos de otorgamiento + seguros + impuestos. <strong style="color:var(--text)">Es el indicador más honesto del costo real del préstamo.</strong> Siempre comparar CFTEA entre bancos.</p>
+        </div>
+      </div>
+
+      <a href="inflacion.html" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1.25rem;text-decoration:none;transition:all 0.25s;margin-bottom:1.5rem" onmouseover="this.style.borderColor='rgba(100,200,150,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+        <p style="font-size:0.82rem;color:var(--text-muted)">📉 ¿Tu cuota pierde poder adquisitivo con el tiempo? Calculá el impacto de la inflación →</p>
+        <span style="color:var(--accent)">→</span>
+      </a>      <div class="calc-layout">
+        <!-- INPUTS -->
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Datos del préstamo</p>
+
+            <div class="form-group">
+              <label for="capital-prest">Capital del préstamo <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="capital-prest" class="has-prefix" value="10000" min="1" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tna">TNA — Tasa Nominal Anual <span>(%)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="tna" class="has-suffix" value="36" min="0" max="2000" step="0.1" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="plazo-prest">Plazo <span>(meses)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="plazo-prest" class="has-suffix" value="24" min="1" max="360" />
+                <span class="input-suffix">meses</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:1.25rem">
+              <label style="display:block;font-size:0.85rem;font-weight:500;color:var(--text-muted);margin-bottom:0.6rem">Sistema de amortización</label>
+              <div class="sistema-tabs">
+                <button class="sistema-tab active" onclick="setSistema('frances',this)">Francés</button>
+                <button class="sistema-tab" onclick="setSistema('aleman',this)">Alemán</button>
+                <button class="sistema-tab" onclick="setSistema('americano',this)">Americano</button>
+              </div>
+              <div id="sistema-desc" style="font-size:0.8rem;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;line-height:1.55"></div>
+            </div>
+
+            <div style="border-top:1px solid var(--border);padding-top:1.25rem;margin-bottom:1rem">
+              <p class="panel-title" style="margin-bottom:1rem">Costos adicionales</p>
+              <div class="form-group">
+                <label for="costo-otorg">Costo de otorgamiento <span>($ único)</span></label>
+                <div class="input-wrap"><span class="input-prefix">$</span>
+                  <input type="number" id="costo-otorg" class="has-prefix" value="0" min="0" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="impuestos">Impuestos y seguros <span>(% sobre los intereses de cada cuota)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="impuestos" class="has-suffix" value="0" min="0" max="50" step="0.1" />
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size:0.78rem;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-left:2px solid rgba(232,201,122,0.4);border-radius:0 8px 8px 0;padding:0.7rem 0.9rem;margin-top:-0.5rem;margin-bottom:1rem;line-height:1.55">
+              <strong style="color:var(--text)">¿Sobre qué se aplica?</strong> Se aplica sobre los <strong style="color:var(--gold)">intereses</strong> de cada cuota, no sobre el capital. Por ejemplo, con IVA del 21%, si una cuota tiene $100 de interés, se agregan $21 extra. Argentina: IVA = 21%. EE.UU.: no suele aplicar. Dejar en 0 si no corresponde.
+            </div>
+            <button class="btn btn-primary" onclick="calcularPrestamo()" style="width:100%;justify-content:center">Calcular →</button>
+          </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+
+            <div class="result-highlight">
+              <p class="result-label">Cuota mensual</p>
+              <p class="result-value" id="res-cuota">$0</p>
+              <p class="result-sub" id="res-cuota-sub">—</p>
+            </div>
+
+            <!-- TNA/TEA/CFTEA -->
+            <div class="rates-grid">
+              <div class="rate-card">
+                <p class="r-label">TNA</p>
+                <p class="r-value" id="r-tna">—</p>
+                <p class="r-desc">Nominal anual</p>
+              </div>
+              <div class="rate-card">
+                <p class="r-label">TEA</p>
+                <p class="r-value" id="r-tea">—</p>
+                <p class="r-desc">Efectiva anual</p>
+              </div>
+              <div class="rate-card" style="border-color:rgba(232,201,122,0.2)">
+                <p class="r-label">CFTEA</p>
+                <p class="r-value" id="r-cftea" style="color:var(--gold)">—</p>
+                <p class="r-desc">Costo total</p>
+              </div>
+            </div>
+
+            <div class="result-row"><span class="label">Capital prestado</span><span class="value" id="res-capital-p">—</span></div>
+            <div class="result-row"><span class="label">Total intereses</span><span class="value" style="color:#ff9999" id="res-total-int">—</span></div>
+            <div class="result-row"><span class="label">Costo otorgamiento</span><span class="value" id="res-otorg">—</span></div>
+            <div class="result-row"><span class="label">Total a pagar</span><span class="value positive" id="res-total-p">—</span></div>
+            <div class="result-row"><span class="label">Costo del crédito</span><span class="value neutral" id="res-costo-pct">—</span></div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Capital vs. Intereses por cuota</p>
+              <canvas id="prestamoChart" class="calc-chart" height="200"></canvas>
+            </div>
+
+            <p class="panel-title" style="margin-top:1.5rem">Tabla de amortización</p>
+            <div class="amort-wrap">
+              <table class="amort-table">
+                <thead>
+                  <tr>
+                    <th>Cuota</th>
+                    <th>Pago</th>
+                    <th>Capital</th>
+                    <th>Interés</th>
+                    <th>Saldo</th>
+                  </tr>
+                </thead>
+                <tbody id="amort-body"></tbody>
+                <tfoot><tr id="amort-foot"></tr></tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+        <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let chart = null;
+    let sistemaActual = 'frances';
+
+    const sistemasDesc = {
+      frances:   '<strong style="color:var(--text)">Cuota fija:</strong> Cada cuota es igual. Al principio pagás más interés y menos capital; al final, más capital. Es el más común en préstamos personales e hipotecas.',
+      aleman:    '<strong style="color:var(--text)">Capital fijo:</strong> La amortización de capital es constante cada mes. La cuota va bajando porque los intereses disminuyen sobre el saldo. Total de intereses menor que el francés.',
+      americano: '<strong style="color:var(--text)">Bullet (solo intereses):</strong> Pagás solo intereses durante el plazo y el capital completo al final. Cuotas muy bajas pero gran desembolso al vencimiento.'
+    };
+
+    function setSistema(s, btn) {
+      sistemaActual = s;
+      document.querySelectorAll('.sistema-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('sistema-desc').innerHTML = sistemasDesc[s];
+      calcularPrestamo();
+    }
+
+    document.getElementById('sistema-desc').innerHTML = sistemasDesc['frances'];
+
+    function calcularPrestamo() {
+      const C       = parseFloat(document.getElementById('capital-prest').value)  || 0;
+      const tna     = (parseFloat(document.getElementById('tna').value) || 0) / 100;
+      const n       = parseInt(document.getElementById('plazo-prest').value)       || 1;
+      const costoO  = parseFloat(document.getElementById('costo-otorg').value)     || 0;
+      const impPct  = (parseFloat(document.getElementById('impuestos').value) || 0) / 100;
+      const tMes    = tna / 12;
+      const tea     = Math.pow(1 + tMes, 12) - 1;
+
+      let cuotas = [];
+      let cuotaMensual = 0;
+
+      if (sistemaActual === 'frances') {
+        if (tMes === 0) {
+          cuotaMensual = C / n;
+          for (let i = 1; i <= n; i++) {
+            const saldoAntes = C - cuotaMensual * (i-1);
+            cuotas.push({ num:i, pago:cuotaMensual, capital:cuotaMensual, interes:0, saldo: Math.max(0, C - cuotaMensual*i) });
+          }
+        } else {
+          cuotaMensual = C * (tMes * Math.pow(1+tMes,n)) / (Math.pow(1+tMes,n) - 1);
+          let saldo = C;
+          for (let i = 1; i <= n; i++) {
+            const interes = saldo * tMes;
+            const capitalAm = cuotaMensual - interes;
+            saldo = Math.max(0, saldo - capitalAm);
+            cuotas.push({ num:i, pago:cuotaMensual, capital:capitalAm, interes, saldo });
+          }
+        }
+      } else if (sistemaActual === 'aleman') {
+        const capitalFijo = C / n;
+        let saldo = C;
+        for (let i = 1; i <= n; i++) {
+          const interes = saldo * tMes;
+          const pago = capitalFijo + interes;
+          saldo = Math.max(0, saldo - capitalFijo);
+          cuotas.push({ num:i, pago, capital:capitalFijo, interes, saldo });
+          if (i === 1) cuotaMensual = pago;
+        }
+      } else { // americano
+        cuotaMensual = C * tMes;
+        for (let i = 1; i <= n; i++) {
+          const esUltima = i === n;
+          const capital = esUltima ? C : 0;
+          const pago = esUltima ? C + C*tMes : C*tMes;
+          cuotas.push({ num:i, pago, capital, interes:C*tMes, saldo: esUltima ? 0 : C });
+        }
+      }
+
+      // Impuesto se aplica SOLO sobre el componente de interés de cada cuota
+      const cuotaConImp   = cuotas[0].pago + cuotas[0].interes * impPct;
+      const totalInt      = cuotas.reduce((s,cu) => s + cu.interes, 0);
+      const totalImpuesto = cuotas.reduce((s,cu) => s + cu.interes * impPct, 0);
+      const totalPago     = cuotas.reduce((s,cu) => s + cu.pago + cu.interes * impPct, 0) + costoO;
+
+      // CFTEA — TIR mensual por bisección con signo correcto
+      // Impuesto se aplica sobre los intereses de cada cuota
+      const cuotasConImpDetalle = cuotas.map(cu => ({
+        ...cu,
+        pagoFinal: cu.pago + cu.interes * impPct
+      }));
+      let cftea = 0;
+      try {
+        // Flujo desde perspectiva del prestatario:
+        // flujo0 = +(C - costoO) [recibís capital menos costo de otorgamiento]
+        // flujos k = -pagoFinal [pagás cuota + impuesto sobre interés]
+        // NPV(r=0) > 0 (pagás más de lo que recibís)
+        // NPV(r->inf) < 0 (descuento hace que pagos valgan menos)
+        const neto0 = C - costoO;
+        let lo = 0, hi = 2; // máx 200% mensual, más que suficiente
+        for (let iter = 0; iter < 80; iter++) {
+          const mid = (lo + hi) / 2;
+          let npv = -neto0;
+          for (let k = 0; k < cuotasConImpDetalle.length; k++) {
+            npv += cuotasConImpDetalle[k].pagoFinal / Math.pow(1 + mid, k + 1);
+          }
+          if (npv > 0) lo = mid; else hi = mid;
+        }
+        const tirMens = (lo + hi) / 2;
+        cftea = Math.pow(1 + tirMens, 12) - 1;
+      } catch(e) { cftea = tea; }
+
+      // UI
+      document.getElementById('res-cuota').textContent     = '$' + formatUSD(cuotaConImp);
+      document.getElementById('res-cuota-sub').textContent = `${n} cuotas · sistema ${sistemaActual} · TNA ${(tna*100).toFixed(1)}%`;
+      document.getElementById('r-tna').textContent         = (tna*100).toFixed(2) + '%';
+      document.getElementById('r-tea').textContent         = (tea*100).toFixed(2) + '%';
+      document.getElementById('r-cftea').textContent       = (cftea*100).toFixed(2) + '%';
+      document.getElementById('res-capital-p').textContent = '$' + formatUSD(C);
+      document.getElementById('res-total-int').textContent = '$' + formatUSD(totalInt);
+      document.getElementById('res-otorg').textContent     = '$' + formatUSD(costoO);
+      document.getElementById('res-total-p').textContent   = '$' + formatUSD(totalPago);
+      document.getElementById('res-costo-pct').textContent = ((totalPago - C) / C * 100).toFixed(1) + '% sobre el capital';
+
+      // Tabla amortización
+      const tbody = document.getElementById('amort-body');
+      tbody.innerHTML = cuotas.map(cu => {
+        const pagoFinal = cu.pago + cu.interes * impPct;
+        const impEsta   = cu.interes * impPct;
+        return `<tr>
+          <td>${cu.num}</td>
+          <td>$${formatUSD(pagoFinal)}</td>
+          <td class="col-capital">$${formatUSD(cu.capital)}</td>
+          <td class="col-interes">$${formatUSD(cu.interes + impEsta)}</td>
+          <td>$${formatUSD(cu.saldo)}</td>
+        </tr>`;}).join('');
+
+      document.getElementById('amort-foot').innerHTML = `
+        <td>Total</td>
+        <td>$${formatUSD(totalPago)}</td>
+        <td class="col-capital">$${formatUSD(C)}</td>
+        <td class="col-interes">$${formatUSD(totalInt + totalImpuesto + costoO)}</td>
+        <td>—</td>`;
+
+      // Chart
+      const maxShow = Math.min(cuotas.length, 36);
+      const labels  = cuotas.slice(0,maxShow).map(c => `C${c.num}`);
+      const dCap    = cuotas.slice(0,maxShow).map(c => c.capital);
+      const dInt    = cuotas.slice(0,maxShow).map(c => c.interes);
+
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById('prestamoChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Capital', data: dCap, backgroundColor: 'rgba(74,222,154,0.7)', borderRadius: 2 },
+            { label: 'Interés', data: dInt, backgroundColor: 'rgba(255,100,100,0.6)', borderRadius: 2 },
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color:'#7a8599', font:{family:'DM Mono',size:10} } } },
+          scales: {
+            x: { stacked:true, ticks:{color:'#7a8599',font:{family:'DM Mono',size:8},maxTicksLimit:12}, grid:{color:'rgba(255,255,255,0.03)'} },
+            y: { stacked:true, ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0))}, grid:{color:'rgba(255,255,255,0.04)'} }
+          }
+        }
+      });
+    }
+
+    calcularPrestamo();
+    ['capital-prest','tna','plazo-prest','costo-otorg','impuestos'].forEach(id =>
+      document.getElementById(id).addEventListener('input', calcularPrestamo)
+    );
+  </script>
+</body>
+</html>

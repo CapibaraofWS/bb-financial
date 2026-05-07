@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora WACC — BB Financial</title>
+  <meta name="description" content="Calculá el WACC (Costo Promedio Ponderado de Capital). Costo de deuda, equity, beta, CAPM y estructura de capital para valuación DCF." />
+  <meta name="keywords" content="WACC, costo ponderado capital, CAPM, beta, valuación DCF, equity research, costo deuda" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .wacc-result{background:linear-gradient(135deg,rgba(74,222,154,0.07),rgba(74,222,154,0.03));border:1px solid rgba(74,222,154,0.25);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:1.5rem;}
+    .wacc-result .wr-label{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;}
+    .wacc-result .wr-value{font-family:var(--font-display);font-size:3.5rem;letter-spacing:-0.03em;color:var(--text);line-height:1;}
+    .wacc-result .wr-sub{font-size:0.82rem;color:var(--text-muted);margin-top:0.5rem;font-family:var(--font-mono);}
+    .component-bar{height:28px;border-radius:6px;overflow:hidden;display:flex;margin-bottom:0.5rem;}
+    .cb-equity{background:rgba(74,222,154,0.65);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.72rem;color:#0a0c0f;font-weight:600;transition:width 0.4s;}
+    .cb-debt{background:rgba(232,201,122,0.65);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.72rem;color:#0a0c0f;font-weight:600;transition:width 0.4s;}
+    .capm-box{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin-bottom:1rem;}
+    .capm-box .cb-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.5rem;}
+    .capm-box .cb-formula{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);margin-bottom:0.5rem;}
+    .capm-box .cb-result{font-family:var(--font-display);font-size:1.4rem;color:var(--text);}
+    .field-note{font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono);line-height:1.5;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <span class="nav-sep"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>WACC</p>
+        <h1 class="page-title">Calculadora de WACC ⚖️</h1>
+        <p class="page-subtitle">Costo Promedio Ponderado de Capital. La tasa que usás para descontar flujos en cualquier DCF profesional. Incluye CAPM para el costo del equity.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <strong style="color:var(--text)">¿Qué es el WACC?</strong> Es el costo promedio que le paga una empresa a sus fuentes de financiamiento (deuda y equity), ponderado por el peso de cada una en la estructura de capital. Es la tasa de descuento correcta para un DCF: representa el rendimiento mínimo que debe generar el proyecto para que valga la pena.<br/>
+        <strong style="color:var(--text)">Fórmula:</strong> <span style="font-family:var(--font-mono);color:var(--accent)">WACC = (E/V) × Ke + (D/V) × Kd × (1 − t)</span><br/>
+        Donde E = valor del equity, D = deuda, V = E+D, Ke = costo del equity (CAPM), Kd = costo de la deuda, t = tasa impositiva.
+      </div>
+
+      <div class="calc-layout">
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Estructura de capital</p>
+
+            <div class="form-group">
+              <label for="equity-val">Valor del Equity <span>(market cap, USD M)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="equity-val" class="has-prefix" value="800" min="0" oninput="calcWACC()"/><span class="input-suffix">M</span></div>
+              <p class="field-note">Capitalización bursátil actual (precio × acciones en circulación).</p>
+            </div>
+            <div class="form-group">
+              <label for="debt-val">Deuda total <span>(USD M)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="debt-val" class="has-prefix" value="200" min="0" oninput="calcWACC()"/><span class="input-suffix">M</span></div>
+              <p class="field-note">Deuda financiera total: bonos + préstamos bancarios (del balance sheet).</p>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0"/>
+            <p class="panel-title" style="margin-bottom:1rem">Costo del Equity — CAPM</p>
+
+            <div class="form-group">
+              <label for="rf">Tasa libre de riesgo <span>(Rf, %)</span></label>
+              <div class="input-wrap"><input type="number" id="rf" class="has-suffix" value="4.5" min="0" max="20" step="0.1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <p class="field-note">Rendimiento del bono soberano de EEUU a 10 años (~4.5%). Búscalo en Bloomberg o US Treasury.</p>
+            </div>
+            <div class="form-group">
+              <label for="beta">Beta de la empresa</label>
+              <div class="input-wrap"><input type="number" id="beta" class="has-suffix" value="1.2" min="0" max="5" step="0.01" oninput="calcWACC()"/><span class="input-suffix">β</span></div>
+              <p class="field-note">Mide la sensibilidad de la acción al mercado. β>1 = más volátil que el mercado. Encontralo en Yahoo Finance o Finviz bajo "Beta".</p>
+            </div>
+            <div class="form-group">
+              <label for="rm">Prima de riesgo de mercado <span>(ERP, %)</span></label>
+              <div class="input-wrap"><input type="number" id="rm" class="has-suffix" value="5.5" min="0" max="15" step="0.1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <p class="field-note">Retorno histórico del S&P 500 − Rf. Damodaran estima ~5.5% para EEUU. Para Argentina, sumar prima de riesgo país (~15–25%).</p>
+            </div>
+            <div class="form-group">
+              <label for="erp-pais">Prima de riesgo país <span>(opcional, %)</span></label>
+              <div class="input-wrap"><input type="number" id="erp-pais" class="has-suffix" value="0" min="0" max="50" step="0.5" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <p class="field-note">Para empresas en mercados emergentes. Argentina 2024: ~20%. Brasil: ~3%. Dato: Damodaran website.</p>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0"/>
+            <p class="panel-title" style="margin-bottom:1rem">Costo de la deuda</p>
+
+            <div class="form-group">
+              <label for="kd">Costo de la deuda bruto <span>(Kd, %)</span></label>
+              <div class="input-wrap"><input type="number" id="kd" class="has-suffix" value="6" min="0" max="50" step="0.1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <p class="field-note">Tasa promedio que paga la empresa por su deuda. Mirá el estado de resultados: "gastos financieros / deuda total".</p>
+            </div>
+            <div class="form-group">
+              <label for="tax-rate">Tasa impositiva efectiva <span>(%)</span></label>
+              <div class="input-wrap"><input type="number" id="tax-rate" class="has-suffix" value="30" min="0" max="60" step="1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <p class="field-note">Los intereses de deuda son deducibles de impuestos (escudo fiscal). Argentina: ~35%. EEUU: ~21%.</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="calcWACC()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Resultado</p>
+
+            <div class="wacc-result">
+              <p class="wr-label">WACC</p>
+              <p class="wr-value" id="res-wacc">0%</p>
+              <p class="wr-sub" id="res-wacc-sub">—</p>
+            </div>
+
+            <!-- Structure bar -->
+            <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.5rem">Estructura de capital</p>
+            <div class="component-bar" id="struct-bar">
+              <div class="cb-equity" id="bar-equity" style="width:80%">Equity 80%</div>
+              <div class="cb-debt"   id="bar-debt"   style="width:20%">Deuda 20%</div>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem">
+              <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)">E/V = <span id="ev-ratio">—</span></span>
+              <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)">D/V = <span id="dv-ratio">—</span></span>
+              <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)">V = $<span id="total-v">—</span>M</span>
+            </div>
+
+            <!-- CAPM breakdown -->
+            <div class="capm-box">
+              <p class="cb-label">Costo del Equity — CAPM</p>
+              <p class="cb-formula" id="capm-formula">Ke = Rf + β × ERP</p>
+              <p class="cb-result" id="res-ke">—</p>
+            </div>
+
+            <div class="result-row"><span class="label">Costo equity (Ke)</span><span class="value positive" id="r-ke">—</span></div>
+            <div class="result-row"><span class="label">Costo deuda bruto (Kd)</span><span class="value" id="r-kd">—</span></div>
+            <div class="result-row"><span class="label">Costo deuda neto (Kd × 1−t)</span><span class="value neutral" id="r-kd-net">—</span></div>
+            <div class="result-row"><span class="label">Peso equity (E/V)</span><span class="value" id="r-ev">—</span></div>
+            <div class="result-row"><span class="label">Peso deuda (D/V)</span><span class="value" id="r-dv">—</span></div>
+            <div class="result-row"><span class="label">Componente equity al WACC</span><span class="value" id="r-eq-contrib">—</span></div>
+            <div class="result-row"><span class="label">Componente deuda al WACC</span><span class="value" id="r-dt-contrib">—</span></div>
+
+            <div style="background:rgba(74,222,154,0.05);border:1px solid rgba(74,222,154,0.15);border-radius:10px;padding:1rem;margin-top:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
+              <strong style="color:var(--accent)">📐 Cómo usar el WACC:</strong> Este valor es tu tasa de descuento para el DCF. Ingresalo en la calculadora de <a href="vpn.html" style="color:var(--accent)">VPN/DCF</a> como "tasa de descuento". Si el VPN &gt; 0 con esta tasa, el proyecto genera valor para los accionistas.
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Equity Research</h3><ul>
+        <li><a href="wacc.html">WACC</a></li>
+        <li><a href="ddm.html">DDM</a></li>
+        <li><a href="multiplos.html">Múltiplos</a></li>
+        <li><a href="vpn.html">VPN / DCF</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function calcWACC() {
+      const E   = parseFloat(document.getElementById('equity-val').value) || 0;
+      const D   = parseFloat(document.getElementById('debt-val').value)   || 0;
+      const rf  = (parseFloat(document.getElementById('rf').value)        || 0) / 100;
+      const beta= parseFloat(document.getElementById('beta').value)       || 0;
+      const rm  = (parseFloat(document.getElementById('rm').value)        || 0) / 100;
+      const erp = (parseFloat(document.getElementById('erp-pais').value)  || 0) / 100;
+      const kd  = (parseFloat(document.getElementById('kd').value)        || 0) / 100;
+      const t   = (parseFloat(document.getElementById('tax-rate').value)  || 0) / 100;
+
+      const V    = E + D;
+      const wE   = V > 0 ? E / V : 0;
+      const wD   = V > 0 ? D / V : 0;
+      const ke   = rf + beta * (rm + erp);
+      const kdNet= kd * (1 - t);
+      const wacc = wE * ke + wD * kdNet;
+      const eqContrib = wE * ke;
+      const dtContrib = wD * kdNet;
+
+      document.getElementById('res-wacc').textContent    = (wacc*100).toFixed(2) + '%';
+      document.getElementById('res-wacc-sub').textContent= `${(wE*100).toFixed(0)}% equity × ${(ke*100).toFixed(2)}% Ke + ${(wD*100).toFixed(0)}% deuda × ${(kdNet*100).toFixed(2)}% Kd(neto)`;
+      document.getElementById('bar-equity').style.width  = (wE*100)+'%';
+      document.getElementById('bar-equity').textContent  = `Equity ${(wE*100).toFixed(0)}%`;
+      document.getElementById('bar-debt').style.width    = (wD*100)+'%';
+      document.getElementById('bar-debt').textContent    = `Deuda ${(wD*100).toFixed(0)}%`;
+      document.getElementById('ev-ratio').textContent    = (wE*100).toFixed(1)+'%';
+      document.getElementById('dv-ratio').textContent    = (wD*100).toFixed(1)+'%';
+      document.getElementById('total-v').textContent     = formatUSD(V);
+      document.getElementById('capm-formula').textContent= `Ke = ${(rf*100).toFixed(1)}% + ${beta.toFixed(2)} × (${(rm*100).toFixed(1)}%${erp>0?' + '+((erp)*100).toFixed(1)+'%':''})`;
+      document.getElementById('res-ke').textContent      = (ke*100).toFixed(2) + '%';
+      document.getElementById('r-ke').textContent        = (ke*100).toFixed(2)+'%';
+      document.getElementById('r-kd').textContent        = (kd*100).toFixed(2)+'%';
+      document.getElementById('r-kd-net').textContent    = (kdNet*100).toFixed(2)+'%';
+      document.getElementById('r-ev').textContent        = (wE*100).toFixed(1)+'%';
+      document.getElementById('r-dv').textContent        = (wD*100).toFixed(1)+'%';
+      document.getElementById('r-eq-contrib').textContent= (eqContrib*100).toFixed(2)+' pp';
+      document.getElementById('r-dt-contrib').textContent= (dtContrib*100).toFixed(2)+' pp';
+    }
+    calcWACC();
+  </script>
+</body>
+</html>

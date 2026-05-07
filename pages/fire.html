@@ -1,0 +1,493 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regla del 4% — Calculadora FIRE — BB Financial</title>
+  <meta name="description" content="Calculá cuánto capital necesitás para vivir de rentas con la Regla del 4%. Independencia financiera (FIRE) basada en el Trinity Study." />
+  <meta name="keywords" content="regla del 4%, FIRE, independencia financiera, vivir de rentas, trinity study, retiro anticipado" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/fire.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* Slider styling */
+    .slider-group { margin-bottom:1.3rem; }
+    .slider-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem; }
+    .slider-label  { font-size:0.85rem; font-weight:500; color:var(--text-muted); }
+    .slider-value  { font-family:var(--font-mono); font-size:0.85rem; color:var(--accent); background:var(--accent-dim); padding:0.15rem 0.55rem; border-radius:5px; }
+    .slider-value.gold { color:var(--gold); background:var(--gold-dim); }
+    input[type="range"] { width:100%; -webkit-appearance:none; height:4px; border-radius:2px; background:var(--border); outline:none; cursor:pointer; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); cursor:pointer; box-shadow:0 0 6px var(--accent-glow); }
+    input[type="range"].gold-slider::-webkit-slider-thumb { background:var(--gold); box-shadow:0 0 6px rgba(232,201,122,0.4); }
+
+    /* FIRE number — big highlight */
+    .fire-number {
+      background: linear-gradient(135deg, rgba(74,222,154,0.08), rgba(74,222,154,0.04));
+      border: 1px solid rgba(74,222,154,0.25);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .fire-number::before {
+      content: '🔥';
+      position: absolute;
+      font-size: 6rem;
+      opacity: 0.05;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .fire-number .fn-label { font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:0.5rem; }
+    .fire-number .fn-value { font-family:var(--font-display); font-size:clamp(2rem,5vw,3.2rem); letter-spacing:-0.02em; color:var(--text); line-height:1; margin-bottom:0.4rem; }
+    .fire-number .fn-sub   { font-size:0.82rem; color:var(--text-muted); font-family:var(--font-mono); }
+
+    /* Scenarios */
+    .scenario-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; margin-bottom:1.25rem; }
+    .scenario-card { border-radius:10px; padding:1rem; text-align:center; border:1px solid; }
+    .sc-pesimista  { background:rgba(220,60,60,0.06);  border-color:rgba(220,60,60,0.15); }
+    .sc-base       { background:var(--accent-dim);      border-color:rgba(74,222,154,0.2); }
+    .sc-optimista  { background:var(--gold-dim);        border-color:rgba(232,201,122,0.2); }
+    .sc-label { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.3rem; }
+    .sc-pesimista .sc-label  { color:#f08080; }
+    .sc-base .sc-label       { color:var(--accent); }
+    .sc-optimista .sc-label  { color:var(--gold); }
+    .sc-value { font-family:var(--font-display); font-size:1.15rem; letter-spacing:-0.01em; color:var(--text); margin-bottom:0.2rem; }
+    .sc-rate  { font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); }
+
+    /* Alert / insight */
+    .alert-box { border-radius:10px; padding:0.85rem 1.1rem; font-size:0.85rem; line-height:1.55; margin-top:0.75rem; display:none; }
+    .alert-box.visible { display:flex; align-items:flex-start; gap:0.6rem; }
+    .alert-danger  { background:rgba(220,60,60,0.1); border:1px solid rgba(220,60,60,0.2); color:#f08080; }
+    .alert-warning { background:var(--gold-dim); border:1px solid rgba(232,201,122,0.2); color:var(--gold); }
+    .alert-success { background:var(--accent-dim); border:1px solid rgba(74,222,154,0.2); color:var(--accent); }
+
+    .insight-box { background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:10px; padding:1rem 1.25rem; font-size:0.875rem; color:var(--text-muted); line-height:1.65; }
+    .insight-box strong { color:var(--accent); }
+
+    /* Advanced section */
+    .advanced-toggle { display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.875rem; color:var(--text-muted); margin:0.5rem 0 1rem; user-select:none; }
+    .advanced-toggle span { font-family:var(--font-mono); font-size:0.8rem; color:var(--accent); }
+    .advanced-section { display:none; }
+    .advanced-section.open { display:block; }
+
+    /* Trinity disclaimer */
+    .trinity-box { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.75rem; margin-bottom:2rem; }
+    .trinity-box h3 { font-family:var(--font-display); font-size:1.2rem; margin-bottom:0.75rem; }
+    .trinity-box p  { font-size:0.875rem; color:var(--text-muted); line-height:1.7; margin-bottom:0.5rem; }
+
+    @media(max-width:600px){ .scenario-grid{grid-template-columns:1fr;} }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+                              <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Regla del 4%</p>
+        <h1 class="page-title">Regla del 4% 🔥</h1>
+        <p class="page-subtitle">Calculá tu número FIRE: el capital que necesitás para vivir de tus inversiones sin trabajar. Basado en el <em>Trinity Study</em>.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+
+      <!-- Trinity Study explanation -->
+      <div class="trinity-box">
+        <h3>¿Qué es el Trinity Study?</h3>
+        <p>El <strong style="color:var(--accent)">Número FIRE</strong> es la cantidad total de dinero ahorrado e invertido necesario para alcanzar la independencia financiera y retirarte anticipadamente. Es tu meta definitiva: cuando tu portfolio genere suficiente renta pasiva para cubrir todos tus gastos sin necesidad de trabajar.</p>
+        <p>En 1998, tres profesores de la Trinity University (EE.UU.) analizaron décadas de datos históricos del mercado para responder: <strong style="color:var(--text)">¿qué porcentaje de tu portfolio podés retirar anualmente sin quedarte sin dinero?</strong></p>
+        <p>La conclusión: retirar aproximadamente el <strong style="color:var(--accent)">4% anual</strong> ajustado por inflación tiene alta probabilidad de sostener el capital durante <strong style="color:var(--text)">30 años o más</strong>. A ese capital se lo llama tu <strong style="color:var(--accent)">Número FIRE</strong>.</p>
+        <p style="color:var(--text-subtle);font-size:0.8rem;margin-top:0.5rem;font-family:var(--font-mono)">⚠️ Importante: basado en mercados históricos de EE.UU. No garantiza resultados futuros. En países con alta inflación como Argentina, el análisis debe adaptarse.</p>
+      </div>
+
+      <div class="calc-layout">
+        <!-- INPUTS -->
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Tus gastos y objetivo</p>
+
+            <div class="form-group">
+              <label for="gastos-mes">Gastos mensuales <span>(USD)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="gastos-mes" class="has-prefix" value="3000" min="1" oninput="calcularFIRE()" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="otros-ingresos">Otros ingresos mensuales <span>(pensión, renta, etc.)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="otros-ingresos" class="has-prefix" value="0" min="0" oninput="calcularFIRE()" />
+              </div>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <span class="slider-label">Tasa de retiro anual</span>
+                <span class="slider-value" id="val-retiro">4.0%</span>
+              </div>
+              <input type="range" id="tasa-retiro" min="1" max="8" value="4" step="0.1"
+                     oninput="document.getElementById('val-retiro').textContent=parseFloat(this.value).toFixed(1)+'%'; calcularFIRE()" />
+              <div id="alert-retiro" class="alert-box alert-danger"></div>
+            </div>
+
+            <div style="border-top:1px solid var(--border);padding-top:1.25rem;margin-top:0.25rem">
+              <p class="panel-title" style="margin-bottom:1rem">Proyección</p>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <span class="slider-label">Retorno anual del portfolio</span>
+                  <span class="slider-value" id="val-retorno">7%</span>
+                </div>
+                <input type="range" id="retorno-port" min="1" max="20" value="7" step="0.5"
+                       oninput="document.getElementById('val-retorno').textContent=this.value+'%'; calcularFIRE()" />
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <span class="slider-label">Inflación anual esperada</span>
+                  <span class="slider-value gold" id="val-inf-fire">3%</span>
+                </div>
+                <input type="range" class="gold-slider" id="inflacion-fire" min="1" max="100" value="3" step="0.5"
+                       oninput="document.getElementById('val-inf-fire').textContent=this.value+'%'; calcularFIRE()" />
+                <div id="alert-inf" class="alert-box alert-warning"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="horizonte">Horizonte temporal <span>(años)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="horizonte" class="has-suffix" value="30" min="5" max="60" oninput="calcularFIRE()" />
+                  <span class="input-suffix">años</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avanzado -->
+            <div class="advanced-toggle" onclick="toggleAvanzado(this)">
+              <span id="adv-arrow">▶</span>
+              Opciones avanzadas
+            </div>
+            <div class="advanced-section" id="adv-section">
+              <div class="form-group">
+                <label for="impuesto-ret">Impuesto sobre rendimientos <span>(%)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="impuesto-ret" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcularFIRE()" />
+                  <span class="input-suffix">%</span>
+                </div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">¿Qué poner? 🇦🇷 Argentina: ~15% · 🇺🇸 EE.UU.: 15–20% · Sin certeza: usá 15%. Cuentas exentas (IRA, FCI): 0%.</p>
+              </div>
+              
+                <div class="input-wrap">
+                  <input type="number" id="impuesto-ret" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcularFIRE()" />
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="capital-actual">Capital actual ahorrado <span>(USD)</span></label>
+                <div class="input-wrap"><span class="input-prefix">$</span>
+                  <input type="number" id="capital-actual" class="has-prefix" value="0" min="0" oninput="calcularFIRE()" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="aporte-fire">Aporte mensual hacia FIRE <span>(USD)</span></label>
+                <div class="input-wrap"><span class="input-prefix">$</span>
+                  <input type="number" id="aporte-fire" class="has-prefix" value="1000" min="0" oninput="calcularFIRE()" />
+                </div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">Cuánto invertís por mes para acumular tu capital FIRE. Solo ahorro/inversión activo, sin incluir gastos de vida.</p>
+              </div>
+              <div class="form-group">
+                <label for="edad-actual">Edad actual</label>
+                <div class="input-wrap">
+                  <input type="number" id="edad-actual" class="has-suffix" value="30" min="18" max="70" oninput="calcularFIRE()" />
+                  <span class="input-suffix">años</span>
+                </div>
+              </div>
+            </div>
+
+  
+          <a href="salario.html" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;transition:all 0.25s;margin-top:0.75rem" onmouseover="this.style.borderColor='rgba(100,200,150,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+            <div>
+              <p style="font-size:0.875rem;color:var(--text);font-weight:500;margin-bottom:0.2rem">💼 ¿Cuánto de tu sueldo podés realmente invertir?</p>
+              <p style="font-size:0.8rem;color:var(--text-muted)">Calculá tu sueldo discrecional real →</p>
+            </div>
+            <span style="color:var(--accent)">→</span>
+          </a>
+          <button class="btn btn-primary" onclick="calcularFIRE()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
+          </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section>
+          <div class="result-panel">
+
+            <!-- FIRE NUMBER -->
+            <div class="fire-number">
+              <p class="fn-label">Tu número FIRE</p>
+              <p class="fn-value" id="fire-number">$0</p>
+              <p class="fn-sub" id="fire-sub">—</p>
+            </div>
+
+            <!-- Alerts -->
+            <div id="alert-ya-fire" class="alert-box alert-success"></div>
+
+            <!-- 3 scenarios -->
+            <p class="panel-title" style="margin-bottom:0.75rem">Escenarios</p>
+            <div class="scenario-grid">
+              <div class="scenario-card sc-pesimista">
+                <p class="sc-label">Pesimista<br><span id="sc-pes-rate">3%</span></p>
+                <p class="sc-value" id="sc-pesimista">—</p>
+                <p class="sc-rate">tasa retiro</p>
+              </div>
+              <div class="scenario-card sc-base">
+                <p class="sc-label">Base<br><span id="sc-base-rate">4%</span></p>
+                <p class="sc-value" id="sc-base">—</p>
+                <p class="sc-rate">tasa retiro</p>
+              </div>
+              <div class="scenario-card sc-optimista">
+                <p class="sc-label">Optimista<br><span id="sc-opt-rate">5%</span></p>
+                <p class="sc-value" id="sc-optimista">—</p>
+                <p class="sc-rate">tasa retiro</p>
+              </div>
+            </div>
+
+            <div class="result-row"><span class="label">Gasto mensual</span><span class="value" id="r-gasto-mes">—</span></div>
+            <div class="result-row"><span class="label">Gasto anual neto</span><span class="value" id="r-gasto-anual">—</span></div>
+            <div class="result-row"><span class="label">Retiro anual del portfolio</span><span class="value positive" id="r-retiro-anual">—</span></div>
+            <div class="result-row"><span class="label">Años para alcanzar FIRE</span><span class="value neutral" id="r-anios-fire">—</span></div>
+            <div class="result-row" id="row-edad" style="display:none"><span class="label">Edad estimada de retiro</span><span class="value" id="r-edad-retiro">—</span></div>
+
+            <!-- Insight dinámico -->
+            <div class="insight-box" id="insight-fire" style="margin-top:1rem"></div>
+
+            <div class="chart-section" style="margin-top:1.5rem">
+              <p class="chart-title">Evolución del capital — tres escenarios</p>
+              <canvas id="fireChart" class="calc-chart" height="240"></canvas>
+            </div>
+
+            <p style="font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-mono);margin-top:1rem;line-height:1.5;text-align:center">
+              ⚠️ Basado en el Trinity Study. No garantiza resultados futuros. Los números reales dependen del rendimiento del mercado, la inflación y el contexto de cada persona.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+        <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let fireChart = null;
+
+    function toggleAvanzado(el) {
+      const sec = document.getElementById('adv-section');
+      const arrow = document.getElementById('adv-arrow');
+      sec.classList.toggle('open');
+      arrow.textContent = sec.classList.contains('open') ? '▼' : '▶';
+    }
+
+    function mesesHastaFireCapital(objetivo, capitalActual, aporteMes, retornoAnual) {
+      if (capitalActual >= objetivo) return 0;
+      const rMes = retornoAnual / 12;
+      if (rMes === 0) {
+        if (aporteMes <= 0) return Infinity;
+        return Math.ceil((objetivo - capitalActual) / aporteMes);
+      }
+      let acc = capitalActual;
+      for (let m = 1; m <= 1200; m++) {
+        acc = acc * (1 + rMes) + aporteMes;
+        if (acc >= objetivo) return m;
+      }
+      return Infinity;
+    }
+
+    function calcularFIRE() {
+      const gastosMes   = parseFloat(document.getElementById('gastos-mes').value)     || 0;
+      const otrosIng    = parseFloat(document.getElementById('otros-ingresos').value) || 0;
+      const tasaRetiro  = parseFloat(document.getElementById('tasa-retiro').value)    / 100;
+      const retorno     = parseFloat(document.getElementById('retorno-port').value)   / 100;
+      const inflacion   = parseFloat(document.getElementById('inflacion-fire').value) / 100;
+      const horizonte   = parseInt(document.getElementById('horizonte').value)        || 30;
+      const impuesto    = (parseFloat(document.getElementById('impuesto-ret').value)  || 0) / 100;
+      const capActual   = parseFloat(document.getElementById('capital-actual').value) || 0;
+      const aporteMes   = parseFloat(document.getElementById('aporte-fire').value)   || 0;
+      const edadActual  = parseInt(document.getElementById('edad-actual').value)      || null;
+
+      const gastoNeto   = Math.max(0, gastosMes - otrosIng);
+      const gastoAnual  = gastoNeto * 12;
+      const retornoNeto = retorno * (1 - impuesto);
+      const tasaRealNet = ((1 + retornoNeto) / (1 + inflacion)) - 1;
+
+      // Capital FIRE según tasa de retiro
+      const fireNum = gastoAnual / tasaRetiro;
+      const fireOpt = gastoAnual / 0.05;
+      const firePes = gastoAnual / 0.03;
+      const fireBase= gastoAnual / 0.04;
+
+      // Tiempo para alcanzar FIRE
+      const mesesFire = mesesHastaFireCapital(fireNum, capActual, aporteMes, retornoNeto);
+
+      // UI principal
+      document.getElementById('fire-number').textContent = '$' + formatUSD(fireNum);
+      document.getElementById('fire-sub').textContent    = `Con gastos de $${formatUSD(gastoNeto)}/mes y ${(tasaRetiro*100).toFixed(1)}% de retiro`;
+      document.getElementById('sc-pesimista').textContent= '$' + formatUSD(firePes);
+      document.getElementById('sc-base').textContent     = '$' + formatUSD(fireBase);
+      document.getElementById('sc-optimista').textContent= '$' + formatUSD(fireOpt);
+      document.getElementById('sc-pes-rate').textContent = '3% retiro';
+      document.getElementById('sc-base-rate').textContent= '4% retiro';
+      document.getElementById('sc-opt-rate').textContent = '5% retiro';
+      document.getElementById('r-gasto-mes').textContent = '$' + formatUSD(gastoNeto) + '/mes';
+      document.getElementById('r-gasto-anual').textContent = '$' + formatUSD(gastoAnual) + '/año';
+      document.getElementById('r-retiro-anual').textContent= '$' + formatUSD(fireNum * tasaRetiro) + '/año';
+
+      if (mesesFire === 0) {
+        document.getElementById('r-anios-fire').textContent = '¡Ya sos FIRE!';
+        document.getElementById('alert-ya-fire').classList.add('visible');
+        document.getElementById('alert-ya-fire').innerHTML = '✅ Con tu capital actual ya alcanzás la independencia financiera según esta tasa de retiro. ¡Felicitaciones!';
+      } else if (mesesFire === Infinity) {
+        document.getElementById('r-anios-fire').textContent = 'Aumentá el aporte';
+        document.getElementById('alert-ya-fire').classList.remove('visible');
+      } else {
+        document.getElementById('r-anios-fire').textContent = formatYears(mesesFire);
+        document.getElementById('alert-ya-fire').classList.remove('visible');
+        if (edadActual) {
+          const edadRetiro = edadActual + Math.ceil(mesesFire / 12);
+          document.getElementById('r-edad-retiro').textContent = edadRetiro + ' años';
+          document.getElementById('row-edad').style.display = 'flex';
+        } else {
+          document.getElementById('row-edad').style.display = 'none';
+        }
+      }
+
+      // Alerts
+      const alertRetiro = document.getElementById('alert-retiro');
+      if (tasaRetiro > 0.06) {
+        alertRetiro.classList.add('visible');
+        alertRetiro.textContent = `⚠️ Una tasa de retiro del ${(tasaRetiro*100).toFixed(1)}% es alta. El Trinity Study recomienda máximo 4–5%. Aumentar la tasa reduce el capital necesario pero incrementa el riesgo de quedarte sin fondos.`;
+      } else {
+        alertRetiro.classList.remove('visible');
+      }
+
+      const alertInf = document.getElementById('alert-inf');
+      if (inflacion > retorno) {
+        alertInf.classList.add('visible');
+        alertInf.textContent = `⚠️ La inflación (${(inflacion*100).toFixed(0)}%) supera el retorno del portfolio (${(retorno*100).toFixed(0)}%). Estás perdiendo poder adquisitivo real.`;
+      } else {
+        alertInf.classList.remove('visible');
+      }
+
+      // Insights dinámicos
+      const reduccion10pct = (gastosMes * 0.9 - otrosIng) * 12 / tasaRetiro;
+      const insight = document.getElementById('insight-fire');
+      const lines = [];
+      if (gastoNeto > 0) {
+        lines.push(`Reduciendo tus gastos un 10%, necesitás <strong>$${formatUSD(reduccion10pct)}</strong> — un ${((fireNum - reduccion10pct)/fireNum*100).toFixed(1)}% menos de capital.`);
+      }
+      if (mesesFire > 0 && mesesFire !== Infinity && aporteMes > 0) {
+        lines.push(`Con $${formatUSD(aporteMes)}/mes de aportes, alcanzás tu número FIRE en <strong>${formatYears(mesesFire)}</strong>.`);
+      }
+      if (tasaRealNet > 0) {
+        lines.push(`Tu tasa real neta (después de inflación e impuestos) es <strong>${(tasaRealNet*100).toFixed(2)}%</strong> anual.`);
+      } else {
+        lines.push(`Con inflación del ${(inflacion*100).toFixed(0)}% y retorno del ${(retorno*100).toFixed(0)}%, tu capital pierde poder adquisitivo real. Buscá rendimientos más altos.`);
+      }
+      insight.innerHTML = lines.join('<br><br>');
+
+      // Chart: evolución del capital bajo los 3 escenarios
+      const maxAños = Math.min(horizonte, 50);
+      const labels = [], dBase = [], dOpt = [], dPes = [];
+      const rMesNeto = retornoNeto / 12;
+      const rMesOpt  = (retorno * 1.2 * (1-impuesto)) / 12;
+      const rMesPes  = (retorno * 0.8 * (1-impuesto)) / 12;
+
+      for (let y = 0; y <= maxAños; y++) {
+        labels.push(y === 0 ? 'Hoy' : `Año ${y}`);
+        // Simulación: capital crece con retorno, se retira el gasto anual ajustado por inflación
+        let cBase = fireNum, cOpt = fireOpt, cPes = firePes;
+        for (let yr = 0; yr < y; yr++) {
+          const gastoEsteAño = gastoAnual * Math.pow(1+inflacion, yr);
+          cBase = cBase * (1 + retornoNeto) - gastoEsteAño;
+          cOpt  = cOpt  * (1 + retorno * 1.2 * (1-impuesto)) - gastoEsteAño;
+          cPes  = cPes  * (1 + retorno * 0.8 * (1-impuesto)) - gastoEsteAño;
+        }
+        dBase.push(Math.max(0, cBase));
+        dOpt.push(Math.max(0, cOpt));
+        dPes.push(Math.max(0, cPes));
+      }
+
+      if (fireChart) fireChart.destroy();
+      fireChart = new Chart(document.getElementById('fireChart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Optimista (20% más retorno)', data: dOpt, borderColor: '#e8c97a', borderWidth: 1.5, borderDash:[4,3], tension:0.3, pointRadius:0, fill:false },
+            { label: 'Base (retorno estimado)',      data: dBase, borderColor: '#4ade9a', backgroundColor:'rgba(74,222,154,0.06)', borderWidth:2.5, tension:0.3, pointRadius:0, fill:true },
+            { label: 'Pesimista (20% menos retorno)',data: dPes, borderColor: '#ff6b6b', borderWidth:1.5, borderDash:[4,3], tension:0.3, pointRadius:0, fill:false },
+          ]
+        },
+        options: {
+          responsive:true,
+          interaction:{mode:'index',intersect:false},
+          plugins:{
+            legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:10},boxWidth:20}},
+            tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+formatUSD(ctx.parsed.y)}}
+          },
+          scales:{
+            x:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'k':'0')},grid:{color:'rgba(255,255,255,0.04)'}}
+          }
+        }
+      });
+    }
+
+    calcularFIRE();
+  </script>
+</body>
+</html>

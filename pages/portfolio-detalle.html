@@ -1,0 +1,555 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalle de Portafolio — BB Financial</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .beta-badge { display:inline-flex;align-items:center;gap:0.3rem;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.5rem; }
+
+    /* Holdings table */
+    .holdings-wrap { overflow-x: auto; margin-top: 1.5rem; }
+    .holdings-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    .holdings-table th {
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-subtle);
+      padding: 0.65rem 0.75rem; text-align: right;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .holdings-table th:first-child, .holdings-table th:nth-child(2) { text-align: left; }
+    .holdings-table td {
+      padding: 0.75rem 0.75rem; font-family: var(--font-mono);
+      font-size: 0.83rem; color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.03); text-align: right;
+      vertical-align: middle;
+    }
+    .holdings-table td:first-child { text-align: left; color: var(--text); font-weight: 500; font-family: var(--font-body); }
+    .holdings-table td:nth-child(2) { text-align: left; font-size: 0.75rem; color: var(--text-subtle); }
+    .holdings-table td.positive { color: var(--accent); }
+    .holdings-table td.negative { color: #ff6b6b; }
+    .holdings-table tfoot td {
+      font-weight: 600; color: var(--text);
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+    }
+
+    /* Price update inline */
+    .price-edit-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-subtle); font-size: 0.72rem;
+      font-family: var(--font-mono); padding: 0.2rem 0.4rem;
+      border-radius: 4px; transition: all var(--transition);
+    }
+    .price-edit-btn:hover { background: var(--accent-dim); color: var(--accent); }
+    .price-input-inline {
+      width: 90px; padding: 0.3rem 0.5rem;
+      background: var(--bg); border: 1px solid var(--accent);
+      border-radius: 5px; color: var(--text);
+      font-family: var(--font-mono); font-size: 0.82rem;
+    }
+
+    /* Summary cards */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .sum-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+    .sum-card .sc-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 0.35rem; }
+    .sum-card .sc-value { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: -0.02em; color: var(--text); }
+    .sum-card .sc-sub { font-size: 0.72rem; font-family: var(--font-mono); margin-top: 0.2rem; }
+
+    /* Charts side by side */
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .chart-card .chart-title { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 1rem; }
+
+    /* Modal */
+    .modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center;padding:1rem; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto; }
+    .modal h3 { font-family:var(--font-display);font-size:1.3rem;margin-bottom:1.5rem; }
+    .form-row { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
+    .modal .form-group { margin-bottom:1.1rem; }
+    .modal label { display:block;font-size:0.85rem;font-weight:500;color:var(--text-muted);margin-bottom:0.5rem; }
+    .modal input, .modal select {
+      width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);
+      border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:0.9rem;
+      transition:border-color var(--transition);
+    }
+    .modal input:focus,.modal select:focus { outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim); }
+    .modal-actions { display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.5rem; }
+
+    /* Price history modal */
+    .price-history-list { max-height:240px;overflow-y:auto; }
+    .ph-row { display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82rem; }
+    .ph-row .ph-date { font-family:var(--font-mono);color:var(--text-subtle);font-size:0.75rem; }
+    .ph-row .ph-price { font-family:var(--font-mono);color:var(--text); }
+    .ph-row .ph-change { font-family:var(--font-mono);font-size:0.75rem; }
+
+    /* Breadcrumb nav */
+    .portfolio-breadcrumb { display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--text-muted);margin-bottom:0.5rem; }
+    .portfolio-breadcrumb a { color:var(--text-muted);transition:color 0.2s; }
+    .portfolio-breadcrumb a:hover { color:var(--accent); }
+    .portfolio-breadcrumb span { opacity:0.4; }
+
+    @media(max-width:700px){ .charts-row{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+            <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+      <div class="portfolio-breadcrumb">
+        <a href="mis-portafolios.html">← Mis Portafolios</a>
+        <span>/</span>
+        <span id="breadcrumb-name">Cargando...</span>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem">
+        <div>
+          <h1 class="page-title" style="margin-bottom:0.3rem" id="portfolio-title">—</h1>
+          <p style="color:var(--text-muted);font-size:0.875rem" id="portfolio-desc"></p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddModal()">+ Agregar activo</button>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-grid" id="summary-grid">
+        <div class="sum-card"><p class="sc-label">Valor actual</p><p class="sc-value" id="sum-valor">$0</p></div>
+        <div class="sum-card"><p class="sc-label">Costo base</p><p class="sc-value" id="sum-costo">$0</p></div>
+        <div class="sum-card"><p class="sc-label">Ganancia / Pérdida</p><p class="sc-value" id="sum-pnl">—</p><p class="sc-sub" id="sum-pnl-pct">—</p></div>
+        <div class="sum-card"><p class="sc-label">Activos</p><p class="sc-value" id="sum-activos">0</p></div>
+        <div class="sum-card"><p class="sc-label">Última actualización</p><p class="sc-value" style="font-size:0.9rem" id="sum-update">—</p></div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-row" id="charts-row" style="display:none">
+        <div class="chart-card">
+          <p class="chart-title">Distribución por activo (valor actual)</p>
+          <canvas id="donut-activos" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <p class="chart-title">Distribución por clase de activo</p>
+          <canvas id="donut-clases" height="220"></canvas>
+        </div>
+      </div>
+
+      <!-- Holdings table -->
+      <div class="holdings-wrap">
+        <table class="holdings-table" id="holdings-table">
+          <thead>
+            <tr>
+              <th>Símbolo / Nombre</th>
+              <th>Clase</th>
+              <th>Acciones</th>
+              <th>Precio compra</th>
+              <th>Precio actual</th>
+              <th>Valor actual</th>
+              <th>Costo base</th>
+              <th>G/P ($)</th>
+              <th>G/P (%)</th>
+              <th>% Cartera</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="holdings-body"></tbody>
+          <tfoot><tr id="holdings-foot"></tr></tfoot>
+        </table>
+      </div>
+
+      <div id="empty-holdings" style="text-align:center;padding:3rem;display:none">
+        <p style="color:var(--text-muted)">No hay activos en este portafolio. Hacé click en "+ Agregar activo".</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal agregar activo -->
+  <div class="modal-overlay" id="modal-activo">
+    <div class="modal">
+      <h3 id="modal-title">Agregar activo</h3>
+      <input type="hidden" id="edit-activo-id" />
+      <div class="form-row">
+        <div class="form-group">
+          <label>Símbolo <span style="opacity:0.5">(ej: AAPL, BTC)</span></label>
+          <input type="text" id="a-simbolo" placeholder="AAPL" style="text-transform:uppercase" />
+        </div>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="a-nombre" placeholder="Apple Inc." />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Clase de activo</label>
+        <select id="a-clase">
+          <option value="acciones">Acciones (índice)</option>
+          <option value="acciones_tech">Acciones Tech</option>
+          <option value="acciones_em">Acciones emergentes</option>
+          <option value="etf">ETF</option>
+          <option value="bonos">Bonos soberanos</option>
+          <option value="bonos_corp">Bonos corporativos</option>
+          <option value="real_estate">Real Estate / REITs</option>
+          <option value="cripto">Cripto</option>
+          <option value="commodities">Commodities</option>
+          <option value="cash">Efectivo / Money Market</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Cantidad / Acciones</label>
+          <input type="number" id="a-shares" placeholder="10" min="0" step="0.0001" />
+        </div>
+        <div class="form-group">
+          <label>Precio de compra ($)</label>
+          <input type="number" id="a-precio-compra" placeholder="150.00" min="0" step="0.01" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Precio actual ($) <span style="color:var(--text-subtle);font-size:0.75rem">— actualizalo manualmente cuando quieras</span></label>
+        <input type="number" id="a-precio-actual" placeholder="165.00" min="0" step="0.01" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('modal-activo')">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarActivo()">Guardar →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal actualizar precio -->
+  <div class="modal-overlay" id="modal-precio">
+    <div class="modal" style="max-width:380px">
+      <h3>Actualizar precio</h3>
+      <p id="modal-precio-simbolo" style="font-family:var(--font-mono);font-size:0.9rem;color:var(--accent);margin-bottom:1.25rem"></p>
+      <input type="hidden" id="update-activo-id" />
+      <div class="form-group">
+        <label>Precio actual ($)</label>
+        <input type="number" id="nuevo-precio" step="0.01" min="0" style="font-size:1.1rem" />
+      </div>
+      <div style="margin-bottom:1rem">
+        <p style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-subtle);margin-bottom:0.5rem;letter-spacing:0.05em;text-transform:uppercase">Historial de precios</p>
+        <div class="price-history-list" id="price-history-list"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('modal-precio')">Cancelar</button>
+        <button class="btn btn-primary" onclick="actualizarPrecio()">Actualizar →</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Portafolio</h3>
+        <ul>
+          <li><a href="mis-portafolios.html">Mis Portafolios</a></li>
+          <li><a href="portafolio.html">Simulador</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Los datos se guardan solo en tu navegador.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let donutActivos = null, donutClases = null;
+    const COLORES = ['#4ade9a','#e8c97a','#8899ee','#ff7a7a','#5dcaa5','#f09b50','#c084fc','#60a5fa','#fb923c','#a3e635'];
+    const CLASE_LABELS = {
+      acciones:'Acciones',acciones_tech:'Tech',acciones_em:'Emergentes',etf:'ETF',
+      bonos:'Bonos soberanos',bonos_corp:'Bonos corp.',real_estate:'Real Estate',
+      cripto:'Cripto',commodities:'Commodities',cash:'Efectivo',otro:'Otro'
+    };
+
+    // Get portfolio ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const portfolioId = urlParams.get('id');
+
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem('bb_portfolios') || '[]'); } catch { return []; }
+    }
+    function saveData(data) { localStorage.setItem('bb_portfolios', JSON.stringify(data)); }
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+    function getPortfolio() {
+      return loadData().find(p => p.id === portfolioId);
+    }
+    function savePortfolio(portfolio) {
+      const data = loadData();
+      const idx = data.findIndex(p => p.id === portfolioId);
+      if (idx >= 0) { data[idx] = portfolio; saveData(data); }
+    }
+
+    function renderAll() {
+      const p = getPortfolio();
+      if (!p) { window.location.href = 'mis-portafolios.html'; return; }
+
+      document.title = p.nombre + ' — BB Financial';
+      document.getElementById('breadcrumb-name').textContent = p.nombre;
+      document.getElementById('portfolio-title').textContent = p.nombre;
+      document.getElementById('portfolio-desc').textContent = p.desc || '';
+
+      const activos = p.activos || [];
+      const totalVal  = activos.reduce((s,a) => s + a.shares * a.precioActual, 0);
+      const totalCost = activos.reduce((s,a) => s + a.shares * a.precioCompra, 0);
+      const pnl = totalVal - totalCost;
+      const pnlPct = totalCost > 0 ? (pnl/totalCost*100) : 0;
+
+      document.getElementById('sum-valor').textContent   = '$' + formatUSD(totalVal);
+      document.getElementById('sum-costo').textContent   = '$' + formatUSD(totalCost);
+      document.getElementById('sum-pnl').textContent     = (pnl >= 0 ? '+' : '') + '$' + formatUSD(pnl);
+      document.getElementById('sum-pnl').style.color     = pnl >= 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('sum-pnl-pct').textContent = (pnl >= 0 ? '+' : '') + pnlPct.toFixed(2) + '%';
+      document.getElementById('sum-activos').textContent = activos.length;
+
+      // Last update
+      const lastUpdate = activos.reduce((d, a) => {
+        const aDate = a.precioHistorial?.slice(-1)[0]?.fecha || 0;
+        return aDate > d ? aDate : d;
+      }, 0);
+      document.getElementById('sum-update').textContent = lastUpdate
+        ? new Date(lastUpdate).toLocaleDateString('es-AR')
+        : '—';
+
+      // Holdings table
+      const tbody = document.getElementById('holdings-body');
+      const empty = document.getElementById('empty-holdings');
+      if (activos.length === 0) {
+        tbody.innerHTML = ''; empty.style.display = 'block';
+        document.getElementById('charts-row').style.display = 'none';
+        document.querySelector('.holdings-wrap').style.display = 'none';
+        return;
+      }
+      empty.style.display = 'none';
+      document.querySelector('.holdings-wrap').style.display = 'block';
+      document.getElementById('charts-row').style.display = 'grid';
+
+      tbody.innerHTML = activos.map(a => {
+        const val    = a.shares * a.precioActual;
+        const cost   = a.shares * a.precioCompra;
+        const gp     = val - cost;
+        const gpPct  = cost > 0 ? (gp/cost*100) : 0;
+        const weight = totalVal > 0 ? (val/totalVal*100) : 0;
+        const cls    = gp >= 0 ? 'positive' : 'negative';
+        const sgn    = gp >= 0 ? '+' : '';
+        return `<tr>
+          <td>
+            <strong>${a.simbolo}</strong>
+            <div style="font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-body)">${a.nombre||''}</div>
+          </td>
+          <td>${CLASE_LABELS[a.clase]||a.clase}</td>
+          <td>${a.shares}</td>
+          <td>$${formatUSD(a.precioCompra)}</td>
+          <td>
+            $${formatUSD(a.precioActual)}
+            <button class="price-edit-btn" onclick="openPrecioModal('${a.id}')">✏ Actualizar</button>
+          </td>
+          <td>$${formatUSD(val)}</td>
+          <td>$${formatUSD(cost)}</td>
+          <td class="${cls}">${sgn}$${formatUSD(gp)}</td>
+          <td class="${cls}">${sgn}${gpPct.toFixed(2)}%</td>
+          <td>${weight.toFixed(1)}%</td>
+          <td>
+            <button class="price-edit-btn" onclick="editActivo('${a.id}')">✎</button>
+            <button class="price-edit-btn" style="color:#ff7a7a" onclick="deleteActivo('${a.id}')">✕</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('holdings-foot').innerHTML = `
+        <td colspan="5">TOTAL</td>
+        <td>$${formatUSD(totalVal)}</td>
+        <td>$${formatUSD(totalCost)}</td>
+        <td class="${pnl>=0?'positive':'negative'}">${pnl>=0?'+':''}$${formatUSD(pnl)}</td>
+        <td class="${pnl>=0?'positive':'negative'}">${pnl>=0?'+':''}${pnlPct.toFixed(2)}%</td>
+        <td>100%</td>
+        <td></td>`;
+
+      renderCharts(activos, totalVal);
+    }
+
+    function renderCharts(activos, totalVal) {
+      // Donut by asset
+      if (donutActivos) donutActivos.destroy();
+      donutActivos = new Chart(document.getElementById('donut-activos'), {
+        type: 'doughnut',
+        data: {
+          labels: activos.map(a => a.simbolo),
+          datasets: [{ data: activos.map(a => +(a.shares*a.precioActual).toFixed(2)),
+            backgroundColor: COLORES.slice(0, activos.length),
+            borderColor: 'var(--bg-card)', borderWidth: 2 }]
+        },
+        options: { responsive:true, cutout:'62%',
+          plugins: { legend:{position:'bottom',labels:{color:'#7a8599',font:{family:'DM Mono',size:10},padding:8}},
+            tooltip:{callbacks:{label:ctx=>`${ctx.label}: $${formatUSD(ctx.parsed)} (${(ctx.parsed/totalVal*100).toFixed(1)}%)`}} } }
+      });
+
+      // Donut by class
+      const byClass = {};
+      activos.forEach(a => {
+        const lbl = CLASE_LABELS[a.clase] || a.clase;
+        byClass[lbl] = (byClass[lbl] || 0) + a.shares * a.precioActual;
+      });
+      const classLabels = Object.keys(byClass);
+      if (donutClases) donutClases.destroy();
+      donutClases = new Chart(document.getElementById('donut-clases'), {
+        type: 'doughnut',
+        data: {
+          labels: classLabels,
+          datasets: [{ data: classLabels.map(l => +byClass[l].toFixed(2)),
+            backgroundColor: COLORES.slice(0, classLabels.length),
+            borderColor: 'var(--bg-card)', borderWidth: 2 }]
+        },
+        options: { responsive:true, cutout:'62%',
+          plugins: { legend:{position:'bottom',labels:{color:'#7a8599',font:{family:'DM Mono',size:10},padding:8}},
+            tooltip:{callbacks:{label:ctx=>`${ctx.label}: $${formatUSD(ctx.parsed)} (${(ctx.parsed/totalVal*100).toFixed(1)}%)`}} } }
+      });
+    }
+
+    // --- Add / Edit Activo ---
+    function openAddModal() {
+      document.getElementById('modal-title').textContent = 'Agregar activo';
+      document.getElementById('edit-activo-id').value = '';
+      ['a-simbolo','a-nombre','a-shares','a-precio-compra','a-precio-actual'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('a-clase').value = 'acciones';
+      document.getElementById('modal-activo').classList.add('open');
+      setTimeout(() => document.getElementById('a-simbolo').focus(), 100);
+    }
+
+    function editActivo(id) {
+      const p = getPortfolio();
+      const a = p.activos.find(x => x.id === id);
+      if (!a) return;
+      document.getElementById('modal-title').textContent = 'Editar activo';
+      document.getElementById('edit-activo-id').value = id;
+      document.getElementById('a-simbolo').value = a.simbolo;
+      document.getElementById('a-nombre').value = a.nombre || '';
+      document.getElementById('a-clase').value = a.clase;
+      document.getElementById('a-shares').value = a.shares;
+      document.getElementById('a-precio-compra').value = a.precioCompra;
+      document.getElementById('a-precio-actual').value = a.precioActual;
+      document.getElementById('modal-activo').classList.add('open');
+    }
+
+    function guardarActivo() {
+      const simbolo = document.getElementById('a-simbolo').value.trim().toUpperCase();
+      const nombre  = document.getElementById('a-nombre').value.trim();
+      const clase   = document.getElementById('a-clase').value;
+      const shares  = parseFloat(document.getElementById('a-shares').value) || 0;
+      const precioC = parseFloat(document.getElementById('a-precio-compra').value) || 0;
+      const precioA = parseFloat(document.getElementById('a-precio-actual').value) || precioC;
+      const editId  = document.getElementById('edit-activo-id').value;
+
+      if (!simbolo || shares <= 0 || precioC <= 0) {
+        alert('Completá símbolo, cantidad y precio de compra'); return;
+      }
+
+      const p = getPortfolio();
+      if (editId) {
+        const a = p.activos.find(x => x.id === editId);
+        if (a) { a.simbolo=simbolo; a.nombre=nombre; a.clase=clase; a.shares=shares; a.precioCompra=precioC; a.precioActual=precioA; }
+      } else {
+        p.activos.push({ id:genId(), simbolo, nombre, clase, shares, precioCompra:precioC, precioActual:precioA, precioHistorial:[{precio:precioA, fecha:Date.now()}] });
+      }
+      savePortfolio(p);
+      closeModal('modal-activo');
+      renderAll();
+    }
+
+    function deleteActivo(id) {
+      if (!confirm('¿Eliminar este activo?')) return;
+      const p = getPortfolio();
+      p.activos = p.activos.filter(a => a.id !== id);
+      savePortfolio(p);
+      renderAll();
+    }
+
+    // --- Update price ---
+    function openPrecioModal(id) {
+      const p = getPortfolio();
+      const a = p.activos.find(x => x.id === id);
+      if (!a) return;
+      document.getElementById('update-activo-id').value = id;
+      document.getElementById('modal-precio-simbolo').textContent = `${a.simbolo} — Precio actual: $${formatUSD(a.precioActual)}`;
+      document.getElementById('nuevo-precio').value = a.precioActual;
+
+      // History
+      const hist = a.precioHistorial || [];
+      const histEl = document.getElementById('price-history-list');
+      if (hist.length <= 1) {
+        histEl.innerHTML = '<p style="font-size:0.78rem;color:var(--text-subtle)">Sin historial previo.</p>';
+      } else {
+        histEl.innerHTML = [...hist].reverse().slice(0, 15).map((h, i, arr) => {
+          const prev   = arr[i+1];
+          const change = prev ? ((h.precio - prev.precio)/prev.precio*100) : null;
+          const cls    = change === null ? '' : change >= 0 ? 'positive' : 'negative';
+          const sgn    = change === null ? '' : change >= 0 ? '+' : '';
+          return `<div class="ph-row">
+            <span class="ph-date">${new Date(h.fecha).toLocaleDateString('es-AR')}</span>
+            <span class="ph-price">$${formatUSD(h.precio)}</span>
+            ${change !== null ? `<span class="ph-change ${cls}">${sgn}${change.toFixed(2)}%</span>` : '<span></span>'}
+          </div>`;
+        }).join('');
+      }
+
+      document.getElementById('modal-precio').classList.add('open');
+      setTimeout(() => document.getElementById('nuevo-precio').focus(), 100);
+      setTimeout(() => document.getElementById('nuevo-precio').select(), 120);
+    }
+
+    function actualizarPrecio() {
+      const id    = document.getElementById('update-activo-id').value;
+      const precio= parseFloat(document.getElementById('nuevo-precio').value) || 0;
+      if (precio <= 0) { alert('Ingresá un precio válido'); return; }
+      const p = getPortfolio();
+      const a = p.activos.find(x => x.id === id);
+      if (a) {
+        a.precioActual = precio;
+        if (!a.precioHistorial) a.precioHistorial = [];
+        a.precioHistorial.push({ precio, fecha: Date.now() });
+        // Keep last 90 entries
+        if (a.precioHistorial.length > 90) a.precioHistorial = a.precioHistorial.slice(-90);
+      }
+      savePortfolio(p);
+      closeModal('modal-precio');
+      renderAll();
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // Close modals on overlay click
+    ['modal-activo','modal-precio'].forEach(id => {
+      document.getElementById(id).addEventListener('click', function(e) {
+        if (e.target === this) closeModal(id);
+      });
+    });
+
+    // Enter key shortcuts
+    document.getElementById('nuevo-precio').addEventListener('keydown', e => { if (e.key === 'Enter') actualizarPrecio(); });
+
+    if (!portfolioId) { window.location.href = 'mis-portafolios.html'; }
+    else { renderAll(); }
+  </script>
+</body>
+</html>

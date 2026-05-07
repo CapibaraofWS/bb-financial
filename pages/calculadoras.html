@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadoras Financieras — BB Financial</title>
+  <meta name="description" content="Todas las calculadoras financieras de BB Financial: inversiones, préstamos, tasas, métricas financieras y herramientas personales. Gratis." />
+  <meta name="keywords" content="calculadoras financieras, interés compuesto, préstamo, TNA TEA, caución, dividendos, ROI, valor presente" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bbfinancial.app/pages/calculadoras.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+
+    .category-section { margin-bottom: 3.5rem; }
+    .category-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .category-icon { font-size: 1.4rem; }
+    .category-title { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: -0.01em; }
+    .category-desc  { font-size: 0.82rem; color: var(--text-muted); margin-left: auto; }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .calc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.5rem;
+      text-decoration: none;
+      transition: all var(--transition);
+      display: flex; flex-direction: column; gap: 0.6rem;
+      position: relative; overflow: hidden;
+    }
+    .calc-card::after {
+      content: '→';
+      position: absolute; right: 1.25rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent); font-size: 1rem; opacity: 0;
+      transition: opacity var(--transition), right var(--transition);
+    }
+    .calc-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .calc-card:hover::after { opacity: 1; right: 1rem; }
+    .calc-card.featured { border-color: rgba(74,222,154,0.2); background: linear-gradient(135deg,#11141a,#101a14); }
+    .calc-card.argentina { border-color: rgba(232,201,122,0.15); background: linear-gradient(135deg,#11141a,#1a1710); }
+
+    .cc-icon { font-size: 1.5rem; line-height: 1; }
+    .cc-title { font-family: var(--font-display); font-size: 1rem; letter-spacing: -0.01em; color: var(--text); }
+    .cc-desc  { font-size: 0.79rem; color: var(--text-muted); line-height: 1.5; }
+    .cc-badge {
+      display: inline-flex; align-items: center;
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 0.15rem 0.5rem; border-radius: 4px;
+      width: fit-content; margin-top: 0.1rem;
+    }
+    .cc-badge.arg { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(232,201,122,0.2); }
+    .cc-badge.new { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(74,222,154,0.2); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-title">Calculadoras Financieras</h1>
+        <p class="page-subtitle">Todas las herramientas en un solo lugar, organizadas por categoría. Gratis, sin registro, sin publicidad intrusiva.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+
+      <!-- INVERSIONES -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">💰</span>
+          <h2 class="category-title">Inversiones</h2>
+          <span class="category-desc">Proyectá y optimizá tus inversiones</span>
+        </div>
+        <div class="calc-grid">
+          <a href="interes-compuesto.html" class="calc-card featured">
+            <span class="cc-icon">⬡</span>
+            <span class="cc-title">Interés Compuesto</span>
+            <span class="cc-desc">El octavo maravilla. Calculá cómo crece tu dinero con capitalización y aportes periódicos.</span>
+            <span class="cc-badge new">Más popular</span>
+          </a>
+          <a href="dividendos.html" class="calc-card">
+            <span class="cc-icon">💵</span>
+            <span class="cc-title">Dividendos</span>
+            <span class="cc-desc">Proyectá ingresos por dividendos, dividend yield, DRIP y crecimiento del dividendo.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+          <a href="roi.html" class="calc-card">
+            <span class="cc-icon">📈</span>
+            <span class="cc-title">ROI</span>
+            <span class="cc-desc">Retorno sobre la inversión. Simple, anualizado e interpretado en segundos.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+          <a href="fire.html" class="calc-card">
+            <span class="cc-icon">🔥</span>
+            <span class="cc-title">Regla del 4% — FIRE</span>
+            <span class="cc-desc">¿Cuánto capital necesitás para vivir de tus inversiones? Basado en el Trinity Study.</span>
+          </a>
+          <a href="meta-financiera.html" class="calc-card">
+            <span class="cc-icon">◇</span>
+            <span class="cc-title">Meta Financiera</span>
+            <span class="cc-desc">Ahorrando vs. invirtiendo: cuántos años te ahorrás poniendo tu dinero a trabajar.</span>
+          </a>
+          <a href="markowitz.html" class="calc-card featured">
+            <span class="cc-icon">🎯</span>
+            <span class="cc-title">Cartera Avanzada (Markowitz)</span>
+            <span class="cc-desc">Frontera eficiente, correlación entre activos, Sharpe ratio y optimización de portafolio.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- PRÉSTAMOS Y TASAS -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">📋</span>
+          <h2 class="category-title">Préstamos y Tasas</h2>
+          <span class="category-desc">Entendé el verdadero costo del crédito</span>
+        </div>
+        <div class="calc-grid">
+          <a href="prestamo.html" class="calc-card featured">
+            <span class="cc-icon">💳</span>
+            <span class="cc-title">Préstamo / Cuota</span>
+            <span class="cc-desc">Sistemas francés, alemán y americano. TNA, TEA, CFTEA y tabla de amortización.</span>
+          </a>
+          <a href="interes-simple.html" class="calc-card">
+            <span class="cc-icon">◎</span>
+            <span class="cc-title">Interés Simple y Ahorro</span>
+            <span class="cc-desc">Rendimiento lineal de plazos fijos y proyección de ahorro a largo plazo.</span>
+          </a>
+          <a href="conversion-tasas.html" class="calc-card argentina">
+            <span class="cc-icon">↔</span>
+            <span class="cc-title">Conversión de Tasas</span>
+            <span class="cc-desc">TNA a TEA, TEA a TNA, tasa mensual a anual y viceversa. Con cualquier frecuencia.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+          <a href="caucion.html" class="calc-card argentina">
+            <span class="cc-icon">🏛</span>
+            <span class="cc-title">Caución Bursátil</span>
+            <span class="cc-desc">Calculá tus ganancias en cauciones colocadoras. Con comisión broker, derechos e IVA.</span>
+            <span class="cc-badge arg">🇦🇷 Argentina</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS FINANCIERAS -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">📊</span>
+          <h2 class="category-title">Métricas Financieras</h2>
+          <span class="category-desc">Herramientas de análisis profesional</span>
+        </div>
+        <div class="calc-grid">
+          <a href="vpn.html" class="calc-card featured">
+            <span class="cc-icon">⏳</span>
+            <span class="cc-title">Valor Presente (VPN/DCF)</span>
+            <span class="cc-desc">Traé flujos futuros a valor presente. TIR, payback y análisis de sensibilidad.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+
+          <a href="portafolio.html" class="calc-card">
+            <span class="cc-icon">📊</span>
+            <span class="cc-title">Simulador de Portafolio</span>
+            <span class="cc-desc">Rendimiento ponderado, Ratio de Sharpe y tres escenarios para tu cartera.</span>
+          </a>
+        </div>
+      </div>
+
+
+      <!-- EQUITY RESEARCH -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">🔬</span>
+          <h2 class="category-title">Equity Research & Valuación</h2>
+          <span class="category-desc">Herramientas de análisis profesional para inversores</span>
+        </div>
+        <div class="calc-grid">
+          <a href="wacc.html" class="calc-card featured">
+            <span class="cc-icon">⚖️</span>
+            <span class="cc-title">WACC</span>
+            <span class="cc-desc">Costo Promedio Ponderado de Capital. La tasa de descuento base de cualquier DCF profesional.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+          <a href="ddm.html" class="calc-card">
+            <span class="cc-icon">📊</span>
+            <span class="cc-title">DDM — Valuación por Dividendos</span>
+            <span class="cc-desc">Dividend Discount Model. Precio intrínseco de una acción a partir de sus dividendos futuros.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+          <a href="multiplos.html" class="calc-card">
+            <span class="cc-icon">🔢</span>
+            <span class="cc-title">Múltiplos de Valuación</span>
+            <span class="cc-desc">P/E, EV/EBITDA, P/B, P/S. Compará una acción contra su sector y calculá precio objetivo.</span>
+            <span class="cc-badge new">Nuevo</span>
+          </a>
+          <a href="vpn.html" class="calc-card">
+            <span class="cc-icon">⏳</span>
+            <span class="cc-title">VPN / DCF</span>
+            <span class="cc-desc">Flujos de caja descontados con TIR, payback y análisis de sensibilidad.</span>
+          </a>
+          <a href="guia-multiplos.html" class="calc-card featured">
+            <span class="cc-icon">📐</span>
+            <span class="cc-title">Guía de Múltiplos</span>
+            <span class="cc-desc">EPS, P/E, EV/EBITDA, FCF Yield, P/B, ROE, ROIC, Beta. Fórmulas, ejemplos reales y orden de análisis institucional.</span>
+            <span class="cc-badge new">Referencia</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERSONAL Y MACROECONOMÍA -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">💼</span>
+          <h2 class="category-title">Personal y Macroeconomía</h2>
+          <span class="category-desc">Tu situación financiera en contexto</span>
+        </div>
+        <div class="calc-grid">
+          <a href="salario.html" class="calc-card argentina">
+            <span class="cc-icon">💼</span>
+            <span class="cc-title">Salario Real</span>
+            <span class="cc-desc">Sueldo neto, costo empresa, sueldo discrecional y poder adquisitivo real.</span>
+            <span class="cc-badge arg">🇦🇷 Argentina</span>
+          </a>
+          <a href="inflacion.html" class="calc-card">
+            <span class="cc-icon">📉</span>
+            <span class="cc-title">Inflación</span>
+            <span class="cc-desc">Cuánto pierde poder adquisitivo tu dinero y por qué no podés dejar la plata quieta.</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Calculadoras</h3>
+        <ul>
+          <li><a href="calculadoras.html">Todas las calculadoras</a></li>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="caucion.html">Caución Bursátil</a></li>
+          <li><a href="vpn.html">Valor Presente (VPN)</a></li>
+          <li><a href="dividendos.html">Dividendos</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Bruno Behr · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+  <script src="../js/main.js"></script>
+</body>
+</html>
