@@ -384,28 +384,69 @@
 
     function renderTable() {
       const tbody = document.getElementById('asset-body');
-      tbody.innerHTML = assets.map((a, idx) => `
-        <tr data-id="${a.id}">
-          <td><input type="text" placeholder="Ej: S&P 500" value="${a.nombre}"
-            oninput="updateAsset(${a.id},'nombre',this.value)" /></td>
-          <td>
-            <select onchange="updateAsset(${a.id},'clase',this.value)">
-              ${Object.entries(CLASES).map(([k,v]) =>
-                `<option value="${k}" ${k===a.clase?'selected':''}>${v.label}</option>`
-              ).join('')}
-            </select>
-          </td>
-          <td class="td-peso">
-            <input type="number" value="${a.peso}" min="0" max="100" step="1"
-              oninput="updateAsset(${a.id},'peso',parseFloat(this.value)||0)" />
-            <div class="peso-bar" style="width:${Math.min(a.peso,100)}%"></div>
-          </td>
-          <td class="td-rend">
-            <input type="number" value="${a.rend}" min="-50" max="100" step="0.5"
-              oninput="updateAsset(${a.id},'rend',parseFloat(this.value)||0)" />
-          </td>
-          <td class="td-del"><button class="del-btn" onclick="removeAsset(${a.id})">✕</button></td>
-        </tr>`).join('');
+      tbody.innerHTML = '';
+
+      assets.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = a.id;
+
+        // Nombre
+        const tdNombre = document.createElement('td');
+        const inputNombre = document.createElement('input');
+        inputNombre.type = 'text';
+        inputNombre.placeholder = 'Ej: S&P 500';
+        inputNombre.value = a.nombre;
+        inputNombre.addEventListener('input', () => updateAsset(a.id, 'nombre', inputNombre.value));
+        tdNombre.appendChild(inputNombre);
+
+        // Clase
+        const tdClase = document.createElement('td');
+        const select = document.createElement('select');
+        Object.entries(CLASES).forEach(([k, v]) => {
+          const opt = document.createElement('option');
+          opt.value = k;
+          opt.textContent = v.label;
+          if (k === a.clase) opt.selected = true;
+          select.appendChild(opt);
+        });
+        select.addEventListener('change', () => updateAsset(a.id, 'clase', select.value));
+        tdClase.appendChild(select);
+
+        // Peso
+        const tdPeso = document.createElement('td');
+        tdPeso.className = 'td-peso';
+        const inputPeso = document.createElement('input');
+        inputPeso.type = 'number';
+        inputPeso.value = a.peso;
+        inputPeso.min = '0'; inputPeso.max = '100'; inputPeso.step = '1';
+        inputPeso.addEventListener('input', () => updateAsset(a.id, 'peso', parseFloat(inputPeso.value) || 0));
+        const pesoBar = document.createElement('div');
+        pesoBar.className = 'peso-bar';
+        pesoBar.style.width = Math.min(a.peso, 100) + '%';
+        tdPeso.append(inputPeso, pesoBar);
+
+        // Rendimiento
+        const tdRend = document.createElement('td');
+        tdRend.className = 'td-rend';
+        const inputRend = document.createElement('input');
+        inputRend.type = 'number';
+        inputRend.value = a.rend;
+        inputRend.min = '-50'; inputRend.max = '100'; inputRend.step = '0.5';
+        inputRend.addEventListener('input', () => updateAsset(a.id, 'rend', parseFloat(inputRend.value) || 0));
+        tdRend.appendChild(inputRend);
+
+        // Eliminar
+        const tdDel = document.createElement('td');
+        tdDel.className = 'td-del';
+        const btnDel = document.createElement('button');
+        btnDel.className = 'del-btn';
+        btnDel.textContent = '✕';
+        btnDel.addEventListener('click', () => removeAsset(a.id));
+        tdDel.appendChild(btnDel);
+
+        tr.append(tdNombre, tdClase, tdPeso, tdRend, tdDel);
+        tbody.appendChild(tr);
+      });
 
       // Update peso total
       const total = assets.reduce((s,a) => s+a.peso, 0);

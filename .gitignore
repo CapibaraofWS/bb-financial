@@ -32,5 +32,8 @@ desktop.ini
 *.swp
 *.swo
 
+# Claude Code (contiene rutas locales del sistema)
+.claude/
+
 # Vercel local dev
 .vercel
