@@ -21,7 +21,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.allorigins.win query1.finance.yahoo.com api.bcra.gob.ar api.bluelytics.com.ar dolarapi.com apis.datos.gob.ar api.worldbank.org api.coingecko.com open.er-api.com news.google.com www.ambito.com www.cronista.com; frame-ancestors 'none'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.allorigins.win api.worldbank.org open.er-api.com news.google.com www.ambito.com www.cronista.com www.infobae.com; frame-ancestors 'none'"
         }
       ]
     }

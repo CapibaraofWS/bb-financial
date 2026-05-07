@@ -1,0 +1,28 @@
+// Proxy para api.argentinadatos.com — whitelist de paths para prevenir SSRF
+const ALLOWED_PATHS = [
+  'finanzas/reservas',
+  'finanzas/riesgo-pais',
+  'finanzas/indices/inflacion',
+  'finanzas/indices/uva',
+  'finanzas/indices/canasta/basica/alimentaria',
+  'finanzas/indices/canasta/basica/total',
+];
+
+export default async function handler(req, res) {
+  const path = req.query.path;
+
+  if (!path || !ALLOWED_PATHS.includes(path)) {
+    return res.status(400).json({ error: 'Path no permitido' });
+  }
+
+  try {
+    const url = `https://api.argentinadatos.com/v1/${path}`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(9000) });
+    if (!response.ok) return res.status(response.status).json({ error: 'Error desde ArgentinaDatos' });
+    const data = await response.json();
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
+    return res.status(200).json(data);
+  } catch {
+    return res.status(500).json({ error: 'No se pudo conectar con ArgentinaDatos' });
+  }
+}

@@ -73,29 +73,17 @@
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
-  /* ---------- Data sources ---------- */
-  const PROXY = 'https://api.allorigins.win/get?url=';
-
-  function yahooUrl(sym) {
-    return `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=1d&range=1d`;
-  }
+  /* ---------- Data sources — all via /api/* proxies ---------- */
 
   async function getYahoo(sym) {
     try {
-      // Try direct first (Yahoo sometimes allows CORS)
-      let res = await fetch(yahooUrl(sym), { signal: AbortSignal.timeout(4000) });
-      if (!res.ok) throw new Error('direct fail');
-      const d = await res.json();
-      return extractYahoo(d);
+      const res = await fetch(`/api/acciones?symbol=${encodeURIComponent(sym)}`, {
+        signal: AbortSignal.timeout(8000)
+      });
+      if (!res.ok) return null;
+      return extractYahoo(await res.json());
     } catch {
-      try {
-        const res = await fetch(PROXY + encodeURIComponent(yahooUrl(sym)), { signal: AbortSignal.timeout(6000) });
-        const wrapper = await res.json();
-        const d = JSON.parse(wrapper.contents);
-        return extractYahoo(d);
-      } catch {
-        return null;
-      }
+      return null;
     }
   }
 
@@ -110,9 +98,8 @@
 
   async function getRiesgoPais() {
     try {
-      const res = await fetch('https://api.bcra.gob.ar/estadisticas/v2.0/principalesvariables', {
-        signal: AbortSignal.timeout(5000)
-      });
+      const res = await fetch('/api/bcra', { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) return null;
       const d = await res.json();
       const embi = d?.results?.find(v => v.idVariable === 5);
       return embi ? { price: embi.valor, chg: null } : null;
@@ -123,9 +110,11 @@
 
   async function getUsdBlue() {
     try {
-      const res = await fetch('https://api.bluelytics.com.ar/v2/latest', { signal: AbortSignal.timeout(4000) });
-      const d = await res.json();
-      return d?.blue?.value_sell ?? null;
+      const res = await fetch('/api/dolar', { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) return null;
+      const arr = await res.json();
+      const blue = Array.isArray(arr) ? arr.find(d => d.casa === 'blue') : null;
+      return blue?.venta ?? null;
     } catch {
       return null;
     }
