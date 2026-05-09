@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -124,6 +124,7 @@
         <a href="../index.html" class="nav-link">Inicio</a>
         <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
         <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
         <a href="noticias.html" class="nav-link">Noticias</a>
         <a href="datos.html" class="nav-link">Datos</a>
@@ -368,6 +369,9 @@
 
     let assets = [];
     let nextId = 0;
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
 
     function addAsset(nombre='', clase='acciones', peso=25, rend=8) {
       const id = nextId++;
@@ -575,7 +579,7 @@
         const contrib = (a.peso/100) * (a.rend/100) / rendPond;
         const contribPct = isFinite(contrib) ? (contrib*100).toFixed(1)+'%' : '—';
         return `<tr>
-          <td>${a.nombre || CLASES[a.clase].label}</td>
+          <td>${esc(a.nombre || CLASES[a.clase].label)}</td>
           <td>${a.peso.toFixed(1)}%</td>
           <td>${a.rend.toFixed(1)}%</td>
           <td class="${a.rend >= 0 ? 'pos' : 'neg'}">${contribPct}</td>

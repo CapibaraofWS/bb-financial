@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -165,6 +165,7 @@
         <a href="../index.html" class="nav-link">Inicio</a>
         <a href="calculadoras.html" class="nav-link">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
         <a href="mis-portafolios.html" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
         <a href="noticias.html" class="nav-link">Noticias</a>
         <a href="datos.html" class="nav-link">Datos</a>
@@ -209,7 +210,12 @@
         </div>
         <div style="margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid var(--border);display:flex;align-items:flex-start;gap:0.6rem">
           <span style="font-size:1rem">💾</span>
-          <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.55"><strong style="color:var(--text)">Almacenamiento local:</strong> todos tus datos se guardan en tu navegador (<code style="font-family:var(--font-mono);background:var(--bg);padding:0.1rem 0.35rem;border-radius:4px;font-size:0.75rem">localStorage</code>). No se envían a ningún servidor. Si borrás la caché del navegador, perdés los datos — exportar próximamente.</p>
+          <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.55"><strong style="color:var(--text)">Almacenamiento local:</strong> todos tus datos se guardan en tu navegador (<code style="font-family:var(--font-mono);background:var(--bg);padding:0.1rem 0.35rem;border-radius:4px;font-size:0.75rem">localStorage</code>). No se envían a ningún servidor. <strong style="color:var(--gold)">Hacé un backup periódicamente</strong> con el botón <em>Exportar JSON</em>: si borrás la caché o cambiás de dispositivo, podés restaurar tus datos con <em>Importar JSON</em>.</p>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="exportarPortafolios()" style="font-size:0.8rem">⬇ Exportar JSON</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()" style="font-size:0.8rem">⬆ Importar JSON</button>
+          <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importarPortafolios(event)" />
         </div>
       </div>
 
@@ -302,6 +308,9 @@
       localStorage.setItem('bb_portfolios', JSON.stringify(data));
     }
     function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
 
     function getPortfolioValue(p) {
       return p.activos.reduce((s, a) => s + (a.shares * a.precioActual), 0);
@@ -345,13 +354,13 @@
         const changeClass = pnl > 0 ? 'positive' : pnl < 0 ? 'negative' : 'neutral';
         const changeSign  = pnl > 0 ? '+' : '';
         return `
-        <div class="portfolio-card" onclick="openPortfolio('${p.id}')">
-          <button class="pc-delete" onclick="event.stopPropagation(); deletePortfolio('${p.id}')">✕ Eliminar</button>
-          <p class="pc-name">${p.nombre}</p>
+        <div class="portfolio-card" onclick="openPortfolio('${esc(p.id)}')">
+          <button class="pc-delete" onclick="event.stopPropagation(); deletePortfolio('${esc(p.id)}')">✕ Eliminar</button>
+          <p class="pc-name">${esc(p.nombre)}</p>
           <p class="pc-meta">${p.activos.length} activo${p.activos.length !== 1 ? 's' : ''} · Creado ${new Date(p.creadoEn).toLocaleDateString('es-AR')}</p>
           <p class="pc-value">$${formatUSD(val)}</p>
           <p class="pc-change ${changeClass}">${changeSign}$${formatUSD(pnl)} (${changeSign}${pnlPct.toFixed(2)}%)</p>
-          ${p.desc ? `<p style="font-size:0.78rem;color:var(--text-subtle);margin-bottom:0.5rem">${p.desc}</p>` : ''}
+          ${p.desc ? `<p style="font-size:0.78rem;color:var(--text-subtle);margin-bottom:0.5rem">${esc(p.desc)}</p>` : ''}
           <p class="pc-assets-count">Valor de compra: $${formatUSD(cost)}</p>
         </div>`;
       }).join('') + `
@@ -402,6 +411,108 @@
     document.getElementById('nuevo-nombre').addEventListener('keydown', e => {
       if (e.key === 'Enter') crearPortafolio();
     });
+
+    // ---- Export / Import ----
+    function exportarPortafolios() {
+      const data = loadData();
+      if (!data.length) { alert('No hay portafolios para exportar.'); return; }
+      const payload = { app: 'bb-financial', version: 1, exportedAt: new Date().toISOString(), portfolios: data };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = `bb-portafolios-${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+    }
+
+    // Validate strictly: only known fields, sanitized types, capped sizes
+    const VALID_CLASES = new Set(['acciones','acciones_tech','acciones_em','etf','bonos','bonos_corp','real_estate','cripto','commodities','cash','otro']);
+    const VALID_TIPOS  = new Set(['accion','cedear','bono','etf','cripto','otro']);
+    function safeStr(v, max=120) { return typeof v === 'string' ? v.slice(0, max) : ''; }
+    function safeNum(v) { const n = Number(v); return Number.isFinite(n) && n >= 0 && n < 1e15 ? n : 0; }
+
+    function sanitizeActivo(a) {
+      if (!a || typeof a !== 'object') return null;
+      const clase = VALID_CLASES.has(a.clase) ? a.clase : 'otro';
+      const tipo  = VALID_TIPOS.has(a.tipo)  ? a.tipo  : 'accion';
+      const out = {
+        id: safeStr(a.id, 64) || genId(),
+        simbolo: safeStr(a.simbolo, 24).toUpperCase(),
+        nombre:  safeStr(a.nombre, 120),
+        clase, tipo,
+        shares:        safeNum(a.shares),
+        precioCompra:  safeNum(a.precioCompra),
+        precioActual:  safeNum(a.precioActual ?? a.precioCompra),
+        comisionCompra: safeNum(a.comisionCompra),
+        comisionVenta:  safeNum(a.comisionVenta),
+        moneda: safeStr(a.moneda, 8) || 'USD'
+      };
+      if (tipo === 'cedear') {
+        out.ratio     = safeNum(a.ratio) || 1;
+        out.cclCompra = safeNum(a.cclCompra);
+        out.cclVenta  = safeNum(a.cclVenta);
+      }
+      if (Array.isArray(a.precioHistorial)) {
+        out.precioHistorial = a.precioHistorial
+          .filter(h => h && Number.isFinite(+h.precio) && Number.isFinite(+h.fecha))
+          .slice(-90)
+          .map(h => ({ precio: safeNum(h.precio), fecha: +h.fecha }));
+      } else {
+        out.precioHistorial = [{ precio: out.precioActual, fecha: Date.now() }];
+      }
+      if (!out.simbolo || out.shares <= 0 || out.precioCompra <= 0) return null;
+      return out;
+    }
+
+    function sanitizePortfolio(p) {
+      if (!p || typeof p !== 'object') return null;
+      const activos = Array.isArray(p.activos)
+        ? p.activos.slice(0, 200).map(sanitizeActivo).filter(Boolean)
+        : [];
+      const nombre = safeStr(p.nombre, 80).trim();
+      if (!nombre) return null;
+      return {
+        id: safeStr(p.id, 64) || genId(),
+        nombre,
+        desc: safeStr(p.desc, 400),
+        creadoEn: Number.isFinite(+p.creadoEn) ? +p.creadoEn : Date.now(),
+        activos
+      };
+    }
+
+    function importarPortafolios(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      ev.target.value = ''; // allow re-selecting same file
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Archivo demasiado grande (máx 5 MB).'); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        let parsed;
+        try { parsed = JSON.parse(reader.result); }
+        catch { alert('Archivo JSON inválido.'); return; }
+
+        const arr = Array.isArray(parsed) ? parsed
+                  : (parsed && Array.isArray(parsed.portfolios)) ? parsed.portfolios
+                  : null;
+        if (!arr) { alert('Formato no reconocido. Esperaba un export de BB Financial.'); return; }
+
+        const sanitized = arr.slice(0, 100).map(sanitizePortfolio).filter(Boolean);
+        if (!sanitized.length) { alert('No se encontró ningún portafolio válido en el archivo.'); return; }
+
+        const existing = loadData();
+        const action = existing.length === 0
+          ? 'replace'
+          : (confirm(`Tenés ${existing.length} portafolio(s) guardado(s).\n\nAceptar = REEMPLAZAR todo con los ${sanitized.length} importado(s).\nCancelar = AGREGAR los importados a los actuales.`) ? 'replace' : 'append');
+
+        const finalData = action === 'replace' ? sanitized : existing.concat(sanitized.map(p => ({ ...p, id: genId() })));
+        saveData(finalData);
+        renderPortfolios();
+        alert(`Importación completa: ${sanitized.length} portafolio(s).`);
+      };
+      reader.onerror = () => alert('No se pudo leer el archivo.');
+      reader.readAsText(file);
+    }
 
     renderPortfolios();
   </script>

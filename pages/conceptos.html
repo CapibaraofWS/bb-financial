@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conceptos básicos de finanzas y economía — BB Financial</title>
+  <meta name="description" content="Guía clara de conceptos económicos y financieros: inflación, TNA/TEA/CFTEA, riesgo país, reservas, BCRA, FED, FMI, tipos de dólar, UVA/CER, Lecaps, pobreza, superávit y más, con ejemplos reales." />
+  <meta name="keywords" content="conceptos economia, inflacion, tna tea cftea, riesgo pais, reservas bcra, dolar blue ccl mep, uva cer, lecap, pobreza indec, rollover deuda, superavit fiscal" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bbfinancial.app/pages/conceptos.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .disclaimer{background:rgba(232,201,122,0.06);border:1px solid rgba(232,201,122,0.2);border-left:3px solid var(--gold);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:2.5rem;font-size:0.83rem;color:var(--text-muted);line-height:1.7}
+    .disclaimer strong{color:var(--gold)}
+    .guide-tabs{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.4rem}
+    .guide-tab{padding:0.5rem 1.1rem;border-radius:8px;font-size:0.82rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--transition);background:transparent;border:none;font-family:var(--font-body);white-space:nowrap}
+    .guide-tab:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+    .guide-tab.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.35)}
+    .concept-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 2rem;margin-bottom:1.25rem;transition:border-color var(--transition)}
+    .concept-card:hover{border-color:rgba(255,255,255,0.12)}
+    .concept-name{font-family:var(--font-display);font-size:1.25rem;letter-spacing:-0.01em;color:var(--text);margin-bottom:0.3rem}
+    .concept-sub{font-size:0.82rem;color:var(--accent);font-weight:500;font-family:var(--font-mono);margin-bottom:1.25rem}
+    .sec-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-subtle);margin:1.1rem 0 0.5rem}
+    .concept-text{font-size:0.88rem;color:var(--text-muted);line-height:1.75}
+    .concept-text strong{color:var(--text)}
+    .concept-text p{margin-bottom:0.6rem}
+    .example-box{background:rgba(74,180,245,0.05);border:1px solid rgba(74,180,245,0.15);border-radius:8px;padding:0.85rem 1rem;font-size:0.83rem;color:var(--text-muted);line-height:1.8}
+    .example-box strong{color:var(--text)}
+    .formula-box{background:var(--bg);border-left:2px solid var(--accent);border-radius:0 8px 8px 0;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.83rem;color:var(--text);line-height:1.85;margin:0.5rem 0}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+    @media(max-width:600px){.concept-card{padding:1.25rem}.guide-tab{padding:0.45rem 0.75rem;font-size:0.78rem}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link active">Conceptos</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span style="display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;margin-left:0.4rem">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Conceptos</p>
+        <h1 class="page-title">Conceptos de finanzas y economía</h1>
+        <p class="page-subtitle">Esos términos que aparecen todo el tiempo en las noticias y a veces no quedan claros: qué son, cómo se miden, quién los mide, y un ejemplo concreto para fijar la idea.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+      <div class="disclaimer">
+        <strong>Cómo usar esta guía.</strong> Está pensada para entender los conceptos cuando aparecen en una noticia, un informe o una conversación. No reemplaza un curso ni asesoramiento profesional. Los ejemplos son ilustrativos: los números reales cambian todos los días.
+      </div>
+
+      <div class="guide-tabs" role="tablist">
+        <button class="guide-tab active" data-tab="inflacion">Inflación &amp; Precios</button>
+        <button class="guide-tab" data-tab="tasas">Tasas &amp; Préstamos</button>
+        <button class="guide-tab" data-tab="estado">Estado &amp; Macro</button>
+        <button class="guide-tab" data-tab="instituciones">Instituciones</button>
+        <button class="guide-tab" data-tab="argentina">Argentina</button>
+        <button class="guide-tab" data-tab="instrumentos">Instrumentos</button>
+        <button class="guide-tab" data-tab="social">Datos sociales</button>
+      </div>
+
+      <!-- ========== INFLACIÓN ========== -->
+      <div class="tab-panel active" id="tab-inflacion">
+
+        <div class="concept-card">
+          <p class="concept-name">Inflación</p>
+          <p class="concept-sub">El aumento generalizado y sostenido de precios</p>
+          <div class="concept-text">
+            <p>Inflación es el aumento <strong>generalizado y sostenido</strong> de los precios de bienes y servicios. No es que suba un producto: es que el dinero pierde poder de compra. Si la inflación mensual es 4%, lo que costaba $1.000 ahora cuesta $1.040.</p>
+            <p class="sec-label">Cómo se mide</p>
+            <p>Se mide con un <strong>IPC</strong> (Índice de Precios al Consumidor). En Argentina lo publica el <strong>INDEC</strong> a mediados de cada mes con datos del mes anterior. Se arma con una canasta fija de bienes y servicios que representa el consumo promedio. Se relevan miles de precios y se calcula la variación ponderada por peso de cada rubro.</p>
+            <p class="sec-label">Ejemplo real</p>
+            <div class="example-box">Si en enero la canasta cuesta $100.000 y en febrero $104.000, la <strong>inflación mensual</strong> de febrero fue 4%. La <strong>inflación interanual</strong> es la variación contra el mismo mes del año anterior. La <strong>acumulada</strong> es la del año corriente desde enero.</div>
+            <p class="sec-label">Cómo leerlo en una noticia</p>
+            <p>"Inflación de marzo: 3,7%" → es mensual. "Inflación interanual: 211%" → comparado con marzo del año anterior. La inflación <em>núcleo</em> excluye precios estacionales (turismo, frutas) y regulados (luz, gas) — sirve para ver la tendencia "limpia".</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Tasa nominal vs. tasa real</p>
+          <p class="concept-sub">Lo que ves vs. lo que ganás</p>
+          <div class="concept-text">
+            <p>La <strong>tasa nominal</strong> es la que te muestran (ej: un plazo fijo paga 40% anual). La <strong>tasa real</strong> es lo que te queda después de descontar la inflación. Si la inflación fue 50% y la tasa nominal 40%, en términos reales <strong>perdiste 10%</strong> de poder de compra.</p>
+            <p class="sec-label">Fórmula</p>
+            <div class="formula-box">Tasa real ≈ ((1 + nominal) / (1 + inflación)) − 1</div>
+            <div class="example-box">Plazo fijo paga 80% anual, inflación 100% anual. Tasa real = (1,80 / 2,00) − 1 = <strong>−10%</strong>. Aunque tu saldo crece, podés comprar un 10% menos que antes.</div>
+            <p>Por eso decir "rinde X%" no significa nada sin saber la inflación del mismo período.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Nominalidad</p>
+          <p class="concept-sub">Comparar precios entre épocas distintas</p>
+          <div class="concept-text">
+            <p>"Nominalidad" es el problema de comparar valores expresados en pesos de momentos distintos. Decir "mi sueldo era $500.000 en 2020 y ahora es $1.500.000" no significa que ganes 3 veces más: si la inflación acumulada fue 600%, en realidad <strong>perdiste poder de compra</strong>.</p>
+            <p class="sec-label">Cómo comparar bien</p>
+            <p>Llevá los dos valores a la misma fecha (o a dólares constantes, o a una moneda dura) usando el IPC.</p>
+            <div class="formula-box">Valor actualizado = Valor viejo × (IPC actual / IPC fecha vieja)</div>
+            <div class="example-box"><strong>Sueldo 2020:</strong> $500.000, IPC = 100. <strong>IPC hoy:</strong> 700. <br>Sueldo 2020 en pesos de hoy = 500.000 × (700/100) = <strong>$3.500.000</strong>. Si hoy ganás $1.500.000, en términos reales perdiste un 57% de poder de compra.</div>
+            <p>Es el error más frecuente en las discusiones económicas: comparar números <em>nominales</em> de distintas épocas como si fueran lo mismo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== TASAS ========== -->
+      <div class="tab-panel" id="tab-tasas">
+
+        <div class="concept-card">
+          <p class="concept-name">TNA — Tasa Nominal Anual</p>
+          <p class="concept-sub">El "precio" anunciado, sin tener en cuenta capitalización</p>
+          <div class="concept-text">
+            <p>La TNA es la tasa anual <strong>simple</strong>: la tasa del período multiplicada por la cantidad de períodos en el año. No considera el efecto del interés compuesto.</p>
+            <div class="formula-box">TNA = tasa periódica × cantidad de períodos en el año</div>
+            <div class="example-box">Plazo fijo a 30 días paga 3% mensual → TNA = 3% × 12 = <strong>36%</strong>. Pero si renovás todos los meses reinvertiendo, ganás más que 36% al año (eso es la TEA).</div>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">TEA — Tasa Efectiva Anual</p>
+          <p class="concept-sub">Lo que realmente ganás (o pagás) en un año</p>
+          <div class="concept-text">
+            <p>La TEA capitaliza los intereses. Refleja el rendimiento real anual si reinvertís cada período.</p>
+            <div class="formula-box">TEA = (1 + TNA / n)<sup>n</sup> − 1<br>donde n = cantidad de capitalizaciones por año</div>
+            <p class="sec-label">Pasar de TNA a TEA — ejemplo</p>
+            <div class="example-box"><strong>TNA 36%, capitalización mensual</strong> (n = 12): <br>TEA = (1 + 0,36/12)<sup>12</sup> − 1 = (1,03)<sup>12</sup> − 1 ≈ <strong>42,58%</strong>. <br>Es decir: una TNA del 36% mensualizada equivale a ganar 42,58% efectivo anual reinvirtiendo todo.</div>
+            <p>La TEA es la tasa correcta para comparar instrumentos con distinta frecuencia de capitalización.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">CFTEA — Costo Financiero Total Efectivo Anual</p>
+          <p class="concept-sub">Lo que un préstamo realmente te cuesta</p>
+          <div class="concept-text">
+            <p>Cuando pedís un préstamo, además de la tasa de interés pagás <strong>seguros, gastos administrativos, IVA sobre intereses, comisiones</strong>. El CFTEA junta todo eso y te dice cuál es el costo verdadero anual.</p>
+            <p class="sec-label">Qué mirar al sacar un préstamo</p>
+            <p>Si te ofrecen "TNA 60%", ignoralo. Pedí siempre el <strong>CFTEA</strong>. Es el único número comparable entre bancos. La diferencia entre TNA y CFTEA puede ser de 30 o 40 puntos por los gastos asociados.</p>
+            <div class="example-box"><strong>Préstamo personal:</strong> TNA 60%, IVA sobre intereses 21%, seguro de vida, comisión mensual. <br>El CFTEA puede llegar a <strong>120% o más</strong>. Por eso dos préstamos con la misma TNA pueden tener costos muy distintos.</div>
+            <p>En Argentina lo regula el BCRA y todos los bancos están obligados a publicarlo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== ESTADO Y MACRO ========== -->
+      <div class="tab-panel" id="tab-estado">
+
+        <div class="concept-card">
+          <p class="concept-name">Superávit / Déficit fiscal</p>
+          <p class="concept-sub">Ingresos vs. gastos del Estado, sin contar la deuda</p>
+          <div class="concept-text">
+            <p>El <strong>resultado fiscal primario</strong> compara los <strong>ingresos del Estado</strong> (impuestos, retenciones, aportes) con los <strong>gastos primarios</strong> (jubilaciones, sueldos públicos, subsidios, obras), <em>sin</em> contar los intereses de la deuda.</p>
+            <ul style="padding-left:1.5rem;line-height:1.8">
+              <li><strong>Superávit primario:</strong> ingresos &gt; gastos primarios. Sobra plata antes de pagar intereses.</li>
+              <li><strong>Déficit primario:</strong> ingresos &lt; gastos primarios. El Estado gasta más de lo que recauda incluso sin pagar deuda.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Superávit / Déficit financiero</p>
+          <p class="concept-sub">Lo mismo que el primario, pero ya pagando intereses de deuda</p>
+          <div class="concept-text">
+            <p>El <strong>resultado financiero</strong> = resultado primario − intereses de la deuda. Es la foto completa: cuánto necesita financiar el Estado al final del día.</p>
+            <div class="formula-box">Resultado financiero = Ingresos − Gastos primarios − Intereses de deuda</div>
+            <div class="example-box"><strong>Argentina, ejemplo simplificado:</strong> ingresos por $100, gastos por $90 → <strong>superávit primario</strong> de $10. Pero si los intereses de la deuda son $15, <strong>déficit financiero</strong> de $5. Lograr superávit primario es una cosa; superávit financiero (el de verdad) es mucho más difícil.</div>
+            <p>Cuando se habla de "equilibrio fiscal" suele referirse al financiero: que el Estado no necesite emitir ni endeudarse para cerrar el mes.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Reservas brutas vs. netas</p>
+          <p class="concept-sub">Lo que el BCRA tiene vs. lo que realmente le pertenece</p>
+          <div class="concept-text">
+            <p><strong>Reservas brutas:</strong> todos los dólares (y oro, y otros activos en moneda extranjera) que están en el Banco Central, sin importar a quién le pertenezcan.</p>
+            <p><strong>Reservas netas:</strong> brutas menos pasivos en dólares — encajes de depósitos privados, swap con China (que es un préstamo en yuanes/dólares), repo, deuda con el FMI de corto plazo, etc.</p>
+            <div class="example-box"><strong>Ejemplo:</strong> Brutas = US$ 30.000 M. Encajes de depósitos en dólares = US$ 12.000 M. Swap con China = US$ 18.000 M. Otros pasivos = US$ 5.000 M. <strong>Netas = −5.000 M</strong> (negativas). El BCRA "tiene" 30.000 millones, pero <strong>debe más de lo que tiene</strong>.</div>
+            <p>Las netas son las que muestran la verdadera capacidad del país para intervenir en el mercado o pagar deuda.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Riesgo país</p>
+          <p class="concept-sub">Cuánto extra exige el mercado por prestarle a Argentina vs. EE.UU.</p>
+          <div class="concept-text">
+            <p>El riesgo país (medido por el <strong>EMBI+</strong> de JP Morgan) es la diferencia, en puntos básicos, entre el rendimiento de los bonos soberanos en dólares de un país emergente y los bonos del Tesoro de EE.UU. del mismo plazo. <strong>100 puntos básicos = 1%</strong>.</p>
+            <p class="sec-label">Cómo se interpreta</p>
+            <ul style="padding-left:1.5rem;line-height:1.8">
+              <li><strong>500 puntos:</strong> el mercado exige 5% extra anual sobre la tasa de EE.UU. para prestarle a ese país. Razonable.</li>
+              <li><strong>1.500 puntos:</strong> el mercado descuenta riesgo de default. Acceso al crédito internacional, casi cerrado.</li>
+              <li><strong>2.500+ puntos:</strong> default casi descontado.</li>
+            </ul>
+            <p class="sec-label">Por qué importa</p>
+            <p>Un riesgo país bajo le permite al gobierno <strong>refinanciar deuda barata</strong> (rollover) en lugar de pagar todo en efectivo o emitir pesos. A las empresas argentinas también las afecta: si el soberano paga 12%, una empresa local paga aún más, lo que encarece la inversión y por extensión los créditos hipotecarios y prendarios.</p>
+            <p>Lo mide JP Morgan en tiempo real con los precios de los bonos en el mercado secundario.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Rollover de deuda</p>
+          <p class="concept-sub">Pagar deuda vieja emitiendo deuda nueva</p>
+          <div class="concept-text">
+            <p>"Rollover" significa <em>renovar</em> una deuda en lugar de pagarla con dinero nuevo. Cuando un bono vence, el Estado coloca otro bono con vencimiento más largo y usa esa plata para pagar el anterior.</p>
+            <p class="sec-label">Cuándo es bueno y cuándo es malo</p>
+            <div class="example-box"><strong>Rollover sano:</strong> el Tesoro emite deuda nueva al 90% de tasa que la vieja, los inversores aceptan plazos más largos, todo se renueva sin emitir pesos. Señal de confianza.<br><br><strong>Rollover problemático:</strong> sólo se renueva el 60% de los vencimientos, hay que pagar el resto con emisión monetaria o reservas, los plazos se acortan (bonos a 30 días en lugar de 1 año), las tasas suben mucho. Indicador de estrés financiero.</div>
+            <p>El indicador clave es el <strong>porcentaje de rollover</strong>: si un mes vencen $1.000 y el Tesoro coloca $1.200, el rollover fue 120% (captó más de lo que tenía que pagar).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== INSTITUCIONES ========== -->
+      <div class="tab-panel" id="tab-instituciones">
+
+        <div class="concept-card">
+          <p class="concept-name">BCRA — Banco Central de la República Argentina</p>
+          <p class="concept-sub">El banco de los bancos en Argentina</p>
+          <div class="concept-text">
+            <p>El BCRA es el banco central del país. Sus funciones principales:</p>
+            <ul style="padding-left:1.5rem;line-height:1.8">
+              <li><strong>Emisión monetaria:</strong> es el único que puede emitir pesos.</li>
+              <li><strong>Política monetaria:</strong> fija la tasa de referencia, controla la cantidad de dinero, define encajes (reserva mínima que los bancos deben mantener).</li>
+              <li><strong>Reservas internacionales:</strong> guarda los dólares del país.</li>
+              <li><strong>Política cambiaria:</strong> interviene comprando/vendiendo dólares para influir en el tipo de cambio.</li>
+              <li><strong>Regulación bancaria:</strong> supervisa a los bancos privados.</li>
+            </ul>
+            <p>Cuando se habla de "el BCRA emite para financiar al Tesoro" significa que imprime pesos para prestárselos al gobierno — es uno de los principales motores de inflación cuando se hace de forma sostenida.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">FED — Reserva Federal de EE.UU.</p>
+          <p class="concept-sub">El banco central más influyente del mundo</p>
+          <div class="concept-text">
+            <p>La FED es el banco central de Estados Unidos. Lo que hace afecta a todo el mundo porque el dólar es la moneda de reserva global. Sus dos mandatos: <strong>controlar la inflación</strong> y <strong>mantener el pleno empleo</strong>.</p>
+            <p class="sec-label">Cómo influye al resto del mundo</p>
+            <p>Cuando la FED <strong>sube la tasa</strong>, los bonos de EE.UU. rinden más, los capitales se mudan a EE.UU., los emergentes (como Argentina) sufren: el dólar se fortalece, sus monedas se devalúan, sus deudas en dólares se vuelven más caras y el riesgo país sube. Cuando la FED <strong>baja la tasa</strong>, suele beneficiar a los emergentes y a los activos de riesgo.</p>
+            <div class="example-box"><strong>Ejemplo 2022-2023:</strong> la FED subió tasas de 0% a 5,5% para combatir la inflación post-COVID. Resultado: dólar fuerte global, oro y cripto cayeron, monedas emergentes se devaluaron, varios países entraron en estrés.</div>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">FMI — Fondo Monetario Internacional</p>
+          <p class="concept-sub">El prestamista de última instancia entre países</p>
+          <div class="concept-text">
+            <p>El FMI es un organismo internacional con 190 países miembros. Su rol es <strong>prestar dólares a países con problemas de balanza de pagos</strong> (es decir, que se quedaron sin dólares para pagar importaciones o deuda) a cambio de que adopten un programa de reformas: ajuste fiscal, reducción de déficit, acumulación de reservas, ajustes cambiarios.</p>
+            <p>Argentina es <strong>el principal deudor del FMI</strong>. Los créditos vienen con metas trimestrales que se revisan: si se cumplen, se libera el siguiente desembolso (un "tramo"). Si no, se renegocia.</p>
+            <p class="sec-label">Por qué genera polémica</p>
+            <p>Los programas históricamente exigen ajuste fiscal y suben las tarifas de servicios, lo que tiene costo político y social. Pero sin acuerdo con el FMI, suele ser muy difícil acceder a otros mercados de crédito.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== ARGENTINA ========== -->
+      <div class="tab-panel" id="tab-argentina">
+
+        <div class="concept-card">
+          <p class="concept-name">Tipos de dólar en Argentina</p>
+          <p class="concept-sub">Por qué hay diez precios para la misma moneda</p>
+          <div class="concept-text">
+            <p>En Argentina, debido al cepo cambiario, conviven varios tipos de cambio. Los más comunes:</p>
+            <ul style="padding-left:1.5rem;line-height:1.95">
+              <li><strong>Dólar oficial / mayorista:</strong> el que fija el BCRA. Lo usan importadores, exportadores, empresas.</li>
+              <li><strong>Dólar minorista (turista/ahorro):</strong> oficial + impuestos (PAIS, Ganancias). Es el que figura en pizarras de bancos.</li>
+              <li><strong>Dólar blue:</strong> en el mercado informal (paralelo). No es legal pero se opera abiertamente.</li>
+              <li><strong>Dólar MEP (o Bolsa):</strong> comprás un bono en pesos en el mercado y lo vendés en dólares. Legal y al alcance del retail.</li>
+              <li><strong>Dólar CCL (Contado con Liquidación):</strong> igual al MEP pero los dólares quedan en una cuenta del exterior. Lo usan empresas para girar utilidades o ahorrar afuera.</li>
+              <li><strong>Dólar tarjeta:</strong> oficial + recargos para gastos en el exterior con tarjeta.</li>
+              <li><strong>Dólar exportador / cripto / soja:</strong> tipos especiales coyunturales.</li>
+            </ul>
+            <p>La <strong>brecha cambiaria</strong> es la diferencia entre el oficial y los paralelos (CCL, MEP, blue). Una brecha alta indica falta de confianza en el tipo de cambio oficial.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Cepo cambiario</p>
+          <p class="concept-sub">Restricciones para comprar dólares</p>
+          <div class="concept-text">
+            <p>El "cepo" es el conjunto de regulaciones que limitan el acceso al dólar oficial. Puede incluir cupos mensuales (ej: US$ 200/mes), restricciones para empresas, prohibición de operar MEP/CCL si compraste oficial, cobro de impuestos al consumo en dólares, etc.</p>
+            <p class="sec-label">Por qué se impone y qué efectos tiene</p>
+            <p>Se impone cuando el BCRA tiene pocas reservas para sostener el tipo de cambio. <strong>Efecto inmediato:</strong> frena la pérdida de reservas. <strong>Efectos secundarios:</strong> aparece la brecha (el blue/CCL se separa del oficial), se desincentivan las exportaciones (les pagan al oficial barato), se incentivan las importaciones (compran al oficial barato), y se distorsiona la economía. Salir del cepo de forma desordenada suele provocar saltos cambiarios fuertes.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">UVA y CER</p>
+          <p class="concept-sub">Ajuste por inflación en pesos</p>
+          <div class="concept-text">
+            <p>Tanto UVA como CER son <strong>índices que ajustan por inflación</strong>. Sirven para que un valor en pesos no pierda contra la inflación.</p>
+            <ul style="padding-left:1.5rem;line-height:1.95">
+              <li><strong>CER (Coeficiente de Estabilización de Referencia):</strong> índice diario que sigue al IPC. Lo usan principalmente los <strong>bonos soberanos CER</strong> (Boncer, Lecer): te pagan capital ajustado por inflación más una tasa fija pequeña.</li>
+              <li><strong>UVA (Unidad de Valor Adquisitivo):</strong> idéntico al CER en metodología, pero en una unidad. 1 UVA hoy vale más pesos que ayer. Lo usan <strong>plazos fijos UVA</strong> y <strong>créditos hipotecarios UVA</strong>: en lugar de devolver pesos fijos, devolvés UVAs.</li>
+            </ul>
+            <div class="example-box"><strong>Hipoteca UVA:</strong> tomás un préstamo de 100.000 UVAs cuando 1 UVA = $1.000 → $100.000.000. Si la inflación duplica el valor de la UVA (1 UVA = $2.000), debés ahora $200.000.000 nominales pero el sueldo nominal también debería haberse duplicado. Te protege a vos como prestamista y al banco contra la inflación, pero exige que tu sueldo le siga el ritmo.</div>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">TAMAR y BADLAR</p>
+          <p class="concept-sub">Tasas de referencia de los bancos</p>
+          <div class="concept-text">
+            <p>Son <strong>tasas promedio</strong> que pagan los bancos por plazos fijos mayoristas. El BCRA las publica todos los días.</p>
+            <ul style="padding-left:1.5rem;line-height:1.95">
+              <li><strong>BADLAR:</strong> promedio de tasas que pagan los bancos privados por depósitos mayoristas (más de $1 millón) a 30-35 días. Es referencia para muchos contratos y bonos a tasa variable.</li>
+              <li><strong>TAMAR:</strong> similar a BADLAR pero para depósitos aún más grandes (más de $1.000 millones) entre bancos. Es la "tasa entre mayoristas".</li>
+            </ul>
+            <p>Cuando ves un bono que paga "BADLAR + 2%", significa que su rendimiento es la BADLAR de cada momento más 2 puntos. Si la BADLAR sube, el bono paga más. Es una forma de protegerse contra subas de tasas.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== INSTRUMENTOS ========== -->
+      <div class="tab-panel" id="tab-instrumentos">
+
+        <div class="concept-card">
+          <p class="concept-name">Acciones</p>
+          <p class="concept-sub">Una pequeña parte de una empresa</p>
+          <div class="concept-text">
+            <p>Una acción es una <strong>parte proporcional</strong> del capital de una empresa. Si una empresa emitió 1.000.000 de acciones y tenés 1.000, sos dueño del 0,1% de esa empresa: te corresponde el 0,1% de sus ganancias futuras (vía dividendos) y el 0,1% del valor en una eventual venta.</p>
+            <p class="sec-label">De dónde sale el rendimiento</p>
+            <p>Dos fuentes: (1) <strong>apreciación del precio</strong> — la acción vale más con el tiempo si la empresa crece, (2) <strong>dividendos</strong> — pagos periódicos en efectivo a los accionistas cuando la empresa reparte ganancias.</p>
+            <p>En Argentina, los <strong>CEDEARs</strong> permiten comprar acciones del exterior (Apple, Tesla, etc.) en pesos en el mercado local. Cada CEDEAR representa un "ratio" de la acción real (ej: 10 CEDEARs = 1 acción).</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Lecaps y Letras</p>
+          <p class="concept-sub">Deuda de corto plazo del Tesoro en pesos</p>
+          <div class="concept-text">
+            <p>Las <strong>letras</strong> son títulos de deuda de corto plazo (típicamente menos de 1 año). Las <strong>Lecaps</strong> (Letras del Tesoro Capitalizables) son letras a tasa fija que <strong>capitalizan los intereses</strong>: se emiten a un precio menor a $1, y al vencimiento te pagan $1. La diferencia es tu rendimiento.</p>
+            <div class="example-box"><strong>Ejemplo:</strong> comprás una Lecap a $850 con vencimiento en 6 meses. Al vencimiento cobrás $1.000. Tu rendimiento bruto = (1000−850)/850 = <strong>17,6% en 6 meses ≈ 38,7% TEA</strong>.</div>
+            <p>Son útiles cuando esperás que el peso se mantenga relativamente estable y la tasa que ofrecen supera la inflación esperada.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== DATOS SOCIALES ========== -->
+      <div class="tab-panel" id="tab-social">
+
+        <div class="concept-card">
+          <p class="concept-name">Tasa de pobreza</p>
+          <p class="concept-sub">Porcentaje de personas con ingresos por debajo de la canasta básica</p>
+          <div class="concept-text">
+            <p>Una persona u hogar es <strong>pobre</strong> cuando sus ingresos no alcanzan para cubrir la <strong>Canasta Básica Total (CBT)</strong>: alimentos + servicios esenciales (transporte, luz, salud, vestimenta, educación).</p>
+            <p class="sec-label">Cómo se mide</p>
+            <p>La mide el <strong>INDEC</strong> en base a la <strong>EPH</strong> (Encuesta Permanente de Hogares), que se hace en 31 aglomerados urbanos. Cada trimestre se calcula el valor de la CBT para una familia "tipo" (2 adultos + 2 hijos) y se compara con los ingresos declarados. Se publica semestralmente.</p>
+            <div class="example-box"><strong>Ejemplo:</strong> CBT para una familia tipo = $1.000.000/mes. Si esa familia gana menos, está bajo la línea de pobreza. La <strong>tasa de pobreza</strong> es el % de personas en esa situación.</div>
+            <p>Es una medición por <strong>ingresos</strong>, no por bienestar real: alguien con casa propia, auto y poco ingreso aparece como pobre.</p>
+          </div>
+        </div>
+
+        <div class="concept-card">
+          <p class="concept-name">Tasa de indigencia</p>
+          <p class="concept-sub">Personas que no llegan a cubrir ni siquiera la comida</p>
+          <div class="concept-text">
+            <p>Una persona es <strong>indigente</strong> cuando sus ingresos no alcanzan ni siquiera para la <strong>Canasta Básica Alimentaria (CBA)</strong>: las calorías y nutrientes mínimos para no pasar hambre. La indigencia es un subconjunto de la pobreza — todos los indigentes son pobres, no al revés.</p>
+            <div class="example-box"><strong>Ejemplo:</strong> CBA familia tipo = $450.000/mes. Si una familia gana menos que eso, no le alcanza ni para comer lo básico → indigencia. Si gana entre la CBA y la CBT → pobre pero no indigente.</div>
+            <p>Lo mide el INDEC con la misma metodología que la pobreza, en simultáneo.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Educación</h3>
+        <ul>
+          <li><a href="guia-multiplos.html">Guía de Múltiplos</a></li>
+          <li><a href="conceptos.html">Conceptos básicos</a></li>
+          <li><a href="datos.html">Datos económicos</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2026 BB Financial · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.querySelectorAll('.guide-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.guide-tab').forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+        window.scrollTo({ top: document.querySelector('.guide-tabs').offsetTop - 80, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

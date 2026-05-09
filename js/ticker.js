@@ -154,7 +154,7 @@
 
   /* ---------- Fetch all & render ---------- */
   async function refresh() {
-    const [merv, ndx, dji, gspc, gc, cl, rp, blue] = await Promise.all([
+    const results = await Promise.allSettled([
       getYahoo('^MERV'),
       getYahoo('^NDX'),
       getYahoo('^DJI'),
@@ -164,6 +164,8 @@
       getRiesgoPais(),
       getUsdBlue(),
     ]);
+    const [merv, ndx, dji, gspc, gc, cl, rp, blue] =
+      results.map(r => r.status === 'fulfilled' ? r.value : null);
 
     const mervUsd = (merv && blue) ? { price: merv.price / blue, chg: merv.chg } : null;
 

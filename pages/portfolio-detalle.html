@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -106,6 +106,7 @@
         <a href="../index.html" class="nav-link">Inicio</a>
         <a href="calculadoras.html" class="nav-link">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
         <a href="mis-portafolios.html" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
         <a href="noticias.html" class="nav-link">Noticias</a>
         <a href="datos.html" class="nav-link">Datos</a>
@@ -197,21 +198,34 @@
           <input type="text" id="a-nombre" placeholder="Apple Inc." />
         </div>
       </div>
-      <div class="form-group">
-        <label>Clase de activo</label>
-        <select id="a-clase">
-          <option value="acciones">Acciones (índice)</option>
-          <option value="acciones_tech">Acciones Tech</option>
-          <option value="acciones_em">Acciones emergentes</option>
-          <option value="etf">ETF</option>
-          <option value="bonos">Bonos soberanos</option>
-          <option value="bonos_corp">Bonos corporativos</option>
-          <option value="real_estate">Real Estate / REITs</option>
-          <option value="cripto">Cripto</option>
-          <option value="commodities">Commodities</option>
-          <option value="cash">Efectivo / Money Market</option>
-          <option value="otro">Otro</option>
-        </select>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tipo de instrumento</label>
+          <select id="a-tipo" onchange="onTipoChange()">
+            <option value="accion">Acción</option>
+            <option value="cedear">CEDEAR</option>
+            <option value="bono">Bono / Letra</option>
+            <option value="etf">ETF</option>
+            <option value="cripto">Cripto</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Clase de activo</label>
+          <select id="a-clase">
+            <option value="acciones">Acciones (índice)</option>
+            <option value="acciones_tech">Acciones Tech</option>
+            <option value="acciones_em">Acciones emergentes</option>
+            <option value="etf">ETF</option>
+            <option value="bonos">Bonos soberanos</option>
+            <option value="bonos_corp">Bonos corporativos</option>
+            <option value="real_estate">Real Estate / REITs</option>
+            <option value="cripto">Cripto</option>
+            <option value="commodities">Commodities</option>
+            <option value="cash">Efectivo / Money Market</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -219,13 +233,54 @@
           <input type="number" id="a-shares" placeholder="10" min="0" step="0.0001" />
         </div>
         <div class="form-group">
-          <label>Precio de compra ($)</label>
-          <input type="number" id="a-precio-compra" placeholder="150.00" min="0" step="0.01" />
+          <label>Moneda</label>
+          <select id="a-moneda">
+            <option value="USD">USD</option>
+            <option value="ARS">ARS (pesos)</option>
+          </select>
         </div>
       </div>
-      <div class="form-group">
-        <label>Precio actual ($) <span style="color:var(--text-subtle);font-size:0.75rem">— actualizalo manualmente cuando quieras</span></label>
-        <input type="number" id="a-precio-actual" placeholder="165.00" min="0" step="0.01" />
+      <div class="form-row">
+        <div class="form-group">
+          <label>Precio de compra</label>
+          <input type="number" id="a-precio-compra" placeholder="150.00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Precio actual <span style="color:var(--text-subtle);font-size:0.75rem">(actualizable después)</span></label>
+          <input type="number" id="a-precio-actual" placeholder="165.00" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <div id="cedear-fields" style="display:none;border-top:1px solid var(--border);padding-top:1rem;margin-top:0.5rem">
+        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.75rem">Datos del CEDEAR</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ratio de conversión <span style="color:var(--text-subtle);font-size:0.75rem">(N CEDEARs = 1 acción)</span></label>
+            <input type="number" id="a-ratio" placeholder="10" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>CCL al comprar <span style="color:var(--text-subtle);font-size:0.75rem">(opcional)</span></label>
+            <input type="number" id="a-ccl-compra" placeholder="1200" min="0" step="0.01" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>CCL al vender <span style="color:var(--text-subtle);font-size:0.75rem">(sólo si vendiste)</span></label>
+          <input type="number" id="a-ccl-venta" placeholder="1300" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:0.5rem">
+        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.75rem">Comisiones (broker + mercado, en moneda del activo)</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Comisión de compra</label>
+            <input type="number" id="a-comision-compra" placeholder="0" min="0" step="0.01" value="0" />
+          </div>
+          <div class="form-group">
+            <label>Comisión de venta <span style="color:var(--text-subtle);font-size:0.75rem">(si vendiste)</span></label>
+            <input type="number" id="a-comision-venta" placeholder="0" min="0" step="0.01" value="0" />
+          </div>
+        </div>
       </div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeModal('modal-activo')">Cancelar</button>
@@ -291,6 +346,16 @@
     }
     function saveData(data) { localStorage.setItem('bb_portfolios', JSON.stringify(data)); }
     function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function onTipoChange() {
+      const tipo = document.getElementById('a-tipo').value;
+      document.getElementById('cedear-fields').style.display = tipo === 'cedear' ? 'block' : 'none';
+      // Si es CEDEAR, sugerir moneda ARS
+      if (tipo === 'cedear') document.getElementById('a-moneda').value = 'ARS';
+    }
 
     function getPortfolio() {
       return loadData().find(p => p.id === portfolioId);
@@ -312,7 +377,7 @@
 
       const activos = p.activos || [];
       const totalVal  = activos.reduce((s,a) => s + a.shares * a.precioActual, 0);
-      const totalCost = activos.reduce((s,a) => s + a.shares * a.precioCompra, 0);
+      const totalCost = activos.reduce((s,a) => s + a.shares * a.precioCompra + (a.comisionCompra||0) + (a.comisionVenta||0), 0);
       const pnl = totalVal - totalCost;
       const pnlPct = totalCost > 0 ? (pnl/totalCost*100) : 0;
 
@@ -347,32 +412,37 @@
 
       tbody.innerHTML = activos.map(a => {
         const val    = a.shares * a.precioActual;
-        const cost   = a.shares * a.precioCompra;
+        const comisiones = (a.comisionCompra || 0) + (a.comisionVenta || 0);
+        const cost   = a.shares * a.precioCompra + comisiones;
         const gp     = val - cost;
         const gpPct  = cost > 0 ? (gp/cost*100) : 0;
         const weight = totalVal > 0 ? (val/totalVal*100) : 0;
         const cls    = gp >= 0 ? 'positive' : 'negative';
         const sgn    = gp >= 0 ? '+' : '';
+        const cedearTag = a.tipo === 'cedear'
+          ? `<span style="display:inline-block;font-size:0.6rem;background:rgba(96,165,250,0.15);color:#60a5fa;padding:0.1rem 0.4rem;border-radius:4px;margin-left:0.3rem;font-family:var(--font-mono)">CEDEAR${a.ratio?` ${a.ratio}:1`:''}</span>`
+          : '';
+        const moneda = esc(a.moneda || 'USD');
         return `<tr>
           <td>
-            <strong>${a.simbolo}</strong>
-            <div style="font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-body)">${a.nombre||''}</div>
+            <strong>${esc(a.simbolo)}</strong>${cedearTag}
+            <div style="font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-body)">${esc(a.nombre||'')}</div>
           </td>
-          <td>${CLASE_LABELS[a.clase]||a.clase}</td>
+          <td>${esc(CLASE_LABELS[a.clase]||a.clase)}</td>
           <td>${a.shares}</td>
-          <td>$${formatUSD(a.precioCompra)}</td>
+          <td>${moneda} ${formatUSD(a.precioCompra)}${comisiones>0?`<div style="font-size:0.7rem;color:var(--text-subtle)">+ com. ${formatUSD(comisiones)}</div>`:''}</td>
           <td>
-            $${formatUSD(a.precioActual)}
-            <button class="price-edit-btn" onclick="openPrecioModal('${a.id}')">✏ Actualizar</button>
+            ${moneda} ${formatUSD(a.precioActual)}
+            <button class="price-edit-btn" onclick="openPrecioModal('${esc(a.id)}')">✏ Actualizar</button>
           </td>
-          <td>$${formatUSD(val)}</td>
-          <td>$${formatUSD(cost)}</td>
-          <td class="${cls}">${sgn}$${formatUSD(gp)}</td>
+          <td>${moneda} ${formatUSD(val)}</td>
+          <td>${moneda} ${formatUSD(cost)}</td>
+          <td class="${cls}">${sgn}${moneda} ${formatUSD(gp)}</td>
           <td class="${cls}">${sgn}${gpPct.toFixed(2)}%</td>
           <td>${weight.toFixed(1)}%</td>
           <td>
-            <button class="price-edit-btn" onclick="editActivo('${a.id}')">✎</button>
-            <button class="price-edit-btn" style="color:#ff7a7a" onclick="deleteActivo('${a.id}')">✕</button>
+            <button class="price-edit-btn" onclick="editActivo('${esc(a.id)}')">✎</button>
+            <button class="price-edit-btn" style="color:#ff7a7a" onclick="deleteActivo('${esc(a.id)}')">✕</button>
           </td>
         </tr>`;
       }).join('');
@@ -428,11 +498,17 @@
     }
 
     // --- Add / Edit Activo ---
+    const ACTIVO_FIELDS = ['a-simbolo','a-nombre','a-shares','a-precio-compra','a-precio-actual','a-ratio','a-ccl-compra','a-ccl-venta','a-comision-compra','a-comision-venta'];
     function openAddModal() {
       document.getElementById('modal-title').textContent = 'Agregar activo';
       document.getElementById('edit-activo-id').value = '';
-      ['a-simbolo','a-nombre','a-shares','a-precio-compra','a-precio-actual'].forEach(id => document.getElementById(id).value = '');
+      ACTIVO_FIELDS.forEach(id => document.getElementById(id).value = '');
+      document.getElementById('a-comision-compra').value = '0';
+      document.getElementById('a-comision-venta').value = '0';
       document.getElementById('a-clase').value = 'acciones';
+      document.getElementById('a-tipo').value = 'accion';
+      document.getElementById('a-moneda').value = 'USD';
+      onTipoChange();
       document.getElementById('modal-activo').classList.add('open');
       setTimeout(() => document.getElementById('a-simbolo').focus(), 100);
     }
@@ -446,31 +522,57 @@
       document.getElementById('a-simbolo').value = a.simbolo;
       document.getElementById('a-nombre').value = a.nombre || '';
       document.getElementById('a-clase').value = a.clase;
+      document.getElementById('a-tipo').value = a.tipo || 'accion';
+      document.getElementById('a-moneda').value = a.moneda || 'USD';
       document.getElementById('a-shares').value = a.shares;
       document.getElementById('a-precio-compra').value = a.precioCompra;
       document.getElementById('a-precio-actual').value = a.precioActual;
+      document.getElementById('a-ratio').value      = a.ratio ?? '';
+      document.getElementById('a-ccl-compra').value = a.cclCompra ?? '';
+      document.getElementById('a-ccl-venta').value  = a.cclVenta ?? '';
+      document.getElementById('a-comision-compra').value = a.comisionCompra ?? 0;
+      document.getElementById('a-comision-venta').value  = a.comisionVenta ?? 0;
+      onTipoChange();
       document.getElementById('modal-activo').classList.add('open');
     }
 
     function guardarActivo() {
-      const simbolo = document.getElementById('a-simbolo').value.trim().toUpperCase();
-      const nombre  = document.getElementById('a-nombre').value.trim();
+      const simbolo = document.getElementById('a-simbolo').value.trim().toUpperCase().slice(0,24);
+      const nombre  = document.getElementById('a-nombre').value.trim().slice(0,120);
       const clase   = document.getElementById('a-clase').value;
+      const tipo    = document.getElementById('a-tipo').value;
+      const moneda  = document.getElementById('a-moneda').value;
       const shares  = parseFloat(document.getElementById('a-shares').value) || 0;
       const precioC = parseFloat(document.getElementById('a-precio-compra').value) || 0;
       const precioA = parseFloat(document.getElementById('a-precio-actual').value) || precioC;
+      const comisionC = parseFloat(document.getElementById('a-comision-compra').value) || 0;
+      const comisionV = parseFloat(document.getElementById('a-comision-venta').value)  || 0;
+      const ratio   = parseFloat(document.getElementById('a-ratio').value) || 0;
+      const cclC    = parseFloat(document.getElementById('a-ccl-compra').value) || 0;
+      const cclV    = parseFloat(document.getElementById('a-ccl-venta').value)  || 0;
       const editId  = document.getElementById('edit-activo-id').value;
 
       if (!simbolo || shares <= 0 || precioC <= 0) {
         alert('Completá símbolo, cantidad y precio de compra'); return;
       }
 
+      const datos = {
+        simbolo, nombre, clase, tipo, moneda, shares,
+        precioCompra: precioC, precioActual: precioA,
+        comisionCompra: comisionC, comisionVenta: comisionV
+      };
+      if (tipo === 'cedear') {
+        datos.ratio = ratio || 1;
+        datos.cclCompra = cclC;
+        datos.cclVenta = cclV;
+      }
+
       const p = getPortfolio();
       if (editId) {
         const a = p.activos.find(x => x.id === editId);
-        if (a) { a.simbolo=simbolo; a.nombre=nombre; a.clase=clase; a.shares=shares; a.precioCompra=precioC; a.precioActual=precioA; }
+        if (a) Object.assign(a, datos);
       } else {
-        p.activos.push({ id:genId(), simbolo, nombre, clase, shares, precioCompra:precioC, precioActual:precioA, precioHistorial:[{precio:precioA, fecha:Date.now()}] });
+        p.activos.push({ id: genId(), ...datos, precioHistorial: [{ precio: precioA, fecha: Date.now() }] });
       }
       savePortfolio(p);
       closeModal('modal-activo');
@@ -491,7 +593,7 @@
       const a = p.activos.find(x => x.id === id);
       if (!a) return;
       document.getElementById('update-activo-id').value = id;
-      document.getElementById('modal-precio-simbolo').textContent = `${a.simbolo} — Precio actual: $${formatUSD(a.precioActual)}`;
+      document.getElementById('modal-precio-simbolo').textContent = `${a.simbolo} — Precio actual: ${a.moneda||'USD'} ${formatUSD(a.precioActual)}`;
       document.getElementById('nuevo-precio').value = a.precioActual;
 
       // History
