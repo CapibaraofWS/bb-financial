@@ -1,5 +1,5 @@
-// FinCalc — main.js v4
-window.__BB_MAIN_JS_VERSION = 'v4';
+// FinCalc — main.js v5
+window.__BB_MAIN_JS_VERSION = 'v5';
 
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
@@ -53,6 +53,7 @@ window.__BB_MAIN_JS_VERSION = 'v4';
         { href: pagesBase + 'renta-fija.html',         label: 'Renta Fija',          icon: '📜' },
         { href: pagesBase + 'etfs-fci.html',           label: 'ETFs y FCI',          icon: '💎' },
         { href: pagesBase + 'cuentas-remuneradas.html',label: 'Cuentas remuneradas', icon: '💳' },
+        { href: pagesBase + 'cuanto-perdi.html',       label: '¿Cuánto perdí ahorrando?', icon: '🔥' },
       ],
     },
     {

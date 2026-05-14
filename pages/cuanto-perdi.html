@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Cuánto perdiste ahorrando en pesos? — Calculadora gratis — BB Financial</title>
+  <meta name="description" content="Calculá en 5 segundos cuánto poder de compra perdiste por dejar tu plata en el cajón o en la caja de ahorro. Datos reales del IPC argentino." />
+  <meta name="keywords" content="cuanto perdi ahorrando, inflacion argentina, poder de compra, calculadora inflacion, IPC argentino, ahorrar en pesos" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="¿Cuánto perdiste ahorrando en pesos? — BB Financial" />
+  <meta property="og:description" content="Descubrí cuánto poder de compra te comió la inflación. Calculadora con datos reales del IPC argentino." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .lost-hero { padding: 4rem 0 2rem; text-align: center; }
+    .lost-hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 4.5vw, 3.2rem); letter-spacing: -0.02em; margin-bottom: 0.85rem; line-height: 1.1; }
+    .lost-hero h1 em { color: #ff6b6b; font-style: normal; }
+    .lost-hero p.sub { color: var(--text-muted); font-size: 1rem; max-width: 580px; margin: 0 auto; line-height: 1.6; }
+    .lost-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; margin: 2rem auto; max-width: 720px;
+    }
+    .lost-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    @media (max-width: 640px) { .lost-inputs { grid-template-columns: 1fr; } }
+    .lost-inputs label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); display: block; margin-bottom: 0.4rem; }
+    .lost-inputs input, .lost-inputs select {
+      width: 100%; padding: 0.7rem 0.85rem; background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-family: var(--font-body);
+    }
+    .lost-inputs input:focus, .lost-inputs select:focus { border-color: var(--accent); outline: none; }
+    .quick-amounts { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.25rem; justify-content: center; }
+    .quick-amounts button {
+      background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem; font-family: var(--font-mono); cursor: pointer;
+      transition: all var(--transition);
+    }
+    .quick-amounts button:hover { border-color: var(--accent); color: var(--accent); }
+    .result-block { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .result-loss-amount {
+      font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 3.8rem); color: #ff6b6b;
+      letter-spacing: -0.02em; line-height: 1; margin: 0.5rem 0;
+    }
+    .result-loss-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #ff9999; }
+    .result-pct { font-size: 1.1rem; color: var(--text); margin-top: 1rem; }
+    .result-pct strong { color: #ff6b6b; }
+    .result-explain { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin-top: 1.25rem; max-width: 580px; margin-left: auto; margin-right: auto; }
+    .result-explain strong { color: var(--text); }
+
+    .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-top: 1.5rem; }
+    @media (max-width: 640px) { .compare-row { grid-template-columns: 1fr; } }
+    .compare-mini { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: left; }
+    .compare-mini .mini-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+    .compare-mini .mini-value { font-size: 1.3rem; margin-top: 0.3rem; color: var(--text); font-family: var(--font-display); }
+    .compare-mini.bad .mini-value { color: #ff6b6b; }
+    .compare-mini.good .mini-value { color: var(--accent); }
+
+    .share-row { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-top: 1.75rem; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 1.1rem;
+      background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(74,222,154,0.25);
+      border-radius: 8px; font-size: 0.85rem; font-family: var(--font-body); font-weight: 500;
+      text-decoration: none; cursor: pointer; transition: all var(--transition);
+    }
+    .share-btn:hover { background: var(--accent); color: var(--bg); }
+
+    .ctas-after { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin: 3rem auto 0; max-width: 720px; }
+    .cta-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent-dim); color: var(--accent);
+      border: 1px solid rgba(74,222,154,0.25); border-radius: 8px;
+      padding: 0.7rem 1.2rem; font-size: 0.88rem; font-weight: 500; text-decoration: none;
+      transition: all var(--transition);
+    }
+    .cta-link:hover { background: var(--accent); color: var(--bg); }
+
+    .why-explainer { max-width: 720px; margin: 4rem auto 0; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; }
+    .why-explainer h2 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.85rem; letter-spacing: -0.01em; }
+    .why-explainer p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.85rem; }
+    .why-explainer p strong { color: var(--text); }
+
+    .loading-dim { opacity: 0.4; pointer-events: none; transition: opacity 0.3s; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="lost-hero">
+      <div class="container">
+        <h1>¿Cuánto <em>perdiste</em> ahorrando en pesos?</h1>
+        <p class="sub">La inflación argentina te come el poder de compra todos los meses, aunque no lo veas. Calculalo en 5 segundos con datos reales del IPC.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="lost-box" id="calc-box">
+
+        <div class="lost-inputs">
+          <div>
+            <label for="monto">Monto inicial (ARS)</label>
+            <input type="number" id="monto" value="1000000" min="1" step="1000" inputmode="numeric" />
+          </div>
+          <div>
+            <label for="fecha-inicio">Desde</label>
+            <input type="month" id="fecha-inicio" value="2024-01" />
+          </div>
+          <div>
+            <label for="fecha-fin">Hasta</label>
+            <input type="month" id="fecha-fin" />
+          </div>
+        </div>
+
+        <div class="quick-amounts">
+          <button type="button" data-amt="100000">$100.000</button>
+          <button type="button" data-amt="500000">$500.000</button>
+          <button type="button" data-amt="1000000">$1.000.000</button>
+          <button type="button" data-amt="5000000">$5.000.000</button>
+          <button type="button" data-amt="10000000">$10.000.000</button>
+        </div>
+
+        <div class="result-block">
+          <div class="result-loss-label">Plata real que perdiste</div>
+          <div class="result-loss-amount" id="loss-amount">$—</div>
+          <div class="result-pct" id="loss-pct">Tu poder de compra cayó <strong>—%</strong> en ese período.</div>
+
+          <div class="compare-row">
+            <div class="compare-mini bad">
+              <div class="mini-label">Lo que pusiste vale hoy</div>
+              <div class="mini-value" id="real-today">$—</div>
+            </div>
+            <div class="compare-mini good">
+              <div class="mini-label">Inflación acumulada</div>
+              <div class="mini-value" id="infl-pct">—%</div>
+            </div>
+          </div>
+
+          <div class="result-explain" id="explain">
+            En ese período hubieras necesitado <strong id="needed-today">$—</strong> para comprar lo mismo que comprabas con tu monto inicial. La diferencia es la "plata real" que la inflación te sacó sin que firmes nada.
+          </div>
+
+          <div class="share-row">
+            <button type="button" class="share-btn" id="share-twitter">𝕏 Compartir</button>
+            <button type="button" class="share-btn" id="share-whatsapp">💬 WhatsApp</button>
+            <button type="button" class="share-btn" id="share-link">🔗 Copiar resultado</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ctas-after">
+        <a href="cuentas-remuneradas.html" class="cta-link">💳 Cómo NO perder más: Cuentas remuneradas →</a>
+        <a href="etfs-fci.html" class="cta-link">💎 ETFs y FCI para ganarle a la inflación →</a>
+        <a href="empezar-a-invertir.html" class="cta-link">🚀 Guía completa para empezar →</a>
+      </div>
+
+      <section class="why-explainer">
+        <h2>¿Por qué importa esto?</h2>
+        <p>Cuando dejás plata <strong>quieta en una caja de ahorro común o en el cajón</strong>, parece que la conservás. Pero los <strong>pesos siguen ahí mientras los precios suben</strong>: el mismo billete compra cada vez menos.</p>
+        <p>Esta calculadora usa el <strong>IPC oficial del INDEC</strong> mes a mes. No es una estimación: es cuánto subió cada producto y servicio en promedio según los datos publicados.</p>
+        <p>La buena noticia: hay <strong>tres formas básicas</strong> de que tu plata <em>al menos</em> empate a la inflación sin riesgo serio: una <a href="cuentas-remuneradas.html" style="color:var(--accent)">cuenta remunerada</a>, un <a href="etfs-fci.html" style="color:var(--accent)">FCI money market</a> o un plazo fijo. Empezá por ahí.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Para principiantes</h3>
+        <ul>
+          <li><a href="empezar-a-invertir.html">Empezar a invertir</a></li>
+          <li><a href="cuentas-remuneradas.html">Cuentas remuneradas</a></li>
+          <li><a href="etfs-fci.html">ETFs y FCI</a></li>
+          <li><a href="brokers.html">Comparador de Brokers</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio educativo. Datos del IPC del INDEC vía API pública. No constituye asesoramiento financiero.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=5"></script>
+  <script>
+  (function() {
+    const inputs = {
+      monto: document.getElementById('monto'),
+      ini: document.getElementById('fecha-inicio'),
+      fin: document.getElementById('fecha-fin'),
+    };
+    const out = {
+      loss: document.getElementById('loss-amount'),
+      pct:  document.getElementById('loss-pct'),
+      realToday: document.getElementById('real-today'),
+      inflPct: document.getElementById('infl-pct'),
+      needed: document.getElementById('needed-today'),
+    };
+    const box = document.getElementById('calc-box');
+
+    // Default fecha-fin = previous month
+    const today = new Date();
+    const finDefault = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    inputs.fin.value = finDefault.toISOString().slice(0, 7);
+
+    const fmt = n => new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
+
+    let inflationData = null;
+
+    async function loadInflation() {
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/indices/inflacion', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error('http ' + r.status);
+        const arr = await r.json();
+        // Each item: {fecha: "YYYY-MM-DD", valor: 4.2} (monthly %)
+        inflationData = arr.map(d => ({ ym: d.fecha.slice(0, 7), pct: d.valor }));
+      } catch (e) {
+        console.warn('inflation api failed', e);
+      }
+    }
+
+    function calc() {
+      if (!inflationData) return;
+      const monto = parseFloat(inputs.monto.value) || 0;
+      const ini = inputs.ini.value;
+      const fin = inputs.fin.value;
+      if (!ini || !fin || monto <= 0) return;
+
+      // Sum cumulative inflation from ini+1 to fin (the inflation that happened AFTER you held the money)
+      // Approach: include the inflation values where ym > ini and ym <= fin
+      const factor = inflationData
+        .filter(d => d.ym > ini && d.ym <= fin)
+        .reduce((acc, d) => acc * (1 + d.pct / 100), 1);
+
+      if (factor <= 1) {
+        out.loss.textContent = '$0';
+        out.pct.innerHTML = 'Tu poder de compra <strong>no cambió</strong> en ese período (o el rango es inválido).';
+        out.realToday.textContent = fmt(monto);
+        out.inflPct.textContent = '0%';
+        out.needed.textContent = fmt(monto);
+        return;
+      }
+      const realToday = monto / factor;       // poder de compra real actual de los pesos viejos
+      const neededToday = monto * factor;     // cuánta plata necesitarías hoy para comprar lo mismo
+      const lostReal = monto - realToday;      // diferencia en pesos "de hoy" equivalentes
+      const lostPct = (1 - 1 / factor) * 100;
+      const inflPct = (factor - 1) * 100;
+
+      out.loss.textContent = '$' + fmt(lostReal);
+      out.pct.innerHTML = `Tu poder de compra cayó <strong>${lostPct.toFixed(1)}%</strong> en ese período.`;
+      out.realToday.textContent = '$' + fmt(realToday);
+      out.inflPct.textContent = inflPct.toFixed(1) + '%';
+      out.needed.textContent = '$' + fmt(neededToday);
+    }
+
+    function setupShare() {
+      const buildText = () => {
+        const monto = parseFloat(inputs.monto.value) || 0;
+        const loss = out.loss.textContent;
+        const pct = out.pct.textContent.match(/-?[\d.,]+%/)?.[0] || '—';
+        return `Dejé $${fmt(monto)} en pesos desde ${inputs.ini.value} hasta ${inputs.fin.value} y la inflación se llevó ${loss} de poder de compra (${pct}). Calculalo vos también: ${location.origin}/pages/cuanto-perdi.html`;
+      };
+      document.getElementById('share-twitter').onclick = () => {
+        const t = encodeURIComponent(buildText());
+        window.open(`https://twitter.com/intent/tweet?text=${t}`, '_blank', 'noopener');
+      };
+      document.getElementById('share-whatsapp').onclick = () => {
+        const t = encodeURIComponent(buildText());
+        window.open(`https://wa.me/?text=${t}`, '_blank', 'noopener');
+      };
+      document.getElementById('share-link').onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(buildText());
+          const btn = document.getElementById('share-link');
+          const old = btn.textContent; btn.textContent = '✓ Copiado';
+          setTimeout(() => btn.textContent = old, 2000);
+        } catch {}
+      };
+    }
+
+    document.querySelectorAll('.quick-amounts button').forEach(b => {
+      b.addEventListener('click', () => { inputs.monto.value = b.dataset.amt; calc(); });
+    });
+    ['monto','ini','fin'].forEach(k => inputs[k].addEventListener('input', calc));
+
+    (async () => {
+      box.classList.add('loading-dim');
+      await loadInflation();
+      box.classList.remove('loading-dim');
+      setupShare();
+      calc();
+    })();
+  })();
+  </script>
+</body>
+</html>
