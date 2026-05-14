@@ -793,3 +793,71 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
   .tools-grid { grid-template-columns: 1fr; }
 }
 
+
+/* ============================================
+   MOBILE TAP TARGETS — ensure ≥44px hit areas
+   ============================================ */
+@media (max-width: 900px) {
+  /* Footer nav links: bigger tap area on mobile */
+  .footer-nav ul li a {
+    display: block;
+    padding: 0.55rem 0.25rem;
+    min-height: 44px;
+    line-height: 1.4;
+  }
+  /* Tool card CTA at bottom of card */
+  .tool-card .calc-cta,
+  .tool-card a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Dropdown items inside hamburger menu */
+  .main-nav.open .nav-dropdown-menu a {
+    min-height: 44px;
+    padding: 0.7rem 0.85rem;
+  }
+  /* Main nav-link in hamburger */
+  .main-nav.open .nav-link,
+  .main-nav.open .nav-dropdown-btn {
+    min-height: 44px;
+    padding: 0.7rem 0.85rem;
+  }
+  /* "Ver todas" links and inline navigation */
+  .section-cta, .view-all {
+    min-height: 36px;
+    padding: 0.4rem 0.6rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Contact strip on home */
+  .contact-link-item { min-height: 56px; }
+}
+
+/* ============================================
+   GLOBAL FOOTER CONTACT (email everywhere)
+   ============================================ */
+.site-footer .footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.site-footer .footer-contact a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.site-footer .footer-contact a:hover { text-decoration: underline; }
+.site-footer .footer-contact-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}

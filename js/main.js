@@ -1,5 +1,5 @@
-// FinCalc — main.js v2
-window.__BB_MAIN_JS_VERSION = 'v2';
+// FinCalc — main.js v3
+window.__BB_MAIN_JS_VERSION = 'v3';
 
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
@@ -137,6 +137,22 @@ window.__BB_MAIN_JS_VERSION = 'v2';
   }).join('');
 
   nav.innerHTML = html;
+})();
+
+// ============================================================
+// FOOTER CONTACT — inject email/contact block in every footer
+// ============================================================
+(function injectFooterContact() {
+  const footer = document.querySelector('.site-footer');
+  if (!footer || footer.querySelector('.footer-contact')) return;
+  const target = footer.querySelector('.footer-brand') || footer.querySelector('.footer-inner') || footer;
+  const div = document.createElement('div');
+  div.className = 'footer-contact';
+  div.innerHTML = `
+    <span class="footer-contact-label">Contacto</span>
+    <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
+  `;
+  target.appendChild(div);
 })();
 
 // Mobile menu toggle
