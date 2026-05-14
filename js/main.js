@@ -1,11 +1,150 @@
-// FinCalc — main.js
+// FinCalc — main.js v2
+window.__BB_MAIN_JS_VERSION = 'v2';
+
+// ============================================================
+// FAVICON injection (so every page shows the BB logo in tab)
+// ============================================================
+(function injectFavicon() {
+  if (document.querySelector('link[rel="icon"]')) return;
+  // Path is relative to where the document lives. Pages under /pages/ need '../assets'.
+  const inPages = location.pathname.includes('/pages/');
+  const base = inPages ? '../assets/' : 'assets/';
+  const links = [
+    { rel: 'icon', type: 'image/svg+xml', href: base + 'logo-bb.svg' },
+    { rel: 'icon', type: 'image/png', href: base + 'logo-bb.png' },
+    { rel: 'apple-touch-icon', href: base + 'logo-bb.png' },
+  ];
+  links.forEach(l => {
+    const link = document.createElement('link');
+    Object.entries(l).forEach(([k, v]) => link.setAttribute(k, v));
+    document.head.appendChild(link);
+  });
+})();
+
+// ============================================================
+// MAIN NAV — single source of truth, audience-based dropdowns
+// Replaces the static <nav class="main-nav"> on every page so
+// we don't have to edit 35 HTML files when nav changes.
+// ============================================================
+(function buildNav() {
+  const nav = document.querySelector('.main-nav');
+  if (!nav) return;
+
+  const inPages = location.pathname.includes('/pages/');
+  const root = inPages ? '../' : '';
+  const pagesBase = inPages ? '' : 'pages/';
+
+  // Helper: build a dropdown { title, items: [{href, label, icon}] }
+  const groups = [
+    {
+      kind: 'link',
+      href: root + 'index.html',
+      label: 'Inicio',
+      match: ['index.html', '/'],
+    },
+    {
+      kind: 'dropdown',
+      title: 'Nuevos Inversores',
+      highlight: true,
+      items: [
+        { href: pagesBase + 'empezar-a-invertir.html', label: 'Empezar a Invertir', icon: '🚀' },
+        { href: pagesBase + 'conceptos.html',          label: 'Conceptos básicos',  icon: '📖' },
+        { href: pagesBase + 'brokers.html',            label: 'Brokers Argentina',  icon: '🏦' },
+        { href: pagesBase + 'renta-fija.html',         label: 'Renta Fija',          icon: '📜' },
+        { href: pagesBase + 'etfs-fci.html',           label: 'ETFs y FCI',          icon: '💎' },
+        { href: pagesBase + 'cuentas-remuneradas.html',label: 'Cuentas remuneradas', icon: '💳' },
+      ],
+    },
+    {
+      kind: 'dropdown',
+      title: 'Herramientas',
+      items: [
+        { href: pagesBase + 'calculadoras.html',      label: 'Todas las calculadoras', icon: '🧮' },
+        { href: pagesBase + 'interes-compuesto.html', label: 'Interés Compuesto',      icon: '📈' },
+        { href: pagesBase + 'interes-simple.html',    label: 'Interés Simple',         icon: '📊' },
+        { href: pagesBase + 'meta-financiera.html',   label: 'Meta Financiera',        icon: '🎯' },
+        { href: pagesBase + 'prestamo.html',          label: 'Préstamo',                icon: '💰' },
+        { href: pagesBase + 'inflacion.html',         label: 'Inflación',               icon: '📉' },
+        { href: pagesBase + 'salario.html',           label: 'Salario',                 icon: '💵' },
+        { href: pagesBase + 'conversion-tasas.html',  label: 'Conversión de Tasas',    icon: '🔄' },
+        { href: pagesBase + 'roi.html',               label: 'ROI',                     icon: '📊' },
+        { href: pagesBase + 'fire.html',              label: 'FIRE',                    icon: '🔥' },
+        { href: pagesBase + 'vpn.html',               label: 'VPN',                     icon: '💎' },
+        { href: pagesBase + 'caucion.html',           label: 'Caución',                 icon: '⚡' },
+      ],
+    },
+    {
+      kind: 'dropdown',
+      title: 'Mercado',
+      items: [
+        { href: pagesBase + 'ticker.html',     label: 'Acciones',     icon: '📈' },
+        { href: pagesBase + 'mercado.html',    label: 'Mercado',      icon: '🌐' },
+        { href: pagesBase + 'calendario.html', label: 'Calendario',   icon: '📅' },
+        { href: pagesBase + 'noticias.html',   label: 'Noticias',     icon: '📰' },
+        { href: pagesBase + 'datos.html',      label: 'Datos macro',  icon: '📊' },
+        { href: pagesBase + 'dividendos.html', label: 'Dividendos',   icon: '💸' },
+      ],
+    },
+    {
+      kind: 'dropdown',
+      title: 'Avanzado',
+      items: [
+        { href: pagesBase + 'guia-multiplos.html', label: 'Guía de Múltiplos', icon: '📘' },
+        { href: pagesBase + 'multiplos.html',      label: 'Múltiplos',          icon: '🔢' },
+        { href: pagesBase + 'ddm.html',            label: 'DDM',                icon: '📐' },
+        { href: pagesBase + 'wacc.html',           label: 'WACC',               icon: '⚖️' },
+        { href: pagesBase + 'markowitz.html',      label: 'Markowitz',          icon: '🎲' },
+        { href: pagesBase + 'mis-portafolios.html',label: 'Portafolio',         icon: '💼', beta: true },
+      ],
+    },
+    {
+      kind: 'link',
+      href: pagesBase + 'proyectos.html',
+      label: 'Proyectos',
+      extraClass: 'nav-proyectos',
+    },
+  ];
+
+  const currentFile = location.pathname.split('/').pop() || 'index.html';
+
+  const isActive = (href) => {
+    const file = href.split('/').pop();
+    return file === currentFile;
+  };
+
+  const html = groups.map(g => {
+    if (g.kind === 'link') {
+      const active = (g.match || []).some(m => currentFile === m || (m === '/' && currentFile === '')) || isActive(g.href);
+      return `<a href="${g.href}" class="nav-link${active ? ' active' : ''}${g.extraClass ? ' ' + g.extraClass : ''}">${g.label}</a>`;
+    }
+    // dropdown
+    const anyActive = g.items.some(it => isActive(it.href));
+    const itemsHtml = g.items.map(it => `
+      <a href="${it.href}" class="${isActive(it.href) ? 'active' : ''}">
+        <span class="dd-icon">${it.icon || ''}</span>
+        <span>${it.label}${it.beta ? ' <span class="beta-badge">Beta</span>' : ''}</span>
+      </a>`).join('');
+    const btnStyle = g.highlight ? ' style="color:#4ade9a"' : '';
+    return `
+      <div class="nav-dropdown${anyActive ? ' has-active' : ''}">
+        <button class="nav-dropdown-btn${anyActive ? ' has-active' : ''}"${btnStyle} aria-haspopup="true" aria-expanded="false">
+          ${g.title}<span class="dd-arrow">▼</span>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          ${itemsHtml}
+        </div>
+      </div>`;
+  }).join('');
+
+  nav.innerHTML = html;
+})();
 
 // Mobile menu toggle
 const toggle = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.main-nav');
-if (toggle && nav) {
+const navEl = document.querySelector('.main-nav');
+if (toggle && navEl) {
   toggle.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
+    const open = navEl.classList.toggle('open');
     toggle.setAttribute('aria-expanded', open);
   });
 }
@@ -51,18 +190,23 @@ window.formatYears = (months) => {
   return `${y} año${y !== 1 ? 's' : ''} y ${m} mes${m !== 1 ? 'es' : ''}`;
 };
 
-// ---- Dropdown nav ----
+// ---- Dropdown nav interactions ----
 document.querySelectorAll('.nav-dropdown').forEach(dd => {
   const btn = dd.querySelector('.nav-dropdown-btn');
+  if (!btn) return;
   btn.addEventListener('click', e => {
     e.stopPropagation();
-    // Close all others
     document.querySelectorAll('.nav-dropdown.open').forEach(other => {
       if (other !== dd) other.classList.remove('open');
     });
     dd.classList.toggle('open');
+    btn.setAttribute('aria-expanded', dd.classList.contains('open'));
   });
 });
 document.addEventListener('click', () => {
-  document.querySelectorAll('.nav-dropdown.open').forEach(dd => dd.classList.remove('open'));
+  document.querySelectorAll('.nav-dropdown.open').forEach(dd => {
+    dd.classList.remove('open');
+    const b = dd.querySelector('.nav-dropdown-btn');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  });
 });

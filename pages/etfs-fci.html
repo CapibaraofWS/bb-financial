@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ETFs y Fondos Comunes de Inversión (FCI) — Explicación para principiantes — BB Financial</title>
+  <meta name="description" content="Qué son los ETFs y los Fondos Comunes de Inversión (FCI) en Argentina, cómo funcionan, quién los maneja, dónde va tu plata y ejemplos reales (Cocos, Balanz, Adcap, MercadoFondos)." />
+  <meta name="keywords" content="ETF, FCI, fondo común de inversión, Cocos, Balanz, Adcap, MercadoFondos, money market, renta fija, renta variable, principiantes Argentina" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .step-section { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+    .step-section:last-child { border-bottom: none; }
+    .step-num { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:var(--accent-dim);color:var(--accent);font-family:var(--font-mono);font-size:1rem;font-weight:600;margin-right:0.85rem;}
+    .step-title { font-family:var(--font-display);font-size:1.55rem;letter-spacing:-0.02em;margin-bottom:1rem;display:flex;align-items:center;}
+    .step-body p { color:var(--text-muted);font-size:0.92rem;line-height:1.75;margin-bottom:1rem;}
+    .step-body strong { color:var(--text); }
+    .step-body a { color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(74,222,154,0.4);}
+    .step-body a:hover { border-bottom-style:solid; }
+    .info-callout { background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--text-muted);line-height:1.65;}
+    .info-callout strong { color:var(--accent); }
+    .warn-callout { background:rgba(220,60,60,0.04);border:1px solid rgba(220,60,60,0.2);border-left:3px solid #ff6b6b;border-radius:10px;padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--text-muted);line-height:1.65;}
+    .warn-callout strong { color:#ff9999; }
+    .compare-grid { display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+    @media (max-width: 720px) { .compare-grid { grid-template-columns:1fr; } }
+    .compare-card { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;}
+    .compare-card h4 { font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.85rem;letter-spacing:-0.01em;}
+    .compare-card.etf { border-color:rgba(96,165,250,0.25); }
+    .compare-card.etf h4 { color:#60a5fa; }
+    .compare-card.fci { border-color:rgba(74,222,154,0.25); }
+    .compare-card.fci h4 { color:var(--accent); }
+    .compare-card ul { list-style:none;padding:0;margin:0;}
+    .compare-card li { padding:0.4rem 0 0.4rem 1.2rem;position:relative;font-size:0.85rem;color:var(--text-muted);line-height:1.55;}
+    .compare-card li::before { content:'→';position:absolute;left:0;color:var(--accent);}
+    .toc { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2.5rem;}
+    .toc h3 { font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.85rem;}
+    .toc ol { list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.4rem;}
+    .toc li a { display:block;padding:0.5rem 0.75rem;color:var(--text-muted);text-decoration:none;border-radius:6px;font-size:0.85rem;transition:all var(--transition);}
+    .toc li a:hover { background:var(--accent-dim);color:var(--accent); }
+    .toc-num { display:inline-block;width:22px;color:var(--accent);font-family:var(--font-mono);font-size:0.78rem;}
+    .cta-link { display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.6rem 1.1rem;font-family:var(--font-body);font-weight:500;font-size:0.88rem;text-decoration:none;margin-top:0.5rem;transition:all var(--transition);}
+    .cta-link:hover { background:var(--accent);color:var(--bg); }
+    .flow-diagram { background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.25rem 0;}
+    .flow-row { display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;justify-content:center;font-size:0.85rem;color:var(--text-muted);}
+    .flow-row .node { background:rgba(74,222,154,0.08);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.5rem 0.85rem;color:var(--text);font-size:0.82rem;}
+    .flow-row .arrow { color:var(--accent);font-weight:600; }
+    .examples-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.85rem;margin:1.25rem 0;}
+    .example-card { background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem;}
+    .example-card h5 { font-size:0.95rem;margin-bottom:0.3rem;color:var(--text);}
+    .example-card p { font-size:0.78rem;color:var(--text-muted);line-height:1.55;margin:0;}
+    .example-card .tag { display:inline-block;background:var(--accent-dim);color:var(--accent);font-family:var(--font-mono);font-size:0.62rem;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.45rem;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="empezar-a-invertir.html">Empezar a invertir</a><span>/</span>ETFs y FCI</p>
+        <h1 class="page-title">ETFs y FCI 💎</h1>
+        <p class="page-subtitle">Las dos puertas de entrada más simples al mercado. <strong>No tenés que elegir acciones ni mirar pantallas</strong> — un profesional lo hace por vos y vos ponés la plata.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem;max-width:880px">
+
+      <div class="toc">
+        <h3>En esta guía</h3>
+        <ol>
+          <li><a href="#que-son"><span class="toc-num">1.</span> ¿Qué son?</a></li>
+          <li><a href="#diferencias"><span class="toc-num">2.</span> ETF vs FCI</a></li>
+          <li><a href="#quien-maneja"><span class="toc-num">3.</span> ¿Quién los maneja y custodia?</a></li>
+          <li><a href="#donde-va"><span class="toc-num">4.</span> ¿A dónde va tu plata?</a></li>
+          <li><a href="#ejemplos"><span class="toc-num">5.</span> Ejemplos reales (Argentina)</a></li>
+          <li><a href="#como-empezar"><span class="toc-num">6.</span> Cómo empezar</a></li>
+        </ol>
+      </div>
+
+      <!-- 1 -->
+      <section class="step-section" id="que-son">
+        <h2 class="step-title"><span class="step-num">1</span>¿Qué son?</h2>
+        <div class="step-body">
+          <p>Un <strong>ETF</strong> (Exchange Traded Fund) y un <strong>FCI</strong> (Fondo Común de Inversión) son lo mismo en esencia: una <strong>canasta con muchos activos adentro</strong> (acciones, bonos, dólar, plazos fijos, lo que sea) que vos comprás en una sola operación.</p>
+          <p>En lugar de comprar 50 acciones distintas para diversificar, comprás <strong>una cuotaparte</strong> del fondo y automáticamente tenés un pedacito de cada uno de esos 50 activos. Y no sos vos quien decide qué comprar y vender adentro — eso lo hace un equipo de profesionales (el <em>portfolio manager</em>) que cobra una comisión anual a cambio.</p>
+          <div class="info-callout">
+            <strong>👌 La gran ventaja:</strong> diversificación instantánea con muy poca plata. Con $10.000 ya podés tener exposición a 100 empresas a la vez vía un ETF, o a un canasto de bonos argentinos vía un FCI de renta fija.
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="step-section" id="diferencias">
+        <h2 class="step-title"><span class="step-num">2</span>ETF vs FCI: ¿en qué se diferencian?</h2>
+        <div class="step-body">
+          <p>Son primos cercanos. La diferencia más importante es <strong>dónde y cómo se compran</strong>:</p>
+          <div class="compare-grid">
+            <div class="compare-card etf">
+              <h4>📈 ETF</h4>
+              <ul>
+                <li>Cotiza en la bolsa (NYSE, BYMA, etc.) como una acción</li>
+                <li>Lo comprás/vendés en cualquier momento del día al precio del momento</li>
+                <li>La mayoría son extranjeros (USA, Europa)</li>
+                <li>En Argentina los accedés vía <strong>CEDEAR de ETFs</strong> (SPY, QQQ, EEM, etc.)</li>
+                <li>Comisiones anuales muy bajas (0,03% a 0,20%)</li>
+                <li>Suelen ser <em>pasivos</em>: replican un índice (S&P 500, Nasdaq)</li>
+              </ul>
+            </div>
+            <div class="compare-card fci">
+              <h4>💼 FCI (Fondo Común)</h4>
+              <ul>
+                <li>No cotiza en bolsa: la sociedad gerente fija un precio al cierre del día</li>
+                <li>Suscribís/rescatás a través de tu broker o app (Cocos, MercadoFondos, etc.)</li>
+                <li>Producto 100% argentino, regulado por la CNV</li>
+                <li>Hay FCI en pesos, en dólares, money market, renta fija, renta variable</li>
+                <li>Comisiones más altas (1% a 3% anual típicamente)</li>
+                <li>Suelen ser <em>activos</em>: un manager intenta superar al mercado</li>
+              </ul>
+            </div>
+          </div>
+          <p>Para un principiante en Argentina, <strong>los FCI suelen ser más accesibles</strong>: los suscribís desde la app del broker en un toque, sin tener que pasar por mercado abierto. Para inversores más avanzados que buscan bajas comisiones a largo plazo, los ETFs (vía CEDEAR) son imbatibles.</p>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="step-section" id="quien-maneja">
+        <h2 class="step-title"><span class="step-num">3</span>¿Quién crea, maneja y custodia tu plata?</h2>
+        <div class="step-body">
+          <p>Esta es la pregunta clave para sentirte seguro. En un FCI argentino hay <strong>tres roles separados</strong> por ley — y eso es justamente lo que te protege:</p>
+          <div class="flow-diagram">
+            <div class="flow-row">
+              <span class="node">💡 Sociedad Gerente</span>
+              <span class="arrow">→</span>
+              <span class="node">🛡️ Sociedad Depositaria</span>
+              <span class="arrow">→</span>
+              <span class="node">🏛 CNV</span>
+            </div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.85rem;text-align:center">Las tres son entidades distintas. Una decide, otra custodia, la tercera fiscaliza.</p>
+          </div>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">Sociedad Gerente:</strong> es la empresa que crea el fondo, define su estrategia y toma las decisiones de inversión (ej: Cocos Capital, Adcap Asset Management, Galileo, Schroders, Balanz, Megainver).</li>
+            <li><strong style="color:var(--text)">Sociedad Depositaria:</strong> es un banco que <strong>custodia físicamente los activos</strong> del fondo (típicamente Banco Comafi, Banco de Valores, BIND, ICBC). La sociedad gerente <strong>no toca</strong> la plata directamente.</li>
+            <li><strong style="color:var(--text)">CNV:</strong> autoriza el fondo, lo fiscaliza y exige reportes periódicos. Toda la operatoria está auditada.</li>
+          </ul>
+          <div class="info-callout">
+            <strong>🛡 Por qué esto importa:</strong> si la sociedad gerente quebrara mañana, tu plata <strong>no se pierde</strong>: sigue en custodia del banco depositario y la CNV asigna otro administrador. Tu cuotaparte es tuya, no de la gerente.
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="step-section" id="donde-va">
+        <h2 class="step-title"><span class="step-num">4</span>¿A dónde va exactamente tu plata?</h2>
+        <div class="step-body">
+          <p>Depende del <strong>tipo de fondo</strong> que elijas. Cada FCI tiene un "objetivo de inversión" que publica obligatoriamente. Los más comunes:</p>
+          <div class="compare-grid">
+            <div class="compare-card fci">
+              <h4>💧 Money Market (T+0)</h4>
+              <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Tu plata va a <strong style="color:var(--text)">plazos fijos bancarios, cuentas remuneradas y cauciones cortas</strong>. Riesgo muy bajo. Rescatás al instante (mismo día).</p>
+              <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.6rem"><strong style="color:var(--accent)">Para qué sirve:</strong> tu plata "que no usás hoy pero quizá mañana sí". Le gana al cajón sin riesgo serio.</p>
+            </div>
+            <div class="compare-card etf">
+              <h4>📜 Renta Fija</h4>
+              <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Tu plata va a <strong style="color:var(--text)">bonos del gobierno, obligaciones negociables de empresas, letras del Tesoro</strong>. Riesgo medio. Rescate típicamente T+1 (un día hábil).</p>
+              <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.6rem"><strong style="color:var(--accent)">Para qué sirve:</strong> ganarle a la inflación con un poco más de rendimiento que money market.</p>
+            </div>
+            <div class="compare-card fci">
+              <h4>📈 Renta Variable</h4>
+              <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Tu plata va a <strong style="color:var(--text)">acciones argentinas (Merval) o internacionales vía CEDEAR</strong>. Riesgo alto. Rescate T+2.</p>
+              <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.6rem"><strong style="color:var(--accent)">Para qué sirve:</strong> crecimiento de capital a largo plazo. Solo plata que no necesites por al menos 3-5 años.</p>
+            </div>
+            <div class="compare-card etf">
+              <h4>💵 Dólar / Latam</h4>
+              <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Tu plata va a <strong style="color:var(--text)">activos dolarizados</strong>: bonos en USD, ONs corporativas, acciones de la región. Te dolariza sin tener que comprar MEP manualmente.</p>
+              <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.6rem"><strong style="color:var(--accent)">Para qué sirve:</strong> cobertura cambiaria.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="step-section" id="ejemplos">
+        <h2 class="step-title"><span class="step-num">5</span>Ejemplos reales en Argentina</h2>
+        <div class="step-body">
+          <p>Algunos de los FCI más populares y las apps donde podés suscribirlos directamente desde el celular:</p>
+          <div class="examples-grid">
+            <div class="example-card">
+              <span class="tag">Money Market</span>
+              <h5>Cocos Daruma Renta Mixta</h5>
+              <p>De <strong>Cocos Capital</strong>. Money market clásico, rescate instantáneo, sin mínimo. Suscribís desde la app Cocos.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">Money Market</span>
+              <h5>Mercado Fondos (MP)</h5>
+              <p>FCI gestionados por <strong>BIND</strong> y otros, accesibles directo desde Mercado Pago. Es la opción más fácil para arrancar.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">Money Market</span>
+              <h5>Balanz Money Market</h5>
+              <p>De <strong>Balanz</strong>, uno de los brokers más grandes. Disponible desde la app Balanz.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">Renta Fija</span>
+              <h5>Adcap Renta Dólar</h5>
+              <p>De <strong>Adcap Asset Management</strong>. Bonos en USD argentinos. Cobertura inflación + cambio.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">Renta Variable</span>
+              <h5>Schroders Acciones Globales</h5>
+              <p>De <strong>Schroders</strong>. Exposición a acciones del mundo vía CEDEARs. Para horizontes largos.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">ETF (CEDEAR)</span>
+              <h5>SPY CEDEAR</h5>
+              <p>El ETF más famoso del mundo: replica el <strong>S&P 500</strong> (las 500 empresas más grandes de USA). Lo comprás como una acción más.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">ETF (CEDEAR)</span>
+              <h5>QQQ CEDEAR</h5>
+              <p>Replica el <strong>Nasdaq 100</strong>: Apple, Microsoft, Google, Amazon, Tesla, Nvidia, etc.</p>
+            </div>
+            <div class="example-card">
+              <span class="tag">ETF (CEDEAR)</span>
+              <h5>EEM CEDEAR</h5>
+              <p>Mercados emergentes (China, Brasil, India, Sudáfrica). Diversificación geográfica.</p>
+            </div>
+          </div>
+          <div class="warn-callout">
+            <strong>⚠ Verificá siempre:</strong> antes de suscribir un FCI buscá la sociedad gerente en el <a href="https://www.cnv.gov.ar/sitioWeb/RegistrosPublicos/Agentes" target="_blank" rel="noopener noreferrer">registro CNV</a>. Que esté autorizada por la CNV es no negociable.
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="step-section" id="como-empezar">
+        <h2 class="step-title"><span class="step-num">6</span>Cómo empezar (paso a paso)</h2>
+        <div class="step-body">
+          <ol style="padding-left:1.25rem;color:var(--text-muted);font-size:0.92rem;line-height:1.9;margin:1rem 0">
+            <li><strong style="color:var(--text)">Abrí cuenta en un broker o usá Mercado Pago.</strong> Para FCI, lo más rápido es Mercado Pago (Mercado Fondos) o la app de Cocos. Para ETFs (CEDEARs) necesitás un broker como Cocos, Balanz, IOL, Bull Market.</li>
+            <li><strong style="color:var(--text)">Definí tu horizonte.</strong> ¿Necesitás esta plata en 30 días? → money market. ¿En un año? → renta fija. ¿En 5+ años? → renta variable.</li>
+            <li><strong style="color:var(--text)">Empezá chico.</strong> $20.000 o $50.000 alcanza para suscribir un FCI y ver cómo funciona. No metas todo de una.</li>
+            <li><strong style="color:var(--text)">Mirá tu posición una vez por semana, no todos los días.</strong> El precio sube y baja todo el tiempo: a 3 años de plazo eso no importa.</li>
+            <li><strong style="color:var(--text)">Aportá todos los meses</strong> (dollar-cost averaging). Esto neutraliza el riesgo de "comprar caro": entrás cada mes a un precio diferente.</li>
+          </ol>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.25rem">
+            <a href="brokers.html" class="cta-link">⚖️ Comparar brokers →</a>
+            <a href="empezar-a-invertir.html" class="cta-link">🚀 Volver a la guía →</a>
+            <a href="cuentas-remuneradas.html" class="cta-link">💳 Ver cuentas remuneradas →</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Para principiantes</h3>
+        <ul>
+          <li><a href="empezar-a-invertir.html">Guía para principiantes</a></li>
+          <li><a href="cuentas-remuneradas.html">Cuentas remuneradas</a></li>
+          <li><a href="brokers.html">Comparador de Brokers</a></li>
+          <li><a href="conceptos.html">Conceptos financieros</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">© 2026 BB Financial · Contacto: <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+</body>
+</html>

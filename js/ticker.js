@@ -98,11 +98,13 @@
 
   async function getRiesgoPais() {
     try {
-      const res = await fetch('/api/bcra', { signal: AbortSignal.timeout(8000) });
+      const res = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(8000) });
       if (!res.ok) return null;
-      const d = await res.json();
-      const embi = d?.results?.find(v => v.idVariable === 5);
-      return embi ? { price: embi.valor, chg: null } : null;
+      const arr = await res.json();
+      if (!Array.isArray(arr) || arr.length < 2) return null;
+      const last = arr.at(-1), prev = arr.at(-2);
+      if (last?.valor == null) return null;
+      return { price: last.valor, chg: prev?.valor != null ? last.valor - prev.valor : null };
     } catch {
       return null;
     }
@@ -126,23 +128,31 @@
     const s = new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
     return prefix + s;
   }
-  function fmtChg(chg) {
+  function fmtChg(chg, isAbs = false) {
     if (chg == null) return { txt: '', cls: 'neu' };
     const sign = chg >= 0 ? '+' : '';
     return {
-      txt: `${sign}${chg.toFixed(2)}%`,
+      txt: isAbs ? `${sign}${Math.round(chg)} pts` : `${sign}${chg.toFixed(2)}%`,
       cls: chg > 0 ? 'pos' : chg < 0 ? 'neg' : 'neu'
     };
   }
 
   /* ---------- Render ---------- */
-  function renderItem({ flag, label, priceStr, chg }) {
-    const c = fmtChg(chg);
+  // Escape para evitar XSS si una API externa devuelve HTML/script en label/priceStr.
+  // Solo permitimos las clases internas conocidas en c.cls (whitelist).
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  const CHG_CLASSES = new Set(['pos','neg','neu']);
+
+  function renderItem({ flag, label, priceStr, chg, chgIsAbs }) {
+    const c = fmtChg(chg, !!chgIsAbs);
+    const safeCls = CHG_CLASSES.has(c.cls) ? c.cls : 'neu';
     return `<div class="mkt-item">
-      <span class="mkt-flag">${flag}</span>
-      <span class="mkt-label">${label}</span>
-      <span class="mkt-price">${priceStr}</span>
-      ${c.txt ? `<span class="mkt-chg ${c.cls}">${c.txt}</span>` : ''}
+      <span class="mkt-flag">${esc(flag)}</span>
+      <span class="mkt-label">${esc(label)}</span>
+      <span class="mkt-price">${esc(priceStr)}</span>
+      ${c.txt ? `<span class="mkt-chg ${safeCls}">${esc(c.txt)}</span>` : ''}
     </div>`;
   }
 
@@ -171,7 +181,10 @@
 
     const items = [
       { flag: '🇦🇷', label: 'MERVAL USD',    priceStr: fmtPrice(mervUsd?.price, '$'),  chg: mervUsd?.chg  },
-      { flag: '⚠️',  label: 'RIESGO PAÍS',   priceStr: rp ? fmtPrice(rp.price) : '—',  chg: null          },
+      { flag: '🇦🇷',  label: 'RIESGO PAÍS',
+        priceStr: rp ? Math.round(rp.price).toLocaleString('en-US') + ' pts' : '—',
+        chg: rp?.chg != null ? rp.chg : null,
+        chgIsAbs: true },
       { flag: '🇺🇸', label: 'NASDAQ 100',    priceStr: fmtPrice(ndx?.price),            chg: ndx?.chg      },
       { flag: '🇺🇸', label: 'DOW JONES',     priceStr: fmtPrice(dji?.price),            chg: dji?.chg      },
       { flag: '🇺🇸', label: 'S&P 500',       priceStr: fmtPrice(gspc?.price),           chg: gspc?.chg     },
@@ -181,8 +194,45 @@
     ];
 
     bar.innerHTML = buildTrack(items);
+
+    // Timestamp "Actualizado HH:MM:SS" — solo si al menos 1 dato cargó
+    const hasData = items.some(it => it.priceStr && it.priceStr !== '—');
+    if (hasData) {
+      const now = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      const stamp = document.getElementById('ticker-timestamp') || (() => {
+        const el = document.createElement('span');
+        el.id = 'ticker-timestamp';
+        el.style.cssText = 'position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:0.62rem;color:var(--text-subtle);letter-spacing:0.06em;pointer-events:none;background:linear-gradient(90deg,transparent,var(--bg-card) 30%);padding:0.35rem 0 0.35rem 1.2rem';
+        bar.style.position = 'relative';
+        bar.appendChild(el);
+        return el;
+      })();
+      stamp.textContent = `Act. ${now}`;
+    }
   }
 
+  // Throttling: solo refrescar si la pestaña está visible (ahorra cuotas de APIs y batería del usuario)
+  let timer = null;
+  function startTimer() {
+    if (timer) return;
+    timer = setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 90_000);
+  }
+  function stopTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
   refresh();
-  setInterval(refresh, 90_000);
+  startTimer();
+  // Si el usuario vuelve a la pestaña después de >90s, refrescamos inmediatamente.
+  let lastRefresh = Date.now();
+  const origRefresh = refresh;
+  // Wrap refresh para registrar timestamp del último refresh
+  // (evita doble fetch si visibilitychange dispara seguido)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      if (Date.now() - lastRefresh > 90_000) { origRefresh(); lastRefresh = Date.now(); }
+      startTimer();
+    } else {
+      stopTimer();
+    }
+  });
 })();

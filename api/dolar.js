@@ -1,4 +1,7 @@
+import { denyExternalOrigin } from './_security.js';
+
 export default async function handler(req, res) {
+  if (denyExternalOrigin(req, res)) return;
   try {
     const response = await fetch('https://dolarapi.com/v1/dolares', {
       signal: AbortSignal.timeout(8000)

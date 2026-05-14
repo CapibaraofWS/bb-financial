@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de Brokers Argentinos — BB Financial</title>
+  <meta name="description" content="Compará comisiones, mínimos y costos de los principales brokers de Argentina: IOL, Cocos, Balanz, PPI, Bull Market y más." />
+  <meta name="keywords" content="brokers argentina, comparador brokers, comisiones broker, IOL, Cocos Capital, Balanz, PPI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+    .warn-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:0.82rem;color:var(--text-muted);line-height:1.6;}
+    .warn-box strong{color:var(--gold);}
+
+    .filter-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .filter-btn{padding:0.45rem 0.9rem;border-radius:8px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;transition:all var(--transition);}
+    .filter-btn:hover,.filter-btn.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.3);}
+
+    .brokers-table-wrap{overflow-x:auto;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);}
+    .brokers-table{width:100%;border-collapse:collapse;min-width:900px;}
+    .brokers-table th{padding:1rem 0.85rem;text-align:left;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;}
+    .brokers-table td{padding:0.95rem 0.85rem;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+    .brokers-table tr:last-child td{border-bottom:none;}
+    .brokers-table tr:hover td{background:rgba(255,255,255,0.02);}
+    .b-name{font-family:var(--font-display);font-size:1rem;color:var(--text);}
+    .b-tag{display:inline-block;font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.12rem 0.4rem;border-radius:4px;margin-left:0.4rem;}
+    .b-tag.popular{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.2);}
+    .b-tag.banco{background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.2);}
+    .b-num{font-family:var(--font-mono);font-size:0.82rem;color:var(--text);}
+    .b-num.low{color:var(--accent);}
+    .b-num.high{color:#ff9999;}
+    .b-num.zero{color:var(--accent);font-weight:600;}
+    .b-yes{color:var(--accent);}
+    .b-no{color:#ff7a7a;}
+    .b-site{font-family:var(--font-mono);font-size:0.75rem;color:#60a5fa;text-decoration:none;}
+    .b-site:hover{text-decoration:underline;}
+
+    .pros-cons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:2rem;}
+    .pc-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;}
+    .pc-name{font-family:var(--font-display);font-size:1.1rem;letter-spacing:-0.01em;margin-bottom:0.75rem;}
+    .pc-section{margin-top:0.6rem;}
+    .pc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem;}
+    .pc-list{list-style:none;padding:0;margin:0;font-size:0.82rem;color:var(--text-muted);line-height:1.6;}
+    .pc-list li{padding-left:1.1rem;position:relative;margin-bottom:0.2rem;}
+    .pc-list.pros li::before{content:'+';position:absolute;left:0;color:var(--accent);font-weight:600;}
+    .pc-list.cons li::before{content:'−';position:absolute;left:0;color:#ff9999;font-weight:600;}
+
+    @media (max-width:700px){
+      .brokers-table th,.brokers-table td{padding:0.7rem 0.55rem;font-size:0.78rem;}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Brokers Argentina</p>
+        <h1 class="page-title">Comparador de Brokers 🇦🇷</h1>
+        <p class="page-subtitle">Compará comisiones, mínimos y servicios de los principales brokers argentinos. Todos los datos en un solo lugar para que elijas el que mejor se adapta a tu perfil.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <!-- ¿Qué es un broker? -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-bottom:2rem">
+        <h2 style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:-0.01em;margin-bottom:1rem">¿Qué es un broker?</h2>
+        <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;margin-bottom:1rem">
+          Un <strong style="color:var(--text)">broker</strong> (o ALYC en Argentina: <em>Agente de Liquidación y Compensación</em>) es la empresa habilitada por la CNV que te permite comprar y vender activos en la bolsa (acciones, Cedears, bonos, ON, cauciones, dólar MEP, FCI). Es el intermediario obligatorio entre vos y el mercado: no podés operar en BYMA directamente, necesitás abrir una cuenta comitente en algún broker.
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-top:1.25rem">
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">¿Cómo cobran?</p>
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Una <strong style="color:var(--text)">comisión</strong> sobre el monto operado (típicamente entre 0% y 1%) más IVA, derechos de mercado (~0,008%) y a veces mantenimiento de cuenta.</p>
+          </div>
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">¿Es seguro mi dinero?</p>
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Sí. Los títulos quedan en tu <strong style="color:var(--text)">cuenta comitente en Caja de Valores</strong>, no en el broker. Si quiebra, podés transferir tus activos a otro ALYC.</p>
+          </div>
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">¿Cómo elegir?</p>
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Empezá por las <strong style="color:var(--text)">comisiones de lo que más vas a operar</strong> (Cedears para principiantes), después mirá la UX de la app, la atención al cliente, y el tiempo de extracción de dólares.</p>
+          </div>
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">¿Puedo tener varios?</p>
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Sí, y de hecho <strong style="color:var(--text)">es común</strong>. Algunos usan uno para operar Cedears (sin comisión) y otro para bonos o productos sofisticados. No hay restricción.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>¿Cómo usar este comparador?</strong> Más abajo tenés una <strong>tabla completa</strong> con todos los brokers y un <strong>comparador 1 a 1 a 1</strong> para seleccionar 2 o 3 y verlos lado a lado. Las comisiones están expresadas como % sobre el monto operado.
+      </div>
+
+      <div class="warn-box">
+        <strong>⚠ Importante — leer antes de operar:</strong> las comisiones mostradas son del <strong>plan estándar / cuenta base</strong> y son <strong>referenciales</strong>. Varios brokers ofrecen planes con menor comisión (ej: Cocos Pro/Gold, IOL Líder) o bonificaciones por volumen. Las tarifas cambian seguido. <strong>Siempre verificá en el tarifario oficial del broker</strong> (link en cada fila) antes de abrir cuenta. <em>Última revisión de datos: enero 2026.</em>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="zero-comm">Sin comisión Cedears</button>
+        <button class="filter-btn" data-filter="no-min">Sin mínimo</button>
+        <button class="filter-btn" data-filter="banco">Bancos</button>
+      </div>
+
+      <div class="brokers-table-wrap">
+        <table class="brokers-table">
+          <thead>
+            <tr>
+              <th>Broker</th>
+              <th>Cedears</th>
+              <th>Acciones AR</th>
+              <th>Bonos</th>
+              <th title="Caución colocadora en pesos, expresada como Tasa Nominal Anual">Caución (TNA)</th>
+              <th>MEP/CCL</th>
+              <th>Mín. apertura</th>
+              <th>Mantenim.</th>
+              <th>Tarifario oficial</th>
+            </tr>
+          </thead>
+          <tbody id="brokers-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- COMPARADOR 1 vs 1 vs 1 -->
+      <h2 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin:3rem 0 0.5rem">Comparar lado a lado</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.25rem">Seleccioná hasta 3 brokers para verlos uno al lado del otro. Ideal para decidir entre dos opciones que te interesan.</p>
+
+      <div class="vs-selector" id="vs-selector" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"></div>
+
+      <div id="vs-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem"></div>
+
+      <h2 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin:3rem 0 1rem">Pros y contras de cada broker</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.5rem">Más allá de las comisiones, cada broker tiene fortalezas y debilidades. Acá un resumen práctico:</p>
+
+      <div class="pros-cons-grid" id="pros-cons"></div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-top:3rem">
+        <h3 style="font-family:var(--font-display);font-size:1.15rem;margin-bottom:0.75rem">Glosario rápido</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;font-size:0.83rem;color:var(--text-muted);line-height:1.6">
+          <div><strong style="color:var(--text)">Cedear:</strong> certificado argentino que representa una acción extranjera (Apple, Tesla, etc.). Cotiza en pesos en BYMA.</div>
+          <div><strong style="color:var(--text)">MEP / CCL:</strong> dólar legal vía bolsa. Comprás un bono en pesos y lo vendés en dólares.</div>
+          <div><strong style="color:var(--text)">Caución:</strong> préstamo de plazo corto en BYMA, similar a plazo fijo pero con mejor rendimiento.</div>
+          <div><strong style="color:var(--text)">Derechos de mercado:</strong> ~0,008% adicional que cobra BYMA en toda operación.</div>
+          <div><strong style="color:var(--text)">IVA sobre comisión:</strong> 21% sobre la comisión del broker (no sobre el monto operado).</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Secciones</h3>
+        <ul>
+          <li><a href="brokers.html">Comparador de Brokers</a></li>
+          <li><a href="caucion.html">Caución Bursátil</a></li>
+          <li><a href="renta-fija.html">Renta Fija</a></li>
+          <li><a href="mis-portafolios.html">Mis Portafolios</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+  <script>
+    // ⚠ IMPORTANTE: valores REFERENCIALES del plan estándar.
+    // Las comisiones cambian seguido y muchos brokers tienen planes con menores comisiones.
+    // SIEMPRE confirmar en el tarifario oficial (link en cada broker).
+    const BROKERS = [
+      {
+        nombre: 'Cocos Capital', tags: ['popular'],
+        cedears: 0.45, accionesAR: 0.45, bonos: 0.45, caucion: 2.0, mep: 0.45,
+        minimo: 0, mantenimiento: 0,
+        web: 'cocos.capital',
+        tarifario: 'https://cocos.capital/tarifario',
+        planes: [
+          { nombre: 'Cocos (estándar)', desc: 'Sin costo mensual. Web/app personas humanas: 0,45% acciones, Cedears, bonos y ON. Caución colocadora 2% TNA. Operación con operador: 1%.' },
+          { nombre: 'Cocos Pro', desc: '0% comisión en acciones, Cedears, bonos, ON y USD. Caución colocadora 1,5% TNA. Costo: desde USD 150/mes.' },
+          { nombre: 'Cocos Gold', desc: '0% comisión en acciones, Cedears, bonos, ON y USD. Caución colocadora 3% TNA. Costo: hasta 0,15% AUM/mes.' },
+          { nombre: 'Cocos AFI', desc: 'Clientes referenciados por agente productor. Comisiones de 1% en la mayoría de instrumentos.' }
+        ],
+        pros: ['App moderna y muy fácil de usar', 'Comisión web/app baja (0,45%) vs. operador (1%)', 'Planes Pro/Gold eliminan comisiones por instrumento', 'Tarjeta Visa con remuneración del saldo'],
+        cons: ['Catálogo limitado de instrumentos avanzados', 'Custodia con costo arriba de USD 200k', 'Sin atención telefónica robusta']
+      },
+      {
+        nombre: 'IOL InvertirOnline', tags: ['popular'],
+        cedears: 0.5, accionesAR: 0.7, bonos: 0.4, caucion: 2.0, mep: 0.5,
+        minimo: 0, mantenimiento: 0,
+        web: 'invertironline.com',
+        tarifario: 'https://www.invertironline.com/Servicios/Tarifas',
+        planes: [
+          { nombre: 'IOL Líder', desc: 'Bonificaciones por volumen mensual operado. Confirmar requisitos y bonificación en el tarifario oficial.' }
+        ],
+        pros: ['El más usado de Argentina', 'Catálogo muy amplio (incluido EE.UU. directo)', 'Buenos reportes y research', 'Acceso a fondos comunes propios'],
+        cons: ['Comisiones más altas que la competencia nueva', 'Interfaz algo cargada']
+      },
+      {
+        nombre: 'Balanz', tags: [],
+        cedears: 0.5, accionesAR: 0.5, bonos: 0.5, caucion: 2.0, mep: 0.1,
+        minimo: 0, mantenimiento: 0,
+        web: 'balanz.com',
+        tarifario: 'https://balanz.com/comisiones/',
+        planes: [
+          { nombre: 'Trading Asistido', desc: 'Operatoria con asesor: hasta 1,50% en todas las operaciones.' }
+        ],
+        pros: ['Letras en pesos y MEP con comisión muy baja (0,10%)', 'Caución colocadora barata (hasta 0,50%)', 'Buen research y FCI propios', 'Bonificación 50% en trading intradiario'],
+        cons: ['Acciones y Cedears tienen comisión media-alta', 'App menos pulida que Cocos']
+      },
+      {
+        nombre: 'PPI (Portfolio Personal)', tags: [],
+        cedears: 0.6, accionesAR: 0.6, bonos: 0.6, caucion: 2.0, mep: 0.6,
+        minimo: 0, mantenimiento: 0,
+        web: 'portfoliopersonal.com',
+        tarifario: 'https://www.portfoliopersonal.com/Contenido/comisiones',
+        planes: [
+          { nombre: 'Trading con Asesor', desc: 'Hasta 1,5% + IVA en acciones, Cedears y bonos. Hasta 2,5% en opciones.' },
+          { nombre: 'PPI Global Trading', desc: 'Operatoria en mercados internacionales (NYSE, Nasdaq, Hong Kong). Acciones/ETFs: 0,6% + IVA con mínimo USD 10.' }
+        ],
+        pros: ['Excelente research diario', 'Tradición y solidez', 'Acceso directo a mercados internacionales (PPI Global)', 'Letras en pesos: 0,20% (muy bajo)', 'Bonificación 100% en intradiario local'],
+        cons: ['Comisiones medias en acciones y Cedears', 'Mínimos altos para operatoria internacional (USD 10-100)']
+      },
+      {
+        nombre: 'Bull Market Brokers', tags: [],
+        cedears: 0.5, accionesAR: 0.6, bonos: 0.3, caucion: 2.5, mep: 0.5,
+        minimo: 0, mantenimiento: 0,
+        web: 'bullmarketbrokers.com',
+        tarifario: 'https://help.bullmarketbrokers.com/wp-content/uploads/2025/11/Agosto-2025.pdf',
+        planes: [],
+        pros: ['Análisis técnico y videos educativos', 'Variedad de instrumentos', 'Buena comunidad de usuarios'],
+        cons: ['Plataforma menos moderna', 'Comisiones medias']
+      },
+      {
+        nombre: 'Allaria', tags: [],
+        cedears: 0.5, accionesAR: 0.5, bonos: 0.3, caucion: 2.0, mep: 0.5,
+        minimo: 0, mantenimiento: 0,
+        web: 'allaria.com.ar',
+        tarifario: 'https://allaria.com.ar/doc/ArancelesComisiones.pdf',
+        planes: [],
+        pros: ['Broker tradicional y serio', 'Buen servicio para montos altos', 'Acceso a productos institucionales'],
+        cons: ['Interfaz más antigua', 'Más enfocado en clientes medianos/grandes']
+      },
+      {
+        nombre: 'Adcap', tags: [],
+        cedears: 0.5, accionesAR: 0.5, bonos: 0.5, caucion: 1.8, mep: 0.5,
+        minimo: 0, mantenimiento: 0,
+        web: 'adcapsecurities.com',
+        tarifario: 'https://cdn.ad-cap.com.ar/adcap-web/pdf/aranceles-y-comisiones.pdf',
+        planes: [
+          { nombre: 'Gold ($0 - $7,5M operados/mes)', desc: 'Plan inicial. Acciones, Cedears, bonos y ON: 0,5%. Letras: 0,20%. Caución colocadora pesos: 1,8% TNA (0,15% mensual).' },
+          { nombre: 'Platinum ($7,5M - $50M/mes)', desc: 'Acciones, Cedears, bonos y ON: 0,3%. Letras: 0,15%.' },
+          { nombre: 'Black (+$50M/mes)', desc: 'Acciones, Cedears, bonos y ON: 0,1%. Letras: 0,10%. Casi sin comisión para grandes volúmenes.' }
+        ],
+        pros: ['Sistema por volumen mensual: cuanto más operás, menor comisión', 'Plan Black con 0,1% en acciones (top de mercado)', 'Caución colocadora competitiva (1,8% TNA)', 'Bonificación operatoria intradiaria', 'API disponible para automatizar (25k calls gratis/mes)'],
+        cons: ['Plan Gold (inicial) tiene comisiones similares al mercado, hay que escalar para verdadero beneficio', 'No aplica para clientes referenciados por agentes productores']
+      },
+      {
+        nombre: 'Banco Galicia (Inversiones)', tags: ['banco'],
+        cedears: 0.7, accionesAR: 0.8, bonos: 0.5, caucion: 3.0, mep: 0.7,
+        minimo: 0, mantenimiento: 0,
+        web: 'galiciamasinversiones.com',
+        tarifario: 'https://www.galicia.ar/personas/comisiones',
+        planes: [],
+        pros: ['Integración con cuenta del banco', 'Sin transferencias entre entidades', 'Sucursales físicas'],
+        cons: ['Comisiones más altas que brokers especializados', 'Catálogo limitado']
+      },
+      {
+        nombre: 'Santander (Trade)', tags: ['banco'],
+        cedears: 0.7, accionesAR: 0.8, bonos: 0.5, caucion: 3.0, mep: 0.7,
+        minimo: 0, mantenimiento: 0,
+        web: 'santander.com.ar',
+        tarifario: 'https://www.santander.com.ar/banco/online/personas/inversiones',
+        planes: [],
+        pros: ['Conexión con cuenta bancaria', 'Acceso desde la app del banco', 'Soporte de sucursal'],
+        cons: ['Comisiones altas vs. brokers especializados', 'Productos limitados']
+      },
+      {
+        nombre: 'Inviu', tags: [],
+        cedears: 0.5, accionesAR: 0.5, bonos: 0.5, caucion: 2.0, mep: 0.5,
+        minimo: 0, mantenimiento: 0,
+        web: 'inviu.com',
+        tarifario: 'https://s3.amazonaws.com/cms-imgs.dev.inviu.com-ar/Aranceles_Comisiones_202403_ARG_8987c90001.pdf',
+        planes: [],
+        pros: ['Broker del grupo Marcos Galperin (Mercado Libre)', 'Plataforma moderna y fácil de usar', 'Atención personalizada de asesores', 'Acceso a mercados locales e internacionales'],
+        cons: ['Modelo orientado a inversores asesorados', 'Comisiones que dependen del asesor asignado, verificar tarifario']
+      },
+      {
+        nombre: 'IEB (Invertir en Bolsa)', tags: [],
+        cedears: 0.5, accionesAR: 0.5, bonos: 0.4, caucion: 2.0, mep: 0.5,
+        minimo: 0, mantenimiento: 0,
+        web: 'grupoieb.com.ar',
+        tarifario: 'https://www.grupoieb.com.ar/wp-content/uploads/2025/01/ARANCELES-2024-octubre.pdf',
+        planes: [],
+        pros: ['Grupo tradicional con varios productos (FCI, broker, fideicomisos)', 'Buen acceso a mercado primario de bonos y ON', 'Atención personalizada para perfiles medianos y grandes'],
+        cons: ['Plataforma menos moderna que brokers nuevos', 'Más orientado a clientes asesorados que a self-service']
+      },
+    ];
+
+    const FMT = n => n === 0 ? '0%' : n.toFixed(2).replace(/\.?0+$/,'') + '%';
+    function commCell(val) {
+      const cls = val === 0 ? 'zero' : val <= 0.5 ? 'low' : val >= 0.7 ? 'high' : '';
+      return { text: FMT(val), cls };
+    }
+
+    function renderTable(filter) {
+      const tbody = document.getElementById('brokers-tbody');
+      tbody.textContent = '';
+      const filtered = BROKERS.filter(b => {
+        if (filter === 'all') return true;
+        if (filter === 'zero-comm') return b.cedears === 0;
+        if (filter === 'no-min') return b.minimo === 0;
+        if (filter === 'banco') return b.tags.includes('banco');
+        return true;
+      });
+      filtered.forEach(b => {
+        const tr = document.createElement('tr');
+
+        const tdName = document.createElement('td');
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'b-name';
+        nameSpan.textContent = b.nombre;
+        tdName.appendChild(nameSpan);
+        b.tags.forEach(t => {
+          const tag = document.createElement('span');
+          tag.className = 'b-tag ' + t;
+          tag.textContent = t === 'popular' ? '⭐ Popular' : t === 'banco' ? 'Banco' : t;
+          tdName.appendChild(tag);
+        });
+        tr.appendChild(tdName);
+
+        ['cedears','accionesAR','bonos','caucion','mep'].forEach(k => {
+          const td = document.createElement('td');
+          const { text, cls } = commCell(b[k]);
+          td.className = 'b-num ' + cls;
+          td.textContent = text;
+          tr.appendChild(td);
+        });
+
+        const tdMin = document.createElement('td');
+        tdMin.className = 'b-num';
+        tdMin.textContent = b.minimo === 0 ? 'Sin mínimo' : '$' + b.minimo.toLocaleString('es-AR');
+        tr.appendChild(tdMin);
+
+        const tdMant = document.createElement('td');
+        tdMant.className = 'b-num';
+        if (b.mantenimiento === 0) { tdMant.classList.add('zero'); tdMant.textContent = 'Gratis'; }
+        else tdMant.textContent = '$' + b.mantenimiento.toLocaleString('es-AR') + '/mes';
+        tr.appendChild(tdMant);
+
+        const tdWeb = document.createElement('td');
+        const a = document.createElement('a');
+        a.className = 'b-site';
+        a.href = b.tarifario || ('https://' + b.web);
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'Ver tarifario →';
+        tdWeb.appendChild(a);
+        tr.appendChild(tdWeb);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderProsCons() {
+      const cont = document.getElementById('pros-cons');
+      cont.textContent = '';
+      BROKERS.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'pc-card';
+
+        const name = document.createElement('p');
+        name.className = 'pc-name';
+        name.textContent = b.nombre;
+        card.appendChild(name);
+
+        // Planes especiales
+        if (Array.isArray(b.planes) && b.planes.length > 0) {
+          const section = document.createElement('div');
+          section.className = 'pc-section';
+          const lbl = document.createElement('p');
+          lbl.className = 'pc-label';
+          lbl.textContent = 'Planes disponibles';
+          section.appendChild(lbl);
+          b.planes.forEach(p => {
+            const pDiv = document.createElement('div');
+            pDiv.style.cssText = 'margin-bottom:0.5rem;font-size:0.8rem';
+            const pName = document.createElement('strong');
+            pName.style.cssText = 'color:var(--text);display:block';
+            pName.textContent = p.nombre;
+            const pDesc = document.createElement('span');
+            pDesc.style.cssText = 'color:var(--text-muted);line-height:1.5';
+            pDesc.textContent = p.desc;
+            pDiv.append(pName, pDesc);
+            section.appendChild(pDiv);
+          });
+          card.appendChild(section);
+        }
+
+        ['pros','cons'].forEach(key => {
+          const section = document.createElement('div');
+          section.className = 'pc-section';
+          const lbl = document.createElement('p');
+          lbl.className = 'pc-label';
+          lbl.textContent = key === 'pros' ? 'A favor' : 'En contra';
+          section.appendChild(lbl);
+          const ul = document.createElement('ul');
+          ul.className = 'pc-list ' + key;
+          b[key].forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ul.appendChild(li);
+          });
+          section.appendChild(ul);
+          card.appendChild(section);
+        });
+
+        // Link al tarifario
+        const tarifaLink = document.createElement('a');
+        tarifaLink.href = b.tarifario || ('https://' + b.web);
+        tarifaLink.target = '_blank';
+        tarifaLink.rel = 'noopener noreferrer';
+        tarifaLink.style.cssText = 'display:inline-block;margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid var(--border);width:100%;font-family:var(--font-mono);font-size:0.75rem;color:#60a5fa;text-decoration:none';
+        tarifaLink.textContent = 'Ver tarifario oficial →';
+        card.appendChild(tarifaLink);
+
+        cont.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTable(btn.dataset.filter);
+      });
+    });
+
+    // ===== COMPARADOR side-by-side =====
+    const MAX_VS = 3;
+    const selected = new Set(['Cocos Capital', 'IOL InvertirOnline']);
+
+    function renderVsSelector() {
+      const cont = document.getElementById('vs-selector');
+      cont.textContent = '';
+      const lbl = document.createElement('span');
+      lbl.style.cssText = 'font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);align-self:center;margin-right:0.5rem';
+      lbl.textContent = `Elegí hasta ${MAX_VS}:`;
+      cont.appendChild(lbl);
+      BROKERS.forEach(b => {
+        const btn = document.createElement('button');
+        const isSel = selected.has(b.nombre);
+        const atMax = selected.size >= MAX_VS && !isSel;
+        btn.style.cssText = `padding:0.4rem 0.85rem;border-radius:6px;font-size:0.78rem;font-family:var(--font-body);font-weight:500;cursor:${atMax?'not-allowed':'pointer'};opacity:${atMax?'0.4':'1'};transition:all var(--transition);border:1px solid ${isSel?'rgba(74,222,154,0.4)':'var(--border)'};background:${isSel?'var(--accent-dim)':'var(--bg)'};color:${isSel?'var(--accent)':'var(--text-muted)'}`;
+        btn.textContent = (isSel?'✓ ':'') + b.nombre;
+        btn.disabled = atMax;
+        btn.addEventListener('click', () => {
+          if (selected.has(b.nombre)) selected.delete(b.nombre);
+          else if (selected.size < MAX_VS) selected.add(b.nombre);
+          renderVsSelector();
+          renderVsCards();
+        });
+        cont.appendChild(btn);
+      });
+    }
+
+    function makeRow(label, value, cls='') {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.83rem';
+      const l = document.createElement('span');
+      l.style.cssText = 'color:var(--text-muted)';
+      l.textContent = label;
+      const v = document.createElement('span');
+      v.className = cls;
+      v.style.cssText = 'font-family:var(--font-mono);color:var(--text);' + (cls==='zero'?'color:var(--accent);font-weight:600':cls==='low'?'color:var(--accent)':cls==='high'?'color:#ff9999':'');
+      v.textContent = value;
+      row.append(l, v);
+      return row;
+    }
+
+    function renderVsCards() {
+      const cont = document.getElementById('vs-cards');
+      cont.textContent = '';
+      if (selected.size === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--text-subtle);font-size:0.88rem';
+        empty.textContent = 'Seleccioná al menos un broker arriba para empezar a comparar.';
+        cont.appendChild(empty);
+        return;
+      }
+      const list = BROKERS.filter(b => selected.has(b.nombre));
+      list.forEach(b => {
+        const card = document.createElement('div');
+        card.style.cssText = 'background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;';
+
+        const head = document.createElement('div');
+        head.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;padding-bottom:0.85rem;border-bottom:1px solid var(--border)';
+        const nm = document.createElement('h3');
+        nm.style.cssText = 'font-family:var(--font-display);font-size:1.15rem;letter-spacing:-0.01em;color:var(--text)';
+        nm.textContent = b.nombre;
+        const close = document.createElement('button');
+        close.style.cssText = 'background:transparent;border:none;color:var(--text-subtle);cursor:pointer;font-size:1.1rem;padding:0;line-height:1';
+        close.textContent = '✕';
+        close.title = 'Quitar';
+        close.addEventListener('click', () => { selected.delete(b.nombre); renderVsSelector(); renderVsCards(); });
+        head.append(nm, close);
+        card.appendChild(head);
+
+        const lbl = document.createElement('p');
+        lbl.style.cssText = 'font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.4rem';
+        lbl.textContent = 'Comisiones';
+        card.appendChild(lbl);
+
+        const fields = [
+          ['Cedears', 'cedears'],
+          ['Acciones Argentina', 'accionesAR'],
+          ['Bonos / ON', 'bonos'],
+          ['Caución colocadora', 'caucion'],
+          ['MEP / CCL', 'mep'],
+        ];
+        fields.forEach(([label, k]) => {
+          const v = b[k];
+          const cls = v === 0 ? 'zero' : v <= 0.5 ? 'low' : v >= 0.7 ? 'high' : '';
+          card.appendChild(makeRow(label, FMT(v), cls));
+        });
+
+        const lbl2 = document.createElement('p');
+        lbl2.style.cssText = 'font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin:1rem 0 0.4rem';
+        lbl2.textContent = 'Cuenta';
+        card.appendChild(lbl2);
+
+        card.appendChild(makeRow('Mínimo apertura', b.minimo === 0 ? 'Sin mínimo' : '$' + b.minimo.toLocaleString('es-AR'), b.minimo === 0 ? 'zero' : ''));
+        card.appendChild(makeRow('Mantenimiento', b.mantenimiento === 0 ? 'Gratis' : '$' + b.mantenimiento.toLocaleString('es-AR') + '/mes', b.mantenimiento === 0 ? 'zero' : ''));
+
+        // Planes especiales
+        if (Array.isArray(b.planes) && b.planes.length > 0) {
+          const lblP = document.createElement('p');
+          lblP.style.cssText = 'font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin:1rem 0 0.4rem';
+          lblP.textContent = 'Planes';
+          card.appendChild(lblP);
+          b.planes.forEach(p => {
+            const planRow = document.createElement('div');
+            planRow.style.cssText = 'padding:0.5rem 0.75rem;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-bottom:0.4rem;font-size:0.78rem';
+            const pn = document.createElement('p');
+            pn.style.cssText = 'font-weight:600;color:var(--text);margin-bottom:0.2rem';
+            pn.textContent = p.nombre;
+            const pd = document.createElement('p');
+            pd.style.cssText = 'color:var(--text-muted);line-height:1.5;font-size:0.74rem';
+            pd.textContent = p.desc;
+            planRow.append(pn, pd);
+            card.appendChild(planRow);
+          });
+        }
+
+        const link = document.createElement('a');
+        link.href = b.tarifario || ('https://' + b.web);
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.style.cssText = 'display:block;margin-top:1rem;padding-top:0.85rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:0.78rem;color:#60a5fa;text-decoration:none';
+        link.textContent = 'Ver tarifario oficial →';
+        card.appendChild(link);
+
+        cont.appendChild(card);
+      });
+    }
+
+    renderTable('all');
+    renderProsCons();
+    renderVsSelector();
+    renderVsCards();
+  </script>
+</body>
+</html>

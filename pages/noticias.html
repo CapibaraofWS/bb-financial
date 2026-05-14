@@ -222,9 +222,13 @@
         <a href="calculadoras.html" class="nav-link">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
         <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
         <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
         <a href="noticias.html" class="nav-link active">Noticias</a>
         <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
         <span class="nav-sep" aria-hidden="true"></span>
         <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
       </nav>
@@ -251,16 +255,30 @@
       </div>
     </section>
 
+    <div class="container" style="padding-top:1.5rem">
+      <a href="noticias-ticker.html" style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:linear-gradient(135deg,#11141a,#101a14);border:1px solid rgba(74,222,154,0.25);border-radius:14px;padding:1.5rem 1.75rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(74,222,154,0.5)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.25)'">
+        <div style="display:flex;align-items:center;gap:1.25rem;flex:1;min-width:280px">
+          <div style="width:54px;height:54px;border-radius:12px;background:rgba(74,222,154,0.12);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">📰</div>
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.35rem">Nueva herramienta</p>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.3rem;color:var(--text)">Noticias por Ticker</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.5">Buscá las últimas noticias de cualquier acción: AAPL, TSLA, GGAL, YPF y miles más. Ideal para análisis fundamental.</p>
+          </div>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);white-space:nowrap">Buscar acción →</span>
+      </a>
+    </div>
+
     <div class="container" style="padding-top:1.5rem;padding-bottom:6rem">
 
-      <!-- Filters -->
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" data-cat="all">Todas</button>
-        <button class="filter-btn" data-cat="economia">Economía</button>
-        <button class="filter-btn" data-cat="mercados">Mercados</button>
-        <button class="filter-btn" data-cat="empresas">Empresas</button>
-        <button class="filter-btn" data-cat="internacional">Internacional</button>
+      <!-- Region tabs -->
+      <div class="filter-bar" id="regionBar" style="margin-bottom:0.75rem">
+        <button class="filter-btn active" data-region="ar">🇦🇷 Argentina</button>
+        <button class="filter-btn" data-region="us">🇺🇸 EE.UU. / Internacional</button>
       </div>
+
+      <!-- Portal tabs -->
+      <div class="filter-bar" id="filterBar"></div>
 
       <!-- Section header -->
       <div class="news-section-header">
@@ -296,11 +314,11 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 BB Financial · Solo con fines educativos, no constituye asesoramiento financiero.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js?v=2"></script>
   <script src="../js/ticker.js"></script>
   <script>
   /* ============================================================
@@ -356,44 +374,37 @@
     `).join('');
   }
 
-  /* ---- News RSS ---- */
-  const RSS_SOURCES = [
-    { url: 'https://www.ambito.com/rss/economia.xml',       name: 'Ámbito',    cat: 'economia'      },
-    { url: 'https://www.cronista.com/files/rss/economia.xml',name: 'Cronista',  cat: 'economia'      },
-    { url: 'https://www.infobae.com/feeds/rss/economia/',    name: 'Infobae',   cat: 'economia'      },
-    { url: 'https://news.google.com/rss/search?q=bolsa+argentina+mercados&hl=es-419&gl=AR&ceid=AR:es-419',
-      name: 'Google News', cat: 'mercados' },
-    { url: 'https://news.google.com/rss/search?q=empresas+argentina+economia&hl=es-419&gl=AR&ceid=AR:es-419',
-      name: 'Google News', cat: 'empresas' },
-    { url: 'https://news.google.com/rss/search?q=wall+street+nasdaq+sp500&hl=es-419&gl=AR&ceid=AR:es-419',
-      name: 'Google News', cat: 'internacional' },
-  ];
-
-  function parseRSS(xmlStr, sourceName, cat) {
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(xmlStr, 'text/xml');
-    const items = xml.querySelectorAll('item');
-    return Array.from(items).slice(0, 8).map(item => {
-      const title = item.querySelector('title')?.textContent?.trim() || '';
-      // Clean Google News title (removes source suffix)
-      const cleanTitle = title.replace(/\s+-\s+[\w\s]+$/, '').trim();
-      const link  = item.querySelector('link')?.textContent?.trim()
-                 || item.querySelector('link')?.nextSibling?.textContent?.trim()
-                 || '#';
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      const desc  = item.querySelector('description')?.textContent || '';
-      const img   = item.querySelector('enclosure')?.getAttribute('url')
-                 || item.querySelector('media\\:content, content')?.getAttribute('url')
-                 || extractImgFromDesc(desc)
-                 || '';
-      return { title: cleanTitle || title, link, pubDate, img, cat, source: sourceName };
-    }).filter(i => i.title);
-  }
-
-  function extractImgFromDesc(desc) {
-    const match = desc.match(/<img[^>]+src=["']([^"']+)["']/i);
-    return match ? match[1] : '';
-  }
+  /* ---- News (via /api/rss proxy) ---- */
+  const PORTALS = {
+    ar: [
+      { id: 'all',          label: 'Todas',        sources: ['ambito','cronista','infobae','lanacion','iprofesional','bae'] },
+      { id: 'ambito',       label: 'Ámbito',       sources: ['ambito','ambito_fin'] },
+      { id: 'cronista',     label: 'Cronista',     sources: ['cronista','cronista_fin'] },
+      { id: 'infobae',      label: 'Infobae',      sources: ['infobae'] },
+      { id: 'lanacion',     label: 'La Nación',    sources: ['lanacion'] },
+      { id: 'iprofesional', label: 'iProfesional', sources: ['iprofesional'] },
+      { id: 'bae',          label: 'BAE Negocios', sources: ['bae'] },
+      { id: 'pagina12',     label: 'Página 12',    sources: ['pagina12'] },
+      { id: 'google_ar',    label: 'Google News',  sources: ['google_ar'] },
+    ],
+    us: [
+      { id: 'all',          label: 'Todas',        sources: ['yahoo','marketwatch','cnbc','bloomberg','reuters','wsj'] },
+      { id: 'yahoo',        label: 'Yahoo Finance', sources: ['yahoo'] },
+      { id: 'bloomberg',    label: 'Bloomberg',    sources: ['bloomberg'] },
+      { id: 'reuters',      label: 'Reuters',      sources: ['reuters'] },
+      { id: 'cnbc',         label: 'CNBC',         sources: ['cnbc'] },
+      { id: 'marketwatch',  label: 'MarketWatch',  sources: ['marketwatch'] },
+      { id: 'ft',           label: 'Financial Times', sources: ['ft'] },
+      { id: 'wsj',          label: 'WSJ',          sources: ['wsj'] },
+    ],
+  };
+  const SOURCE_NAMES = {
+    ambito:'Ámbito', ambito_fin:'Ámbito', cronista:'Cronista', cronista_fin:'Cronista',
+    infobae:'Infobae', lanacion:'La Nación', iprofesional:'iProfesional', bae:'BAE Negocios',
+    pagina12:'Página 12', yahoo:'Yahoo Finance', bloomberg:'Bloomberg', reuters:'Reuters',
+    cnbc:'CNBC', marketwatch:'MarketWatch', ft:'Financial Times', wsj:'WSJ',
+    google_ar:'Google News', google_markets:'Google News',
+  };
 
   function fmtDate(str) {
     if (!str) return '';
@@ -403,22 +414,24 @@
     } catch { return ''; }
   }
 
-  async function fetchSource(source) {
+  const cache = {}; // sourceId -> items
+  async function fetchSource(sourceId) {
+    if (cache[sourceId]) return cache[sourceId];
     try {
-      const res = await fetch(PROXY + encodeURIComponent(source.url), { signal: AbortSignal.timeout(8000) });
-      const w = await res.json();
-      return parseRSS(w.contents, source.name, source.cat);
+      const res = await fetch(`/api/rss?source=${sourceId}`, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) return [];
+      const j = await res.json();
+      const items = (j.items || []).map(it => ({ ...it, source: SOURCE_NAMES[sourceId] || sourceId }));
+      cache[sourceId] = items;
+      return items;
     } catch { return []; }
   }
-
-  let allNews = [];
-  let activeCat = 'all';
 
   function renderNews(items) {
     const grid = document.getElementById('newsGrid');
     const count = document.getElementById('newsCount');
     if (!items.length) {
-      grid.innerHTML = '<div class="news-loading">No se pudieron cargar las noticias en este momento. Intentá más tarde.</div>';
+      grid.innerHTML = '<div class="news-loading">No se pudieron cargar las noticias. Intentá de nuevo en un momento.</div>';
       count.textContent = '';
       return;
     }
@@ -432,28 +445,20 @@
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
 
-      const imgUrl = safeUrl(item.img);
-      if (imgUrl) {
-        const img = document.createElement('img');
-        img.className = 'news-card-img';
-        img.src = imgUrl;
-        img.alt = '';
-        img.loading = 'lazy';
-        img.onerror = () => { img.style.display = 'none'; };
-        a.appendChild(img);
-      } else {
-        const ph = document.createElement('div');
-        ph.className = 'news-card-img-placeholder';
-        ph.textContent = '📰';
-        a.appendChild(ph);
-      }
+      const PLACEHOLDER = '../img/imagen-para-noticias.png';
+      const img = document.createElement('img');
+      img.className = 'news-card-img';
+      img.src = safeUrl(item.img) || PLACEHOLDER;
+      img.alt = ''; img.loading = 'lazy';
+      img.onerror = () => { if (!img.src.endsWith('imagen-para-noticias.png')) img.src = PLACEHOLDER; };
+      a.appendChild(img);
 
       const body = document.createElement('div');
       body.className = 'news-card-body';
 
-      const cat = document.createElement('span');
-      cat.className = 'news-cat';
-      cat.textContent = item.cat.charAt(0).toUpperCase() + item.cat.slice(1);
+      const src = document.createElement('span');
+      src.className = 'news-cat';
+      src.textContent = item.source;
 
       const meta = document.createElement('div');
       meta.className = 'news-meta';
@@ -463,49 +468,65 @@
       title.className = 'news-title';
       title.textContent = item.title;
 
-      const source = document.createElement('div');
-      source.className = 'news-source';
-      source.textContent = `— ${item.source}`;
-
-      body.append(cat, meta, title, source);
+      body.append(src, meta, title);
       a.appendChild(body);
       grid.appendChild(a);
     });
   }
 
-  function filterNews(cat) {
-    activeCat = cat;
-    const filtered = cat === 'all' ? allNews : allNews.filter(n => n.cat === cat);
-    renderNews(filtered);
+  let activeRegion = 'ar';
+  let activePortal = 'all';
+
+  function renderPortalTabs() {
+    const bar = document.getElementById('filterBar');
+    bar.innerHTML = PORTALS[activeRegion].map(p =>
+      `<button class="filter-btn ${p.id === activePortal ? 'active' : ''}" data-portal="${p.id}">${p.label}</button>`
+    ).join('');
   }
 
-  async function loadNews() {
-    const results = await Promise.all(RSS_SOURCES.map(fetchSource));
-    // Flatten and deduplicate by title similarity
+  async function loadActive() {
+    const grid = document.getElementById('newsGrid');
+    grid.innerHTML = '<div class="news-loading"><div class="spinner"></div>Cargando noticias…</div>';
+    const portal = PORTALS[activeRegion].find(p => p.id === activePortal) || PORTALS[activeRegion][0];
+    const results = await Promise.all(portal.sources.map(fetchSource));
     const flat = results.flat();
+    // Dedup por title
     const seen = new Set();
-    allNews = flat.filter(item => {
-      const key = item.title.toLowerCase().slice(0, 40);
+    const items = flat.filter(it => {
+      const key = it.title.toLowerCase().slice(0, 50);
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
-    }).sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-    filterNews(activeCat);
+    }).sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate)).slice(0, 60);
+    renderNews(items);
   }
 
-  /* ---- Filter buttons ---- */
+  /* ---- Region buttons ---- */
+  document.getElementById('regionBar').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('#regionBar .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeRegion = btn.dataset.region;
+    activePortal = 'all';
+    renderPortalTabs();
+    loadActive();
+  });
+
+  /* ---- Portal buttons ---- */
   document.getElementById('filterBar').addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#filterBar .filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    filterNews(btn.dataset.cat);
+    activePortal = btn.dataset.portal;
+    loadActive();
   });
 
   /* ---- Init ---- */
   loadMarketStrip();
-  loadNews();
+  renderPortalTabs();
+  loadActive();
   </script>
 </body>
 </html>

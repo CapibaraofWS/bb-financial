@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuentas Remuneradas en Argentina — Mercado Pago, Naranja X, Ualá y más — BB Financial</title>
+  <meta name="description" content="Qué son las cuentas remuneradas, cómo funcionan, qué TNA pagan Mercado Pago, Naranja X, Ualá, Brubank y Cocos Pay, y cuál es la diferencia con un plazo fijo." />
+  <meta name="keywords" content="cuenta remunerada, Mercado Pago, Naranja X, Ualá, Brubank, Cocos Pay, TNA, TEA, money market, billetera virtual" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .step-section { margin-bottom:3rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border);}
+    .step-section:last-child { border-bottom:none; }
+    .step-num { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:var(--accent-dim);color:var(--accent);font-family:var(--font-mono);font-size:1rem;font-weight:600;margin-right:0.85rem;}
+    .step-title { font-family:var(--font-display);font-size:1.55rem;letter-spacing:-0.02em;margin-bottom:1rem;display:flex;align-items:center;}
+    .step-body p { color:var(--text-muted);font-size:0.92rem;line-height:1.75;margin-bottom:1rem;}
+    .step-body strong { color:var(--text); }
+    .step-body a { color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(74,222,154,0.4);}
+    .step-body a:hover { border-bottom-style:solid; }
+    .info-callout { background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--text-muted);line-height:1.65;}
+    .info-callout strong { color:var(--accent); }
+    .warn-callout { background:rgba(220,60,60,0.04);border:1px solid rgba(220,60,60,0.2);border-left:3px solid #ff6b6b;border-radius:10px;padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--text-muted);line-height:1.65;}
+    .warn-callout strong { color:#ff9999; }
+    .toc { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2.5rem;}
+    .toc h3 { font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.85rem;}
+    .toc ol { list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.4rem;}
+    .toc li a { display:block;padding:0.5rem 0.75rem;color:var(--text-muted);text-decoration:none;border-radius:6px;font-size:0.85rem;transition:all var(--transition);}
+    .toc li a:hover { background:var(--accent-dim);color:var(--accent); }
+    .toc-num { display:inline-block;width:22px;color:var(--accent);font-family:var(--font-mono);font-size:0.78rem;}
+    .cta-link { display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.6rem 1.1rem;font-family:var(--font-body);font-weight:500;font-size:0.88rem;text-decoration:none;margin-top:0.5rem;transition:all var(--transition);}
+    .cta-link:hover { background:var(--accent);color:var(--bg); }
+    .providers-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1.25rem 0;}
+    .provider-card { background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;transition:all var(--transition);}
+    .provider-card:hover { border-color:rgba(74,222,154,0.3); transform:translateY(-2px); }
+    .provider-card h4 { font-size:1rem;margin-bottom:0.35rem;color:var(--text);}
+    .provider-card .who { font-size:0.78rem;color:var(--text-subtle);font-family:var(--font-mono);letter-spacing:0.04em;margin-bottom:0.85rem;}
+    .provider-card p { font-size:0.83rem;color:var(--text-muted);line-height:1.6;margin:0 0 0.5rem;}
+    .provider-card .feat { display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.6rem;}
+    .provider-card .feat span { background:rgba(74,222,154,0.08);color:var(--accent);border:1px solid rgba(74,222,154,0.2);font-family:var(--font-mono);font-size:0.65rem;padding:0.2rem 0.55rem;border-radius:4px;letter-spacing:0.04em;}
+    table.compare-table { width:100%;border-collapse:collapse;margin:1rem 0;background:var(--bg-card);border-radius:10px;overflow:hidden;border:1px solid var(--border);font-size:0.85rem;}
+    table.compare-table th, table.compare-table td { padding:0.7rem 0.9rem;text-align:left;border-bottom:1px solid var(--border); }
+    table.compare-table th { background:rgba(74,222,154,0.06);color:var(--accent);font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;}
+    table.compare-table td { color:var(--text-muted); }
+    table.compare-table tr:last-child td { border-bottom:none; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="empezar-a-invertir.html">Empezar a invertir</a><span>/</span>Cuentas remuneradas</p>
+        <h1 class="page-title">Cuentas Remuneradas 💳</h1>
+        <p class="page-subtitle">Lo más simple que existe para no perder con la inflación. <strong>Dejás tu plata, te paga interés todos los días, la sacás cuando querés</strong> — sin plazo, sin papeles, sin nada.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem;max-width:880px">
+
+      <div class="toc">
+        <h3>En esta guía</h3>
+        <ol>
+          <li><a href="#que-es"><span class="toc-num">1.</span> ¿Qué es una cuenta remunerada?</a></li>
+          <li><a href="#como-funciona"><span class="toc-num">2.</span> ¿Cómo funciona por dentro?</a></li>
+          <li><a href="#vs-plazo-fijo"><span class="toc-num">3.</span> vs. Plazo Fijo</a></li>
+          <li><a href="#opciones"><span class="toc-num">4.</span> Principales opciones (Argentina)</a></li>
+          <li><a href="#riesgos"><span class="toc-num">5.</span> Riesgos y la letra chica</a></li>
+          <li><a href="#cuando-conviene"><span class="toc-num">6.</span> ¿Cuándo conviene?</a></li>
+        </ol>
+      </div>
+
+      <!-- 1 -->
+      <section class="step-section" id="que-es">
+        <h2 class="step-title"><span class="step-num">1</span>¿Qué es una cuenta remunerada?</h2>
+        <div class="step-body">
+          <p>Una <strong>cuenta remunerada</strong> es una cuenta donde tu plata <strong>genera interés todos los días</strong> sin que hagas nada. A diferencia de una caja de ahorro común (que paga 0% o cerca), acá la billetera virtual o banco invierte tu saldo en instrumentos seguros y te traspasa parte de ese rendimiento.</p>
+          <p>Es básicamente lo que en otros países se llama <em>"high-yield savings account"</em>. En Argentina la popularizaron las <strong>fintechs</strong>: Mercado Pago, Naranja X, Ualá, Brubank, Cocos Pay, Personal Pay, entre otras.</p>
+          <div class="info-callout">
+            <strong>✨ Lo que la hace especial:</strong> tu plata sigue siendo <strong>totalmente líquida</strong>. La gastás con la tarjeta, transferís por CBU, pagás un servicio — todo desde la misma cuenta — y mientras tanto te paga interés. No tenés que "sacarla" de ningún lado.
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="step-section" id="como-funciona">
+        <h2 class="step-title"><span class="step-num">2</span>¿Cómo funciona por dentro?</h2>
+        <div class="step-body">
+          <p>La fintech no es un banco (o si lo es, igual no te paga ese interés con su propia plata). Detrás de cada cuenta remunerada hay un <strong>Fondo Común de Inversión Money Market</strong> en el que tu saldo se invierte automáticamente.</p>
+          <p>El flujo simplificado:</p>
+          <ol style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li>Dejás $100.000 en tu cuenta de Mercado Pago / Ualá / etc.</li>
+            <li>La app automáticamente <strong>suscribe</strong> esos pesos a un FCI Money Market (gestionado por una sociedad gerente regulada por la CNV).</li>
+            <li>Ese fondo coloca tu plata en <strong>plazos fijos bancarios, cauciones bursátiles cortas y cuentas remuneradas mayoristas</strong>.</li>
+            <li>Genera intereses diarios. Una parte se queda la gerente como comisión, el resto se acredita en tu cuenta cada día.</li>
+            <li>Cuando vos gastás o transferís, la app <strong>rescata</strong> automáticamente la cantidad necesaria y la usás como dinero normal.</li>
+          </ol>
+          <div class="info-callout">
+            <strong>👉 Conclusión:</strong> tu plata realmente está en un FCI regulado por la CNV, custodiada por un banco depositario. No es magia ni es promesa: hay infraestructura financiera seria detrás. La fintech es solo la <em>cara amigable</em> del producto.
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="step-section" id="vs-plazo-fijo">
+        <h2 class="step-title"><span class="step-num">3</span>vs. Plazo Fijo: ¿cuál conviene?</h2>
+        <div class="step-body">
+          <p>Es la pregunta clásica. Las dos son renta fija conservadora, pero tienen lógicas distintas:</p>
+          <table class="compare-table">
+            <thead>
+              <tr><th>Característica</th><th>Cuenta remunerada</th><th>Plazo fijo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Liquidez</td><td>Total — sacás cuando quieras</td><td>Bloqueada 30 días mínimo</td></tr>
+              <tr><td>Rendimiento</td><td>Variable (cambia día a día)</td><td>Fijo desde el día 1</td></tr>
+              <tr><td>Mínimo</td><td>No hay (desde $1)</td><td>Varía por banco</td></tr>
+              <tr><td>Riesgo</td><td>Bajo — FCI money market</td><td>Muy bajo — protegido por FGD hasta $1.140.000</td></tr>
+              <tr><td>Apertura</td><td>Inmediata desde la app</td><td>Online en el home banking</td></tr>
+              <tr><td>Si baja la tasa</td><td>Te baja al toque</td><td>Te mantiene la tasa que pactaste</td></tr>
+            </tbody>
+          </table>
+          <p>En la práctica: si la tasa va a la baja, <strong>el plazo fijo te conviene</strong> (te asegura el rendimiento). Si la tasa va al alza, <strong>la cuenta remunerada te conviene</strong> (te acompaña). Para plata de uso cotidiano, la remunerada gana siempre por liquidez.</p>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="step-section" id="opciones">
+        <h2 class="step-title"><span class="step-num">4</span>Principales opciones en Argentina</h2>
+        <div class="step-body">
+          <p>Las TNA cambian semana a semana — siempre verificá la actual en la app antes de decidir. Esto es a modo orientativo:</p>
+          <div class="providers-grid">
+
+            <div class="provider-card">
+              <h4>🟡 Mercado Pago</h4>
+              <p class="who">Mercado Libre</p>
+              <p>La más usada del país. Tu plata va al FCI <em>Mercado Fondos</em>, gestionado por BIND. Cero comisiones, rescate instantáneo. Pagás con tarjeta y QR como de costumbre.</p>
+              <div class="feat"><span>Sin plazo</span><span>Sin mínimo</span><span>Rescate T+0</span></div>
+            </div>
+
+            <div class="provider-card">
+              <h4>🟠 Naranja X</h4>
+              <p class="who">Banco Naranja</p>
+              <p>Una de las TNA más altas del mercado para los primeros $X (límite que cambia). Históricamente <strong>paga más que Mercado Pago</strong> en saldos chicos.</p>
+              <div class="feat"><span>TNA alta</span><span>Límite por tope</span><span>Tarjeta prepaga</span></div>
+            </div>
+
+            <div class="provider-card">
+              <h4>🟣 Ualá</h4>
+              <p class="who">Uilo S.A. (Pierpaolo)</p>
+              <p>Fintech con cuenta remunerada vía FCI propio. TNA competitiva, ecosistema completo (inversiones, tarjeta, plazo fijo, préstamos).</p>
+              <div class="feat"><span>Sin plazo</span><span>App completa</span></div>
+            </div>
+
+            <div class="provider-card">
+              <h4>🔵 Brubank</h4>
+              <p class="who">Banco digital</p>
+              <p>A diferencia de las anteriores <strong>es un banco</strong> (con licencia BCRA). El interés viene como remuneración de caja de ahorro. Protegido por el FGD.</p>
+              <div class="feat"><span>Banco</span><span>FGD</span><span>Sin plazo</span></div>
+            </div>
+
+            <div class="provider-card">
+              <h4>🟢 Cocos Pay</h4>
+              <p class="who">Cocos Capital</p>
+              <p>El "monedero" de Cocos. Saldo invertido automáticamente en el FCI Cocos Daruma. Si ya operás en Cocos, todo queda en la misma cuenta.</p>
+              <div class="feat"><span>Integración broker</span><span>Sin plazo</span></div>
+            </div>
+
+            <div class="provider-card">
+              <h4>🔴 Personal Pay</h4>
+              <p class="who">Grupo Clarín / Telecom</p>
+              <p>La billetera de Personal y Cablevisión. Cuenta remunerada con TNA competitiva. Pensada para clientes del grupo, pero abierta a cualquiera.</p>
+              <div class="feat"><span>Sin plazo</span><span>Cashback servicios</span></div>
+            </div>
+
+          </div>
+          <div class="info-callout">
+            <strong>💡 Truco de principiante:</strong> abrí dos o tres de estas (son gratis), dejá un poco en cada una y compará durante un mes. Vas a ver cuál te paga más en la práctica, cuál tiene mejor app y dónde te sentís más cómodo.
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="step-section" id="riesgos">
+        <h2 class="step-title"><span class="step-num">5</span>Riesgos y letra chica</h2>
+        <div class="step-body">
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">NO está protegida por el FGD</strong> (excepto Brubank y bancos). El FCI tiene su propio riesgo: bajo, pero no cero. Si quebrara un banco donde el FCI tiene plazos fijos, podría haber un golpe.</li>
+            <li><strong style="color:var(--text)">La TNA es variable.</strong> Si el BCRA baja la tasa de referencia, tu rendimiento baja al toque (a diferencia de un plazo fijo que ya pactaste).</li>
+            <li><strong style="color:var(--text)">Algunas tienen tope de saldo bonificado.</strong> Naranja X paga su TNA alta solo hasta cierto monto. Por encima, el rendimiento cae.</li>
+            <li><strong style="color:var(--text)">Impuestos:</strong> los intereses ganados están alcanzados por <strong>Ingresos Brutos</strong> según provincia y por <strong>Bienes Personales</strong> si el patrimonio supera el mínimo. Ganancias en general NO grava los rendimientos de FCI money market en pesos (verificar la normativa vigente).</li>
+            <li><strong style="color:var(--text)">Sigue siendo pesos.</strong> Te cubre del rendimiento nominal, pero si la inflación supera la TNA real, igual perdés poder de compra (aunque mucho menos que en el cajón).</li>
+          </ul>
+          <div class="warn-callout">
+            <strong>⚠ Antes de elegir:</strong> verificá que la fintech opere con un FCI <strong>autorizado por la CNV</strong>. Las apps serias lo aclaran en sus términos. Si no figura ninguna sociedad gerente regulada — desconfiá.
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="step-section" id="cuando-conviene">
+        <h2 class="step-title"><span class="step-num">6</span>¿Cuándo conviene usar una cuenta remunerada?</h2>
+        <div class="step-body">
+          <p>Es la <strong>herramienta financiera más básica y útil</strong> para alguien que está empezando. Casos típicos:</p>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">Tu fondo de emergencia</strong> (3-6 meses de gastos). Querés que esté disponible YA si pasa algo, pero no querés que la inflación se lo coma.</li>
+            <li><strong style="color:var(--text)">Plata para gastos del mes próximo.</strong> En lugar de tenerla quieta en una caja de ahorro común que no paga nada.</li>
+            <li><strong style="color:var(--text)">Aguinaldo, vacaciones, impuesto del año que viene.</strong> Cualquier dinero que sabés que vas a usar pero no <em>todavía</em>.</li>
+            <li><strong style="color:var(--text)">Mientras decidís qué hacer.</strong> Si recién empezás y todavía no sabés si querés bonos, acciones o nada — meté la plata acá. Le ganás a la inflación en parte mientras pensás.</li>
+          </ul>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.25rem">
+            <a href="inflacion.html" class="cta-link">📉 Calcular cuánto perdés con la inflación →</a>
+            <a href="interes-simple.html" class="cta-link">◎ Comparar contra plazo fijo →</a>
+            <a href="etfs-fci.html" class="cta-link">💎 Ver ETFs y FCI →</a>
+            <a href="empezar-a-invertir.html" class="cta-link">🚀 Volver a la guía →</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Para principiantes</h3>
+        <ul>
+          <li><a href="empezar-a-invertir.html">Guía para principiantes</a></li>
+          <li><a href="etfs-fci.html">ETFs y FCI</a></li>
+          <li><a href="brokers.html">Comparador de Brokers</a></li>
+          <li><a href="conceptos.html">Conceptos financieros</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Tasas indicativas que pueden variar día a día. Consultá la TNA actual en la app correspondiente.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">© 2026 BB Financial · Contacto: <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+</body>
+</html>

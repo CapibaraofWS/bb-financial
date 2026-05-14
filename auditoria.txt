@@ -1,0 +1,82 @@
+============================================================
+REPORTE DE AUDITORÍA DE CIBERSEGURIDAD — BB FINANCIAL - 11-05-2026
+============================================================
+Fecha: 11 de mayo de 2026
+Estado del Proyecto: En Desarrollo / Portfolio Profesional
+Objetivo: Identificación de vulnerabilidades y plan de mitigación.
+------------------------------------------------------------
+
+1. VULNERABILIDADES DE INYECCIÓN (XSS - CROSS-SITE SCRIPTING)
+------------------------------------------------------------
+Nivel de Riesgo: CRÍTICO 🔴
+
+- El Problema: Uso de `${label}`, `${priceStr}` y `${c.txt}` dentro de 'innerHTML' en la función renderItem.
+- Por qué falla: El sistema confía en la integridad de las APIs externas. Si un origen es comprometido, un atacante puede inyectar scripts maliciosos.
+- Escenario: Inyección de código para exfiltrar datos del localStorage (portafolios o watchlists del usuario).
+- Solución: Reemplazar el uso de .innerHTML por .textContent o .innerText. Para inserciones complejas, utilizar la librería DOMPurify.
+
+2. ABUSO DE ENDPOINTS (EXPOSICIÓN DE PROXY)
+------------------------------------------------------------
+Nivel de Riesgo: ALTO 🟠
+
+- El Problema: Las rutas /api/acciones, /api/dolar y /api/argentinadatos son públicas sin validación de origen.
+- Por qué falla: Cualquier cliente externo puede consumir tus recursos, agotando créditos de APIs pagas o gratuitas y saturando el servidor (DoS).
+- Escenario: Un tercero utiliza tus endpoints para alimentar su propia aplicación financiera, generando costos excesivos en Vercel.
+- Solución: 
+    * Implementar Rate Limiting (máximo 10 peticiones/min por IP).
+    * Configurar CORS en vercel.json para permitir únicamente solicitudes desde tu dominio oficial.
+
+3. MANIPULACIÓN DE LÓGICA EN LOCALSTORAGE
+------------------------------------------------------------
+Nivel de Riesgo: MEDIO 🟠
+
+- El Problema: Almacenamiento del portafolio y watchlist en texto plano en el navegador del usuario.
+- Por qué falla: El localStorage no posee mecanismos de integridad; los datos son editables mediante la consola del desarrollador.
+- Escenario: Manipulación de valores para falsificar estados de cuenta o inyección de activos inexistentes que rompan la lógica de cálculo.
+- Solución:
+    * Firmado de datos: Generar un hash de verificación para validar que los datos no fueron alterados.
+    * Cifrado ligero: Almacenar los strings en formato cifrado para evitar la edición directa.
+
+4. FUGA DE INFORMACIÓN EN PATHS DE API
+------------------------------------------------------------
+Nivel de Riesgo: BAJO / MEDIO 🟡
+
+- El Problema: Parámetros descriptivos en el frontend como: fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais').
+- Por qué falla: Revela la arquitectura y los proveedores de datos internos, permitiendo a un atacante adivinar otros endpoints sensibles.
+- Escenario: Un atacante intenta "Path Traversal" modificando el parámetro para acceder a rutas de configuración de la API de origen.
+- Solución: Utilizar alias en el servidor. Ejemplo: llamar a /api/riesgo-pais y mapear internamente la ruta real en el backend.
+
+5. AUSENCIA DE CABECERAS DE SEGURIDAD (SECURITY HEADERS)
+------------------------------------------------------------
+Nivel de Riesgo: BAJO 🟡
+
+- El Problema: Configuración de despliegue estándar sin políticas restrictivas.
+- Por qué falla: Vulnerabilidad ante Clickjacking y carga de scripts de sitios no autorizados.
+- Escenario: El sitio es cargado dentro de un iframe invisible en un dominio malicioso para capturar eventos de usuario.
+- Solución: Configurar vercel.json con las siguientes cabeceras:
+    * X-Frame-Options: DENY
+    * X-Content-Type-Options: nosniff
+    * Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+------------------------------------------------------------
+PLAN DE ACCIÓN INMEDIATO
+------------------------------------------------------------
+
+[ ] PASO 1: (CÓDIGO) Cambiar renderizado peligroso.
+    // DE:
+    return `<span class="mkt-price">${priceStr}</span>`;
+    // A:
+    const span = document.createElement('span');
+    span.className = 'mkt-price';
+    span.textContent = priceStr;
+
+[ ] PASO 2: (CONFIGURACIÓN) Crear vercel.json con reglas de CORS y Seguridad.
+[ ] PASO 3: (ARQUITECTURA) Implementar alias de rutas para ocultar proveedores.
+[ ] PASO 4: (DATOS) Añadir validación de estructura JSON antes del procesamiento.
+
+--------------------------------------------------------------
+Tienes un archivo llamado .env.local marcado con una "M" (modificado). Asegúrate de que ese archivo esté incluido dentro de tu .gitignore antes de hacer cualquier git push. Si ese archivo contiene tus API Keys reales y lo subes a GitHub, la seguridad de tu proxy no servirá de nada porque las llaves quedarán públicas.
+
+============================================================
+FIN DEL REPORTE
+============================================================

@@ -75,24 +75,30 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   gap: 2rem;
 }
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  letter-spacing: -0.01em;
   text-decoration: none;
+  color: var(--text);
+  flex-shrink: 0;
 }
 .logo-img {
-  height: 34px;
+  height: 48px;
   width: auto;
   display: block;
   object-fit: contain;
   transition: opacity 0.2s;
+  flex-shrink: 0;
 }
-.logo:hover .logo-img { opacity: 0.8; }
+.logo:hover .logo-img { opacity: 0.85; }
 .logo-symbol { color: var(--accent); font-size: 1.1rem; }
-.site-footer .logo-img { height: 38px; }
+.site-footer .logo-img { height: 60px; }
+@media (max-width: 1100px) {
+  .logo-img { height: 40px; }
+}
+@media (max-width: 720px) {
+  .logo-img { height: 36px; }
+  .site-footer .logo-img { height: 48px; }
+}
 .main-nav { display: flex; gap: 0.25rem; align-items: center; }
 .nav-link {
   padding: 0.4rem 0.85rem;
@@ -743,7 +749,12 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 900px) {
+@media (max-width: 1280px) {
+  .main-nav { gap: 0.1rem; }
+  .nav-link { padding: 0.35rem 0.55rem; font-size: 0.8rem; }
+  .nav-sep { margin: 0 0.05rem; }
+}
+@media (max-width: 1100px) {
   .main-nav { display: none; }
   .main-nav.open {
     display: flex;

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mercado — Heatmaps, Top Movers & Macro — BB Financial</title>
+  <meta name="description" content="Heatmap de sectores estilo Finviz, treemap S&P 500, heatmap cripto, top movers, indicadores macro (VIX, DXY, yields, Fear & Greed)." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <style>
+    .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    .nuevo-badge { display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;vertical-align:middle;margin-left:0.5rem; }
+
+    .mkt-tabs-wrap { position:sticky; top:64px; z-index:50; background:rgba(10,12,15,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+    .mkt-tabs-bar { display:flex; gap:0.25rem; overflow-x:auto; padding:0.6rem 0; scrollbar-width:none; }
+    .mkt-tabs-bar::-webkit-scrollbar { display:none; }
+    .mtab-btn { flex-shrink:0; padding:0.5rem 1.1rem; font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.04em; border-radius:8px; border:1px solid transparent; color:var(--text-muted); background:transparent; transition:all var(--transition); cursor:pointer; white-space:nowrap; }
+    .mtab-btn:hover { color:var(--text); background:var(--bg-card); border-color:var(--border); }
+    .mtab-btn.active { color:var(--accent); background:var(--accent-dim); border-color:rgba(74,222,154,0.25); }
+
+    .mtab-content { display:none; padding-bottom:6rem; padding-top:2rem; }
+    .mtab-content.active { display:block; }
+
+    .mkt-sec-hdr { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem; padding-bottom:0.85rem; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .mkt-sec-icon { font-size:1.35rem; }
+    .mkt-sec-title { font-family:var(--font-display); font-size:1.3rem; letter-spacing:-0.01em; }
+    .mkt-sec-src { font-family:var(--font-mono); font-size:0.65rem; color:var(--text-subtle); margin-left:auto; letter-spacing:0.06em; }
+    .mkt-live { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.09em; text-transform:uppercase; padding:0.15rem 0.55rem; border-radius:4px; background:rgba(74,222,154,0.12); color:var(--accent); border:1px solid rgba(74,222,154,0.2); }
+
+    /* ===== Sectors heatmap grid ===== */
+    .sector-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:0.6rem; }
+    .sector-cell { padding:1.1rem 1.2rem; border-radius:8px; min-height:110px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; transition:transform var(--transition); border:1px solid rgba(255,255,255,0.06); }
+    .sector-cell:hover { transform:translateY(-2px); }
+    .sector-cell .sc-name { font-family:var(--font-display); font-size:0.95rem; color:#fff; letter-spacing:-0.01em; line-height:1.2; }
+    .sector-cell .sc-sym { font-family:var(--font-mono); font-size:0.65rem; color:rgba(255,255,255,0.6); letter-spacing:0.08em; margin-top:0.2rem; }
+    .sector-cell .sc-pct { font-family:var(--font-mono); font-size:1.4rem; font-weight:600; color:#fff; margin-top:0.5rem; }
+    .sector-cell .sc-price { font-family:var(--font-mono); font-size:0.7rem; color:rgba(255,255,255,0.65); margin-top:0.15rem; }
+
+    /* ===== Treemap (S&P 500) ===== */
+    .treemap-wrap { position:relative; width:100%; height:640px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .tm-cell { position:absolute; padding:0.4rem; box-sizing:border-box; cursor:pointer; overflow:hidden; transition:filter var(--transition); outline:1px solid rgba(0,0,0,0.35); outline-offset:-1px; display:flex; flex-direction:column; justify-content:flex-start; }
+    .tm-cell:hover { filter:brightness(1.15); z-index:10; }
+    .tm-cell .tm-sym { font-family:var(--font-mono); font-weight:700; color:#fff; line-height:1; }
+    .tm-cell .tm-pct { font-family:var(--font-mono); color:rgba(255,255,255,0.92); margin-top:0.15rem; line-height:1; }
+    .tm-cell.tiny .tm-sym { font-size:0.55rem; }
+    .tm-cell.tiny .tm-pct { display:none; }
+    .tm-cell.small .tm-sym { font-size:0.7rem; }
+    .tm-cell.small .tm-pct { font-size:0.62rem; }
+    .tm-cell.med   .tm-sym { font-size:0.9rem; }
+    .tm-cell.med   .tm-pct { font-size:0.75rem; }
+    .tm-cell.big   .tm-sym { font-size:1.2rem; }
+    .tm-cell.big   .tm-pct { font-size:0.9rem; }
+    .tm-cell.huge  .tm-sym { font-size:1.6rem; }
+    .tm-cell.huge  .tm-pct { font-size:1.1rem; }
+
+    /* ===== Color legend ===== */
+    .heat-legend { display:flex; align-items:center; gap:0.5rem; font-family:var(--font-mono); font-size:0.7rem; color:var(--text-subtle); margin-bottom:1rem; }
+    .heat-legend .hl-bar { display:flex; gap:2px; }
+    .heat-legend .hl-bar > div { width:22px; height:14px; border-radius:2px; }
+
+    /* ===== Movers tables ===== */
+    .movers-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(330px,1fr)); gap:1.25rem; }
+    .movers-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem 1.4rem; }
+    .movers-card h3 { font-family:var(--font-display); font-size:1.05rem; margin-bottom:0.9rem; letter-spacing:-0.01em; }
+    .movers-row { display:grid; grid-template-columns:1fr auto auto; gap:0.5rem; padding:0.5rem 0; border-bottom:1px solid rgba(255,255,255,0.04); font-family:var(--font-mono); font-size:0.82rem; align-items:center; cursor:pointer; }
+    .movers-row:last-child { border-bottom:none; }
+    .movers-row:hover { background:rgba(255,255,255,0.02); }
+    .movers-row .mv-sym { color:var(--accent); font-weight:600; }
+    .movers-row .mv-px { color:var(--text); text-align:right; }
+    .movers-row .mv-pct { text-align:right; font-weight:600; }
+    .pos { color:#4ade9a; } .neg { color:#ff6b6b; } .neu { color:var(--text-subtle); }
+
+    /* ===== Macro cards ===== */
+    .macro-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1rem; }
+    .macro-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.15rem 1.3rem; }
+    .macro-card .mc-cat { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-subtle); }
+    .macro-card .mc-name { font-family:var(--font-display); font-size:1.05rem; margin-top:0.3rem; color:var(--text); letter-spacing:-0.01em; }
+    .macro-card .mc-val { font-family:var(--font-mono); font-size:1.5rem; font-weight:500; color:var(--text); margin-top:0.5rem; }
+    .macro-card .mc-chg { font-family:var(--font-mono); font-size:0.82rem; margin-top:0.3rem; font-weight:600; }
+    .macro-card .mc-sub { font-family:var(--font-mono); font-size:0.7rem; color:var(--text-subtle); margin-top:0.3rem; }
+
+    /* Fear & Greed gauge */
+    .fg-card { display:flex; gap:1.5rem; align-items:center; }
+    .fg-gauge { width:120px; height:120px; position:relative; flex-shrink:0; }
+    .fg-gauge svg { width:100%; height:100%; transform:rotate(-90deg); }
+    .fg-gauge .fg-val { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .fg-gauge .fg-num { font-family:var(--font-display); font-size:1.8rem; color:var(--text); line-height:1; }
+    .fg-gauge .fg-lbl { font-family:var(--font-mono); font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-subtle); margin-top:0.15rem; }
+
+    .loading-cell { padding:2rem; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:0.8rem; }
+    .spinner-mini { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 0.5rem; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .info-box { background:rgba(96,165,250,0.06); border:1px solid rgba(96,165,250,0.18); border-radius:8px; padding:0.8rem 1rem; font-size:0.78rem; color:var(--text-muted); margin-top:1.25rem; line-height:1.55; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link active">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Mercado</p>
+        <h1 class="page-title">Mercado <span class="nuevo-badge">Nuevo</span></h1>
+        <p class="page-subtitle">Heatmaps de sectores y acciones, treemap S&P 500, top movers del día, criptomonedas e indicadores macro de mercado.</p>
+      </div>
+    </section>
+
+    <div class="mkt-tabs-wrap">
+      <div class="container">
+        <div class="mkt-tabs-bar" role="tablist">
+          <button class="mtab-btn active" data-tab="sectores">🔥 Sectores</button>
+          <button class="mtab-btn"        data-tab="sp500">📊 S&P 500</button>
+          <button class="mtab-btn"        data-tab="cripto">🪙 Cripto</button>
+          <button class="mtab-btn"        data-tab="movers">🚀 Top Movers</button>
+          <button class="mtab-btn"        data-tab="macro">🌐 Macro</button>
+          <button class="mtab-btn"        data-tab="insider">👤 Insider Trading</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── SECTORES ───────── -->
+    <div id="tab-sectores" class="mtab-content active" role="tabpanel">
+      <div class="container">
+        <div class="mkt-sec-hdr">
+          <span class="mkt-sec-icon">🔥</span>
+          <h2 class="mkt-sec-title">Heatmap de Sectores (S&P 500)</h2>
+          <span class="mkt-live">En vivo</span>
+          <span class="mkt-sec-src">SPDR Select Sector ETFs · Yahoo Finance</span>
+        </div>
+        <div class="heat-legend">
+          <span>−3%</span>
+          <div class="hl-bar">
+            <div style="background:#8b1c1c"></div><div style="background:#a02828"></div>
+            <div style="background:#c24545"></div><div style="background:#1a1f2a"></div>
+            <div style="background:#2d8a55"></div><div style="background:#1f9e4f"></div><div style="background:#0b6e34"></div>
+          </div>
+          <span>+3%</span>
+        </div>
+        <div id="grid-sectores" class="sector-grid"><div class="loading-cell"><div class="spinner-mini"></div>Cargando sectores…</div></div>
+        <div class="info-box">
+          ℹ️ Cada celda representa un sector del S&P 500 vía su ETF SPDR Select. El color refleja el % de variación del día.
+          Click en una celda para abrir el ticker en detalle.
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── S&P 500 TREEMAP ───────── -->
+    <div id="tab-sp500" class="mtab-content" role="tabpanel">
+      <div class="container">
+        <div class="mkt-sec-hdr">
+          <span class="mkt-sec-icon">📊</span>
+          <h2 class="mkt-sec-title">Treemap S&P 500 — Top 100 por Market Cap</h2>
+          <span class="mkt-live">En vivo</span>
+          <span class="mkt-sec-src">Yahoo Finance</span>
+        </div>
+        <div id="treemap-sp500" class="treemap-wrap"><div class="loading-cell"><div class="spinner-mini"></div>Cargando treemap…</div></div>
+        <div class="info-box">
+          ℹ️ El tamaño de cada celda es proporcional al market cap. El color refleja el % del día.
+          Click en cualquier celda para abrir la acción en el buscador.
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── CRIPTO ───────── -->
+    <div id="tab-cripto" class="mtab-content" role="tabpanel">
+      <div class="container">
+        <div class="mkt-sec-hdr">
+          <span class="mkt-sec-icon">🪙</span>
+          <h2 class="mkt-sec-title">Treemap Cripto — Top 60 por Market Cap</h2>
+          <span class="mkt-live">En vivo</span>
+          <span class="mkt-sec-src">CoinGecko</span>
+        </div>
+        <div id="treemap-cripto" class="treemap-wrap"><div class="loading-cell"><div class="spinner-mini"></div>Cargando cripto…</div></div>
+        <div class="info-box">
+          ℹ️ Tamaño = market cap. Color = % 24h. CoinGecko free plan tiene límite de 30 req/min.
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── TOP MOVERS ───────── -->
+    <div id="tab-movers" class="mtab-content" role="tabpanel">
+      <div class="container">
+        <div class="mkt-sec-hdr">
+          <span class="mkt-sec-icon">🚀</span>
+          <h2 class="mkt-sec-title">Top Movers — S&P 500 (intradía)</h2>
+          <span class="mkt-live">En vivo</span>
+          <span class="mkt-sec-src">Yahoo Finance</span>
+        </div>
+        <div id="movers-grid" class="movers-grid"><div class="loading-cell"><div class="spinner-mini"></div>Cargando movers…</div></div>
+        <div class="info-box">
+          ℹ️ Ranking sobre las top 100 acciones más grandes del S&P 500. Si el mercado está cerrado se muestra el último día disponible.
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── MACRO ───────── -->
+    <div id="tab-macro" class="mtab-content" role="tabpanel">
+      <div class="container">
+        <div class="mkt-sec-hdr">
+          <span class="mkt-sec-icon">🌐</span>
+          <h2 class="mkt-sec-title">Indicadores Macro de Mercado</h2>
+          <span class="mkt-live">En vivo</span>
+          <span class="mkt-sec-src">Yahoo Finance · Alternative.me</span>
+        </div>
+        <div id="grid-macro" class="macro-grid"><div class="loading-cell"><div class="spinner-mini"></div>Cargando indicadores…</div></div>
+        <div class="info-box">
+          ℹ️ VIX (volatilidad implícita S&P 500), DXY (índice dólar), yields del Tesoro de EE.UU. (10Y-2Y = curva de rendimiento),
+          Fear &amp; Greed Index (Alternative.me — referencia del mercado cripto, también orientativo para risk-on/risk-off).
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── INSIDER ───────── -->
+    <div id="tab-insider" class="mtab-content" role="tabpanel">
+      <div class="container">
+        <div class="mkt-sec-hdr">
+          <span class="mkt-sec-icon">👤</span>
+          <h2 class="mkt-sec-title">Insider Trading — Ejecutivos & Directores</h2>
+          <span class="mkt-sec-src">SEC Form 4</span>
+        </div>
+        <form id="insider-form" onsubmit="event.preventDefault(); loadInsider();" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem">
+          <input type="text" id="insider-input" placeholder="Ticker (ej: AAPL, MSFT, TSLA)" autocomplete="off" style="flex:1;min-width:200px;padding:0.7rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-mono);text-transform:uppercase" />
+          <button type="submit" style="padding:0.7rem 1.3rem;background:var(--accent);color:#0a0c0f;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--font-body)">Buscar →</button>
+        </form>
+        <div id="insider-area">
+          <div class="info-box">Ingresá un ticker para ver las transacciones de insiders (compras/ventas reportadas a la SEC vía Form 4) en los últimos meses.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Mercado</h3><ul>
+        <li><a href="ticker.html">Buscar acción</a></li>
+        <li><a href="watchlist.html">Watchlist</a></li>
+        <li><a href="comparar.html">Comparar</a></li>
+        <li><a href="mercado.html">Heatmaps</a></li>
+        <li><a href="calendario.html">Calendario earnings</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+  <script src="../js/ticker.js"></script>
+  <script>
+  /* ════════════════════════════════════════════════
+     MERCADO — Heatmaps, Movers, Macro, Insider
+  ════════════════════════════════════════════════ */
+
+  /* ─── Tab switching ─── */
+  const mtabBtns = document.querySelectorAll('.mtab-btn');
+  const mtabContents = document.querySelectorAll('.mtab-content');
+  const loaded = { sectores: false, sp500: false, cripto: false, movers: false, macro: false };
+  mtabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      mtabBtns.forEach(b => b.classList.remove('active'));
+      mtabContents.forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.getElementById('tab-' + tab).classList.add('active');
+      if (!loaded[tab]) {
+        loaded[tab] = true;
+        if (tab === 'sp500')   loadSP500();
+        if (tab === 'cripto')  loadCripto();
+        if (tab === 'movers')  loadMovers();
+        if (tab === 'macro')   loadMacro();
+      }
+    });
+  });
+
+  /* ─── Helpers ─── */
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmtPct = (n, d=2) => (n == null || isNaN(n)) ? '—' : (n >= 0 ? '+' : '') + n.toFixed(d) + '%';
+  const fmtN   = (n, d=2) => (n == null || isNaN(n)) ? '—' : n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmtPrice = n => (n == null || isNaN(n)) ? '—' : '$' + fmtN(n, 2);
+  const fmtCap = n => {
+    if (!n || isNaN(n)) return '—';
+    if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
+    if (n >= 1e9)  return '$' + (n/1e9).toFixed(2) + 'B';
+    if (n >= 1e6)  return '$' + (n/1e6).toFixed(2) + 'M';
+    return '$' + n.toLocaleString('en-US');
+  };
+  const chgClass = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'neu';
+
+  /* Color scale: pct ∈ [-3, +3] → red ↔ neutral ↔ green */
+  function heatColor(pct) {
+    if (pct == null || isNaN(pct)) return '#1a1f2a';
+    const v = Math.max(-3, Math.min(3, pct));
+    if (Math.abs(v) < 0.1) return '#1a1f2a';
+    if (v > 0) {
+      const t = v / 3; // 0..1
+      // dark→bright green
+      const r = Math.round(20 + (45 - 20) * t);
+      const g = Math.round(80 + (170 - 80) * t);
+      const b = Math.round(45 + (90 - 45) * t);
+      return `rgb(${r},${g},${b})`;
+    } else {
+      const t = -v / 3;
+      const r = Math.round(120 + (200 - 120) * t);
+      const g = Math.round(35 + (60 - 35) * t);
+      const b = Math.round(35 + (60 - 35) * t);
+      return `rgb(${r},${g},${b})`;
+    }
+  }
+
+  async function fetchQuotes(symbols) {
+    const chunks = [];
+    for (let i = 0; i < symbols.length; i += 50) chunks.push(symbols.slice(i, i+50));
+    const results = await Promise.all(chunks.map(async chunk => {
+      try {
+        const r = await fetch(`/api/quotes?symbols=${encodeURIComponent(chunk.join(','))}`, { signal: AbortSignal.timeout(10000) });
+        if (!r.ok) return [];
+        const j = await r.json();
+        return j?.quoteResponse?.result || [];
+      } catch { return []; }
+    }));
+    return results.flat();
+  }
+
+  /* ════════════════════════════════════════════════
+     SECTORES — SPDR Select Sector ETFs
+  ════════════════════════════════════════════════ */
+  const SECTORS = [
+    { sym:'XLK',  name:'Tecnología' },
+    { sym:'XLF',  name:'Financiero' },
+    { sym:'XLV',  name:'Salud' },
+    { sym:'XLY',  name:'Consumo Discrecional' },
+    { sym:'XLP',  name:'Consumo Básico' },
+    { sym:'XLE',  name:'Energía' },
+    { sym:'XLI',  name:'Industrial' },
+    { sym:'XLB',  name:'Materiales' },
+    { sym:'XLU',  name:'Utilities' },
+    { sym:'XLRE', name:'Real Estate' },
+    { sym:'XLC',  name:'Servicios Comunicación' },
+  ];
+
+  async function loadSectores() {
+    const grid = document.getElementById('grid-sectores');
+    const quotes = await fetchQuotes(SECTORS.map(s => s.sym));
+    const map = Object.fromEntries(quotes.map(q => [q.symbol, q]));
+    grid.innerHTML = SECTORS.map(s => {
+      const q = map[s.sym];
+      if (!q) return `<div class="sector-cell" style="background:#1a1f2a"><div class="sc-name">${esc(s.name)}</div><div class="sc-sym">${esc(s.sym)} · sin datos</div></div>`;
+      const pct = q.regularMarketChangePercent;
+      return `<div class="sector-cell" style="background:${heatColor(pct)}" onclick="location.href='ticker.html?symbol=${encodeURIComponent(s.sym)}'">
+        <div>
+          <div class="sc-name">${esc(s.name)}</div>
+          <div class="sc-sym">${esc(s.sym)}</div>
+        </div>
+        <div>
+          <div class="sc-pct">${fmtPct(pct, 2)}</div>
+          <div class="sc-price">${fmtPrice(q.regularMarketPrice)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ════════════════════════════════════════════════
+     S&P 500 TREEMAP — Top 100 por market cap (orden estable)
+  ════════════════════════════════════════════════ */
+  // Top S&P 500 con market cap aproximado en USD billions (referencia 2026 — cambian lento).
+  // El % se trae en vivo de Yahoo; el tamaño del treemap usa este weight estable.
+  const SP500_TOP_W = [
+    ['NVDA',3700],['AAPL',3500],['MSFT',3300],['GOOGL',2400],['AMZN',2300],['META',1700],['AVGO',1100],['TSLA',1000],['BRK-B',1000],['JPM',780],
+    ['WMT',760],['LLY',680],['V',650],['XOM',620],['UNH',560],['ORCL',540],['MA',510],['HD',410],['PG',410],['COST',410],
+    ['JNJ',400],['BAC',360],['NFLX',360],['ABBV',350],['CRM',330],['CVX',330],['KO',310],['ADBE',290],['MRK',280],['TMO',230],
+    ['AMD',230],['LIN',220],['PEP',220],['ACN',220],['CSCO',220],['WFC',220],['MCD',210],['BX',210],['IBM',200],['AXP',200],
+    ['PM',190],['TMUS',190],['GE',190],['DIS',180],['CAT',180],['ABT',180],['GS',170],['ISRG',170],['VZ',170],['NOW',170],
+    ['INTU',170],['MS',160],['TXN',160],['PFE',160],['UBER',150],['BKNG',150],['RTX',150],['QCOM',140],['SPGI',140],['BLK',140],
+    ['AMGN',140],['T',140],['NEE',140],['UNP',140],['LOW',130],['HON',130],['PGR',130],['BSX',130],['SCHW',130],['SYK',130],
+    ['KKR',130],['PLD',120],['LMT',120],['C',120],['TJX',120],['BA',120],['VRTX',110],['PANW',110],['ETN',110],['ELV',110],
+    ['COP',110],['GILD',110],['REGN',100],['BMY',100],['ADP',100],['MDT',100],['MU',100],['MMC',100],['ANET',100],['DE',100],
+    ['CB',95],['LRCX',95],['SO',95],['CI',90],['ICE',90],['KLAC',90],['EQIX',90],['ADI',90],['APH',85],['SHW',80],
+  ];
+  const SP500_TOP = SP500_TOP_W.map(([s]) => s);
+  const SP500_WEIGHTS = Object.fromEntries(SP500_TOP_W.map(([s,w]) => [s, w * 1e9]));
+
+  async function loadSP500() {
+    const wrap = document.getElementById('treemap-sp500');
+    const quotes = await fetchQuotes(SP500_TOP);
+    const valid = quotes.filter(q => q.regularMarketChangePercent != null).map(q => ({
+      sym: q.symbol, name: q.shortName || q.longName || q.symbol,
+      cap: q.marketCap || SP500_WEIGHTS[q.symbol] || 50e9,
+      pct: q.regularMarketChangePercent,
+      price: q.regularMarketPrice,
+    })).sort((a,b) => b.cap - a.cap);
+    if (!valid.length) {
+      wrap.innerHTML = '<div class="loading-cell">No se pudieron cargar los datos del S&P 500.</div>';
+      return;
+    }
+    renderTreemap(wrap, valid);
+  }
+
+  /* ════════════════════════════════════════════════
+     CRIPTO TREEMAP — CoinGecko top 60
+  ════════════════════════════════════════════════ */
+  async function loadCripto() {
+    const wrap = document.getElementById('treemap-cripto');
+    try {
+      const r = await fetch('/api/crypto?path=coins/markets&vs_currency=usd&per_page=60&order=market_cap_desc', { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) throw new Error();
+      const arr = await r.json();
+      const data = arr.filter(c => c.market_cap && c.price_change_percentage_24h != null).map(c => ({
+        sym: c.symbol.toUpperCase(),
+        name: c.name,
+        cap: c.market_cap,
+        pct: c.price_change_percentage_24h,
+        price: c.current_price,
+        link: `https://www.coingecko.com/en/coins/${c.id}`,
+      }));
+      renderTreemap(wrap, data, { cryptoLinks: true });
+    } catch {
+      wrap.innerHTML = '<div class="loading-cell">No se pudo conectar con CoinGecko. Intentá en un minuto.</div>';
+    }
+  }
+
+  /* Squarified treemap (algoritmo correcto: Bruls/Huijssen/Van Wijk 2000) */
+  function renderTreemap(container, items, opts = {}) {
+    const rect = container.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    container.innerHTML = '';
+    if (!items.length || W < 10 || H < 10) return;
+
+    // Escalar caps al área disponible
+    const totalCap = items.reduce((s, i) => s + i.cap, 0);
+    const totalArea = W * H;
+    const scaled = items.map(it => ({ ...it, area: (it.cap / totalCap) * totalArea }));
+    const cells = [];
+
+    function worstRatio(row, w) {
+      // w = lado más corto. row = items con .area
+      const sum = row.reduce((s, r) => s + r.area, 0);
+      const maxA = Math.max(...row.map(r => r.area));
+      const minA = Math.min(...row.map(r => r.area));
+      const w2 = w * w;
+      const s2 = sum * sum;
+      return Math.max((w2 * maxA) / s2, s2 / (w2 * minA));
+    }
+
+    function layoutRow(row, x, y, w, h, horizontal) {
+      // Cuando horizontal=true (rect más ancho que alto): apilamos una FRANJA VERTICAL a la izquierda;
+      // las celdas se acumulan en Y; cada celda tiene w=longSide (grosor de la franja), h=len.
+      // Cuando horizontal=false: apilamos una FRANJA HORIZONTAL arriba;
+      // las celdas se acumulan en X; cada celda tiene h=longSide, w=len.
+      const sum = row.reduce((s, r) => s + r.area, 0);
+      const shortSide = horizontal ? h : w;
+      const longSide  = sum / shortSide;
+      let pos = 0;
+      for (const r of row) {
+        const len = r.area / longSide;
+        if (horizontal) cells.push({ ...r, x, y: y + pos, w: longSide, h: len });
+        else            cells.push({ ...r, x: x + pos, y, w: len, h: longSide });
+        pos += len;
+      }
+      return longSide;
+    }
+
+    function squarify(items, x, y, w, h) {
+      if (!items.length) return;
+      if (w < 1 || h < 1) return;
+      if (items.length === 1) { cells.push({ ...items[0], x, y, w, h }); return; }
+
+      const shortSide = Math.min(w, h);
+      const horizontal = w >= h;
+      let row = [];
+      let i = 0;
+
+      while (i < items.length) {
+        const next = [...row, items[i]];
+        if (row.length && worstRatio(next, shortSide) > worstRatio(row, shortSide)) {
+          // Empeoró → cerrar franja y recursar en el espacio restante
+          const longSide = layoutRow(row, x, y, w, h, horizontal);
+          // La franja ocupa longSide del lado largo; lo recortamos del rect remanente
+          if (horizontal) squarify(items.slice(i), x + longSide, y, w - longSide, h);
+          else            squarify(items.slice(i), x, y + longSide, w, h - longSide);
+          return;
+        }
+        row = next;
+        i++;
+      }
+      // Todos entran en una fila
+      layoutRow(row, x, y, w, h, horizontal);
+    }
+
+    squarify(scaled, 0, 0, W, H);
+
+    // Validar URL antes de inyectar: solo https:// o path relativo seguro (anti javascript: / data:)
+    const safeHref = (raw, fallback) => {
+      const s = String(raw || '');
+      if (/^https:\/\/[^\s<>"']+$/i.test(s)) return s;
+      if (/^[a-z0-9.?=_&%-]+$/i.test(s)) return s; // path relativo limpio
+      return fallback;
+    };
+
+    container.innerHTML = cells.map(c => {
+      const area = c.w * c.h;
+      const sizeClass = area < 600 ? 'tiny' : area < 2200 ? 'small' : area < 8000 ? 'med' : area < 25000 ? 'big' : 'huge';
+      const rawHref = opts.cryptoLinks ? c.link : `ticker.html?symbol=${encodeURIComponent(c.sym)}`;
+      const href = safeHref(rawHref, '#');
+      const target = opts.cryptoLinks ? 'target="_blank" rel="noopener noreferrer"' : '';
+      return `<a href="${esc(href)}" ${target} class="tm-cell ${sizeClass}" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px;background:${heatColor(c.pct)};text-decoration:none">
+        <div class="tm-sym">${esc(c.sym)}</div>
+        <div class="tm-pct">${fmtPct(c.pct, 2)}</div>
+      </a>`;
+    }).join('');
+  }
+
+  /* ════════════════════════════════════════════════
+     TOP MOVERS
+  ════════════════════════════════════════════════ */
+  async function loadMovers() {
+    const grid = document.getElementById('movers-grid');
+    const quotes = await fetchQuotes(SP500_TOP);
+    const valid = quotes.filter(q => q.regularMarketChangePercent != null).map(q => ({
+      sym: q.symbol, name: q.shortName || q.symbol,
+      px: q.regularMarketPrice, pct: q.regularMarketChangePercent,
+      vol: q.regularMarketVolume || 0,
+    }));
+    if (!valid.length) { grid.innerHTML = '<div class="loading-cell">No hay datos disponibles.</div>'; return; }
+    const gainers = [...valid].sort((a,b) => b.pct - a.pct).slice(0, 15);
+    const losers  = [...valid].sort((a,b) => a.pct - b.pct).slice(0, 15);
+    const active  = [...valid].sort((a,b) => b.vol - a.vol).slice(0, 15);
+
+    const renderList = arr => arr.map(r => `
+      <div class="movers-row" onclick="location.href='ticker.html?symbol=${encodeURIComponent(r.sym)}'">
+        <span class="mv-sym">${esc(r.sym)}</span>
+        <span class="mv-px">${fmtPrice(r.px)}</span>
+        <span class="mv-pct ${chgClass(r.pct)}">${fmtPct(r.pct)}</span>
+      </div>`).join('');
+
+    grid.innerHTML = `
+      <div class="movers-card">
+        <h3>🟢 Top Gainers</h3>
+        ${renderList(gainers)}
+      </div>
+      <div class="movers-card">
+        <h3>🔴 Top Losers</h3>
+        ${renderList(losers)}
+      </div>
+      <div class="movers-card">
+        <h3>📊 Most Active (volumen)</h3>
+        ${renderList(active)}
+      </div>
+    `;
+  }
+
+  /* ════════════════════════════════════════════════
+     MACRO
+  ════════════════════════════════════════════════ */
+  const MACRO = [
+    { sym:'^VIX',     name:'VIX',                 cat:'Volatilidad',     sub:'Volatilidad implícita S&P 500 (30d)' },
+    { sym:'DX-Y.NYB', name:'DXY · Índice Dólar',  cat:'Divisas',         sub:'USD vs canasta de monedas mayores' },
+    { sym:'^TNX',     name:'US 10Y Treasury',     cat:'Tasas',           sub:'Yield bono a 10 años EE.UU.' },
+    { sym:'^FVX',     name:'US 5Y Treasury',      cat:'Tasas',           sub:'Yield bono a 5 años' },
+    { sym:'^TYX',     name:'US 30Y Treasury',     cat:'Tasas',           sub:'Yield bono a 30 años' },
+    { sym:'^IRX',     name:'US 13W Bill',         cat:'Tasas',           sub:'Yield letra a 13 semanas' },
+    { sym:'GC=F',     name:'Oro',                 cat:'Commodities',     sub:'Spot gold (oz)' },
+    { sym:'CL=F',     name:'Petróleo WTI',        cat:'Commodities',     sub:'Crude oil WTI futures' },
+    { sym:'BZ=F',     name:'Petróleo Brent',      cat:'Commodities',     sub:'Brent crude futures' },
+    { sym:'BTC-USD',  name:'Bitcoin',             cat:'Cripto',          sub:'BTC vs USD' },
+  ];
+
+  async function loadMacro() {
+    const grid = document.getElementById('grid-macro');
+    const [quotes, fg] = await Promise.all([
+      fetchQuotes(MACRO.map(m => m.sym)),
+      fetchFearGreed(),
+    ]);
+    const map = Object.fromEntries(quotes.map(q => [q.symbol, q]));
+
+    const fgCard = fg ? `
+      <div class="macro-card fg-card">
+        <div class="fg-gauge">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#1a1f2a" stroke-width="10"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="${fgColor(fg.value)}" stroke-width="10"
+              stroke-dasharray="${(fg.value/100)*264} 264" stroke-linecap="round"/>
+          </svg>
+          <div class="fg-val"><div class="fg-num">${fg.value}</div><div class="fg-lbl">${esc(fg.classification)}</div></div>
+        </div>
+        <div>
+          <div class="mc-cat">Sentimiento</div>
+          <div class="mc-name">Fear &amp; Greed Index</div>
+          <div class="mc-sub" style="margin-top:0.6rem">Cripto · Alternative.me</div>
+          <div class="mc-sub">Ayer: ${fg.prev ?? '—'} · Sem: ${fg.weekAgo ?? '—'}</div>
+        </div>
+      </div>
+    ` : '';
+
+    const cards = MACRO.map(m => {
+      const q = map[m.sym];
+      if (!q) return `<div class="macro-card"><div class="mc-cat">${esc(m.cat)}</div><div class="mc-name">${esc(m.name)}</div><div class="mc-val">—</div><div class="mc-sub">Sin datos</div></div>`;
+      const pct = q.regularMarketChangePercent;
+      const price = q.regularMarketPrice;
+      const dec = (m.sym.startsWith('^T') || m.sym === '^FVX' || m.sym === '^IRX' || m.sym === '^TYX') ? 3 : 2;
+      return `<div class="macro-card">
+        <div class="mc-cat">${esc(m.cat)}</div>
+        <div class="mc-name">${esc(m.name)}</div>
+        <div class="mc-val">${fmtN(price, dec)}</div>
+        <div class="mc-chg ${chgClass(pct)}">${fmtPct(pct, 2)}</div>
+        <div class="mc-sub">${esc(m.sub)}</div>
+      </div>`;
+    }).join('');
+
+    // Curva de rendimiento (10Y - 2Y) si tenemos los datos
+    let curveCard = '';
+    const tnx = map['^TNX']?.regularMarketPrice;
+    const fvx = map['^FVX']?.regularMarketPrice;
+    if (tnx != null && fvx != null) {
+      const spread = tnx - fvx;
+      const inverted = spread < 0;
+      curveCard = `<div class="macro-card">
+        <div class="mc-cat">Curva de rendimiento</div>
+        <div class="mc-name">Spread 10Y − 5Y</div>
+        <div class="mc-val ${inverted?'neg':'pos'}">${(spread>=0?'+':'')}${spread.toFixed(2)} bps</div>
+        <div class="mc-sub">${inverted ? '⚠ Curva invertida (señal recesiva)' : 'Curva normal'}</div>
+      </div>`;
+    }
+
+    grid.innerHTML = fgCard + curveCard + cards;
+  }
+
+  async function fetchFearGreed() {
+    try {
+      const r = await fetch('https://api.alternative.me/fng/?limit=8', { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) return null;
+      const j = await r.json();
+      const arr = j?.data || [];
+      if (!arr.length) return null;
+      return {
+        value: parseInt(arr[0].value, 10),
+        classification: arr[0].value_classification,
+        prev: arr[1]?.value,
+        weekAgo: arr[7]?.value,
+      };
+    } catch { return null; }
+  }
+  function fgColor(v) {
+    if (v <= 24) return '#ff6b6b';      // Extreme Fear
+    if (v <= 49) return '#f59e0b';      // Fear
+    if (v <= 54) return '#a3a3a3';      // Neutral
+    if (v <= 74) return '#4ade9a';      // Greed
+    return '#1f9e4f';                    // Extreme Greed
+  }
+
+  /* ════════════════════════════════════════════════
+     INSIDER TRADING
+  ════════════════════════════════════════════════ */
+  window.loadInsider = async function() {
+    const sym = document.getElementById('insider-input').value.trim().toUpperCase();
+    if (!sym) return;
+    const area = document.getElementById('insider-area');
+    area.innerHTML = '<div class="loading-cell"><div class="spinner-mini"></div>Cargando…</div>';
+    try {
+      const r = await fetch(`/api/finnhub?type=insider&symbol=${encodeURIComponent(sym)}`, { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) throw new Error();
+      const j = await r.json();
+      const data = (j.data || []).slice(0, 50);
+      if (!data.length) {
+        area.innerHTML = `<div class="info-box">Sin transacciones de insiders reportadas recientemente para <strong>${esc(sym)}</strong>.</div>`;
+        return;
+      }
+      const rows = data.map(t => {
+        const isBuy = t.change > 0;
+        const value = Math.abs((t.share || t.change || 0) * (t.transactionPrice || 0));
+        return `<tr>
+          <td>${esc(t.name || '—')}</td>
+          <td>${esc(t.transactionDate || t.filingDate || '—')}</td>
+          <td>${esc(t.transactionCode || '—')}</td>
+          <td class="${isBuy?'pos':'neg'}" style="text-align:right">${isBuy?'+':''}${(t.change||0).toLocaleString('en-US')}</td>
+          <td style="text-align:right">${t.transactionPrice ? '$'+fmtN(t.transactionPrice,2) : '—'}</td>
+          <td style="text-align:right">${value ? fmtCap(value) : '—'}</td>
+        </tr>`;
+      }).join('');
+      const totalBuy = data.filter(t => t.change > 0).reduce((s,t) => s + (t.change||0), 0);
+      const totalSell = data.filter(t => t.change < 0).reduce((s,t) => s + Math.abs(t.change||0), 0);
+      area.innerHTML = `
+        <div class="macro-grid" style="margin-bottom:1.5rem">
+          <div class="macro-card"><div class="mc-cat">Net</div><div class="mc-name">${esc(sym)} — Insiders</div><div class="mc-val ${totalBuy>=totalSell?'pos':'neg'}">${(totalBuy-totalSell).toLocaleString('en-US')} sh</div><div class="mc-sub">Net shares ${totalBuy>=totalSell?'comprados':'vendidos'}</div></div>
+          <div class="macro-card"><div class="mc-cat">Buys</div><div class="mc-name">Compras</div><div class="mc-val pos">+${totalBuy.toLocaleString('en-US')}</div><div class="mc-sub">${data.filter(t=>t.change>0).length} transacciones</div></div>
+          <div class="macro-card"><div class="mc-cat">Sells</div><div class="mc-name">Ventas</div><div class="mc-val neg">−${totalSell.toLocaleString('en-US')}</div><div class="mc-sub">${data.filter(t=>t.change<0).length} transacciones</div></div>
+        </div>
+        <div style="overflow-x:auto;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+          <thead><tr style="background:var(--bg)">
+            <th style="text-align:left;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)">Insider</th>
+            <th style="text-align:left;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)">Fecha</th>
+            <th style="text-align:left;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)">Tipo</th>
+            <th style="text-align:right;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)">Cambio (sh)</th>
+            <th style="text-align:right;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)">Precio</th>
+            <th style="text-align:right;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)">Valor</th>
+          </tr></thead>
+          <tbody style="font-family:var(--font-mono)">
+            <style>#insider-area tbody tr td { padding:0.65rem 1rem; border-bottom:1px solid rgba(255,255,255,0.04); }</style>
+            ${rows}
+          </tbody>
+        </table>
+        </div>
+        <div class="info-box" style="margin-top:1.25rem">
+          Códigos SEC más comunes: <code>P</code>=Compra abierta, <code>S</code>=Venta abierta, <code>A</code>=Award/grant,
+          <code>M</code>=Ejercicio de opciones, <code>F</code>=Pago de impuestos en acciones, <code>G</code>=Donación.
+        </div>
+      `;
+    } catch {
+      area.innerHTML = `<div class="info-box">No se pudo obtener insider data para ${esc(sym)}. Verificá el ticker.</div>`;
+    }
+  };
+
+  /* ─── Init ─── */
+  loadSectores(); loaded.sectores = true;
+
+  </script>
+</body>
+</html>

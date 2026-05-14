@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendario de Earnings — BB Financial</title>
+  <meta name="description" content="Calendario de presentación de resultados (earnings) de empresas listadas. Vista mensual con EPS estimado vs reportado." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <style>
+    .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    .nuevo-badge { display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;vertical-align:middle;margin-left:0.5rem; }
+
+    .cal-controls { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem; }
+    .cal-nav { display:flex; gap:0.5rem; align-items:center; }
+    .cal-nav button { padding:0.55rem 1rem; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text-muted); font-family:var(--font-mono); font-size:0.78rem; cursor:pointer; transition:all var(--transition); }
+    .cal-nav button:hover { color:var(--text); border-color:var(--border-hover); }
+    .cal-title { font-family:var(--font-display); font-size:1.7rem; letter-spacing:-0.01em; text-transform:capitalize; min-width:280px; text-align:center; }
+    .cal-filter { display:flex; gap:0.3rem; flex-wrap:wrap; }
+    .cal-filter button { padding:0.4rem 0.9rem; background:var(--bg-card); border:1px solid var(--border); border-radius:18px; color:var(--text-muted); font-family:var(--font-mono); font-size:0.7rem; cursor:pointer; letter-spacing:0.05em; text-transform:uppercase; transition:all var(--transition); }
+    .cal-filter button.active { background:var(--accent-dim); color:var(--accent); border-color:rgba(74,222,154,0.3); }
+
+    .cal-grid {
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:6px;
+      background:var(--bg-card);
+      padding:6px;
+      border:1px solid var(--border);
+      border-radius:var(--radius-lg);
+    }
+    .cal-dow {
+      font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--text-subtle); padding:0.5rem; text-align:center;
+    }
+    .cal-day {
+      background:var(--bg); border:1px solid transparent; border-radius:6px;
+      padding:0.55rem 0.6rem; min-height:115px; display:flex; flex-direction:column;
+      transition:border-color var(--transition); position:relative;
+    }
+    .cal-day.muted { opacity:0.35; }
+    .cal-day.today { border-color:var(--accent); }
+    .cal-day.has-earnings { background:#11141a; }
+    .cal-day:hover { border-color:var(--border-hover); }
+    .cd-num { font-family:var(--font-mono); font-size:0.78rem; color:var(--text-muted); font-weight:600; margin-bottom:0.3rem; display:flex; align-items:center; justify-content:space-between; }
+    .cd-count { font-family:var(--font-mono); font-size:0.6rem; color:var(--accent); background:var(--accent-dim); padding:0.05rem 0.4rem; border-radius:8px; }
+    .cd-tickers { display:flex; flex-wrap:wrap; gap:3px; }
+    .cd-ticker {
+      font-family:var(--font-mono); font-size:0.62rem; color:var(--text); background:var(--bg-card);
+      border:1px solid var(--border); border-radius:4px; padding:0.1rem 0.35rem;
+      cursor:pointer; text-decoration:none;
+    }
+    .cd-ticker:hover { color:var(--accent); border-color:rgba(74,222,154,0.3); }
+    .cd-ticker.beat { color:#4ade9a; border-color:rgba(74,222,154,0.25); }
+    .cd-ticker.miss { color:#ff6b6b; border-color:rgba(255,107,107,0.25); }
+    .cd-more { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-subtle); padding:0.1rem 0.35rem; }
+
+    .loading-cell { padding:5rem; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:0.8rem; }
+    .spinner-mini { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 0.5rem; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .info-box { background:rgba(96,165,250,0.06); border:1px solid rgba(96,165,250,0.18); border-radius:8px; padding:0.8rem 1rem; font-size:0.78rem; color:var(--text-muted); margin-top:1.5rem; line-height:1.55; }
+
+    /* Detail panel */
+    .day-detail { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.25rem 1.5rem; margin-top:1.5rem; display:none; }
+    .day-detail.show { display:block; }
+    .day-detail h3 { font-family:var(--font-display); font-size:1.15rem; margin-bottom:1rem; letter-spacing:-0.01em; }
+    .dd-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    .dd-table th { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-subtle); padding:0.6rem 0.8rem; text-align:left; border-bottom:1px solid var(--border); }
+    .dd-table td { padding:0.55rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.04); font-family:var(--font-mono); }
+    .dd-table tbody tr { cursor:pointer; }
+    .dd-table tbody tr:hover td { background:rgba(255,255,255,0.015); }
+    .dd-sym { color:var(--accent); font-weight:600; }
+    .pos { color:#4ade9a; } .neg { color:#ff6b6b; }
+
+    @media(max-width:700px) {
+      .cal-grid { font-size:0.7rem; }
+      .cal-day { min-height:80px; padding:0.35rem; }
+      .cd-tickers { gap:2px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link active">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Calendario</p>
+        <h1 class="page-title">Calendario de Earnings <span class="nuevo-badge">Nuevo</span></h1>
+        <p class="page-subtitle">Cuándo presenta resultados cada empresa. EPS estimado vs reportado y revenue (empresas listadas en EE.UU.).</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:1.5rem;padding-bottom:6rem">
+
+      <div class="cal-controls">
+        <div class="cal-nav">
+          <button id="prev-month">← Anterior</button>
+          <div class="cal-title" id="cal-title">—</div>
+          <button id="next-month">Siguiente →</button>
+          <button id="today-btn" style="margin-left:0.5rem">Hoy</button>
+        </div>
+        <div class="cal-filter" id="cal-filter">
+          <button class="active" data-filter="all">Todas</button>
+          <button data-filter="large">Large Cap</button>
+          <button data-filter="mega">Mega Cap (&gt;$200B)</button>
+          <button data-filter="reported">Ya reportaron</button>
+        </div>
+      </div>
+
+      <div id="cal-banner" style="display:none; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.25); border-radius:8px; padding:0.85rem 1.1rem; margin-bottom:1rem; font-size:0.85rem; color:#fda4af; line-height:1.55"></div>
+
+      <div id="cal-grid" class="cal-grid">
+        <div class="loading-cell" style="grid-column:1/-1"><div class="spinner-mini"></div>Cargando earnings…</div>
+      </div>
+
+      <div id="day-detail" class="day-detail"></div>
+
+      <div class="info-box">
+        ℹ️ <strong>Earnings calendar</strong>: muestra cuándo cada empresa presenta sus resultados trimestrales (10-Q en EE.UU.).
+        <code class="pos">Verde</code> = EPS reportado superó estimado (beat). <code class="neg">Rojo</code> = miss.
+        Sin color = aún no reportó. Solo empresas listadas en EE.UU.
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Mercado</h3><ul>
+        <li><a href="ticker.html">Buscar acción</a></li>
+        <li><a href="mercado.html">Heatmaps</a></li>
+        <li><a href="calendario.html">Calendario earnings</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+  <script src="../js/ticker.js"></script>
+  <script>
+  (function() {
+    const DOW_LBL = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const MONTH_LBL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const fmtN = (n, d=2) => (n == null || isNaN(n)) ? '—' : Number(n).toFixed(d);
+
+    let currentMonth = new Date(); // first day will be set when rendering
+    let monthEarnings = []; // raw earnings list for visible month
+    let activeFilter = 'all';
+    let mcapCache = {}; // sym -> mcap (approx via Yahoo on demand)
+
+    function ymd(d) { return d.toISOString().slice(0,10); }
+    function firstDayOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+    function lastDayOfMonth(d) { return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+
+    let lastError = null;
+    async function loadMonth() {
+      const grid = document.getElementById('cal-grid');
+      grid.innerHTML = '<div class="loading-cell" style="grid-column:1/-1"><div class="spinner-mini"></div>Cargando earnings…</div>';
+      const first = firstDayOfMonth(currentMonth);
+      const last = lastDayOfMonth(currentMonth);
+      document.getElementById('cal-title').textContent = `${MONTH_LBL[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+      lastError = null;
+      try {
+        const r = await fetch(`/api/finnhub?type=earnings-calendar&from=${ymd(first)}&to=${ymd(last)}`, { signal: AbortSignal.timeout(15000) });
+        const j = await r.json();
+        if (!r.ok) { lastError = j.error || 'Error desconocido'; monthEarnings = []; }
+        else { monthEarnings = j.earningsCalendar || []; await loadMarketCaps(); }
+      } catch (err) {
+        lastError = 'No se pudo conectar';
+        monthEarnings = [];
+      }
+      renderCalendar();
+    }
+
+    async function loadMarketCaps() {
+      // Lista de símbolos únicos del mes
+      const syms = [...new Set(monthEarnings.map(e => e.symbol))];
+      const missing = syms.filter(s => mcapCache[s] === undefined);
+      if (!missing.length) return;
+      // Batch (50 por request)
+      for (let i = 0; i < missing.length; i += 50) {
+        const chunk = missing.slice(i, i+50);
+        try {
+          const r = await fetch(`/api/quotes?symbols=${encodeURIComponent(chunk.join(','))}`, { signal: AbortSignal.timeout(10000) });
+          if (!r.ok) { chunk.forEach(s => mcapCache[s] = null); continue; }
+          const j = await r.json();
+          const result = j?.quoteResponse?.result || [];
+          const map = Object.fromEntries(result.map(q => [q.symbol, q.marketCap]));
+          chunk.forEach(s => { mcapCache[s] = map[s] ?? null; });
+        } catch { chunk.forEach(s => mcapCache[s] = null); }
+      }
+    }
+
+    function applyFilter(items) {
+      if (activeFilter === 'all') return items;
+      if (activeFilter === 'reported') return items.filter(e => e.epsActual != null);
+      if (activeFilter === 'mega')  return items.filter(e => (mcapCache[e.symbol] || 0) > 200e9);
+      if (activeFilter === 'large') return items.filter(e => (mcapCache[e.symbol] || 0) > 10e9);
+      return items;
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('cal-grid');
+      const first = firstDayOfMonth(currentMonth);
+      const last = lastDayOfMonth(currentMonth);
+      const startDow = first.getDay();
+      const daysInMonth = last.getDate();
+      const today = new Date(); today.setHours(0,0,0,0);
+      const filtered = applyFilter(monthEarnings);
+
+      // Group earnings by day
+      const byDay = {};
+      for (const e of filtered) {
+        const d = e.date;
+        if (!d) continue;
+        const day = parseInt(d.slice(-2), 10);
+        (byDay[day] = byDay[day] || []).push(e);
+      }
+      // Sort each day: mega cap first (more interesting)
+      for (const k in byDay) {
+        byDay[k].sort((a,b) => (mcapCache[b.symbol]||0) - (mcapCache[a.symbol]||0));
+      }
+
+      // Banner de error si la API falló
+      const banner = document.getElementById('cal-banner');
+      if (lastError) {
+        banner.style.display = 'block';
+        banner.innerHTML = `⚠️ <strong>No se pudo cargar el calendario.</strong> ${/key|API/i.test(lastError) ? 'Servicio de datos temporalmente no disponible. Intentá en unos minutos.' : 'Detalle: ' + esc(lastError)}`;
+      } else if (!monthEarnings.length) {
+        banner.style.display = 'block';
+        banner.innerHTML = `ℹ️ Sin earnings reportados para ${MONTH_LBL[currentMonth.getMonth()]} ${currentMonth.getFullYear()}.`;
+      } else {
+        banner.style.display = 'none';
+      }
+
+      let html = DOW_LBL.map(d => `<div class="cal-dow">${d}</div>`).join('');
+      // Leading muted cells (previous month tail)
+      const prevLast = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0).getDate();
+      for (let i = 0; i < startDow; i++) {
+        const day = prevLast - startDow + 1 + i;
+        html += `<div class="cal-day muted"><div class="cd-num">${day}</div></div>`;
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
+        const isToday = date.getTime() === today.getTime();
+        const events = byDay[d] || [];
+        const tickersHtml = events.slice(0, 4).map(e => {
+          let cls = '';
+          if (e.epsActual != null && e.epsEstimate != null) {
+            cls = e.epsActual >= e.epsEstimate ? 'beat' : 'miss';
+          }
+          return `<a class="cd-ticker ${cls}" href="ticker.html?symbol=${encodeURIComponent(e.symbol)}" title="${esc(e.symbol)} · est: ${e.epsEstimate ?? '—'} · actual: ${e.epsActual ?? '—'}">${esc(e.symbol)}</a>`;
+        }).join('');
+        const more = events.length > 4 ? `<span class="cd-more">+${events.length-4}</span>` : '';
+        html += `<div class="cal-day ${isToday?'today':''} ${events.length?'has-earnings':''}" onclick="window.showDay(${d})">
+          <div class="cd-num">${d}${events.length ? `<span class="cd-count">${events.length}</span>` : ''}</div>
+          <div class="cd-tickers">${tickersHtml}${more}</div>
+        </div>`;
+      }
+      // Trailing muted to fill last row
+      const totalCells = startDow + daysInMonth;
+      const trailing = (7 - (totalCells % 7)) % 7;
+      for (let i = 1; i <= trailing; i++) {
+        html += `<div class="cal-day muted"><div class="cd-num">${i}</div></div>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    window.showDay = function(day) {
+      const events = monthEarnings.filter(e => parseInt(e.date.slice(-2), 10) === day);
+      const filtered = applyFilter(events).sort((a,b) => (mcapCache[b.symbol]||0) - (mcapCache[a.symbol]||0));
+      const panel = document.getElementById('day-detail');
+      if (!filtered.length) {
+        panel.classList.remove('show');
+        return;
+      }
+      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const rows = filtered.map(e => {
+        const beat = e.epsActual != null && e.epsEstimate != null ? (e.epsActual >= e.epsEstimate) : null;
+        const surprise = (e.epsActual != null && e.epsEstimate != null && e.epsEstimate !== 0)
+          ? ((e.epsActual - e.epsEstimate) / Math.abs(e.epsEstimate)) * 100 : null;
+        const cap = mcapCache[e.symbol];
+        const capStr = cap ? (cap>=1e12 ? '$'+(cap/1e12).toFixed(1)+'T' : cap>=1e9 ? '$'+(cap/1e9).toFixed(1)+'B' : '$'+(cap/1e6).toFixed(0)+'M') : '—';
+        return `<tr onclick="location.href='ticker.html?symbol=${encodeURIComponent(e.symbol)}'">
+          <td class="dd-sym">${esc(e.symbol)}</td>
+          <td>${capStr}</td>
+          <td>${esc(e.hour === 'bmo' ? 'Pre-mkt' : e.hour === 'amc' ? 'After-hours' : (e.hour || '—'))}</td>
+          <td>${fmtN(e.epsEstimate, 2)}</td>
+          <td class="${beat===true?'pos':beat===false?'neg':''}">${fmtN(e.epsActual, 2)}</td>
+          <td class="${surprise>0?'pos':surprise<0?'neg':''}">${surprise!=null?(surprise>=0?'+':'')+surprise.toFixed(1)+'%':'—'}</td>
+          <td>${e.revenueEstimate ? '$'+(e.revenueEstimate/1e9).toFixed(2)+'B' : '—'}</td>
+          <td>${e.revenueActual ? '$'+(e.revenueActual/1e9).toFixed(2)+'B' : '—'}</td>
+        </tr>`;
+      }).join('');
+      panel.innerHTML = `
+        <h3>${date.toLocaleDateString('es-AR',{weekday:'long', day:'numeric', month:'long', year:'numeric'})} — ${filtered.length} empresa${filtered.length!==1?'s':''}</h3>
+        <div style="overflow-x:auto">
+        <table class="dd-table">
+          <thead><tr>
+            <th>Ticker</th><th>Mkt Cap</th><th>Horario</th><th>EPS Est.</th><th>EPS Real</th><th>Surprise</th><th>Rev Est.</th><th>Rev Real</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        </div>`;
+      panel.classList.add('show');
+      panel.scrollIntoView({ behavior:'smooth', block:'start' });
+    };
+
+    document.getElementById('prev-month').onclick = () => { currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth()-1, 1); document.getElementById('day-detail').classList.remove('show'); loadMonth(); };
+    document.getElementById('next-month').onclick = () => { currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth()+1, 1); document.getElementById('day-detail').classList.remove('show'); loadMonth(); };
+    document.getElementById('today-btn').onclick = () => { currentMonth = new Date(); document.getElementById('day-detail').classList.remove('show'); loadMonth(); };
+
+    document.getElementById('cal-filter').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#cal-filter button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      renderCalendar();
+      document.getElementById('day-detail').classList.remove('show');
+    });
+
+    loadMonth();
+  })();
+  </script>
+</body>
+</html>

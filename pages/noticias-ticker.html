@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noticias por Ticker — Análisis fundamental — BB Financial</title>
+  <meta name="description" content="Buscá las últimas noticias de cualquier acción por símbolo. AAPL, TSLA, GGAL, YPF y miles más. Hasta 2 semanas de historial." />
+  <meta name="keywords" content="noticias acciones, news por ticker, AAPL noticias, TSLA noticias, análisis fundamental, noticias YPF GGAL" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+
+    .search-bar{display:flex;gap:0.75rem;align-items:stretch;margin-bottom:1.5rem;flex-wrap:wrap;}
+    .search-input-wrap{flex:1;min-width:260px;display:flex;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color var(--transition);}
+    .search-input-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
+    .search-input-wrap input{flex:1;border:none;background:transparent;padding:0.85rem 1.1rem;color:var(--text);font-family:var(--font-mono);font-size:1rem;letter-spacing:0.05em;text-transform:uppercase;outline:none;}
+    .search-input-wrap input::placeholder{color:var(--text-subtle);text-transform:none;letter-spacing:normal;}
+    .search-btn{background:var(--accent);color:#0a0e13;border:none;padding:0.85rem 1.5rem;font-family:var(--font-body);font-size:0.9rem;font-weight:600;cursor:pointer;transition:background var(--transition);}
+    .search-btn:hover{background:#5ee0a8;}
+    .search-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+    .quick-tickers{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:2rem;}
+    .qt-label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);align-self:center;margin-right:0.4rem;}
+    .qt-btn{padding:0.35rem 0.75rem;border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;transition:all var(--transition);}
+    .qt-btn:hover{background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.3);}
+
+    .ticker-header{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:1.5rem;display:none;}
+    .ticker-header.show{display:block;}
+    .th-row{display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;}
+    .th-logo{width:54px;height:54px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;color:var(--accent);font-size:1.1rem;overflow:hidden;flex-shrink:0;}
+    .th-logo img{width:100%;height:100%;object-fit:cover;}
+    .th-info{flex:1;min-width:200px;}
+    .th-symbol{font-family:var(--font-display);font-size:1.6rem;letter-spacing:-0.01em;color:var(--text);}
+    .th-name{font-size:0.88rem;color:var(--text-muted);margin-top:0.15rem;}
+    .th-stats{display:flex;gap:1.5rem;flex-wrap:wrap;}
+    .th-stat .ts-label{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);}
+    .th-stat .ts-value{font-family:var(--font-mono);font-size:0.95rem;color:var(--text);margin-top:0.15rem;}
+    .th-stat .ts-value.positive{color:var(--accent);}
+    .th-stat .ts-value.negative{color:#ff6b6b;}
+
+    .news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;}
+    .news-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:all var(--transition);}
+    .news-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+    .news-img{width:100%;aspect-ratio:16/9;object-fit:cover;background:#1a1f2a;}
+    .news-img-placeholder{width:100%;aspect-ratio:16/9;background:#1a1f2a;display:flex;align-items:center;justify-content:center;color:#3d4558;font-size:2rem;}
+    .news-body{padding:1.1rem 1.25rem 1.25rem;flex:1;display:flex;flex-direction:column;}
+    .news-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;}
+    .news-source{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border-radius:20px;padding:0.15rem 0.55rem;}
+    .news-date{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-subtle);}
+    .news-title{font-size:0.92rem;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:0.5rem;}
+    .news-summary{font-size:0.78rem;color:var(--text-muted);line-height:1.55;flex:1;}
+
+    .loader{text-align:center;padding:3rem 1rem;color:var(--text-subtle);font-family:var(--font-mono);font-size:0.85rem;display:none;}
+    .loader.show{display:block;}
+    .empty{text-align:center;padding:4rem 1rem;color:var(--text-muted);}
+    .empty-icon{font-size:2.5rem;margin-bottom:0.75rem;opacity:0.3;}
+    .error-box{background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.2);border-radius:10px;padding:1.1rem 1.25rem;color:#ff9999;font-size:0.88rem;display:none;}
+    .error-box.show{display:block;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link active">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="noticias.html">Noticias</a><span>/</span>Por Ticker</p>
+        <h1 class="page-title">Noticias por Ticker</h1>
+        <p class="page-subtitle">Buscá noticias de cualquier acción de los últimos 14 días. Ingresá el símbolo (ej: AAPL, TSLA, GGAL, YPF) y mirá qué se publicó.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <div class="info-box">
+        <strong>¿Para qué sirve?</strong> Antes de invertir en una acción, conviene saber qué está pasando con la empresa. Acá tenés todas las noticias publicadas sobre ella en las últimas dos semanas, ordenadas por fecha. Útil para detectar resultados, anuncios, controversias o cambios relevantes.
+      </div>
+
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <input type="text" id="ticker-input" placeholder="Símbolo (AAPL, TSLA, GGAL...)" maxlength="15" autocomplete="off" />
+        </div>
+        <button class="search-btn" id="search-btn">Buscar noticias →</button>
+      </div>
+
+      <div class="quick-tickers">
+        <span class="qt-label">Populares:</span>
+        <button class="qt-btn" data-sym="AAPL">AAPL</button>
+        <button class="qt-btn" data-sym="TSLA">TSLA</button>
+        <button class="qt-btn" data-sym="MSFT">MSFT</button>
+        <button class="qt-btn" data-sym="NVDA">NVDA</button>
+        <button class="qt-btn" data-sym="META">META</button>
+        <button class="qt-btn" data-sym="GOOGL">GOOGL</button>
+        <button class="qt-btn" data-sym="AMZN">AMZN</button>
+        <span class="qt-label" style="margin-left:1rem">Argentina:</span>
+        <button class="qt-btn" data-sym="GGAL">GGAL</button>
+        <button class="qt-btn" data-sym="YPF">YPF</button>
+        <button class="qt-btn" data-sym="PAM">PAM</button>
+        <button class="qt-btn" data-sym="BMA">BMA</button>
+        <button class="qt-btn" data-sym="TX">TX</button>
+        <button class="qt-btn" data-sym="MELI">MELI</button>
+      </div>
+
+      <div class="ticker-header" id="ticker-header"></div>
+
+      <div class="error-box" id="error-box"></div>
+      <div class="loader" id="loader">Cargando noticias…</div>
+
+      <div class="news-grid" id="news-grid"></div>
+
+      <div class="empty" id="empty-state">
+        <div class="empty-icon">🔎</div>
+        <p>Ingresá un símbolo para ver las últimas noticias.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Noticias</h3>
+        <ul>
+          <li><a href="noticias.html">Noticias macro</a></li>
+          <li><a href="noticias-ticker.html">Noticias por ticker</a></li>
+          <li><a href="datos.html">Datos macro</a></li>
+          <li><a href="mercado.html">Mercado</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+  <script>
+    const SYMBOL_REGEX = /^[A-Z0-9.\-^=]{1,15}$/;
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function safeUrl(url) {
+      return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null;
+    }
+    function fmtDate(ts) {
+      if (!ts) return '';
+      try { return new Date(ts * 1000).toLocaleDateString('es-AR', { day:'numeric', month:'short', year:'numeric' }); }
+      catch { return ''; }
+    }
+
+    const input    = document.getElementById('ticker-input');
+    const btn      = document.getElementById('search-btn');
+    const grid     = document.getElementById('news-grid');
+    const loader   = document.getElementById('loader');
+    const empty    = document.getElementById('empty-state');
+    const errorBox = document.getElementById('error-box');
+    const header   = document.getElementById('ticker-header');
+
+    function setLoading(on) {
+      loader.classList.toggle('show', on);
+      if (on) {
+        grid.textContent = '';
+        empty.style.display = 'none';
+        errorBox.classList.remove('show');
+        btn.disabled = true;
+      } else {
+        btn.disabled = false;
+      }
+    }
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.classList.add('show');
+      header.classList.remove('show');
+      header.textContent = '';
+    }
+
+    async function loadCompanyProfile(sym) {
+      try {
+        const r = await fetch(`/api/finnhub?type=profile&symbol=${encodeURIComponent(sym)}`, { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) return null;
+        return await r.json();
+      } catch { return null; }
+    }
+
+    async function loadQuote(sym) {
+      try {
+        const r = await fetch(`/api/finnhub?type=quote&symbol=${encodeURIComponent(sym)}`, { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) return null;
+        return await r.json();
+      } catch { return null; }
+    }
+
+    function renderHeader(sym, profile, quote) {
+      header.textContent = '';
+      header.classList.add('show');
+
+      const row = document.createElement('div');
+      row.className = 'th-row';
+
+      const logo = document.createElement('div');
+      logo.className = 'th-logo';
+      const logoUrl = safeUrl(profile && profile.logo);
+      if (logoUrl) {
+        const img = document.createElement('img');
+        img.src = logoUrl; img.alt = '';
+        img.onerror = () => { logo.textContent = sym.slice(0,2); };
+        logo.appendChild(img);
+      } else {
+        logo.textContent = sym.slice(0,2);
+      }
+      row.appendChild(logo);
+
+      const info = document.createElement('div');
+      info.className = 'th-info';
+      const symEl = document.createElement('p'); symEl.className = 'th-symbol'; symEl.textContent = sym;
+      info.appendChild(symEl);
+      if (profile && profile.name) {
+        const name = document.createElement('p'); name.className = 'th-name';
+        name.textContent = profile.name + (profile.exchange ? ' · ' + profile.exchange : '') + (profile.finnhubIndustry ? ' · ' + profile.finnhubIndustry : '');
+        info.appendChild(name);
+      }
+      row.appendChild(info);
+
+      if (quote && Number.isFinite(quote.c) && quote.c > 0) {
+        const stats = document.createElement('div');
+        stats.className = 'th-stats';
+        const price = quote.c;
+        const change = quote.d;
+        const pct = quote.dp;
+        const cls = change > 0 ? 'positive' : change < 0 ? 'negative' : '';
+
+        const makeStat = (label, value, valueClass='') => {
+          const s = document.createElement('div'); s.className = 'th-stat';
+          const l = document.createElement('p'); l.className = 'ts-label'; l.textContent = label;
+          const v = document.createElement('p'); v.className = 'ts-value ' + valueClass; v.textContent = value;
+          s.append(l, v); return s;
+        };
+        stats.appendChild(makeStat('Precio', '$' + price.toFixed(2)));
+        if (Number.isFinite(change)) stats.appendChild(makeStat('Variación', (change >= 0 ? '+' : '') + change.toFixed(2), cls));
+        if (Number.isFinite(pct)) stats.appendChild(makeStat('Variación %', (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%', cls));
+        if (Number.isFinite(quote.h)) stats.appendChild(makeStat('Máx día', '$' + quote.h.toFixed(2)));
+        if (Number.isFinite(quote.l)) stats.appendChild(makeStat('Mín día', '$' + quote.l.toFixed(2)));
+        row.appendChild(stats);
+      }
+      header.appendChild(row);
+    }
+
+    function renderNews(news) {
+      grid.textContent = '';
+      if (!Array.isArray(news) || news.length === 0) {
+        const e = document.createElement('div');
+        e.className = 'empty';
+        const icon = document.createElement('div'); icon.className = 'empty-icon'; icon.textContent = '📭';
+        const p = document.createElement('p'); p.textContent = 'No se encontraron noticias para este símbolo en los últimos 14 días.';
+        e.append(icon, p);
+        grid.appendChild(e);
+        return;
+      }
+
+      news.slice(0, 30).forEach(n => {
+        const link = safeUrl(n.url) || '#';
+        const card = document.createElement('a');
+        card.className = 'news-card';
+        card.href = link;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+
+        const PLACEHOLDER = '../img/imagen-para-noticias.png';
+        const img = document.createElement('img');
+        img.className = 'news-img';
+        img.src = safeUrl(n.image) || PLACEHOLDER;
+        img.alt = '';
+        img.loading = 'lazy';
+        img.onerror = () => { if (!img.src.endsWith('imagen-para-noticias.png')) img.src = PLACEHOLDER; };
+        card.appendChild(img);
+
+        const body = document.createElement('div');
+        body.className = 'news-body';
+
+        const meta = document.createElement('div');
+        meta.className = 'news-meta';
+        const src = document.createElement('span');
+        src.className = 'news-source';
+        src.textContent = (n.source || 'Fuente').slice(0, 30);
+        const date = document.createElement('span');
+        date.className = 'news-date';
+        date.textContent = fmtDate(n.datetime);
+        meta.append(src, date);
+
+        const title = document.createElement('p');
+        title.className = 'news-title';
+        title.textContent = n.headline || '(Sin título)';
+
+        const summary = document.createElement('p');
+        summary.className = 'news-summary';
+        summary.textContent = (n.summary || '').slice(0, 240) + ((n.summary || '').length > 240 ? '…' : '');
+
+        body.append(meta, title, summary);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+    }
+
+    function makePlaceholder() {
+      const ph = document.createElement('div');
+      ph.className = 'news-img-placeholder';
+      ph.textContent = '📰';
+      return ph;
+    }
+
+    async function searchTicker(rawSym) {
+      const sym = (rawSym || '').trim().toUpperCase();
+      if (!sym) return;
+      if (!SYMBOL_REGEX.test(sym)) {
+        showError('Símbolo inválido. Usá solo letras, números, puntos o guiones (máx 15).');
+        return;
+      }
+
+      setLoading(true);
+      header.classList.remove('show');
+      header.textContent = '';
+
+      try {
+        // Profile + quote en paralelo con news
+        const [profile, quote, newsRes] = await Promise.all([
+          loadCompanyProfile(sym),
+          loadQuote(sym),
+          fetch(`/api/finnhub?type=company-news&symbol=${encodeURIComponent(sym)}`, { signal: AbortSignal.timeout(12000) })
+        ]);
+
+        if (!newsRes.ok) {
+          showError('No se pudieron obtener noticias en este momento. Intentá más tarde.');
+          setLoading(false);
+          return;
+        }
+
+        const news = await newsRes.json();
+
+        // Si finnhub no conoce el símbolo, el profile viene vacío
+        if (profile && (profile.name || profile.ticker)) {
+          renderHeader(sym, profile, quote);
+        } else {
+          renderHeader(sym, null, quote);
+        }
+
+        renderNews(news);
+        empty.style.display = 'none';
+      } catch (e) {
+        showError('Error al buscar. Verificá tu conexión e intentá nuevamente.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    btn.addEventListener('click', () => searchTicker(input.value));
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') searchTicker(input.value); });
+    document.querySelectorAll('.qt-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        input.value = b.dataset.sym;
+        searchTicker(b.dataset.sym);
+      });
+    });
+
+    // Si llega ?symbol=XXX en URL, ejecutar búsqueda
+    const params = new URLSearchParams(location.search);
+    const initial = params.get('symbol') || params.get('s');
+    if (initial && SYMBOL_REGEX.test(initial.toUpperCase())) {
+      input.value = initial.toUpperCase();
+      searchTicker(initial);
+    }
+  </script>
+</body>
+</html>

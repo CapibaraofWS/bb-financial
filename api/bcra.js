@@ -1,8 +1,11 @@
 // Proxy para BCRA API v3.0
 // Soporta ?endpoint=principalesvariables (default)
+import { denyExternalOrigin } from './_security.js';
+
 const ALLOWED = ['principalesvariables'];
 
 export default async function handler(req, res) {
+  if (denyExternalOrigin(req, res)) return;
   const endpoint = req.query.endpoint || 'principalesvariables';
 
   if (!ALLOWED.includes(endpoint)) {

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparar Acciones — BB Financial</title>
+  <meta name="description" content="Compará 2 a 4 acciones lado a lado: precio, P/E, ROE, márgenes, deuda, performance histórica." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    .nuevo-badge { display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;vertical-align:middle;margin-left:0.5rem; }
+    .subnav { display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap; }
+    .subnav a { padding:0.45rem 1rem;border-radius:18px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);text-decoration:none;transition:all var(--transition); }
+    .subnav a:hover { color:var(--text);border-color:var(--border-hover); }
+    .subnav a.active { background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.3); }
+
+    .add-bar { display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:flex-end; }
+    .add-bar-fields { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.5rem;flex:1; }
+    .add-bar input { width:100%;padding:0.7rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;text-transform:uppercase; }
+    .add-bar input:focus { outline:none;border-color:var(--accent); }
+    .add-bar button { padding:0.7rem 1.3rem;background:var(--accent);color:#0a0c0f;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--font-body); }
+
+    .cmp-table { width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem; }
+    .cmp-table th, .cmp-table td { padding:0.85rem 1rem;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.04);text-align:right; }
+    .cmp-table th:first-child, .cmp-table td:first-child { text-align:left;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);font-weight:500; }
+    .cmp-table th { font-family:var(--font-display);font-size:1rem;color:var(--text);background:var(--bg);text-align:center; }
+    .cmp-table th .ct-symbol { font-family:var(--font-display);font-size:1.05rem;color:var(--accent); }
+    .cmp-table th .ct-name { font-family:var(--font-body);font-size:0.72rem;color:var(--text-muted);font-weight:400;display:block;margin-top:0.15rem; }
+    .cmp-table td { font-family:var(--font-mono); }
+    .cmp-table .best { color:var(--accent);font-weight:600; }
+    .cmp-table .worst { color:#ff7a7a; }
+    .cmp-table tbody tr:hover td { background:rgba(255,255,255,0.015); }
+
+    .pos { color:var(--accent); }
+    .neg { color:#ff6b6b; }
+
+    .empty { text-align:center;padding:4rem 1rem;color:var(--text-muted); }
+    .empty h2 { font-family:var(--font-display);font-size:1.4rem;color:var(--text);margin-bottom:0.5rem; }
+
+    .chart-card { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem; }
+    .chart-title { font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:1rem; }
+    .loading-card { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;color:var(--text-muted); }
+    .spinner-mini { width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 0.75rem; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    @media(max-width:760px) { .cmp-table { display:block;overflow-x:auto; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link active">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span><a href="ticker.html">Acciones</a><span>/</span>Comparar</p>
+        <h1 class="page-title">Comparador <span class="nuevo-badge">Nuevo</span></h1>
+        <p class="page-subtitle">Pegá 2 a 4 tickers y vé sus métricas lado a lado: valuación, rentabilidad, deuda y performance histórica.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:1.5rem;padding-bottom:6rem">
+
+      <div class="subnav">
+        <a href="ticker.html">🔍 Buscar</a>
+        <a href="watchlist.html">⭐ Watchlist</a>
+        <a href="comparar.html" class="active">⚖ Comparar</a>
+      </div>
+
+      <form class="add-bar" id="cmp-form" onsubmit="event.preventDefault(); comparar();">
+        <div class="add-bar-fields">
+          <input type="text" id="cmp-1" placeholder="Ticker 1 (ej: AAPL)" autocomplete="off" />
+          <input type="text" id="cmp-2" placeholder="Ticker 2 (ej: MSFT)" autocomplete="off" />
+          <input type="text" id="cmp-3" placeholder="Ticker 3 (opcional)" autocomplete="off" />
+          <input type="text" id="cmp-4" placeholder="Ticker 4 (opcional)" autocomplete="off" />
+        </div>
+        <button type="submit">Comparar →</button>
+      </form>
+
+      <div id="cmp-area">
+        <div class="empty">
+          <h2>Pegá entre 2 y 4 tickers</h2>
+          <p>Ej: <code>AAPL</code>, <code>MSFT</code>, <code>GOOGL</code>. Lleno los campos y dale a Comparar.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a><p>Herramientas financieras gratuitas.</p></div>
+      <nav class="footer-nav"><h3>Acciones</h3><ul>
+        <li><a href="ticker.html">Buscar acción</a></li>
+        <li><a href="watchlist.html">Watchlist</a></li>
+        <li><a href="comparar.html">Comparador</a></li>
+        <li><a href="mis-portafolios.html">Portafolio</a></li>
+      </ul></nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+  <script src="../js/ticker.js"></script>
+  <script src="../js/ticker-data.js"></script>
+  <script>
+  (function() {
+    let chart = null;
+
+    window.comparar = async function() {
+      const syms = ['cmp-1','cmp-2','cmp-3','cmp-4']
+        .map(id => document.getElementById(id).value.trim().toUpperCase())
+        .filter(s => s);
+      if (syms.length < 2) {
+        alert('Ingresá al menos 2 tickers');
+        return;
+      }
+      history.replaceState({}, '', `?symbols=${encodeURIComponent(syms.join(','))}`);
+      const area = document.getElementById('cmp-area');
+      area.innerHTML = `<div class="loading-card"><div class="spinner-mini"></div>Cargando ${syms.length} tickers…</div>`;
+
+      const datos = await Promise.all(syms.map(s => TickerData.fullQuote(s)));
+      const ok = datos.filter(d => d);
+      if (ok.length < 2) {
+        area.innerHTML = `<div class="loading-card">No se pudieron cargar suficientes tickers. Verificá los símbolos.</div>`;
+        return;
+      }
+      render(ok);
+    };
+
+    // Define qué métricas mostrar y cómo formatearlas. higher = true significa "más alto = mejor".
+    const METRICS = [
+      { group: 'Precio',         label: 'Precio actual',     key: 'price',           fmt: (v,d) => TickerData.fmtPrice(v, d.currency), higher: null },
+      { group: 'Precio',         label: '% Día',             key: 'dayChg',          fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Precio',         label: 'Market Cap',        key: 'marketCap',       fmt: v => TickerData.fmtMarketCap(v),            higher: null },
+      { group: 'Precio',         label: '52W High',          key: 'high52',          fmt: (v,d) => TickerData.fmtPrice(v, d.currency), higher: null },
+      { group: 'Precio',         label: '52W Low',           key: 'low52',           fmt: (v,d) => TickerData.fmtPrice(v, d.currency), higher: null },
+      { group: 'Valuación',      label: 'P/E',               key: 'pe',              fmt: v => TickerData.fmtNum(v, 1),               higher: false },
+      { group: 'Valuación',      label: 'P/B',               key: 'pb',              fmt: v => TickerData.fmtNum(v, 2),               higher: false },
+      { group: 'Valuación',      label: 'P/S',               key: 'ps',              fmt: v => TickerData.fmtNum(v, 2),               higher: false },
+      { group: 'Valuación',      label: 'EV/EBITDA',         key: 'evEbitda',        fmt: v => TickerData.fmtNum(v, 1),               higher: false },
+      { group: 'Valuación',      label: 'Div Yield',         key: 'divYield',        fmt: v => v != null ? v.toFixed(2)+'%' : '—',    higher: true },
+      { group: 'Rentabilidad',   label: 'ROE',               key: 'roe',             fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Rentabilidad',   label: 'ROA',               key: 'roa',             fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Rentabilidad',   label: 'Margen bruto',      key: 'grossMargin',     fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Rentabilidad',   label: 'Margen operativo',  key: 'operatingMargin', fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Rentabilidad',   label: 'Margen neto',       key: 'netMargin',       fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Salud',          label: 'Deuda / Equity',    key: 'debtEquity',      fmt: v => TickerData.fmtNum(v, 2),               higher: false },
+      { group: 'Salud',          label: 'Ratio corriente',   key: 'currentRatio',    fmt: v => TickerData.fmtNum(v, 2),               higher: true },
+      { group: 'Salud',          label: 'Ratio rápido',      key: 'quickRatio',      fmt: v => TickerData.fmtNum(v, 2),               higher: true },
+      { group: 'Salud',          label: 'Beta',              key: 'beta',            fmt: v => TickerData.fmtNum(v, 2),               higher: null },
+      { group: 'Crecimiento',    label: 'Revenue YoY',       key: 'revenueGrowth',   fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Crecimiento',    label: 'EPS YoY',           key: 'epsGrowth',       fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true },
+      { group: 'Performance',    label: '1 mes',             key: 'perf1M',          fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true, perf: true },
+      { group: 'Performance',    label: 'YTD',               key: 'perfYTD',         fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true, perf: true },
+      { group: 'Performance',    label: '1 año',             key: 'perf1Y',          fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true, perf: true },
+      { group: 'Performance',    label: '5 años',            key: 'perf5Y',          fmt: v => TickerData.fmtPct(v),                  higher: true,  pct: true, perf: true },
+    ];
+
+    function render(datos) {
+      // Headers
+      const head = `<tr><th></th>${datos.map(d => `
+        <th><span class="ct-symbol"><a href="ticker.html?symbol=${encodeURIComponent(d.symbol)}" style="color:inherit;text-decoration:none">${TickerData.esc(d.symbol)}</a></span><span class="ct-name">${TickerData.esc((d.name||'').slice(0, 28))}</span></th>
+      `).join('')}</tr>`;
+
+      // Group rows
+      const groups = [...new Set(METRICS.map(m => m.group))];
+      let body = '';
+      for (const g of groups) {
+        body += `<tr style="background:rgba(255,255,255,0.02)"><td colspan="${datos.length + 1}" style="font-family:var(--font-display);font-size:0.95rem;color:var(--text);text-align:left;padding:1rem 1rem 0.5rem">${g}</td></tr>`;
+        for (const m of METRICS.filter(x => x.group === g)) {
+          // Recolectar valores numéricos
+          const vals = datos.map(d => {
+            let v = d[m.key];
+            if (m.perf && v != null && Math.abs(v) < 5) v = v * 100; // normalizar perf % decimal
+            return v;
+          });
+          // Encontrar mejor / peor
+          let bestIdx = -1, worstIdx = -1;
+          if (m.higher !== null) {
+            const valid = vals.map((v, i) => ({ v, i })).filter(x => x.v != null && !isNaN(x.v));
+            if (valid.length >= 2) {
+              const sorted = [...valid].sort((a, b) => a.v - b.v);
+              if (m.higher) { bestIdx = sorted[sorted.length-1].i; worstIdx = sorted[0].i; }
+              else          { bestIdx = sorted[0].i; worstIdx = sorted[sorted.length-1].i; }
+            }
+          }
+          body += `<tr><td>${m.label}</td>${vals.map((v, i) => {
+            const cls = i === bestIdx ? 'best' : i === worstIdx ? 'worst' : '';
+            const txt = (v == null || isNaN(v)) ? '—' : m.fmt(v, datos[i]);
+            return `<td class="${cls}">${txt}</td>`;
+          }).join('')}</tr>`;
+        }
+      }
+
+      const html = `
+        <table class="cmp-table">
+          <thead>${head}</thead>
+          <tbody>${body}</tbody>
+        </table>
+        <div class="chart-card">
+          <p class="chart-title">Performance comparada (1 año, base 100)</p>
+          <div style="position:relative;height:340px;width:100%">
+            <canvas id="cmp-chart"></canvas>
+          </div>
+        </div>
+      `;
+      document.getElementById('cmp-area').innerHTML = html;
+      drawChart(datos);
+    }
+
+    function drawChart(datos) {
+      const ctx = document.getElementById('cmp-chart');
+      if (!ctx) return;
+      if (chart) chart.destroy();
+      const colors = ['#4ade9a','#60a5fa','#e8c97a','#c084fc'];
+      // Normalizar cada serie a base 100 desde el primer valor disponible
+      const datasets = datos.map((d, i) => {
+        const closes = (d.chart?.closes || []).filter(c => c != null);
+        const base = closes[0];
+        const data = base ? closes.map(c => (c / base) * 100) : closes;
+        return { label: d.symbol, data, borderColor: colors[i], backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.1 };
+      });
+      // Usar timestamps del más largo
+      const longest = datos.reduce((acc, d) => (d.chart?.timestamps?.length || 0) > (acc?.length || 0) ? d.chart.timestamps : acc, []);
+      const labels = (longest || []).map(ts => new Date(ts * 1000).toLocaleDateString('es-AR', { day:'numeric', month:'short' }));
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color:'#7a8599', font:{family:'DM Mono',size:11} } } },
+          scales: {
+            x: { ticks:{ color:'#7a8599', font:{family:'DM Mono',size:9}, maxTicksLimit:10 }, grid:{ color:'rgba(255,255,255,0.04)' } },
+            y: { ticks:{ color:'#7a8599', font:{family:'DM Mono',size:9}, callback: v => v.toFixed(0) }, grid:{ color:'rgba(255,255,255,0.04)' } }
+          }
+        }
+      });
+    }
+
+    // Auto-load from URL
+    const urlSyms = new URLSearchParams(window.location.search).get('symbols');
+    if (urlSyms) {
+      const arr = urlSyms.split(',').slice(0, 4);
+      arr.forEach((s, i) => { const el = document.getElementById('cmp-' + (i+1)); if (el) el.value = s; });
+      if (arr.length >= 2) comparar();
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -44,9 +44,13 @@
         <a href="calculadoras.html" class="nav-link">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
         <a href="conceptos.html" class="nav-link active">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
         <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span style="display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;margin-left:0.4rem">Beta</span></a>
         <a href="noticias.html" class="nav-link">Noticias</a>
         <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
         <span class="nav-sep" aria-hidden="true"></span>
         <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
       </nav>
@@ -62,6 +66,18 @@
         <p class="page-subtitle">Esos términos que aparecen todo el tiempo en las noticias y a veces no quedan claros: qué son, cómo se miden, quién los mide, y un ejemplo concreto para fijar la idea.</p>
       </div>
     </section>
+
+    <div class="container" style="padding-top:1.5rem">
+      <a href="empezar-a-invertir.html" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(96,165,250,0.3);border-radius:14px;padding:1.5rem 1.75rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(96,165,250,0.55)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(96,165,250,0.3)'">
+        <div style="font-size:2rem;flex-shrink:0">🚀</div>
+        <div style="flex:1;min-width:260px">
+          <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.35rem">Nuevos en el mercado</p>
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.3rem;color:var(--text)">Empezar a invertir desde cero</h3>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.5">Cómo elegir broker confiable, banderas rojas de estafas, renta fija vs. variable, BYMA, custodia e impuestos básicos.</p>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.85rem;color:#60a5fa;white-space:nowrap">Ver guía →</span>
+      </a>
+    </div>
 
     <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
       <div class="disclaimer">
@@ -395,10 +411,10 @@
         </ul>
       </nav>
     </div>
-    <div class="footer-bottom"><p>© 2026 BB Financial · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js?v=2"></script>
   <script>
     document.querySelectorAll('.guide-tab').forEach(btn => {
       btn.addEventListener('click', () => {

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empezar a Invertir — Guía para principiantes — BB Financial</title>
+  <meta name="description" content="Guía completa para empezar a invertir en Argentina: cómo elegir un broker confiable, banderas rojas de estafas, renta fija vs variable, BYMA, Caja de Valores e impuestos." />
+  <meta name="keywords" content="empezar a invertir, primera inversión, broker confiable Argentina, CNV, ALYC, renta fija, renta variable, BYMA, caja de valores" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+
+    .step-section { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+    .step-section:last-child { border-bottom: none; }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--accent-dim); color: var(--accent);
+      font-family: var(--font-mono); font-size: 1rem; font-weight: 600;
+      margin-right: 0.85rem;
+    }
+    .step-title {
+      font-family: var(--font-display); font-size: 1.55rem;
+      letter-spacing: -0.02em; margin-bottom: 1rem;
+      display: flex; align-items: center;
+    }
+    .step-body p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.75; margin-bottom: 1rem; }
+    .step-body strong { color: var(--text); }
+    .step-body a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed rgba(74,222,154,0.4); }
+    .step-body a:hover { border-bottom-style: solid; }
+
+    .info-callout {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px; padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0; font-size: 0.88rem; color: var(--text-muted); line-height: 1.65;
+    }
+    .info-callout strong { color: var(--accent); }
+    .warn-callout {
+      background: rgba(220, 60, 60, 0.04); border: 1px solid rgba(220, 60, 60, 0.2);
+      border-left: 3px solid #ff6b6b;
+      border-radius: 10px; padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0; font-size: 0.88rem; color: var(--text-muted); line-height: 1.65;
+    }
+    .warn-callout strong { color: #ff9999; }
+
+    .flags-list { list-style: none; padding: 0; margin: 1rem 0; }
+    .flags-list li {
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      background: rgba(220, 60, 60, 0.04);
+      border: 1px solid rgba(220, 60, 60, 0.15);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      position: relative;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .flags-list li::before {
+      content: '🚩';
+      position: absolute;
+      left: 0.85rem;
+      top: 0.7rem;
+      font-size: 1rem;
+    }
+
+    .compare-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+    }
+    .compare-card h4 {
+      font-family: var(--font-display); font-size: 1.2rem;
+      margin-bottom: 0.85rem; letter-spacing: -0.01em;
+    }
+    .compare-card.fija { border-color: rgba(74,222,154,0.25); }
+    .compare-card.fija h4 { color: var(--accent); }
+    .compare-card.variable { border-color: rgba(96,165,250,0.25); }
+    .compare-card.variable h4 { color: #60a5fa; }
+    .compare-card ul { list-style: none; padding: 0; margin: 0; }
+    .compare-card li {
+      padding: 0.4rem 0 0.4rem 1.2rem;
+      position: relative; font-size: 0.85rem; color: var(--text-muted); line-height: 1.55;
+    }
+    .compare-card li::before {
+      content: '→'; position: absolute; left: 0; color: var(--accent);
+    }
+
+    .toc {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc h3 {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-subtle);
+      margin-bottom: 0.85rem;
+    }
+    .toc ol {
+      list-style: none; padding: 0; margin: 0;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.4rem;
+    }
+    .toc li a {
+      display: block; padding: 0.5rem 0.75rem;
+      color: var(--text-muted); text-decoration: none;
+      border-radius: 6px; font-size: 0.85rem;
+      transition: all var(--transition);
+    }
+    .toc li a:hover { background: var(--accent-dim); color: var(--accent); }
+    .toc-num {
+      display: inline-block; width: 22px; color: var(--accent);
+      font-family: var(--font-mono); font-size: 0.78rem;
+    }
+
+    .cta-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent-dim); color: var(--accent);
+      border: 1px solid rgba(74,222,154,0.25); border-radius: 8px;
+      padding: 0.6rem 1.1rem;
+      font-family: var(--font-body); font-weight: 500; font-size: 0.88rem;
+      text-decoration: none; margin-top: 0.5rem;
+      transition: all var(--transition);
+    }
+    .cta-link:hover { background: var(--accent); color: var(--bg); }
+
+    .quiz-teaser {
+      background: linear-gradient(135deg, #11141a, #0f1820);
+      border: 1px solid rgba(96,165,250,0.25);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .quiz-teaser h3 {
+      font-family: var(--font-display); font-size: 1.4rem;
+      letter-spacing: -0.01em; margin-bottom: 0.5rem;
+    }
+    .quiz-teaser p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin-bottom: 1rem; }
+    .coming-soon {
+      display: inline-block;
+      background: rgba(96,165,250,0.15); color: #60a5fa;
+      border: 1px solid rgba(96,165,250,0.3); border-radius: 20px;
+      padding: 0.3rem 0.85rem;
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link active">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="conceptos.html">Conceptos</a><span>/</span>Empezar a invertir</p>
+        <h1 class="page-title">Empezar a invertir 🚀</h1>
+        <p class="page-subtitle">Guía completa para quienes nunca invirtieron. Sin tecnicismos innecesarios, con foco en lo que <strong>realmente importa</strong>: cómo no caer en estafas, qué instrumentos existen y cómo dar tus primeros pasos en serio.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:6rem;max-width:880px">
+
+      <!-- CTA a otros conceptos -->
+      <a href="conceptos.html" style="display:flex;align-items:center;gap:1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.4rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap;margin-bottom:1.5rem" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:1.5rem;flex-shrink:0">📚</div>
+        <div style="flex:1;min-width:240px">
+          <p style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.25rem">¿Querés profundizar?</p>
+          <p style="font-size:0.92rem;color:var(--text);font-weight:500;line-height:1.45">Más conceptos de economía, finanzas y macro <span style="color:var(--text-muted);font-weight:400">— inflación, tipos de cambio, PBI, FED, riesgo país, múltiplos…</span></p>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);white-space:nowrap">Ver glosario →</span>
+      </a>
+
+      <!-- Tabla de contenidos -->
+      <div class="toc">
+        <h3>En esta guía</h3>
+        <ol>
+          <li><a href="#miedo"><span class="toc-num">0.</span> ¿Te da miedo invertir?</a></li>
+          <li><a href="#donde"><span class="toc-num">1.</span> ¿Dónde se invierte?</a></li>
+          <li><a href="#confiable"><span class="toc-num">2.</span> ¿Qué broker es confiable?</a></li>
+          <li><a href="#banderas"><span class="toc-num">3.</span> Banderas rojas de estafas</a></li>
+          <li><a href="#fija-variable"><span class="toc-num">4.</span> Renta fija vs. renta variable</a></li>
+          <li><a href="#cuanto"><span class="toc-num">5.</span> ¿Cuánto invertir?</a></li>
+          <li><a href="#byma"><span class="toc-num">6.</span> ¿Qué es BYMA?</a></li>
+          <li><a href="#custodia"><span class="toc-num">7.</span> Custodia: Caja de Valores</a></li>
+          <li><a href="#control"><span class="toc-num">8.</span> Controlar tus inversiones</a></li>
+          <li><a href="#impuestos"><span class="toc-num">9.</span> Impuestos básicos</a></li>
+        </ol>
+      </div>
+
+      <!-- 0. ¿Te da miedo invertir? -->
+      <section class="step-section" id="miedo">
+        <h2 class="step-title"><span class="step-num">0</span>¿Te da miedo invertir?</h2>
+        <div class="step-body">
+          <p>Es lo más común que escuchamos: <strong>"tengo miedo de perder la plata"</strong>. Pero hay algo que casi nadie te dice — <strong>no invertir también te hace perder plata</strong>, solo que más despacio y sin que te des cuenta. La inflación se come tus ahorros todos los meses.</p>
+
+          <div class="info-callout">
+            <strong>🧮 Pongámoslo en números:</strong> Si en enero del año pasado tenías $1.000.000 guardados en el cajón (o en una caja de ahorro común que no paga interés), hoy esos pesos compran muchísimas menos cosas. La inflación argentina del último año se llevó una parte enorme de tu poder de compra. <strong>Sin hacer nada, perdiste</strong>.
+          </div>
+
+          <p>La pregunta correcta no es <em>"¿y si pierdo plata invirtiendo?"</em>, sino <em>"¿cuánto ya estoy perdiendo por no invertir?"</em>. Calculalo vos mismo con tus números reales:</p>
+
+          <a href="inflacion.html" class="cta-link">📉 Calcular cuánto perdí ahorrando en pesos →</a>
+
+          <div class="warn-callout" style="margin-top:1.25rem">
+            <strong>⚠ Importante:</strong> invertir <strong>no</strong> significa apostar ni jugar a la ruleta. Existen instrumentos muy conservadores (cuentas remuneradas, plazos fijos, FCI <em>money market</em>) que te protegen de la inflación con riesgo casi nulo. Lo peligroso es <strong>no entender</strong> qué hacés con tu plata, no invertir en sí.
+          </div>
+
+          <p style="margin-top:1.25rem">El objetivo de esta guía es justamente ese: que entiendas qué opciones tenés, de menor a mayor riesgo, y elijas vos con la cabeza fría — no por miedo, no por euforia, no porque te lo dijo alguien en TikTok.</p>
+        </div>
+      </section>
+
+      <!-- Instrumentos fáciles section is added later in the page -->
+      <style>
+        .miedo-quick-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1.25rem; }
+        .miedo-quick-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.2rem; }
+        .miedo-quick-card h4 { font-size:0.95rem; margin-bottom:0.4rem; }
+        .miedo-quick-card p { color:var(--text-muted); font-size:0.82rem; line-height:1.55; }
+        .miedo-quick-card .badge { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); }
+      </style>
+
+      <!-- 1. ¿Dónde invertir? -->
+      <section class="step-section" id="donde">
+        <h2 class="step-title"><span class="step-num">1</span>¿Dónde se invierte?</h2>
+        <div class="step-body">
+          <p>En Argentina, para comprar acciones, bonos, Cedears, dólar MEP o cualquier instrumento del mercado de capitales, <strong>necesitás abrir una cuenta en un broker</strong> (también llamado ALYC: <em>Agente de Liquidación y Compensación</em>). El broker es el intermediario que ejecuta tus órdenes en BYMA.</p>
+          <p>No podés operar directamente en la bolsa — siempre hay un broker en el medio. Acá tenés un comparador con los principales brokers argentinos, sus comisiones y planes:</p>
+          <a href="brokers.html" class="cta-link">⚖️ Ver comparador de brokers →</a>
+        </div>
+      </section>
+
+      <!-- 2. ¿Qué broker es confiable? -->
+      <section class="step-section" id="confiable">
+        <h2 class="step-title"><span class="step-num">2</span>¿Qué broker es confiable?</h2>
+        <div class="step-body">
+          <p>La regla básica: <strong>tu broker tiene que estar regulado y registrado en la CNV</strong> (Comisión Nacional de Valores). Si no aparece en el listado oficial, no es un broker legítimo — puede ser una estafa.</p>
+          <div class="info-callout">
+            <strong>✓ Verificá en el registro oficial:</strong> entrá a <a href="https://www.cnv.gov.ar/sitioWeb/RegistrosPublicos/Agentes" target="_blank" rel="noopener noreferrer">cnv.gov.ar/sitioWeb/RegistrosPublicos/Agentes</a> y buscá el nombre del broker. Si no figura, no operes con ellos.
+          </div>
+          <p>Lo mismo aplica para <strong>asesores financieros</strong>: deben estar matriculados como <em>Idóneo del Mercado de Capitales</em> en la CNV. Si alguien se presenta como "asesor de inversiones" pero no tiene matrícula, no es legal que cobre por ese servicio.</p>
+          <a href="https://www.cnv.gov.ar/sitioWeb/RegistrosPublicos/Agentes" class="cta-link" target="_blank" rel="noopener noreferrer">🔍 Verificar matrícula de asesores en CNV →</a>
+        </div>
+      </section>
+
+      <!-- 3. Banderas rojas -->
+      <section class="step-section" id="banderas">
+        <h2 class="step-title"><span class="step-num">3</span>Banderas rojas de estafas</h2>
+        <div class="step-body">
+          <p>Si alguien (persona, post, anuncio, mensaje) te promete cualquiera de estas cosas, <strong>desconfiá inmediatamente</strong>:</p>
+          <ul class="flags-list">
+            <li><strong>"Rendimiento asegurado del X%"</strong> — en mercados de capitales <strong>nada está asegurado</strong>. Solo el plazo fijo bancario tiene rendimiento garantizado (y es bajo).</li>
+            <li><strong>"Poné X plata y ganás Y"</strong> — esquemas piramidales clásicos. Si fuera real, todo el mundo lo haría.</li>
+            <li><strong>"Te enseño a invertir, pasame plata y la opero por vos"</strong> — un asesor matriculado <strong>nunca</strong> toca tu plata; solo te asesora. La plata queda en tu cuenta comitente.</li>
+            <li><strong>Promociones por Instagram / TikTok / WhatsApp sin matrícula visible</strong> — verificá siempre la matrícula CNV antes de mandar plata.</li>
+            <li><strong>"Inversión cripto con retorno garantizado mensual"</strong> — cripto es muy volátil y nada está garantizado. Si te aseguran un % fijo mensual, es estafa.</li>
+            <li><strong>Plataformas que no figuran en CNV</strong> — apps que prometen rendimientos altos pero no aparecen en el registro de la CNV.</li>
+            <li><strong>Presión para decidir rápido</strong> — "es por hoy", "se cierra la oportunidad". Las inversiones legítimas no funcionan así.</li>
+          </ul>
+          <div class="warn-callout">
+            <strong>⚠ Regla de oro:</strong> tu plata <strong>siempre</strong> tiene que quedar en tu cuenta comitente a tu nombre, en una entidad regulada por CNV. Si te piden transferir a una cuenta personal, billetera virtual rara o cualquier intermediario que no sea tu broker, es estafa.
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Renta fija vs variable -->
+      <section class="step-section" id="fija-variable">
+        <h2 class="step-title"><span class="step-num">4</span>Renta fija vs. renta variable</h2>
+        <div class="step-body">
+          <p>Los instrumentos del mercado se dividen en dos grandes categorías según cómo se sabe (o no) el rendimiento futuro:</p>
+
+          <div class="compare-grid">
+            <div class="compare-card fija">
+              <h4>📜 Renta fija</h4>
+              <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.6;margin-bottom:0.85rem">Sabés <strong style="color:var(--text)">desde el momento de la compra</strong> cuánto te van a pagar y cuándo.</p>
+              <ul>
+                <li>Bonos del gobierno (AL30, GD30, Bonares, Globales)</li>
+                <li>Obligaciones Negociables (ON) de empresas</li>
+                <li>Letras del Tesoro (LECAP, LELIQ)</li>
+                <li>Plazo fijo bancario</li>
+                <li>Cauciones bursátiles</li>
+              </ul>
+              <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.6;margin-top:0.85rem"><strong style="color:var(--text)">Riesgo principal:</strong> que el emisor no pague (default). Por eso bonos del estado argentino rinden mucho más que bonos de Estados Unidos.</p>
+              <a href="renta-fija.html" class="cta-link" style="margin-top:0.85rem;font-size:0.82rem">📜 Calculadora de Renta Fija →</a>
+            </div>
+
+            <div class="compare-card variable">
+              <h4>📈 Renta variable</h4>
+              <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.6;margin-bottom:0.85rem">El rendimiento <strong style="color:var(--text)">depende de cómo le vaya a la empresa</strong>. No sabés cuánto vas a ganar (o perder).</p>
+              <ul>
+                <li>Acciones argentinas (GGAL, YPF, Pampa, etc.)</li>
+                <li>Cedears (acciones de EE.UU. en pesos: AAPL, TSLA, etc.)</li>
+                <li>ETFs (canastas de activos)</li>
+                <li>Criptomonedas</li>
+              </ul>
+              <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.6;margin-top:0.85rem"><strong style="color:var(--text)">Es para perfiles más agresivos:</strong> puede subir mucho, pero también puede caer fuerte. Históricamente da el mayor rendimiento a largo plazo si tenés paciencia.</p>
+              <a href="dividendos.html" class="cta-link" style="margin-top:0.85rem;font-size:0.82rem">💵 Calculadora de Dividendos →</a>
+            </div>
+          </div>
+
+          <div class="info-callout">
+            <strong>Tip para empezar:</strong> los principiantes suelen arrancar con una mezcla, por ejemplo 60% renta fija (más estable) + 40% renta variable (más rendimiento potencial). Cuanto más jóven sos y más largo tu horizonte, más variable podés tener.
+          </div>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem">
+            <a href="caucion.html" class="cta-link" style="font-size:0.82rem">🏛 Caución bursátil →</a>
+            <a href="interes-simple.html" class="cta-link" style="font-size:0.82rem">◎ Plazo fijo →</a>
+            <a href="conversion-tasas.html" class="cta-link" style="font-size:0.82rem">↔ TNA ↔ TEA →</a>
+          </div>
+
+          <div class="info-callout" style="margin-top:1.5rem">
+            <strong>👉 ¿Querés algo más simple todavía?</strong> Si todo esto te parece mucho, hay tres puertas de entrada pensadas para principiantes que <strong>no requieren saber mirar el mercado</strong>:
+            <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.8rem">
+              <a href="etfs-fci.html" class="cta-link" style="font-size:0.82rem">💎 ETFs y FCI: invertir sin elegir acciones →</a>
+              <a href="cuentas-remuneradas.html" class="cta-link" style="font-size:0.82rem">💳 Cuentas remuneradas (MP, Naranja X...) →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. ¿Cuánto invertir? -->
+      <section class="step-section" id="cuanto">
+        <h2 class="step-title"><span class="step-num">5</span>¿Cuánto invertir?</h2>
+        <div class="step-body">
+          <p><strong>Regla básica</strong>: solo invertí dinero que no necesitás en el corto plazo (mínimo 6-12 meses). Si te hace falta para vivir o emergencias, no lo metas al mercado.</p>
+          <p>Una guía aproximada:</p>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">Fondo de emergencia primero:</strong> tené 3-6 meses de gastos en efectivo o plazo fijo antes de invertir en cualquier otra cosa.</li>
+            <li><strong style="color:var(--text)">Después invertí lo que sobra:</strong> 10-20% de tus ingresos mensuales es un buen punto de partida.</li>
+            <li><strong style="color:var(--text)">Empezá chico:</strong> $50.000 o $100.000 alcanza para comprar varios Cedears y aprender cómo funciona la operatoria sin tener miedo de perderlo todo.</li>
+          </ul>
+          <div class="info-callout">
+            <strong>El poder del interés compuesto:</strong> aportando $20.000 por mes al 8% anual real, en 30 años terminás con más de $30 millones. Probá vos mismo con la calculadora:
+          </div>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.5rem">
+            <a href="interes-compuesto.html" class="cta-link" style="font-size:0.82rem">⬡ Interés Compuesto →</a>
+            <a href="meta-financiera.html" class="cta-link" style="font-size:0.82rem">◇ Meta Financiera →</a>
+            <a href="fire.html" class="cta-link" style="font-size:0.82rem">🔥 Regla del 4% (FIRE) →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. BYMA -->
+      <section class="step-section" id="byma">
+        <h2 class="step-title"><span class="step-num">6</span>¿Qué es BYMA?</h2>
+        <div class="step-body">
+          <p><strong>BYMA</strong> (Bolsas y Mercados Argentinos S.A.) es la bolsa de valores de Argentina. Es el lugar donde se compran y venden las acciones, bonos, Cedears, etc. — pero vos no operás directamente ahí.</p>
+          <p>El flujo es así: <strong>vos</strong> → tu <strong>broker</strong> → manda la orden a <strong>BYMA</strong> → se ejecuta la compra/venta → te liquida en tu cuenta comitente.</p>
+          <p>BYMA cobra un pequeño cargo en cada operación (los <strong>"derechos de mercado"</strong>, típicamente ~0,008%) que se suma a la comisión del broker. Es el precio por usar la infraestructura del mercado.</p>
+        </div>
+      </section>
+
+      <!-- 7. Custodia / Caja de Valores -->
+      <section class="step-section" id="custodia">
+        <h2 class="step-title"><span class="step-num">7</span>Custodia: ¿dónde está tu plata?</h2>
+        <div class="step-body">
+          <p>Una de las cosas más importantes que entender: <strong>cuando comprás un activo, NO queda en el broker. Queda a tu nombre en Caja de Valores S.A.</strong></p>
+          <p>Caja de Valores es la entidad nacional que custodia los títulos de todos los inversores argentinos. Tu broker solo es un intermediario que ejecuta la orden — los activos quedan a tu nombre, en una "cuenta comitente" que es tuya.</p>
+          <div class="info-callout">
+            <strong>¿Y si el broker quiebra?</strong> Tus activos están a salvo. Podés pedir a Caja de Valores que los transfiera a otro broker y los seguís teniendo a tu nombre. La plata en pesos/dólares que tengas <em>sin invertir</em> en el broker sí puede tener riesgo de contraparte — por eso conviene tenerla invertida (aunque sea en caución 1 día o un fondo money market).
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Controlar inversiones -->
+      <section class="step-section" id="control">
+        <h2 class="step-title"><span class="step-num">8</span>Cómo controlar tus inversiones</h2>
+        <div class="step-body">
+          <p>Algunos consejos para no enloquecer y tomar buenas decisiones:</p>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">No mires el precio todos los días.</strong> Si invertís a largo plazo (5+ años), revisar diariamente solo genera ansiedad y malas decisiones impulsivas.</li>
+            <li><strong style="color:var(--text)">Llevá un registro de tus compras.</strong> Anotá qué compraste, cuándo y a qué precio. Acá tenés una herramienta:</li>
+          </ul>
+          <a href="mis-portafolios.html" class="cta-link">📊 Mis Portafolios (Beta) →</a>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">Definí una tesis antes de comprar.</strong> ¿Por qué comprás esto? ¿Cuándo lo vendés? Si no podés contestarlo, no compres todavía.</li>
+            <li><strong style="color:var(--text)">Reviá tu portafolio cada 3-6 meses</strong> para rebalancear (volver a las proporciones que querés mantener).</li>
+            <li><strong style="color:var(--text)">No persigas modas.</strong> Si todo el mundo habla de algo, probablemente ya esté caro.</li>
+          </ul>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem">
+            <a href="portafolio.html" class="cta-link" style="font-size:0.82rem">📊 Simulador de portafolio →</a>
+            <a href="markowitz.html" class="cta-link" style="font-size:0.82rem">🎯 Markowitz (avanzado) →</a>
+            <a href="roi.html" class="cta-link" style="font-size:0.82rem">📈 Calcular ROI →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Impuestos -->
+      <section class="step-section" id="impuestos">
+        <h2 class="step-title"><span class="step-num">9</span>Impuestos básicos</h2>
+        <div class="step-body">
+          <div class="warn-callout">
+            <strong>⚠ Importante:</strong> los impuestos cambian seguido y cada situación es particular. <strong>Consultá siempre con un contador</strong> antes de tomar decisiones fiscales. Acá tenés solo una guía orientativa.
+          </div>
+          <p>Para personas humanas residentes en Argentina, los impuestos más comunes sobre inversiones son:</p>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.85;margin:1rem 0">
+            <li><strong style="color:var(--text)">Bienes Personales:</strong> grava el patrimonio total al 31/12 de cada año (incluye acciones, bonos, plazos fijos, etc.) si supera el mínimo no imponible. Acciones argentinas <strong>están exentas</strong> de Bienes Personales (las paga la empresa por vos), pero Cedears y bonos extranjeros sí pagan.</li>
+            <li><strong style="color:var(--text)">Ganancia por compra-venta:</strong> el resultado de comprar y vender en pesos en BYMA <strong>está exento</strong> para personas humanas en el caso de acciones, Cedears y bonos. Sí pagan ganancias los plazos fijos en moneda extranjera y operaciones en el exterior.</li>
+            <li><strong style="color:var(--text)">Dividendos:</strong> pagan 7% de retención de Ganancias (acciones argentinas) o 15% para acciones del exterior vía Cedear.</li>
+            <li><strong style="color:var(--text)">Intereses de bonos / plazo fijo en pesos:</strong> exentos.</li>
+            <li><strong style="color:var(--text)">Intereses de bonos en dólares:</strong> exentos si son emitidos por el Estado argentino.</li>
+            <li><strong style="color:var(--text)">Ingresos brutos:</strong> en algunas provincias hay retención de IIBB sobre operaciones bursátiles. CABA tiene algunas exenciones.</li>
+          </ul>
+          <p>El broker te emite a fin de año un <strong>certificado de retenciones e ingresos</strong> que tu contador usa para presentar la declaración jurada.</p>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem">
+            <a href="salario.html" class="cta-link" style="font-size:0.82rem">💼 Calcular salario neto / impuestos →</a>
+            <a href="inflacion.html" class="cta-link" style="font-size:0.82rem">📉 Inflación / poder adquisitivo →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quiz teaser -->
+      <div class="quiz-teaser">
+        <span class="coming-soon">Próximamente</span>
+        <h3 style="margin-top:0.85rem">Quiz: ¿Qué tipo de inversor sos?</h3>
+        <p>Estamos preparando un test para que descubras tu perfil (conservador, moderado o agresivo) y qué instrumentos se ajustan mejor a tu personalidad y horizonte.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Empezar a invertir</h3>
+        <ul>
+          <li><a href="empezar-a-invertir.html">Guía para principiantes</a></li>
+          <li><a href="brokers.html">Comparador de Brokers</a></li>
+          <li><a href="conceptos.html">Conceptos financieros</a></li>
+          <li><a href="mis-portafolios.html">Mis Portafolios</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=2"></script>
+</body>
+</html>

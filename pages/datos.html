@@ -343,6 +343,9 @@
         <a href="calculadoras.html" class="nav-link">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
         <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
         <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
         <a href="noticias.html" class="nav-link">Noticias</a>
         <a href="datos.html" class="nav-link active">Datos</a>
@@ -396,17 +399,6 @@
         <div class="datos-grid wide" id="grid-dolar" aria-live="polite" aria-label="Cotizaciones del dólar"></div>
       </div>
 
-      <!-- BCRA -->
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">🏛</span>
-          <h2 class="dsec-title">BCRA — Banco Central</h2>
-          <span class="dsec-src">BCRA Oficial · ArgentinaDatos</span>
-          <span class="dsec-upd" id="bcra-upd"></span>
-        </div>
-        <div class="datos-grid" id="grid-bcra" aria-live="polite"></div>
-      </div>
-
       <!-- INDEC -->
       <div class="container datos-section">
         <div class="datos-sec-hdr">
@@ -415,21 +407,10 @@
           <span class="dsec-src">INDEC · ArgentinaDatos · datos.gob.ar</span>
         </div>
         <div class="datos-grid" id="grid-indec" aria-live="polite"></div>
-      </div>
-
-      <!-- FISCAL -->
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">💼</span>
-          <h2 class="dsec-title">Sector Fiscal</h2>
-          <span class="dsec-src">Ministerio de Economía · datos.gob.ar</span>
-        </div>
-        <div class="datos-grid" id="grid-fiscal" aria-live="polite"></div>
         <div class="info-box">
-          ℹ️ Los datos fiscales son publicados mensualmente por la Secretaría de Hacienda con un rezago de 30–45 días.
-          Fuentes oficiales: <a href="https://www.indec.gob.ar" target="_blank" rel="noopener">INDEC</a> ·
-          <a href="https://www.argentina.gob.ar/economia" target="_blank" rel="noopener">Ministerio de Economía</a> ·
-          <a href="https://www.bcra.gob.ar" target="_blank" rel="noopener">BCRA</a>
+          ℹ️ Datos oficiales del INDEC vía ArgentinaDatos y datos.gob.ar.
+          Fuentes: <a href="https://www.indec.gob.ar" target="_blank" rel="noopener">INDEC</a> ·
+          <a href="https://argentinadatos.com" target="_blank" rel="noopener">ArgentinaDatos</a>
         </div>
       </div>
 
@@ -541,11 +522,11 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 BB Financial · Solo con fines educativos, no constituye asesoramiento financiero.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js?v=2"></script>
   <script src="../js/ticker.js"></script>
   <script>
   /* ==============================================
@@ -700,11 +681,9 @@
   }
 
   /* ══════════════════════════════════════════
-     FETCH: BCRA
-     Primary:  https://api.argentinadatos.com/v1/finanzas/reservas
-     Official: https://api.bcra.gob.ar/estadisticas/v3.0/principalesvariables
+     FETCH: BCRA (deshabilitado — APIs inestables)
   ══════════════════════════════════════════ */
-  async function loadBCRA() {
+  async function loadBCRA_DISABLED() {
     document.getElementById('grid-bcra').innerHTML = skeleton(4);
     const cards = [];
 
@@ -898,22 +877,30 @@
         }));
       }
     } catch {}
-    /* Riesgo País — ArgentinaDatos */
+    /* Riesgo País Argentina — ArgentinaDatos (EMBI+ JP Morgan) */
+    let riesgoOk = false;
     try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/riesgo-pais', { signal: AbortSignal.timeout(9000) });
+      const r = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(9000) });
       if (r.ok) {
         const arr = await r.json();
         if (arr?.length >= 2) {
           const last = arr.at(-1), prev = arr.at(-2);
-          cards.push(datoCard({
-            cat:'Mercado', name:'Riesgo País',
-            value: fmtNum(last.valor, 0) + ' pts',
-            changeAbs: last.valor - prev.valor,
-            period: fmtDate(last.fecha), source:'JP Morgan', cls:'red-card'
-          }));
+          if (last?.valor != null) {
+            cards.push(datoCard({
+              cat:'Mercado · 🇦🇷 Argentina', name:'Riesgo País (EMBI+)',
+              value: fmtNum(last.valor, 0), unit:'pts',
+              changeAbs: prev?.valor != null ? last.valor - prev.valor : null,
+              sub:'Spread sobre bonos del Tesoro EE.UU.',
+              period: fmtDate(last.fecha), source:'JP Morgan', cls:'red-card'
+            }));
+            riesgoOk = true;
+          }
         }
       }
     } catch {}
+    if (!riesgoOk) {
+      cards.push(errorCard('🇦🇷 Riesgo País', 'API temporalmente no disponible'));
+    }
 
     /* Valor UVA — ArgentinaDatos */
     try {
@@ -944,10 +931,9 @@
   }
 
   /* ══════════════════════════════════════════
-     FETCH: FISCAL
-     datos.gob.ar series fiscales SPNF
+     FETCH: FISCAL (deshabilitado — APIs inestables)
   ══════════════════════════════════════════ */
-  async function loadFiscal() {
+  async function loadFiscal_DISABLED() {
     document.getElementById('grid-fiscal').innerHTML = skeleton(3);
     const cards = [];
 
@@ -1243,7 +1229,7 @@
   });
 
   /* Carga inicial: Argentina */
-  Promise.all([loadDolares(), loadBCRA(), loadINDEC(), loadFiscal()]);
+  Promise.all([loadDolares(), loadINDEC()]);
 
   </script>
 </body>

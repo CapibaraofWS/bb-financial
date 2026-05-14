@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Página no encontrada — BB Financial</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .err-wrap {
+      min-height: calc(100vh - 200px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .err-card {
+      max-width: 820px; text-align: center;
+    }
+    .err-hero-img {
+      max-width: 100%;
+      height: auto;
+      max-height: 380px;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .err-code {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 14vw, 9rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 60px rgba(74,222,154,0.2);
+      display: none;
+    }
+    .err-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .err-msg {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .err-actions {
+      display: flex; gap: 0.85rem; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .err-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: 8px;
+      font-family: var(--font-body); font-size: 0.92rem; font-weight: 500;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+    .err-btn-primary {
+      background: var(--accent); color: var(--bg);
+    }
+    .err-btn-primary:hover {
+      background: #5ee0a8;
+      transform: translateY(-2px);
+    }
+    .err-btn-secondary {
+      background: var(--bg-card); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .err-btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .err-popular {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .err-popular p {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 1rem;
+    }
+    .err-links {
+      display: flex; gap: 0.5rem; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .err-link {
+      display: inline-block;
+      padding: 0.45rem 0.95rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+    .err-link:hover {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-color: rgba(74,222,154,0.3);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo"><img src="assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="/" class="nav-link">Inicio</a>
+        <a href="/pages/calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="/pages/conceptos.html" class="nav-link">Conceptos</a>
+        <a href="/pages/brokers.html" class="nav-link">Brokers</a>
+        <a href="/pages/noticias.html" class="nav-link">Noticias</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="err-wrap">
+      <div class="err-card">
+        <img src="img/imagen-error-404.png" alt="404 — Conexión perdida en la bolsa" class="err-hero-img" />
+        <p class="err-msg">
+          La página que buscás no existe o fue movida. Quizás escribiste mal la URL o seguiste un link que ya no es válido.<br><br>
+          Volvé al inicio o explorá nuestras herramientas más usadas.
+        </p>
+        <div class="err-actions">
+          <a href="/" class="err-btn err-btn-primary">← Volver al inicio</a>
+          <a href="/pages/calculadoras.html" class="err-btn err-btn-secondary">Ver calculadoras</a>
+        </div>
+
+        <div class="err-popular">
+          <p>Páginas populares</p>
+          <div class="err-links">
+            <a href="/pages/empezar-a-invertir.html" class="err-link">🚀 Empezar a invertir</a>
+            <a href="/pages/brokers.html" class="err-link">⚖️ Brokers</a>
+            <a href="/pages/renta-fija.html" class="err-link">📜 Renta Fija</a>
+            <a href="/pages/mis-portafolios.html" class="err-link">📊 Mis Portafolios</a>
+            <a href="/pages/noticias.html" class="err-link">📰 Noticias</a>
+            <a href="/pages/datos.html" class="err-link">📈 Datos macro</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="logo"><img src="assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+</body>
+</html>

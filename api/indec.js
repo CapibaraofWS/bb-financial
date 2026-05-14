@@ -1,9 +1,12 @@
 // Soporta ?series=id1,id2 para pedir series del portal de datos abiertos
+import { denyExternalOrigin } from './_security.js';
+
 export default async function handler(req, res) {
+  if (denyExternalOrigin(req, res)) return;
   const series = req.query.series;
 
-  if (!series) {
-    return res.status(400).json({ error: 'Parámetro series requerido' });
+  if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {
+    return res.status(400).json({ error: 'Parámetro series inválido' });
   }
 
   try {

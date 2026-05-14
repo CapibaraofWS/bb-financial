@@ -28,15 +28,19 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a>
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
       <nav class="main-nav">
         <a href="../index.html" class="nav-link">Inicio</a>
         <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
         <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
         <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
         <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
         <a href="noticias.html" class="nav-link">Noticias</a>
         <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
         <span class="nav-sep" aria-hidden="true"></span>
         <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
       </nav>
@@ -205,7 +209,7 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img"/></a><p>Herramientas financieras gratuitas.</p></div>
+      <div class="footer-brand"><a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a><p>Herramientas financieras gratuitas.</p></div>
       <nav class="footer-nav"><h3>Calculadoras</h3><ul>
         <li><a href="calculadoras.html">Todas las calculadoras</a></li>
         <li><a href="conversion-tasas.html">Conversión de Tasas</a></li>
@@ -213,10 +217,10 @@
         <li><a href="prestamo.html">Préstamo / Cuota</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p>© 2026 BB Financial · Solo con fines educativos, no constituye asesoramiento financiero.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js?v=2"></script>
   <script>
     function switchTab(name, btn) {
       ['tna-tea','tea-tna','periodica'].forEach(t => document.getElementById('tab-'+t).style.display='none');
@@ -242,9 +246,14 @@
       document.getElementById('formula1').textContent    = `TEA = (1 + ${tna.toFixed(2)}% / ${n})^${n} − 1 = ${tea.toFixed(4)}%`;
       // Table
       const freqs = [{n:365,l:'Diaria'},{n:12,l:'Mensual'},{n:4,l:'Trimestral'},{n:2,l:'Semestral'},{n:1,l:'Anual'}];
-      document.getElementById('equiv-body1').innerHTML = freqs.map(f =>
-        `<tr><td>${f.l} (${f.n}/año)</td><td>${((Math.pow(1+r/f.n,f.n)-1)*100).toFixed(4)}%</td></tr>`
-      ).join('');
+      const tb1 = document.getElementById('equiv-body1');
+      tb1.textContent = '';
+      freqs.forEach(f => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td'); td1.textContent = `${f.l} (${f.n}/año)`;
+        const td2 = document.createElement('td'); td2.textContent = `${((Math.pow(1+r/f.n,f.n)-1)*100).toFixed(4)}%`;
+        tr.append(td1, td2); tb1.appendChild(tr);
+      });
     }
 
     function calcTeaTna() {
@@ -258,10 +267,15 @@
       document.getElementById('r2-period').textContent = rPer.toFixed(4)+'% / período';
       document.getElementById('r2-tna').textContent    = tna.toFixed(4)+'%';
       const freqs = [{n:365,l:'Diaria'},{n:12,l:'Mensual'},{n:4,l:'Trimestral'},{n:2,l:'Semestral'},{n:1,l:'Anual'}];
-      document.getElementById('equiv-body2').innerHTML = freqs.map(f => {
+      const tb2 = document.getElementById('equiv-body2');
+      tb2.textContent = '';
+      freqs.forEach(f => {
         const rp = (Math.pow(1+T,1/f.n)-1)*100;
-        return `<tr><td>${f.l}</td><td>${(f.n*rp).toFixed(4)}%</td></tr>`;
-      }).join('');
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td'); td1.textContent = f.l;
+        const td2 = document.createElement('td'); td2.textContent = `${(f.n*rp).toFixed(4)}%`;
+        tr.append(td1, td2); tb2.appendChild(tr);
+      });
     }
 
     function calcPeriodica() {
@@ -276,10 +290,15 @@
       document.getElementById('rtp-tea').textContent    = tea.toFixed(4)+'%';
       const periods = [{d:1,l:'Diaria'},{d:7,l:'Semanal'},{d:30,l:'Mensual'},{d:90,l:'Trimestral'},{d:180,l:'Semestral'},{d:365,l:'Anual'}];
       const tea100  = tea/100;
-      document.getElementById('equiv-body3').innerHTML = periods.map(p => {
+      const tb3 = document.getElementById('equiv-body3');
+      tb3.textContent = '';
+      periods.forEach(p => {
         const eq = (Math.pow(1+tea100, p.d/365)-1)*100;
-        return `<tr><td>${p.l}</td><td>${eq.toFixed(4)}%</td></tr>`;
-      }).join('');
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td'); td1.textContent = p.l;
+        const td2 = document.createElement('td'); td2.textContent = `${eq.toFixed(4)}%`;
+        tr.append(td1, td2); tb3.appendChild(tr);
+      });
     }
 
     calcTnaTea();

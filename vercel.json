@@ -20,8 +20,12 @@
           "value": "camera=(), microphone=(), geolocation=()"
         },
         {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.allorigins.win api.worldbank.org open.er-api.com news.google.com www.ambito.com www.cronista.com www.infobae.com; frame-ancestors 'none'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.worldbank.org open.er-api.com api.alternative.me api.allorigins.win; frame-ancestors 'none'"
         }
       ]
     }
