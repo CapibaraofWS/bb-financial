@@ -1,5 +1,21 @@
-// FinCalc — main.js v5
-window.__BB_MAIN_JS_VERSION = 'v5';
+// FinCalc — main.js v6
+window.__BB_MAIN_JS_VERSION = 'v6';
+
+// ============================================================
+// GOOGLE ANALYTICS 4 — G-1SF925SGNN
+// ============================================================
+(function loadGA() {
+  if (window.__gaLoaded) return;
+  window.__gaLoaded = true;
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', 'G-1SF925SGNN');
+})();
 
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
@@ -9,10 +25,11 @@ window.__BB_MAIN_JS_VERSION = 'v5';
   // Path is relative to where the document lives. Pages under /pages/ need '../assets'.
   const inPages = location.pathname.includes('/pages/');
   const base = inPages ? '../assets/' : 'assets/';
+  // Only JPG — browsers prefer SVG when both present and ours is the small old logo
   const links = [
-    { rel: 'icon', type: 'image/jpeg', href: base + 'favicon.jpg' },
-    { rel: 'icon', type: 'image/svg+xml', href: base + 'logo-bb.svg' },
-    { rel: 'apple-touch-icon', href: base + 'favicon.jpg' },
+    { rel: 'icon', type: 'image/jpeg', sizes: '512x512', href: base + 'favicon.jpg' },
+    { rel: 'shortcut icon', type: 'image/jpeg', href: base + 'favicon.jpg' },
+    { rel: 'apple-touch-icon', sizes: '180x180', href: base + 'favicon.jpg' },
   ];
   links.forEach(l => {
     const link = document.createElement('link');

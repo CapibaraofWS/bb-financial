@@ -25,7 +25,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.worldbank.org open.er-api.com api.alternative.me api.allorigins.win; frame-ancestors 'none'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.worldbank.org open.er-api.com api.alternative.me api.allorigins.win www.google-analytics.com analytics.google.com region1.google-analytics.com; frame-ancestors 'none'"
         }
       ]
     }
