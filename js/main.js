@@ -1,21 +1,7 @@
-// FinCalc — main.js v6
-window.__BB_MAIN_JS_VERSION = 'v6';
+// FinCalc — main.js v7
+window.__BB_MAIN_JS_VERSION = 'v7';
 
-// ============================================================
-// GOOGLE ANALYTICS 4 — G-1SF925SGNN
-// ============================================================
-(function loadGA() {
-  if (window.__gaLoaded) return;
-  window.__gaLoaded = true;
-  const s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN';
-  document.head.appendChild(s);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function(){ window.dataLayer.push(arguments); };
-  window.gtag('js', new Date());
-  window.gtag('config', 'G-1SF925SGNN');
-})();
+// GA4 is now loaded inline at the top of every <head> (per Google's recommendation).
 
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
