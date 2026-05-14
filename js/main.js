@@ -1,5 +1,5 @@
-// FinCalc — main.js v8
-window.__BB_MAIN_JS_VERSION = 'v8';
+// FinCalc — main.js v9
+window.__BB_MAIN_JS_VERSION = 'v9';
 
 // GA4 is now loaded inline at the top of every <head> (per Google's recommendation).
 
@@ -57,6 +57,7 @@ window.__BB_MAIN_JS_VERSION = 'v8';
         { href: pagesBase + 'etfs-fci.html',           label: 'ETFs y FCI',          icon: '💎' },
         { href: pagesBase + 'cuentas-remuneradas.html',label: 'Cuentas remuneradas', icon: '💳' },
         { href: pagesBase + 'cuanto-perdi.html',       label: '¿Cuánto perdí ahorrando?', icon: '🔥' },
+        { href: pagesBase + 'comparador-dolares.html', label: 'Tipos de dólar',           icon: '💵' },
       ],
     },
     {
@@ -81,11 +82,8 @@ window.__BB_MAIN_JS_VERSION = 'v8';
       kind: 'dropdown',
       title: 'Comparadores',
       items: [
-        { href: pagesBase + 'comparador-cuentas.html',    label: 'Cuentas remuneradas',   icon: '💳' },
         { href: pagesBase + 'comparador-dolares.html',    label: 'Tipos de dólar',         icon: '💵' },
-        { href: pagesBase + 'comparador-plazos-fijos.html', label: 'Plazos fijos',         icon: '🏦' },
         { href: pagesBase + 'contado-vs-cuotas.html',     label: 'Contado vs cuotas',      icon: '🛒' },
-        { href: pagesBase + 'comparador-creditos-uva.html', label: 'Créditos UVA',          icon: '🏠' },
       ],
     },
     {
@@ -166,6 +164,7 @@ window.__BB_MAIN_JS_VERSION = 'v8';
   div.innerHTML = `
     <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
+    <a href="https://www.linkedin.com/in/bruno-behr-9647b6217/" target="_blank" rel="noopener noreferrer">💼 LinkedIn — Bruno Behr</a>
   `;
   target.appendChild(div);
 })();
@@ -183,8 +182,8 @@ window.__BB_MAIN_JS_VERSION = 'v8';
     <div class="container donation-inner">
       <div class="donation-text">
         <p class="donation-eyebrow">¿Te sirvió esta herramienta?</p>
-        <h3>Ayudame a comprarme una <em>acción de Apple</em> 🍎</h3>
-        <p class="donation-sub">El sitio es y va a seguir siendo gratis y sin publicidad. Si te sirvió y querés colaborar, podés ayudarme con el valor de un café o el ladrillo de mi futura jubilación.</p>
+        <h3>Sé mi <em>inversionista ángel</em> 👼📈</h3>
+        <p class="donation-sub">El sitio es y va a seguir siendo gratis y sin publicidad. Si te sirvió, sumate con el valor de un café — me ayudás a mantenerlo vivo y a sumar más herramientas.</p>
       </div>
       <div class="donation-buttons">
         <a href="https://cafecito.app/bbfinancial" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">

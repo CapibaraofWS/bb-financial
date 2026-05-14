@@ -42,6 +42,9 @@
         <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-0.02em;margin-bottom:0.6rem">🏦 Plazos Fijos por Banco</h1>
         <p style="color:var(--text-muted);max-width:600px;margin:0 auto;font-size:0.95rem;line-height:1.6">Tasas referenciales de plazo fijo a 30 días en bancos argentinos. Los datos provienen de la BADLAR (BCRA) y reportes públicos de bancos.</p>
         <div class="freshness-badge" id="badge">Cargando BADLAR...</div>
+        <div style="background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.25);border-radius:10px;padding:0.9rem 1.2rem;margin:1.25rem auto;max-width:720px;font-size:0.85rem;color:var(--text-muted);line-height:1.6">
+          <strong style="color:#ffb84d">⚠ Datos referenciales:</strong> las TNAs se calculan a partir del BADLAR del BCRA con offsets aproximados por banco. NO son las tasas reales que cada banco publica en su home banking hoy — son estimaciones. Para el valor real, consultá en la web de cada banco antes de constituir el plazo fijo.
+        </div>
       </div>
     </section>
 
@@ -78,7 +81,7 @@
     <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
   </footer>
 
-  <script src="../js/main.js?v=8"></script>
+  <script src="../js/main.js?v=9"></script>
   <script>
   // Bancos con TNA referencial. Se ajusta dinámicamente al BADLAR si disponible.
   const bancosBase = [
