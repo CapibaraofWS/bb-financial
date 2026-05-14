@@ -1,5 +1,5 @@
-// FinCalc — main.js v3
-window.__BB_MAIN_JS_VERSION = 'v3';
+// FinCalc — main.js v4
+window.__BB_MAIN_JS_VERSION = 'v4';
 
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
@@ -10,9 +10,9 @@ window.__BB_MAIN_JS_VERSION = 'v3';
   const inPages = location.pathname.includes('/pages/');
   const base = inPages ? '../assets/' : 'assets/';
   const links = [
+    { rel: 'icon', type: 'image/jpeg', href: base + 'favicon.jpg' },
     { rel: 'icon', type: 'image/svg+xml', href: base + 'logo-bb.svg' },
-    { rel: 'icon', type: 'image/png', href: base + 'logo-bb.png' },
-    { rel: 'apple-touch-icon', href: base + 'logo-bb.png' },
+    { rel: 'apple-touch-icon', href: base + 'favicon.jpg' },
   ];
   links.forEach(l => {
     const link = document.createElement('link');
