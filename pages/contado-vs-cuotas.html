@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Contado o Cuotas? Calculadora con Inflación — BB Financial</title>
+  <meta name="description" content="Decidí si comprar al contado o en cuotas sin interés conviene de verdad, considerando la inflación que erosiona las cuotas futuras." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .calc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; max-width: 760px; margin: 2rem auto; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    @media (max-width: 640px) { .row3 { grid-template-columns: 1fr; } }
+    .row3 label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); display: block; margin-bottom: 0.35rem; }
+    .row3 input { width: 100%; padding: 0.7rem 0.85rem; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-family: var(--font-body); }
+    .verdict { padding: 1.5rem; border-radius: 12px; text-align: center; margin-top: 1.5rem; }
+    .verdict.cuotas { background: rgba(74,222,154,0.08); border: 1px solid rgba(74,222,154,0.3); }
+    .verdict.contado { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.3); }
+    .verdict h3 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+    .verdict.cuotas h3 { color: var(--accent); }
+    .verdict.contado h3 { color: #ff9999; }
+    .verdict p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; }
+    .verdict p strong { color: var(--text); }
+    .breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-top: 1.25rem; }
+    @media (max-width: 640px) { .breakdown { grid-template-columns: 1fr; } }
+    .mini { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .mini .lbl { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+    .mini .val { font-family: var(--font-display); font-size: 1.3rem; color: var(--text); margin-top: 0.3rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section style="padding:3rem 0 1rem;text-align:center">
+      <div class="container">
+        <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-0.02em;margin-bottom:0.6rem">🛒 ¿Contado o cuotas sin interés?</h1>
+        <p style="color:var(--text-muted);max-width:600px;margin:0 auto;font-size:0.95rem;line-height:1.6">Si te dan cuotas sin interés y tu plata te rinde en una cuenta remunerada, las cuotas suelen convenir más. Calculalo acá:</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="calc-card">
+        <div class="row3">
+          <div>
+            <label>Precio total</label>
+            <input type="number" id="precio" value="500000" min="0" />
+          </div>
+          <div>
+            <label>Cantidad de cuotas</label>
+            <input type="number" id="cuotas" value="6" min="1" max="60" />
+          </div>
+          <div>
+            <label>TNA de tu cuenta (%)</label>
+            <input type="number" id="tna" value="32" step="0.1" min="0" />
+          </div>
+        </div>
+
+        <div id="verdict" class="verdict cuotas">
+          <h3 id="v-title">Calculando...</h3>
+          <p id="v-text">—</p>
+        </div>
+
+        <div class="breakdown">
+          <div class="mini">
+            <div class="lbl">Pagás al contado</div>
+            <div class="val" id="b-contado">$—</div>
+          </div>
+          <div class="mini">
+            <div class="lbl">Costo real cuotas (valor presente)</div>
+            <div class="val" id="b-cuotas">$—</div>
+          </div>
+        </div>
+
+        <p style="color:var(--text-subtle);font-size:0.78rem;line-height:1.6;margin-top:1.5rem">
+          <strong style="color:var(--text)">Cómo funciona:</strong> calculamos cuánto tendrías que tener hoy invertido a tu TNA para pagar cada cuota futura. Esa suma es el "valor presente" real de pagar en cuotas. Si es menor que el precio al contado, te conviene cuotas.
+        </p>
+      </div>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin:2rem 0">
+        <a href="comparador-cuentas.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">💳 Ver TNAs de cuentas remuneradas →</a>
+        <a href="cuanto-perdi.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">🔥 ¿Cuánto perdiste con la inflación? →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/main.js?v=8"></script>
+  <script>
+  const $ = id => document.getElementById(id);
+  const fmt = n => '$' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
+
+  function calc() {
+    const precio = parseFloat($('precio').value) || 0;
+    const cuotas = parseInt($('cuotas').value) || 1;
+    const tnaAnual = parseFloat($('tna').value) / 100 || 0;
+    const tnaMensual = tnaAnual / 12;
+
+    const cuotaMensual = precio / cuotas;
+
+    // Valor presente de N cuotas iguales: VP = cuota * (1 - (1+i)^-n) / i
+    let vp;
+    if (tnaMensual === 0) {
+      vp = precio;
+    } else {
+      vp = cuotaMensual * (1 - Math.pow(1 + tnaMensual, -cuotas)) / tnaMensual;
+    }
+
+    $('b-contado').textContent = fmt(precio);
+    $('b-cuotas').textContent = fmt(vp);
+
+    const ahorro = precio - vp;
+    const ahorroPct = precio > 0 ? (ahorro / precio * 100) : 0;
+    const v = $('verdict');
+    if (vp < precio - 1) {
+      v.className = 'verdict cuotas';
+      $('v-title').textContent = '✅ Te conviene en cuotas';
+      $('v-text').innerHTML = `Pagar en ${cuotas} cuotas sin interés equivale a pagar <strong>${fmt(vp)}</strong> hoy. Te <strong>ahorrás ${fmt(ahorro)}</strong> (${ahorroPct.toFixed(1)}%) porque la inflación y tu rendimiento erosionan el valor de las cuotas futuras.`;
+    } else {
+      v.className = 'verdict contado';
+      $('v-title').textContent = '⚠ Mejor al contado (o da igual)';
+      $('v-text').innerHTML = `Tu TNA no compensa la diferencia. Pagar al contado sale lo mismo o menos en este caso.`;
+    }
+  }
+
+  ['precio','cuotas','tna'].forEach(id => $(id).addEventListener('input', calc));
+  calc();
+  </script>
+</body>
+</html>

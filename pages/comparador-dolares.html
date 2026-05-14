@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de Dólares: Oficial, Blue, MEP, CCL — BB Financial</title>
+  <meta name="description" content="Precio actualizado del dólar oficial, blue, MEP, CCL, mayorista y cripto. Diferencias explicadas y de dónde sale cada precio." />
+  <meta name="keywords" content="dolar oficial, dolar blue, dolar MEP, dolar CCL, brecha cambiaria, comparador dolar Argentina" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .cmp-hero { padding: 3rem 0 1.5rem; text-align: center; }
+    .cmp-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+    .cmp-hero p.sub { color: var(--text-muted); max-width: 640px; margin: 0 auto; line-height: 1.6; font-size: 0.95rem; }
+    .freshness-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); background: var(--bg-card); border: 1px solid var(--border); padding: 0.3rem 0.7rem; border-radius: 20px; margin-top: 1rem; }
+    .dolar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .dolar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; text-align: left; transition: all var(--transition); position: relative; }
+    .dolar-card:hover { border-color: rgba(74,222,154,0.3); transform: translateY(-2px); }
+    .dolar-card.green { border-left: 3px solid var(--accent); }
+    .dolar-card.blue { border-left: 3px solid #60a5fa; }
+    .dolar-card.purple { border-left: 3px solid #c084fc; }
+    .dolar-card.gold { border-left: 3px solid var(--gold); }
+    .dolar-card.gray { border-left: 3px solid var(--text-subtle); }
+    .dolar-card.red { border-left: 3px solid #ff6b6b; }
+    .dolar-card h3 { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+    .dolar-price { font-family: var(--font-display); font-size: 1.85rem; color: var(--text); margin: 0.4rem 0; line-height: 1; }
+    .dolar-cv { display: flex; gap: 0.6rem; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 0.3rem; }
+    .dolar-cv strong { color: var(--text); }
+    .dolar-update { font-size: 0.7rem; color: var(--text-subtle); margin-top: 0.85rem; font-family: var(--font-mono); }
+    .dolar-brecha { background: rgba(255,107,107,0.08); color: #ff9999; font-family: var(--font-mono); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 0.5rem; }
+
+    .explainer { max-width: 880px; margin: 3rem auto 0; }
+    .explain-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .explain-card h3 { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.5rem; }
+    .explain-card h3 .tag { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; background: var(--accent-dim); color: var(--accent); padding: 0.2rem 0.5rem; border-radius: 4px; }
+    .explain-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.7; margin-bottom: 0.5rem; }
+    .explain-card strong { color: var(--text); }
+    .explain-card .source { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-subtle); margin-top: 0.6rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="cmp-hero">
+      <div class="container">
+        <h1>Comparador de Dólares 💵</h1>
+        <p class="sub">Precio actualizado de cada cotización en Argentina, con explicación clara de qué es cada una y de dónde sale su precio.</p>
+        <div class="freshness-badge" id="badge">Cargando datos...</div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="dolar-grid" id="dolar-grid"></div>
+
+      <section class="explainer">
+        <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;letter-spacing:-0.01em">¿Por qué hay tantos dólares?</h2>
+        <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.7;margin-bottom:1.5rem">En Argentina conviven varios "precios" del dólar al mismo tiempo. Cada uno se determina en un mercado distinto, con compradores, vendedores y reglas diferentes. Entender cuál es cuál te ayuda a decidir <strong style="color:var(--text)">cómo dolarizarte</strong>.</p>
+
+        <div class="explain-card" style="border-left:3px solid var(--accent)">
+          <h3>💚 Dólar Oficial <span class="tag">Banco / Brou</span></h3>
+          <p>Es el dólar que vendía el banco al público minorista para atesoramiento (cuando había cupo de USD 200/mes). <strong>Lo fija el BCRA</strong> a través de su política cambiaria. Hoy es la cotización "de referencia" oficial.</p>
+          <p class="source">Fuente: BCRA · Bancos comerciales</p>
+        </div>
+
+        <div class="explain-card" style="border-left:3px solid var(--text-subtle)">
+          <h3>🌫 Dólar Mayorista <span class="tag">Bancos entre sí</span></h3>
+          <p>El dólar que los <strong>bancos se compran y venden entre sí</strong> en el mercado mayorista (MAE/MULC). Es la referencia más "limpia" del valor oficial sin el spread del minorista. Lo informa el BCRA todos los días.</p>
+          <p class="source">Fuente: BCRA · MULC (Mercado Único y Libre de Cambios)</p>
+        </div>
+
+        <div class="explain-card" style="border-left:3px solid #60a5fa">
+          <h3>💙 Dólar Blue <span class="tag">Mercado paralelo</span></h3>
+          <p>Es el dólar que se compra y vende en el <strong>mercado informal</strong> (cuevas, arbolitos). No está regulado y su precio refleja la oferta/demanda real sin restricciones. Históricamente sirvió como termómetro de tensión cambiaria.</p>
+          <p class="source">Fuente: cuevas / arbolitos relevados por medios financieros</p>
+        </div>
+
+        <div class="explain-card" style="border-left:3px solid #c084fc">
+          <h3>💜 Dólar MEP (Bolsa) <span class="tag">Legal vía broker</span></h3>
+          <p>Se obtiene <strong>comprando un bono en pesos y vendiéndolo en dólares</strong> en la bolsa local (BYMA). Es 100% legal y operás desde tu broker (Cocos, IOL, Balanz, etc.). El "precio" sale de hacer pesos → bono → dólares, todo en el mismo día. <strong>Es la forma más común de dolarizarse hoy</strong>.</p>
+          <p class="source">Fuente: BYMA · Operatoria bursátil con bonos AL30/GD30</p>
+        </div>
+
+        <div class="explain-card" style="border-left:3px solid var(--gold)">
+          <h3>💛 Dólar CCL (Contado con Liqui) <span class="tag">Bolsa con liquidación afuera</span></h3>
+          <p>Similar al MEP pero el dólar te queda en una <strong>cuenta en el exterior</strong> (típicamente en USA). Comprás un bono que cotiza acá y lo vendés en Nueva York. Lo usan empresas y particulares que quieren <strong>sacar plata del país legalmente</strong>.</p>
+          <p class="source">Fuente: BYMA + bolsa de Nueva York · Bonos AL30/GD30 ambos mercados</p>
+        </div>
+
+        <div class="explain-card" style="border-left:3px solid #ff6b6b">
+          <h3>💥 Dólar Cripto <span class="tag">USDT en exchanges</span></h3>
+          <p>Es el precio del <strong>stablecoin USDT</strong> (o USDC, DAI) cotizado en pesos en exchanges cripto argentinos (Lemon, Belo, Buenbit, Ripio). Suele estar entre el MEP y el blue. Muy líquido, opera 24/7 pero implica el riesgo de la stablecoin/exchange.</p>
+          <p class="source">Fuente: exchanges cripto locales (Binance P2P, Buenbit, Lemon)</p>
+        </div>
+
+        <div class="info-callout" style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.4rem;margin:1.5rem 0;font-size:0.9rem;color:var(--text-muted);line-height:1.7">
+          <strong style="color:var(--accent)">💡 ¿Cuál te conviene?</strong> Para principiantes que quieren dolarizar ahorros: <strong style="color:var(--text)">MEP</strong> es la opción estándar — legal, accesible desde la app del broker, sin movimientos físicos. El blue solo si necesitás efectivo. CCL si querés que tu plata quede fuera de Argentina. Cripto si priorizás velocidad y operás fines de semana.
+        </div>
+
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem">
+          <a href="empezar-a-invertir.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">🚀 Guía para empezar a invertir →</a>
+          <a href="cuanto-perdi.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">🔥 ¿Cuánto perdiste ahorrando en pesos? →</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas. Datos actualizados de fuentes oficiales (BCRA, BYMA, DolarAPI).</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · Datos referenciales · No constituye asesoramiento financiero · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/main.js?v=8"></script>
+  <script>
+  (async function() {
+    const grid = document.getElementById('dolar-grid');
+    const badge = document.getElementById('badge');
+    const META = {
+      oficial:         { title: 'Dólar Oficial',  emoji: '💚', cls: 'green',  desc: 'Banco minorista' },
+      mayorista:       { title: 'Mayorista',      emoji: '🌫', cls: 'gray',   desc: 'Entre bancos (MULC)' },
+      blue:            { title: 'Dólar Blue',     emoji: '💙', cls: 'blue',   desc: 'Mercado informal' },
+      bolsa:           { title: 'Dólar MEP',      emoji: '💜', cls: 'purple', desc: 'Bolsa local (BYMA)' },
+      contadoconliqui: { title: 'Dólar CCL',      emoji: '💛', cls: 'gold',   desc: 'Liquidación afuera' },
+      cripto:          { title: 'Dólar Cripto',   emoji: '💥', cls: 'red',    desc: 'USDT en exchanges' },
+    };
+    const ORDER = ['oficial','mayorista','blue','bolsa','contadoconliqui','cripto'];
+    const fmt = n => new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+
+    try {
+      const r = await fetch('/api/dolar', { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const arr = await r.json();
+      const byCasa = {};
+      arr.forEach(d => byCasa[d.casa] = d);
+      const oficialVenta = byCasa.oficial?.venta;
+
+      const cards = ORDER.map(casa => {
+        const d = byCasa[casa];
+        if (!d) return '';
+        const m = META[casa];
+        const brecha = (oficialVenta && casa !== 'oficial' && d.venta) ? ((d.venta - oficialVenta) / oficialVenta * 100) : null;
+        const date = d.fechaActualizacion ? new Date(d.fechaActualizacion).toLocaleString('es-AR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '—';
+        return `
+          <div class="dolar-card ${m.cls}">
+            <h3>${m.emoji} ${m.title}</h3>
+            <div class="dolar-price">$${fmt(d.venta)}</div>
+            <div class="dolar-cv">
+              <span>Compra <strong>$${fmt(d.compra)}</strong></span>
+              <span>Venta <strong>$${fmt(d.venta)}</strong></span>
+            </div>
+            ${brecha != null ? `<div class="dolar-brecha">Brecha vs oficial: +${brecha.toFixed(1)}%</div>` : ''}
+            <div class="dolar-update">${m.desc} · Actualizado ${date}</div>
+          </div>`;
+      }).join('');
+      grid.innerHTML = cards;
+
+      const latest = ORDER.map(c => byCasa[c]?.fechaActualizacion).filter(Boolean).sort().pop();
+      if (latest) badge.textContent = '🕐 Último dato: ' + new Date(latest).toLocaleString('es-AR');
+    } catch (e) {
+      grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">No se pudieron cargar las cotizaciones. Reintentá en unos segundos.</p>';
+      badge.textContent = '⚠ Error de conexión';
+    }
+  })();
+  </script>
+</body>
+</html>

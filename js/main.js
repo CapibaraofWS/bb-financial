@@ -1,5 +1,5 @@
-// FinCalc — main.js v7
-window.__BB_MAIN_JS_VERSION = 'v7';
+// FinCalc — main.js v8
+window.__BB_MAIN_JS_VERSION = 'v8';
 
 // GA4 is now loaded inline at the top of every <head> (per Google's recommendation).
 
@@ -75,6 +75,17 @@ window.__BB_MAIN_JS_VERSION = 'v7';
         { href: pagesBase + 'fire.html',              label: 'FIRE',                    icon: '🔥' },
         { href: pagesBase + 'vpn.html',               label: 'VPN',                     icon: '💎' },
         { href: pagesBase + 'caucion.html',           label: 'Caución',                 icon: '⚡' },
+      ],
+    },
+    {
+      kind: 'dropdown',
+      title: 'Comparadores',
+      items: [
+        { href: pagesBase + 'comparador-cuentas.html',    label: 'Cuentas remuneradas',   icon: '💳' },
+        { href: pagesBase + 'comparador-dolares.html',    label: 'Tipos de dólar',         icon: '💵' },
+        { href: pagesBase + 'comparador-plazos-fijos.html', label: 'Plazos fijos',         icon: '🏦' },
+        { href: pagesBase + 'contado-vs-cuotas.html',     label: 'Contado vs cuotas',      icon: '🛒' },
+        { href: pagesBase + 'comparador-creditos-uva.html', label: 'Créditos UVA',          icon: '🏠' },
       ],
     },
     {
@@ -157,6 +168,35 @@ window.__BB_MAIN_JS_VERSION = 'v7';
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
   `;
   target.appendChild(div);
+})();
+
+// ============================================================
+// DONATIONS — finance-themed creative copy block above footer
+// ============================================================
+(function injectDonations() {
+  const footer = document.querySelector('.site-footer');
+  if (!footer || document.querySelector('.donation-strip')) return;
+  // Skip on the donation-only page itself if we make one later
+  const div = document.createElement('section');
+  div.className = 'donation-strip';
+  div.innerHTML = `
+    <div class="container donation-inner">
+      <div class="donation-text">
+        <p class="donation-eyebrow">¿Te sirvió esta herramienta?</p>
+        <h3>Ayudame a comprarme una <em>acción de Apple</em> 🍎</h3>
+        <p class="donation-sub">El sitio es y va a seguir siendo gratis y sin publicidad. Si te sirvió y querés colaborar, podés ayudarme con el valor de un café o el ladrillo de mi futura jubilación.</p>
+      </div>
+      <div class="donation-buttons">
+        <a href="https://cafecito.app/bbfinancial" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">
+          ☕ Invitame un cafecito
+        </a>
+        <a href="https://link.mercadopago.com.ar/bbfinancial" target="_blank" rel="noopener noreferrer" class="donation-btn mp">
+          💛 Mercado Pago
+        </a>
+      </div>
+    </div>
+  `;
+  footer.parentNode.insertBefore(div, footer);
 })();
 
 // Mobile menu toggle

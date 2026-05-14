@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Salario Real — BB Financial</title>
+  <meta name="description" content="Calculá tu sueldo neto, costo empresa, valor hora y sueldo discrecional real. Descubrí cuánto vale realmente tu trabajo en Argentina." />
+  <meta name="keywords" content="calculadora salario neto, sueldo neto Argentina, costo empresa, descuentos sueldo, ganancias cuarta categoría, sueldo real" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb.app/pages/salario.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .warning-banner {
+      background: rgba(232,201,122,0.08);
+      border: 1px solid rgba(232,201,122,0.25);
+      border-left: 3px solid var(--gold);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .warning-banner strong { color: var(--gold); }
+
+    .regime-tabs { display:flex; gap:0.5rem; margin-bottom:1.25rem; }
+    .regime-tab {
+      flex:1; padding:0.6rem 0.5rem;
+      border-radius:7px; font-size:0.82rem; font-weight:500;
+      color:var(--text-muted); background:var(--bg);
+      border:1px solid var(--border); cursor:pointer;
+      transition:all var(--transition); text-align:center;
+    }
+    .regime-tab.active { color:var(--accent); background:var(--accent-dim); border-color:rgba(74,222,154,0.25); }
+
+    .descuentos-breakdown {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .db-header {
+      padding: 0.65rem 1rem;
+      background: var(--bg-card);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      border-bottom: 1px solid var(--border);
+    }
+    .db-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 1rem;
+      font-size: 0.82rem;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .db-row:last-child { border-bottom: none; }
+    .db-label { color: var(--text-muted); }
+    .db-pct { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-subtle); margin: 0 0.75rem; }
+    .db-amount { font-family: var(--font-mono); color: #ff9999; font-size: 0.82rem; }
+    .db-row.total { background: rgba(255,100,100,0.05); }
+    .db-row.total .db-label { color: var(--text); font-weight: 600; }
+    .db-row.total .db-amount { color: #ff6b6b; font-weight: 600; }
+
+    .costo-empresa-card {
+      background: rgba(100,120,200,0.06);
+      border: 1px solid rgba(100,120,200,0.2);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .ce-label { font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:#8899ee; margin-bottom:0.4rem; }
+    .ce-value { font-family:var(--font-display); font-size:1.6rem; color:var(--text); letter-spacing:-0.02em; }
+    .ce-sub { font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem; font-family:var(--font-mono); }
+
+    .discretionary-card {
+      background: linear-gradient(135deg, var(--accent-dim), rgba(74,222,154,0.04));
+      border: 1px solid rgba(74,222,154,0.2);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .dc-label { font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:0.4rem; }
+    .dc-value { font-family:var(--font-display); font-size:1.8rem; color:var(--text); letter-spacing:-0.02em; }
+    .dc-sub { font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem; font-family:var(--font-mono); }
+
+    .hora-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gold-dim);
+      border: 1px solid rgba(232,201,122,0.2);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+    .fire-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      text-decoration: none;
+      transition: all var(--transition);
+      margin-top: 1rem;
+    }
+    .fire-link-btn:hover { border-color: var(--border-hover); transform: translateX(4px); }
+    .fire-link-btn .flb-text { font-size:0.875rem; color:var(--text-muted); }
+    .fire-link-btn .flb-text strong { display:block; color:var(--text); margin-bottom:0.2rem; }
+    .fire-link-btn .flb-arrow { color:var(--accent); font-size:1.1rem; }
+  </style>
+
+    <style>
+      .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+    </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+            <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Salario Real</p>
+        <h1 class="page-title">Calculadora de Salario Real 💼</h1>
+        <p class="page-subtitle">Tu sueldo bruto no es lo que cobrás, lo que cobrás no es lo que podés gastar. Descubrí cuánto vale realmente tu trabajo.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <div class="warning-banner">
+        <strong>⚠️ Aviso importante sobre los cálculos:</strong> Esta calculadora usa los parámetros vigentes al momento de su desarrollo. Argentina tiene una legislación laboral y tributaria que cambia frecuentemente — incluyendo escalas de Ganancias 4ta categoría, alícuotas de aportes y la reciente <strong>reforma laboral</strong>. Los valores del aguinaldo (SAC) se calculan de forma estimada. <strong>Todos los resultados son aproximaciones con fines educativos</strong>, no reemplazan la liquidación oficial de tu empleador ni asesoramiento profesional.
+      </div>
+
+      <div class="calc-layout">
+        <!-- INPUTS -->
+        <section>
+          <div class="input-panel">
+            <p class="panel-title">Tu situación laboral</p>
+
+            <div style="margin-bottom:1.25rem">
+              <label style="display:block;font-size:0.85rem;font-weight:500;color:var(--text-muted);margin-bottom:0.6rem">Régimen laboral</label>
+              <div class="regime-tabs">
+                <button class="regime-tab active" onclick="setRegimen('dependencia',this)">Relación de dependencia</button>
+                <button class="regime-tab" onclick="setRegimen('monotributo',this)">Monotributo</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="bruto">Sueldo bruto mensual <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="bruto" class="has-prefix" value="500000" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+
+            <!-- Solo dependencia -->
+            <div id="bloque-dependencia">
+              <div class="form-group">
+                <label for="horas-semana">Horas trabajadas por semana</label>
+                <div class="input-wrap">
+                  <input type="number" id="horas-semana" class="has-suffix" value="40" min="1" max="80" oninput="calcularSalario()" />
+                  <span class="input-suffix">hs</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="tiene-hij">¿Tenés hijos a cargo? <span>(reduce Ganancias)</span></label>
+                <select id="tiene-hij" onchange="calcularSalario()">
+                  <option value="0">No</option>
+                  <option value="1">1 hijo</option>
+                  <option value="2">2 hijos</option>
+                  <option value="3">3 o más hijos</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Solo monotributo -->
+            <div id="bloque-monotributo" style="display:none">
+              <div class="form-group">
+                <label for="cat-mono">Categoría monotributo</label>
+                <select id="cat-mono" onchange="calcularSalario()">
+                  <option value="A">A — hasta $1.700.000 facturación</option>
+                  <option value="B">B — hasta $2.550.000</option>
+                  <option value="C">C — hasta $3.400.000</option>
+                  <option value="D">D — hasta $5.100.000</option>
+                  <option value="E" selected>E — hasta $6.800.000</option>
+                  <option value="F">F — hasta $8.500.000</option>
+                  <option value="G">G — hasta $10.200.000</option>
+                  <option value="H">H — hasta $12.700.000</option>
+                  <option value="I">I — hasta $15.300.000</option>
+                  <option value="J">J — hasta $18.300.000</option>
+                  <option value="K">K — hasta $21.800.000</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="horas-semana-mono">Horas trabajadas por semana</label>
+                <div class="input-wrap">
+                  <input type="number" id="horas-semana-mono" class="has-suffix" value="40" min="1" max="80" oninput="calcularSalario()" />
+                  <span class="input-suffix">hs</span>
+                </div>
+              </div>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Bloque gastos -->
+            <p class="panel-title" style="margin-bottom:1rem">Gastos fijos mensuales</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.55">Tu sueldo <em>discrecional</em> es lo que queda <strong style="color:var(--text)">después de cubrir todos tus gastos de vida</strong>. Completá lo que aplique.</p>
+
+            <div class="form-group">
+              <label for="g-alquiler">Alquiler / expensas <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="g-alquiler" class="has-prefix" value="0" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="g-servicios">Servicios (luz, gas, internet) <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="g-servicios" class="has-prefix" value="0" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="g-comida">Alimentación <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="g-comida" class="has-prefix" value="0" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="g-transporte">Transporte <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="g-transporte" class="has-prefix" value="0" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="g-otros">Otros gastos fijos <span>(ARS)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="g-otros" class="has-prefix" value="0" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+
+            <hr class="section-divider" />
+            <p class="panel-title" style="margin-bottom:1rem">Poder adquisitivo</p>
+            <div class="form-group">
+              <label for="sueldo-hace">¿Cuánto ganabas hace 1 año? <span>(ARS bruto)</span></label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" id="sueldo-hace" class="has-prefix" value="300000" min="0" oninput="calcularSalario()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inf-anual">Inflación del último año <span>(%)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="inf-anual" class="has-suffix" value="120" min="0" max="500" oninput="calcularSalario()" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section>
+          <div class="result-panel">
+            <p class="panel-title">Tu sueldo real</p>
+
+            <!-- Neto -->
+            <div class="result-highlight">
+              <p class="result-label">Sueldo neto (bolsillo)</p>
+              <p class="result-value" id="res-neto">$0</p>
+              <p class="result-sub" id="res-neto-sub">—</p>
+            </div>
+
+            <!-- Costo empresa -->
+            <div class="costo-empresa-card" id="bloque-costo-empresa">
+              <p class="ce-label">👁 Costo empresa (lo que paga realmente tu empleador)</p>
+              <p class="ce-value" id="res-costo-empresa">$0</p>
+              <p class="ce-sub" id="res-costo-sub">—</p>
+            </div>
+
+            <!-- Descuentos breakdown -->
+            <div class="descuentos-breakdown">
+              <div class="db-header">Descuentos detallados</div>
+              <div id="descuentos-rows"></div>
+            </div>
+
+            <!-- Valor hora -->
+            <div class="hora-badge">
+              ⏱ Tu hora de trabajo vale <strong id="res-hora" style="margin-left:0.4rem;font-size:1rem">—</strong>
+            </div>
+
+            <!-- SAC / Aguinaldo -->
+            <div class="result-row" id="row-sac">
+              <span class="label">SAC estimado (aguinaldo semestral)</span>
+              <span class="value neutral" id="res-sac">—</span>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Sueldo discrecional -->
+            <div class="discretionary-card">
+              <p class="dc-label">💰 Sueldo discrecional (lo que realmente podés gastar/invertir)</p>
+              <p class="dc-value" id="res-discrecional">$0</p>
+              <p class="dc-sub" id="res-disc-sub">—</p>
+            </div>
+
+            <div class="result-row"><span class="label">Total gastos fijos</span><span class="value" style="color:#ff9999" id="res-gastos">—</span></div>
+            <div class="result-row"><span class="label">Tasa de ahorro potencial</span><span class="value positive" id="res-tasa-ahorro">—</span></div>
+
+            <!-- Compras en horas -->
+            <div id="compras-horas" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-top:1rem">
+              <p class="panel-title" style="margin-bottom:0.75rem">Cuánto cuesta en horas de trabajo</p>
+              <div id="compras-rows" style="display:flex;flex-direction:column;gap:0.4rem"></div>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Poder adquisitivo -->
+            <p class="panel-title" style="margin-bottom:0.75rem">Poder adquisitivo real</p>
+            <div class="result-row"><span class="label">Tu sueldo de hace 1 año equivale hoy a</span><span class="value" id="res-sueldo-ajustado">—</span></div>
+            <div class="result-row"><span class="label">Variación real de tu sueldo</span><span class="value" id="res-variacion-real">—</span></div>
+            <div class="result-row"><span class="label">Para mantener poder adquisitivo de hace 1 año</span><span class="value neutral" id="res-necesario">—</span></div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Distribución del sueldo bruto</p>
+              <canvas id="salarioChart" class="calc-chart" height="220"></canvas>
+            </div>
+
+            <!-- Link a FIRE -->
+            <a href="fire.html" class="fire-link-btn" id="fire-link">
+              <div class="flb-text">
+                <strong>¿Cuándo podés retirarte?</strong>
+                Con este sueldo discrecional, calculá tu independencia financiera →
+              </div>
+              <span class="flb-arrow">🔥</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Calculadoras</h3>
+        <ul>
+          <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
+          <li><a href="interes-simple.html">Interés Simple y Ahorro</a></li>
+          <li><a href="inflacion.html">Inflación</a></li>
+          <li><a href="prestamo.html">Préstamo / Cuota</a></li>
+          <li><a href="fire.html">Regla del 4%</a></li>
+          <li><a href="salario.html">Salario Real</a></li>
+          <li><a href="mis-portafolios.html">Portafolio (Beta)</a></li>
+          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/main.js?v=8"></script>
+  <script>
+    let salarioChart = null;
+    let regimenActual = 'dependencia';
+
+    // Aportes patronales Argentina (aprox.)
+    const APORTES_EMPLEADO = {
+      jubilacion: 0.11,
+      obraSocial: 0.03,
+      anssal:     0.005,
+      ley19032:   0.03,
+    };
+    const APORTES_PATRONALES = {
+      jubilacion: 0.1017,
+      obraSocial: 0.06,
+      anssal:     0.009,
+      ley19032:   0.02,
+      art:        0.015,
+      fondoDesempleo: 0.015,
+    };
+    // Monotributo cuotas estimadas 2024 (ARS) - valores aproximados
+    const MONO_CUOTAS = {
+      A:{ imp:1700,  jub:14000,  os:22000 },
+      B:{ imp:2500,  jub:14000,  os:22000 },
+      C:{ imp:3500,  jub:14000,  os:22000 },
+      D:{ imp:5500,  jub:14000,  os:22000 },
+      E:{ imp:8000,  jub:14000,  os:22000 },
+      F:{ imp:11000, jub:14000,  os:22000 },
+      G:{ imp:16000, jub:14000,  os:22000 },
+      H:{ imp:23000, jub:20000,  os:32000 },
+      I:{ imp:32000, jub:20000,  os:32000 },
+      J:{ imp:46000, jub:20000,  os:32000 },
+      K:{ imp:65000, jub:20000,  os:32000 },
+    };
+
+    // Ganancias 4ta categoría - escala progresiva estimada 2024
+    // Mínimo no imponible aprox $3.5M/año + deducciones
+    function calcularGanancias(brutoAnual, hijos) {
+      const MNI = 3500000;
+      const DEDUCCION_ESPECIAL = MNI * 3.8;
+      const CARGA_HIJO = 300000;
+      const baseImponible = Math.max(0, brutoAnual - MNI - DEDUCCION_ESPECIAL - (hijos * CARGA_HIJO));
+      if (baseImponible <= 0) return 0;
+      // Escala simplificada progresiva
+      const tramos = [
+        { hasta: 419768,   tasa: 0.05, fijo: 0 },
+        { hasta: 838537,   tasa: 0.09, fijo: 20988 },
+        { hasta: 1258306,  tasa: 0.12, fijo: 58658 },
+        { hasta: 1677933,  tasa: 0.15, fijo: 108984 },
+        { hasta: 2517058,  tasa: 0.19, fijo: 171960 },
+        { hasta: 3355926,  tasa: 0.23, fijo: 331566 },
+        { hasta: 5033889,  tasa: 0.27, fijo: 524568 },
+        { hasta: 6711852,  tasa: 0.31, fijo: 977558 },
+        { hasta: Infinity, tasa: 0.35, fijo: 1497682 },
+      ];
+      let anterior = 0;
+      for (const t of tramos) {
+        if (baseImponible <= t.hasta) {
+          return t.fijo + (baseImponible - anterior) * t.tasa;
+        }
+        anterior = t.hasta;
+      }
+      return 0;
+    }
+
+    function setRegimen(r, btn) {
+      regimenActual = r;
+      document.querySelectorAll('.regime-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('bloque-dependencia').style.display = r === 'dependencia' ? 'block' : 'none';
+      document.getElementById('bloque-monotributo').style.display  = r === 'monotributo'  ? 'block' : 'none';
+      document.getElementById('bloque-costo-empresa').style.display = r === 'dependencia' ? 'block' : 'none';
+      document.getElementById('row-sac').style.display = r === 'dependencia' ? 'flex' : 'none';
+      calcularSalario();
+    }
+
+    function calcularSalario() {
+      const bruto    = parseFloat(document.getElementById('bruto').value)        || 0;
+      const horasSem = parseFloat(document.getElementById(regimenActual === 'dependencia' ? 'horas-semana' : 'horas-semana-mono').value) || 40;
+      const hijos    = parseInt(document.getElementById('tiene-hij').value)      || 0;
+
+      const gAlquiler   = parseFloat(document.getElementById('g-alquiler').value)   || 0;
+      const gServicios  = parseFloat(document.getElementById('g-servicios').value)  || 0;
+      const gComida     = parseFloat(document.getElementById('g-comida').value)     || 0;
+      const gTransporte = parseFloat(document.getElementById('g-transporte').value) || 0;
+      const gOtros      = parseFloat(document.getElementById('g-otros').value)      || 0;
+      const totalGastos = gAlquiler + gServicios + gComida + gTransporte + gOtros;
+
+      const sueldoHace = parseFloat(document.getElementById('sueldo-hace').value) || 0;
+      const infAnual   = (parseFloat(document.getElementById('inf-anual').value)  || 0) / 100;
+
+      let neto = 0, descuentosDetalle = [], costoEmpresa = 0;
+      let sacMensual = 0;
+
+      if (regimenActual === 'dependencia') {
+        // Aportes empleado
+        const dJub    = bruto * APORTES_EMPLEADO.jubilacion;
+        const dOS     = bruto * APORTES_EMPLEADO.obraSocial;
+        const dAns    = bruto * APORTES_EMPLEADO.anssal;
+        const dPAMI   = bruto * APORTES_EMPLEADO.ley19032;
+        const totalAp = dJub + dOS + dAns + dPAMI;
+
+        // Ganancias sobre bruto anual aprox
+        const brutoAnual = bruto * 13; // 12 meses + SAC
+        const ganAnual   = calcularGanancias(brutoAnual, hijos);
+        const ganMensual = ganAnual / 12;
+
+        neto = bruto - totalAp - ganMensual;
+        sacMensual = neto / 12; // SAC = 50% del mejor sueldo semestral, aprox neto/12 mensualizado
+
+        descuentosDetalle = [
+          { label: 'Jubilación (11%)',        pct: '11.0%', monto: dJub },
+          { label: 'Obra social (3%)',         pct: '3.0%',  monto: dOS },
+          { label: 'ANSSAL (0.5%)',            pct: '0.5%',  monto: dAns },
+          { label: 'PAMI / Ley 19.032 (3%)',   pct: '3.0%',  monto: dPAMI },
+          { label: 'Ganancias 4ta cat. (est.)',pct: '—',     monto: ganMensual },
+        ];
+
+        // Costo empresa
+        const totPatronal = Object.values(APORTES_PATRONALES).reduce((s,v) => s+v,0);
+        costoEmpresa = bruto * (1 + totPatronal);
+        document.getElementById('res-costo-empresa').textContent = '$' + formatUSD(costoEmpresa);
+        document.getElementById('res-costo-sub').textContent = `Por cada $${formatUSD(bruto)} de bruto, la empresa paga $${formatUSD(costoEmpresa - bruto)} extra (~${(totPatronal*100).toFixed(1)}% aportes patronales)`;
+        document.getElementById('res-sac').textContent = '~$' + formatUSD(sacMensual) + '/mes (≈$' + formatUSD(sacMensual*6) + ' semestral)';
+
+      } else {
+        // Monotributo
+        const cat = document.getElementById('cat-mono').value;
+        const cuota = MONO_CUOTAS[cat] || MONO_CUOTAS['E'];
+        const totalMono = cuota.imp + cuota.jub + cuota.os;
+        neto = bruto - totalMono;
+        descuentosDetalle = [
+          { label: `Impuesto integrado (Cat. ${cat})`, pct: '—', monto: cuota.imp },
+          { label: 'Aportes jubilatorios',             pct: '—', monto: cuota.jub },
+          { label: 'Obra social',                      pct: '—', monto: cuota.os },
+        ];
+      }
+
+      const totalDesc = bruto - neto;
+      const discrecional = Math.max(0, neto - totalGastos);
+      const horasMes = horasSem * 4.33;
+      const valorHora = neto / horasMes;
+
+      // Poder adquisitivo
+      const sueldoAjustado = sueldoHace * (1 + infAnual);
+      const variacion = sueldoHace > 0 ? ((bruto - sueldoAjustado) / sueldoAjustado * 100) : 0;
+
+      // UI
+      document.getElementById('res-neto').textContent = '$' + formatUSD(neto);
+      document.getElementById('res-neto-sub').textContent = `${((totalDesc/bruto)*100).toFixed(1)}% en descuentos · $${formatUSD(totalDesc)} retenidos`;
+      document.getElementById('res-hora').textContent = '$' + formatUSD(valorHora) + '/hora';
+      document.getElementById('res-gastos').textContent = '$' + formatUSD(totalGastos);
+      document.getElementById('res-discrecional').textContent = '$' + formatUSD(discrecional);
+      document.getElementById('res-disc-sub').textContent = discrecional > 0
+        ? `${((discrecional/neto)*100).toFixed(1)}% de tu neto disponible para ahorrar/invertir`
+        : '⚠️ Tus gastos superan tu sueldo neto';
+      document.getElementById('res-tasa-ahorro').textContent = neto > 0
+        ? ((discrecional/neto)*100).toFixed(1) + '% del neto'
+        : '—';
+
+      // Poder adquisitivo
+      document.getElementById('res-sueldo-ajustado').textContent = '$' + formatUSD(sueldoAjustado);
+      document.getElementById('res-variacion-real').textContent  =
+        variacion >= 0
+          ? `+${variacion.toFixed(1)}% (ganaste poder adquisitivo)`
+          : `${variacion.toFixed(1)}% (perdiste poder adquisitivo)`;
+      document.getElementById('res-variacion-real').style.color  = variacion >= 0 ? 'var(--accent)' : '#ff6b6b';
+      document.getElementById('res-necesario').textContent = '$' + formatUSD(sueldoAjustado) + '/mes bruto';
+
+      // Descuentos breakdown
+      const rowsEl = document.getElementById('descuentos-rows');
+      rowsEl.innerHTML = descuentosDetalle.map(d => `
+        <div class="db-row">
+          <span class="db-label">${d.label}</span>
+          <span class="db-pct">${d.pct}</span>
+          <span class="db-amount">−$${formatUSD(d.monto)}</span>
+        </div>`).join('') + `
+        <div class="db-row total">
+          <span class="db-label">Total descuentos</span>
+          <span class="db-pct">${((totalDesc/bruto)*100).toFixed(1)}%</span>
+          <span class="db-amount">−$${formatUSD(totalDesc)}</span>
+        </div>`;
+
+      // Compras en horas
+      const compras = [
+        { item: 'Café en bar', precio: 2500 },
+        { item: 'Almuerzo',    precio: 8000 },
+        { item: 'Par de zapatillas', precio: 80000 },
+        { item: 'iPhone (aprox)', precio: 2000000 },
+      ];
+      document.getElementById('compras-rows').innerHTML = compras.map(comp => {
+        const horas = (comp.precio / valorHora);
+        return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+          <span style="color:var(--text-muted)">${comp.item}</span>
+          <span style="font-family:var(--font-mono);color:var(--gold)">${horas.toFixed(1)} hs</span>
+        </div>`;
+      }).join('');
+
+      // FIRE link
+      document.getElementById('fire-link').href = `fire.html?aporte=${Math.round(discrecional)}`;
+
+      // Chart
+      const dAportes  = bruto - neto - (regimenActual === 'dependencia' ? bruto * (Object.values(APORTES_EMPLEADO).reduce((s,v)=>s+v,0)) : 0);
+      const dGan      = regimenActual === 'dependencia' ? Math.max(0, bruto - neto - bruto*(Object.values(APORTES_EMPLEADO).reduce((s,v)=>s+v,0))) : 0;
+      const totalAp2  = bruto - neto - dGan;
+
+      const chartData = regimenActual === 'dependencia'
+        ? [totalAp2, dGan, totalGastos, Math.max(0, discrecional)]
+        : [bruto - neto, 0, totalGastos, Math.max(0, discrecional)];
+
+      if (salarioChart) salarioChart.destroy();
+      salarioChart = new Chart(document.getElementById('salarioChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Aportes obligatorios', 'Ganancias', 'Gastos fijos', 'Discrecional'],
+          datasets: [{ data: chartData, backgroundColor: ['rgba(255,100,100,0.6)','rgba(255,150,50,0.6)','rgba(90,100,120,0.6)','rgba(74,222,154,0.7)'], borderColor: 'var(--bg-card)', borderWidth: 2 }]
+        },
+        options: {
+          responsive: true,
+          cutout: '65%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color:'#7a8599', font:{family:'DM Mono',size:10}, padding:12 } },
+            tooltip: { callbacks: { label: ctx => ctx.label + ': $' + formatUSD(ctx.parsed) + ' (' + ((ctx.parsed/bruto)*100).toFixed(1) + '%)' } }
+          }
+        }
+      });
+    }
+
+    calcularSalario();
+  </script>
+</body>
+</html>
+

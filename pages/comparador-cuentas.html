@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de Cuentas Remuneradas — Mercado Pago, Naranja X, Ualá... — BB Financial</title>
+  <meta name="description" content="Compará rendimientos, topes y rescate de las cuentas remuneradas argentinas: Mercado Pago, Naranja X, Ualá, Brubank, Cocos Pay, Personal Pay y más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .cmp-hero { padding: 3rem 0 1.5rem; text-align: center; }
+    .cmp-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 0.6rem; letter-spacing: -0.02em; }
+    .cmp-hero p.sub { color: var(--text-muted); max-width: 640px; margin: 0 auto; line-height: 1.6; font-size: 0.95rem; }
+    .cmp-table-wrap { overflow-x: auto; max-width: 100%; margin: 2rem auto; -webkit-overflow-scrolling: touch; }
+    .cmp-table { width: 100%; min-width: 720px; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 0.88rem; }
+    .cmp-table th, .cmp-table td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .cmp-table th { background: rgba(74,222,154,0.06); color: var(--accent); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .cmp-table td { color: var(--text-muted); }
+    .cmp-table td strong { color: var(--text); }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table tr:hover td { background: rgba(74,222,154,0.03); }
+    .cmp-table .tna { font-family: var(--font-display); font-size: 1.05rem; color: var(--accent); }
+    .cmp-table .badge { display: inline-block; font-family: var(--font-mono); font-size: 0.62rem; padding: 0.15rem 0.45rem; border-radius: 4px; letter-spacing: 0.05em; }
+    .badge-bank { background: rgba(96,165,250,0.12); color: #60a5fa; }
+    .badge-fintech { background: var(--accent-dim); color: var(--accent); }
+    .badge-fgd { background: rgba(232,201,122,0.15); color: var(--gold); }
+    .freshness-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); background: var(--bg-card); border: 1px solid var(--border); padding: 0.3rem 0.7rem; border-radius: 20px; margin-top: 1rem; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0; font-size: 0.78rem; color: var(--text-muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="cmp-hero">
+      <div class="container">
+        <h1>Comparador de Cuentas Remuneradas 💳</h1>
+        <p class="sub">Tu plata trabajando todos los días sin plazo y sin papeles. Comparamos TNA, mínimos, topes bonificados y si tienen FGD.</p>
+        <div class="freshness-badge">📅 Datos actualizados periódicamente · Verificá la TNA actual en cada app antes de operar</div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="legend">
+        <span><span class="badge badge-fintech">Fintech</span> Billetera virtual / FCI money market</span>
+        <span><span class="badge badge-bank">Banco</span> Cuenta caja de ahorro remunerada</span>
+        <span><span class="badge badge-fgd">FGD</span> Protegido hasta $1.140.000</span>
+      </div>
+
+      <div class="cmp-table-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>Proveedor</th>
+              <th>Tipo</th>
+              <th>TNA aprox.</th>
+              <th>Tope bonificado</th>
+              <th>Mínimo</th>
+              <th>Rescate</th>
+              <th>FGD</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody id="cuentas-tbody"></tbody>
+        </table>
+      </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.4rem;margin:1.5rem auto;max-width:900px;font-size:0.88rem;color:var(--text-muted);line-height:1.7">
+        <strong style="color:var(--accent)">💡 Cómo elegir:</strong> Si tu saldo es chico (&lt;$1M) en general te conviene la que tenga la <strong style="color:var(--text)">TNA más alta sin tope</strong>. Si tenés varios millones, fijate en el <strong style="color:var(--text)">tope bonificado</strong> (Naranja X, por ejemplo, paga su tasa máxima solo hasta cierto monto y luego baja). Los <strong style="color:var(--text)">bancos digitales (Brubank) están cubiertos por el FGD</strong>; las billeteras virtuales no, pero su FCI money market es muy bajo riesgo igual.
+      </div>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin:2rem 0">
+        <a href="cuentas-remuneradas.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">💳 ¿Cómo funcionan por dentro? Guía completa →</a>
+        <a href="interes-simple.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">◎ Calculadora de rendimiento →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Información indicativa. Las TNA cambian semana a semana — siempre confirmá en la app antes de operar.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · Educativo · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/main.js?v=8"></script>
+  <script>
+  const cuentas = [
+    { nombre: 'Mercado Pago',    tipo: 'fintech', tna: '~30-35%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo (T+0)', fgd: false, notas: 'Vía FCI Mercado Fondos · App muy completa · Cero comisiones' },
+    { nombre: 'Naranja X',       tipo: 'fintech', tna: '~35-40%', tope: 'Hasta ~$1.5M',      minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'TNA alta solo hasta el tope · Mayor monto rinde menos' },
+    { nombre: 'Ualá',            tipo: 'fintech', tna: '~28-32%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'Ecosistema completo (tarjeta, plazo fijo, inversiones)' },
+    { nombre: 'Brubank',         tipo: 'bank',    tna: '~25-30%', tope: 'Variable',          minimo: '$0',  rescate: 'Instantáneo',       fgd: true,  notas: 'Banco digital con licencia BCRA · Protegido por FGD' },
+    { nombre: 'Cocos Pay',       tipo: 'fintech', tna: '~32-36%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'Integrado con broker Cocos · Ideal si ya invertís ahí' },
+    { nombre: 'Personal Pay',    tipo: 'fintech', tna: '~28-33%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'Billetera del Grupo Clarín/Telecom · Cashback en servicios' },
+    { nombre: 'Astropay',        tipo: 'fintech', tna: '~30-34%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'Billetera internacional · Útil para pagos al exterior' },
+    { nombre: 'Lemon',           tipo: 'fintech', tna: '~25-30%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'Híbrido fintech/cripto · Pagás con tarjeta usando saldo ARS' },
+    { nombre: 'Fiwind',          tipo: 'fintech', tna: '~32-37%', tope: 'Sin tope',          minimo: '$0',  rescate: 'Instantáneo',       fgd: false, notas: 'TNA competitiva · Foco en pagos cotidianos' },
+    { nombre: 'Galicia +',       tipo: 'bank',    tna: '~22-28%', tope: 'Hasta ~$500k',      minimo: '$0',  rescate: 'T+0 hábil',         fgd: true,  notas: 'Galicia Banco · Caja de ahorro remunerada · Tope bonificado' },
+  ];
+
+  const fmtTipo = t => t === 'bank'
+    ? '<span class="badge badge-bank">Banco</span>'
+    : '<span class="badge badge-fintech">Fintech</span>';
+  const fmtFGD = b => b ? '<span class="badge badge-fgd">✓ FGD</span>' : '<span style="color:var(--text-subtle);font-size:0.78rem">—</span>';
+
+  document.getElementById('cuentas-tbody').innerHTML = cuentas.map(c => `
+    <tr>
+      <td><strong>${c.nombre}</strong></td>
+      <td>${fmtTipo(c.tipo)}</td>
+      <td><span class="tna">${c.tna}</span></td>
+      <td>${c.tope}</td>
+      <td>${c.minimo}</td>
+      <td>${c.rescate}</td>
+      <td>${fmtFGD(c.fgd)}</td>
+      <td style="font-size:0.78rem;max-width:280px">${c.notas}</td>
+    </tr>
+  `).join('');
+  </script>
+</body>
+</html>

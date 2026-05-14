@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const response = await fetch(url, { signal: AbortSignal.timeout(9000) });
     if (!response.ok) return res.status(response.status).json({ error: 'Error desde ArgentinaDatos' });
     const data = await response.json();
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
     return res.status(200).json(data);
   } catch {
     return res.status(500).json({ error: 'No se pudo conectar con ArgentinaDatos' });

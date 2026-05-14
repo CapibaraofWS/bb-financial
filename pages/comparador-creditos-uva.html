@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Créditos Hipotecarios UVA — Cómo funcionan y comparador — BB Financial</title>
+  <meta name="description" content="Cómo funcionan los créditos hipotecarios UVA en Argentina, qué es la UVA, riesgos, ventajas y comparación entre bancos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .freshness-badge { display:inline-block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);background:var(--bg-card);border:1px solid var(--border);padding:0.3rem 0.7rem;border-radius:20px;margin-top:1rem;}
+    .uva-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:2rem 0;}
+    .uva-card { background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center;}
+    .uva-card .lbl { font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);}
+    .uva-card .val { font-family:var(--font-display);font-size:1.7rem;color:var(--accent);margin:0.4rem 0;}
+    .uva-card .meta { font-size:0.78rem;color:var(--text-muted);}
+    .cmp-table { width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:0.88rem;margin:2rem 0;}
+    .cmp-table th, .cmp-table td { padding:0.85rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+    .cmp-table th { background:rgba(74,222,154,0.06);color:var(--accent);font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;}
+    .cmp-table td { color:var(--text-muted); }
+    .cmp-table td strong { color:var(--text); }
+    .explainer-block { background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem; }
+    .explainer-block h3 { font-family:var(--font-display);font-size:1.15rem;margin-bottom:0.5rem;letter-spacing:-0.01em; }
+    .explainer-block p { color:var(--text-muted);font-size:0.88rem;line-height:1.7;margin-bottom:0.5rem; }
+    .explainer-block strong { color:var(--text); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section style="padding:3rem 0 1rem;text-align:center">
+      <div class="container">
+        <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-0.02em;margin-bottom:0.6rem">🏠 Créditos Hipotecarios UVA</h1>
+        <p style="color:var(--text-muted);max-width:640px;margin:0 auto;font-size:0.95rem;line-height:1.6">Tu mejor camino a la vivienda propia hoy — pero entendé cómo funcionan antes de firmar. Tu cuota se ajusta por inflación, no por dólar.</p>
+        <div class="freshness-badge" id="badge">Cargando valor UVA...</div>
+      </div>
+    </section>
+
+    <div class="container" style="max-width:880px">
+      <div class="uva-grid">
+        <div class="uva-card">
+          <div class="lbl">Valor UVA hoy</div>
+          <div class="val" id="uva-val">$—</div>
+          <div class="meta" id="uva-date">cargando</div>
+        </div>
+        <div class="uva-card">
+          <div class="lbl">Crédito típico</div>
+          <div class="val">4-9%</div>
+          <div class="meta">TNA + UVA · 20-30 años</div>
+        </div>
+        <div class="uva-card">
+          <div class="lbl">Cuota inicial estimada</div>
+          <div class="val" id="cuota-ej">$—</div>
+          <div class="meta">por $100.000.000 a 25 años</div>
+        </div>
+      </div>
+
+      <div class="explainer-block" style="border-left:3px solid var(--accent)">
+        <h3>¿Qué es UVA?</h3>
+        <p><strong>UVA = Unidad de Valor Adquisitivo</strong>. Es un índice creado por el BCRA en 2016 que se actualiza diariamente según el <strong>CER (Coeficiente de Estabilización de Referencia)</strong>, que sigue la inflación oficial del INDEC.</p>
+        <p>En vez de tomar un crédito por <em>$50 millones</em>, tomás un crédito por <em>X cantidad de UVAs</em>. Cada mes, tu deuda y tu cuota se recalculan al valor actual de la UVA. Así, en términos reales, <strong>siempre debés lo mismo</strong> — lo que cambia es cuántos pesos.</p>
+      </div>
+
+      <div class="explainer-block" style="border-left:3px solid var(--accent)">
+        <h3>Bancos con créditos UVA hoy</h3>
+        <p>Estos son los principales bancos ofreciendo créditos hipotecarios UVA. Los plazos, tasas y montos máximos cambian — siempre verificá con cada banco antes de avanzar.</p>
+        <table class="cmp-table">
+          <thead><tr><th>Banco</th><th>TNA típica</th><th>Plazo</th><th>Tope</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Banco Hipotecario</strong></td><td>4-6%</td><td>30 años</td><td>Sin tope</td></tr>
+            <tr><td><strong>Banco Nación</strong></td><td>4.5%</td><td>30 años</td><td>$250M</td></tr>
+            <tr><td><strong>Banco Ciudad</strong></td><td>5.5%</td><td>20 años</td><td>$300M</td></tr>
+            <tr><td><strong>Galicia</strong></td><td>7-9%</td><td>20 años</td><td>$250M</td></tr>
+            <tr><td><strong>Santander</strong></td><td>7-9%</td><td>20 años</td><td>$300M</td></tr>
+            <tr><td><strong>Macro</strong></td><td>6-8%</td><td>20-30 años</td><td>$200M</td></tr>
+            <tr><td><strong>ICBC</strong></td><td>7-8%</td><td>20 años</td><td>$250M</td></tr>
+            <tr><td><strong>Brubank</strong></td><td>8-9%</td><td>20 años</td><td>$200M</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="explainer-block" style="border-left:3px solid #ff6b6b">
+        <h3>⚠ Cuidado: el "riesgo UVA"</h3>
+        <p>El crédito UVA tiene una <strong>letra chica importante</strong>: si tu sueldo no acompaña a la inflación, la cuota se vuelve impagable. Eso pasó en 2018-2020, cuando la inflación se aceleró y los salarios reales cayeron — muchas familias quedaron con cuotas que representaban &gt;40% de su ingreso.</p>
+        <p>Hay un <strong>"seguro" implícito</strong>: si la cuota supera el 10% de tu sueldo, podés pedir extender el plazo del crédito (hasta 25% del plazo original). Pero <strong>no es una solución mágica</strong>, solo te da aire.</p>
+        <p><strong>Regla práctica:</strong> antes de tomar un UVA, simulá con una inflación 30% mayor a la actual y asegurate de poder pagar la cuota igual. Si no, está fuera de tus posibilidades.</p>
+      </div>
+
+      <div class="explainer-block" style="border-left:3px solid #60a5fa">
+        <h3>📋 Requisitos típicos</h3>
+        <p>Variar según el banco, pero en general necesitás:</p>
+        <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.88rem;line-height:1.8;margin:0.5rem 0">
+          <li><strong style="color:var(--text)">Edad:</strong> 18 a 65 (al finalizar el crédito)</li>
+          <li><strong style="color:var(--text)">Antigüedad laboral:</strong> mínimo 1 año en relación de dependencia o 2 años como monotributista</li>
+          <li><strong style="color:var(--text)">Ingreso:</strong> la cuota inicial NO puede superar el 25% del ingreso familiar</li>
+          <li><strong style="color:var(--text)">Inicial (anticipo):</strong> 10-30% del valor de la propiedad (no se financia)</li>
+          <li><strong style="color:var(--text)">Garantía real:</strong> hipoteca sobre la propiedad que comprás</li>
+          <li><strong style="color:var(--text)">Seguro:</strong> seguro de vida obligatorio (cubre saldo si falleces) + seguro de hogar</li>
+        </ul>
+      </div>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin:2rem 0">
+        <a href="prestamo.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">💰 Calculadora de cuota →</a>
+        <a href="inflacion.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">📉 Calculadora inflación →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Datos UVA del BCRA. Verificá las condiciones con cada banco.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/main.js?v=8"></script>
+  <script>
+  (async function() {
+    try {
+      const r = await fetch('/api/argentinadatos?path=finanzas/indices/uva', { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error();
+      const arr = await r.json();
+      const last = arr.at(-1);
+      const val = last.valor;
+      document.getElementById('uva-val').textContent = '$' + val.toLocaleString('es-AR', { maximumFractionDigits: 2 });
+      document.getElementById('uva-date').textContent = last.fecha;
+      document.getElementById('badge').textContent = `📊 UVA al ${last.fecha} · BCRA`;
+      // Cuota inicial $100M a 25 años, 5% TNA UVA, sistema francés
+      const monto = 100000000;
+      const tnaUVA = 0.05;
+      const tnaM = tnaUVA / 12;
+      const n = 25 * 12;
+      const cuota = monto * (tnaM * Math.pow(1 + tnaM, n)) / (Math.pow(1 + tnaM, n) - 1);
+      document.getElementById('cuota-ej').textContent = '$' + Math.round(cuota).toLocaleString('es-AR');
+    } catch {
+      document.getElementById('badge').textContent = '⚠ No se pudo cargar UVA';
+    }
+  })();
+  </script>
+</body>
+</html>
