@@ -1,5 +1,106 @@
-// FinCalc — main.js v9
-window.__BB_MAIN_JS_VERSION = 'v9';
+// FinCalc — main.js v10
+window.__BB_MAIN_JS_VERSION = 'v10';
+
+// ============================================================
+// GLOSARIO — tooltips para términos financieros
+// Uso: <span data-term="MEP">Dólar MEP</span>
+// Definiciones extensibles. Funciona con hover (desktop) y tap (mobile).
+// ============================================================
+window.BB_GLOSARIO = {
+  'MEP':    { titulo: 'Dólar MEP', def: 'Forma legal de comprar dólares vía bolsa. Comprás un bono en pesos y lo vendés en dólares en BYMA, el mismo día. Lo hacés desde el broker (Cocos, IOL, Balanz...). Es la opción estándar para dolarizar ahorros.' },
+  'CCL':    { titulo: 'Contado con Liqui (CCL)', def: 'Igual que el MEP pero el dólar te queda en una cuenta en el exterior (típicamente en USA). Útil si querés sacar plata del país legalmente.' },
+  'TNA':    { titulo: 'TNA — Tasa Nominal Anual', def: 'Es la tasa "anual" pero sin contar el interés compuesto. Si dice "TNA 30%" y la cuenta paga todos los días, en realidad al final del año tenés más del 30% (por la reinversión diaria). La TNA es la tasa "publicitada"; la TEA es la real.' },
+  'TEA':    { titulo: 'TEA — Tasa Efectiva Anual', def: 'La tasa anual REAL que rinde una inversión, considerando que los intereses se reinvierten. Siempre es mayor que la TNA. Es la que te conviene mirar para comparar inversiones distintas (plazo fijo vs FCI vs cuenta remunerada).' },
+  'TEM':    { titulo: 'TEM — Tasa Efectiva Mensual', def: 'El interés que rinde una inversión en un mes. Por ejemplo, TEM 2.5% significa que tu plata crece 2.5% cada mes. Si la reinvertís 12 meses, llegás a la TEA.' },
+  'CFTEA':  { titulo: 'CFTEA — Costo Financiero Total Efectivo Anual', def: 'En préstamos, es la tasa REAL que pagás incluyendo TODOS los costos: interés, seguros, comisiones, gastos administrativos, IVA. Es lo único que sirve para comparar entre bancos — no la TNA.' },
+  'CFT':    { titulo: 'CFT — Costo Financiero Total', def: 'Similar al CFTEA pero sin "anualizar" con interés compuesto. Incluye interés + seguros + comisiones del préstamo.' },
+  'IPC':    { titulo: 'IPC — Índice de Precios al Consumidor', def: 'El número que mide la inflación. Lo publica el INDEC cada mes (alrededor del día 15). Por ejemplo, IPC 3.4% en marzo significa que los precios en promedio subieron 3.4% ese mes.' },
+  'FCI':    { titulo: 'FCI — Fondo Común de Inversión', def: 'Una "canasta" con muchas inversiones adentro (plazos fijos, bonos, acciones, etc.) gestionada por profesionales. Vos comprás una cuotaparte y participás de todas. Mínimo $1, rescate en T+0/T+1/T+2 según el tipo.' },
+  'ALYC':   { titulo: 'ALYC — Agente de Liquidación y Compensación', def: 'Es el nombre técnico de los brokers en Argentina. Empresas autorizadas por la CNV para ejecutar tus órdenes en BYMA. Ejemplos: Cocos, IOL Invertironline, Balanz, Bull Market.' },
+  'BYMA':   { titulo: 'BYMA — Bolsas y Mercados Argentinos', def: 'La bolsa de valores de Argentina. Donde se compran y venden las acciones, bonos, CEDEARs. No operás directamente — vas a través de un broker (ALYC).' },
+  'FGD':    { titulo: 'FGD — Fondo de Garantía de Depósitos', def: 'Sistema que protege los depósitos bancarios en Argentina. Si quiebra tu banco, te devuelven hasta $1.140.000 por persona (May 2026). Cubre cajas de ahorro, cuentas corrientes y plazos fijos. NO cubre FCI ni billeteras virtuales.' },
+  'CER':    { titulo: 'CER — Coeficiente de Estabilización de Referencia', def: 'Índice diario que sigue la inflación argentina. Lo publica el BCRA. Es la base del UVA y de muchos bonos "ajustables por inflación".' },
+  'UVA':    { titulo: 'UVA — Unidad de Valor Adquisitivo', def: 'Una "moneda" creada por el BCRA en 2016 que se actualiza diariamente con la inflación (CER). Se usa para créditos hipotecarios: la deuda se mide en UVAs, no en pesos, así siempre debés lo mismo en términos reales.' },
+  'BADLAR': { titulo: 'BADLAR', def: 'Tasa que pagan los bancos privados por depósitos de más de $1 millón a 30-35 días. Es la referencia del sistema financiero y la base sobre la que cada banco fija sus TNAs de plazo fijo.' },
+  'CEDEAR': { titulo: 'CEDEAR — Certificado de Depósito Argentino', def: 'Te permite comprar acciones extranjeras (Apple, Tesla, Google...) desde Argentina, en pesos. Cada CEDEAR representa una fracción de la acción real. Cotizan en BYMA, los comprás vía tu broker.' },
+  'CNV':    { titulo: 'CNV — Comisión Nacional de Valores', def: 'Organismo del Estado que regula el mercado de capitales argentino. Autoriza brokers, FCI, sociedades gerentes, asesores. Si alguien no figura en su registro, no es legal.' },
+  'BCRA':   { titulo: 'BCRA — Banco Central de la República Argentina', def: 'El banco central. Define la política monetaria, fija tasas de referencia, regula los bancos, administra las reservas en dólares.' },
+  'INDEC':  { titulo: 'INDEC — Instituto Nacional de Estadística y Censos', def: 'Organismo oficial que mide la inflación (IPC), la pobreza, el PBI y otras estadísticas del país.' },
+  'TIR':    { titulo: 'TIR — Tasa Interna de Retorno', def: 'La tasa anual que rinde una inversión considerando todos los flujos futuros (cuotas, cupones, etc.) descontados al presente. En bonos, te dice cuánto rinde si lo comprás hoy y lo mantenés hasta el vencimiento.' },
+  'PBI':    { titulo: 'PBI — Producto Bruto Interno', def: 'Valor de todos los bienes y servicios producidos en un país durante un año. Es la medida más común para hablar del "tamaño" de una economía.' },
+  'EMBI':   { titulo: 'EMBI+ — Riesgo País', def: 'Lo calcula JP Morgan. Mide cuánta tasa "extra" debe pagar Argentina sobre los bonos de EE.UU. para compensar el riesgo de no pagar. Se mide en "puntos básicos" (100 pb = 1%). Hoy ~525 pb significa que Argentina paga ~5.25% más que el Tesoro de EE.UU.' },
+  'AL30':   { titulo: 'AL30', def: 'Bono del Estado argentino en dólares con vencimiento en 2030, ley argentina. Es de los más operados, se usa para hacer dólar MEP y CCL.' },
+  'GD30':   { titulo: 'GD30', def: 'Bono del Estado argentino en dólares con vencimiento en 2030, ley NEW YORK. Como tiene jurisdicción de EE.UU., los inversores lo consideran "más seguro" que el AL30 — paga una tasa un poco menor.' },
+  'ON':     { titulo: 'ON — Obligación Negociable', def: 'Son bonos emitidos por EMPRESAS (no el Estado). Ej: una ON de YPF, Pampa, Vista. Funcionan como un préstamo: vos le prestás plata a la empresa y ella te paga interés.' },
+  'LECAP':  { titulo: 'LECAP — Letra Capitalizable', def: 'Letra del Tesoro argentino en pesos a corto plazo (típicamente 30-90 días). El interés se capitaliza diariamente. Es uno de los instrumentos de renta fija en pesos más populares.' },
+  'T+0':    { titulo: 'T+0 — Liquidación inmediata', def: '"Hoy mismo". Si vendés algo en T+0, la plata te queda disponible para retirar el mismo día. Las cuentas remuneradas y muchos FCI money market rescatan T+0.' },
+  'T+1':    { titulo: 'T+1 — Liquidación al día siguiente', def: 'Si vendés hoy, la plata te queda disponible mañana hábil. Es el plazo típico para bonos en pesos y muchos FCI de renta fija.' },
+  'T+2':    { titulo: 'T+2 — Liquidación a 2 días', def: 'Si vendés hoy, la plata te queda disponible en 2 días hábiles. Es el plazo típico de acciones, CEDEARs, bonos en dólares.' },
+  'DCA':    { titulo: 'DCA — Dollar Cost Averaging', def: 'Estrategia de invertir un monto fijo todos los meses (ej: $50.000 cada 1ro de mes), sin importar el precio. Neutraliza el riesgo de "comprar caro" y suaviza la volatilidad. Es lo más recomendado para principiantes.' },
+  'ETF':    { titulo: 'ETF — Exchange Traded Fund', def: 'Un fondo que cotiza en bolsa como una acción. Adentro tiene muchas inversiones (las 500 empresas de EE.UU. en el caso del SPY, por ejemplo). Comprás "una sola cosa" y diversificás en cientos.' },
+  'BCBA':   { titulo: 'BCBA — Bolsa de Comercio de Buenos Aires', def: 'La institución histórica de la bolsa argentina. Hoy la operatoria se hace a través de BYMA, pero la BCBA sigue existiendo como entidad.' },
+};
+
+// Inyecta tooltip cuando hay <span data-term="...">
+(function initGlossary() {
+  // CSS tooltip
+  if (!document.getElementById('bb-glossary-styles')) {
+    const s = document.createElement('style');
+    s.id = 'bb-glossary-styles';
+    s.textContent = `
+      [data-term] { border-bottom: 1px dotted rgba(74,222,154,0.6); cursor: help; position: relative; }
+      .bb-tooltip { position: absolute; z-index: 1000; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+        background: #0a0c0f; border: 1px solid rgba(74,222,154,0.35); border-radius: 8px;
+        padding: 0.7rem 0.85rem; width: 280px; max-width: 90vw; font-size: 0.8rem; color: #e8edf5;
+        line-height: 1.55; box-shadow: 0 12px 32px rgba(0,0,0,0.5); pointer-events: auto;
+        font-family: 'Outfit', sans-serif; font-weight: 400; text-transform: none; letter-spacing: 0; }
+      .bb-tooltip strong { color: #4ade9a; display: block; font-family: 'DM Serif Display', serif; font-size: 0.9rem; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
+      .bb-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+        border: 6px solid transparent; border-top-color: rgba(74,222,154,0.35); }
+      @media (max-width: 600px) {
+        .bb-tooltip { width: min(260px, 80vw); }
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  let openTip = null;
+  function close() { if (openTip) { openTip.remove(); openTip = null; } }
+  function show(el) {
+    close();
+    const term = el.dataset.term;
+    const g = window.BB_GLOSARIO[term];
+    if (!g) return;
+    const t = document.createElement('div');
+    t.className = 'bb-tooltip';
+    t.innerHTML = `<strong>${g.titulo}</strong>${g.def}`;
+    el.appendChild(t);
+    openTip = t;
+    // Reposition if overflows
+    const r = t.getBoundingClientRect();
+    if (r.left < 8) t.style.transform = `translateX(${-r.left + 8}px)`;
+    if (r.right > innerWidth - 8) t.style.transform = `translateX(${innerWidth - r.right - 8}px)`;
+  }
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('[data-term]');
+    if (el) show(el);
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('[data-term]')) close();
+  });
+  // Mobile tap
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-term]');
+    if (el) {
+      e.preventDefault();
+      if (openTip && openTip.parentElement === el) close();
+      else show(el);
+    } else {
+      close();
+    }
+  });
+})();
 
 // GA4 is now loaded inline at the top of every <head> (per Google's recommendation).
 

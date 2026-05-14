@@ -89,9 +89,57 @@
         </div>
 
         <p style="color:var(--text-subtle);font-size:0.78rem;line-height:1.6;margin-top:1.5rem">
-          <strong style="color:var(--text)">Cómo funciona:</strong> calculamos cuánto tendrías que tener hoy invertido a tu TNA para pagar cada cuota futura. Esa suma es el "valor presente" real de pagar en cuotas. Si es menor que el precio al contado, te conviene cuotas.
+          <strong style="color:var(--text)">Cómo funciona:</strong> calculamos cuánto tendrías que tener hoy invertido a tu <span data-term="TNA">TNA</span> para pagar cada cuota futura. Esa suma es el "valor presente" real de pagar en cuotas. Si es menor que el precio al contado, te conviene cuotas.
         </p>
       </div>
+
+      <section style="max-width:760px;margin:3rem auto 0;display:flex;flex-direction:column;gap:1rem">
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:12px;padding:1.5rem">
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.6rem;letter-spacing:-0.01em">✅ Cuándo te conviene pagar en cuotas</h3>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.9rem;line-height:1.8;margin:0">
+            <li>Las cuotas son <strong style="color:var(--text)">realmente sin interés</strong> — verificá que el precio total = precio al contado, sin descuento perdido.</li>
+            <li>Tu plata <strong style="color:var(--text)">rinde más que la inflación</strong> esperada (ej: cuenta remunerada con <span data-term="TNA">TNA</span> ~30% mientras la inflación mensual es 2-3%).</li>
+            <li>Tenés la plata YA disponible y la dejás trabajando hasta que toque cada cuota.</li>
+            <li>Sos disciplinado: pagás cada cuota a término sin atrasos. Los recargos por mora se comen el beneficio en 1 mes.</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #ff6b6b;border-radius:12px;padding:1.5rem">
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.6rem;letter-spacing:-0.01em">❌ La "trampa del sin interés"</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;margin-bottom:0.85rem">No todo "sin interés" lo es. Atento a estos casos:</p>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.88rem;line-height:1.8;margin:0">
+            <li><strong style="color:var(--text)">Precio inflado:</strong> el comercio sube el precio "contado" a propósito para "regalarte" las cuotas. Producto que vale $400.000 en otro lado, acá te lo venden a $500.000 "en 6 cuotas sin interés". <strong>Estás pagando el interés en el precio</strong>, no en las cuotas.</li>
+            <li><strong style="color:var(--text)">Descuento al contado que perdés:</strong> "$500.000 en 6 cuotas o 15% off al contado = $425.000". Las cuotas te están cobrando un interés implícito alto. Calculalo arriba.</li>
+            <li><strong style="color:var(--text)">"Cuotas Ahora 12":</strong> son cuotas con tasa subsidiada por el gobierno, pero <strong>tienen interés</strong> (CFT bajo, no cero). Mirá la letra chica.</li>
+            <li><strong style="color:var(--text)">Plazos muy largos:</strong> 24+ cuotas "sin interés" son raras precisamente porque al comercio le sirven menos. Cuando aparecen, suelen venir con sobreprecio.</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #60a5fa;border-radius:12px;padding:1.5rem">
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.6rem;letter-spacing:-0.01em">🔎 La tasa implícita: ¿qué interés te cobran "escondido"?</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;margin-bottom:0.85rem">Cuando te ofrecen <strong style="color:var(--text)">"$425.000 al contado o $500.000 en 6 cuotas sin interés"</strong>, el "sin interés" es marketing. En realidad, hay un interés mensual implícito en el sobreprecio.</p>
+          <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65;margin-bottom:0.5rem">Cálculo en este ejemplo:</p>
+          <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.85rem;line-height:1.75;margin-bottom:0.85rem">
+            <li>Sobrecargo: $500.000 − $425.000 = $75.000 (≈17.6% sobre el precio contado).</li>
+            <li>Repartido en 6 meses ≈ <strong style="color:var(--text)">2.7% mensual implícito</strong> (<span data-term="TEM">TEM</span>).</li>
+            <li>Anualizado ≈ 38% <span data-term="TEA">TEA</span> — muy parecido a un préstamo personal.</li>
+          </ul>
+          <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Si tu plata rinde 30% <span data-term="TNA">TNA</span> en una cuenta remunerada (≈35% TEA), el contado con descuento te conviene. Si no rinde nada (efectivo guardado), las cuotas zafan apenas.</p>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:12px;padding:1.5rem">
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.6rem;letter-spacing:-0.01em">📋 Términos rápidos (pasá el mouse o tocá)</h3>
+          <ul style="padding-left:0;color:var(--text-muted);font-size:0.88rem;line-height:1.85;margin:0;list-style:none">
+            <li>📈 <strong style="color:var(--text)"><span data-term="TNA">TNA</span></strong> — la tasa "del cartel", sin considerar reinversión.</li>
+            <li>📊 <strong style="color:var(--text)"><span data-term="TEA">TEA</span></strong> — la tasa REAL que rinde al año.</li>
+            <li>📉 <strong style="color:var(--text)"><span data-term="TEM">TEM</span></strong> — tasa mensual. ×12 ≈ TNA. Compuesta 12× ≈ TEA.</li>
+            <li>💸 <strong style="color:var(--text)"><span data-term="CFTEA">CFTEA</span></strong> — costo total real anual de un préstamo (con seguros, IVA, todo).</li>
+            <li>📈 <strong style="color:var(--text)"><span data-term="IPC">IPC</span></strong> — inflación oficial INDEC. Si la TNA real es menor, perdés poder de compra.</li>
+          </ul>
+        </div>
+
+      </section>
 
       <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin:2rem 0">
         <a href="comparador-cuentas.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">💳 Ver TNAs de cuentas remuneradas →</a>
@@ -110,7 +158,7 @@
     <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
   </footer>
 
-  <script src="../js/main.js?v=9"></script>
+  <script src="../js/main.js?v=10"></script>
   <script>
   const $ = id => document.getElementById(id);
   const fmt = n => '$' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
