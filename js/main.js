@@ -1,5 +1,5 @@
-// FinCalc — main.js v10
-window.__BB_MAIN_JS_VERSION = 'v10';
+// FinCalc — main.js v11
+window.__BB_MAIN_JS_VERSION = 'v11';
 
 // ============================================================
 // GLOSARIO — tooltips para términos financieros
@@ -183,7 +183,6 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Comparadores',
       items: [
-        { href: pagesBase + 'comparador-dolares.html',    label: 'Tipos de dólar',         icon: '💵' },
         { href: pagesBase + 'contado-vs-cuotas.html',     label: 'Contado vs cuotas',      icon: '🛒' },
       ],
     },
