@@ -945,3 +945,61 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
   .donation-inner { grid-template-columns: 1fr; gap: 1.5rem; text-align: center; }
   .donation-buttons { flex-direction: row; justify-content: center; flex-wrap: wrap; }
 }
+
+/* ============================================
+   GUÍA DE USO — acordeón <details> reutilizable
+   ============================================ */
+.use-guide {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 0;
+  margin: 0 auto 1.5rem;
+  max-width: 900px;
+  overflow: hidden;
+}
+.use-guide > summary {
+  padding: 1rem 1.4rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: background var(--transition);
+}
+.use-guide > summary::-webkit-details-marker { display: none; }
+.use-guide > summary::after {
+  content: '▼';
+  font-size: 0.65rem;
+  opacity: 0.6;
+  transition: transform 0.2s;
+}
+.use-guide[open] > summary::after { transform: rotate(180deg); }
+.use-guide > summary:hover { background: rgba(74,222,154,0.04); }
+.use-guide .guide-body {
+  padding: 0 1.4rem 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.use-guide .guide-body ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+.use-guide .guide-body ol li { margin-bottom: 0.4rem; }
+.use-guide .guide-body strong { color: var(--text); }
+.use-guide .guide-body .tip {
+  background: rgba(96,165,250,0.06);
+  border-left: 2px solid #60a5fa;
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+}

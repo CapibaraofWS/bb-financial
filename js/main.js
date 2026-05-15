@@ -1,5 +1,5 @@
-// FinCalc — main.js v13
-window.__BB_MAIN_JS_VERSION = 'v13';
+// FinCalc — main.js v14
+window.__BB_MAIN_JS_VERSION = 'v14';
 
 // ============================================================
 // GLOSARIO — tooltips para términos financieros
@@ -109,9 +109,10 @@ window.BB_GLOSARIO = {
 // ============================================================
 (function injectFavicon() {
   if (document.querySelector('link[rel="icon"]')) return;
-  // Path is relative to where the document lives. Pages under /pages/ need '../assets'.
+  // Path is relative to where the document lives.
+  const inBlog = location.pathname.includes('/blog/');
   const inPages = location.pathname.includes('/pages/');
-  const base = inPages ? '../assets/' : 'assets/';
+  const base = inBlog ? '../../assets/' : (inPages ? '../assets/' : 'assets/');
   // Only JPG — browsers prefer SVG when both present and ours is the small old logo
   const links = [
     { rel: 'icon', type: 'image/jpeg', sizes: '512x512', href: base + 'favicon.jpg' },
@@ -134,9 +135,10 @@ window.BB_GLOSARIO = {
   const nav = document.querySelector('.main-nav');
   if (!nav) return;
 
+  const inBlog = location.pathname.includes('/blog/');
   const inPages = location.pathname.includes('/pages/');
-  const root = inPages ? '../' : '';
-  const pagesBase = inPages ? '' : 'pages/';
+  const root = inBlog ? '../../' : (inPages ? '../' : '');
+  const pagesBase = inBlog ? '../' : (inPages ? '' : 'pages/');
 
   // Helper: build a dropdown { title, items: [{href, label, icon}] }
   const groups = [
@@ -209,6 +211,11 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'markowitz.html',      label: 'Markowitz',          icon: '🎲' },
         { href: pagesBase + 'mis-portafolios.html',label: 'Portafolio',         icon: '💼', beta: true },
       ],
+    },
+    {
+      kind: 'link',
+      href: pagesBase + 'blog/index.html',
+      label: 'Blog',
     },
     {
       kind: 'link',
