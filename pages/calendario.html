@@ -136,8 +136,11 @@
         </div>
         <div class="cal-filter" id="cal-filter">
           <button class="active" data-filter="all">Todas</button>
+          <button data-filter="top20">Top 20</button>
+          <button data-filter="top50">Top 50</button>
+          <button data-filter="top100">Top 100</button>
           <button data-filter="large">Large Cap</button>
-          <button data-filter="mega">Mega Cap (&gt;$200B)</button>
+          <button data-filter="mega">Mega (&gt;$200B)</button>
           <button data-filter="reported">Ya reportaron</button>
         </div>
       </div>
@@ -171,7 +174,7 @@
     <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="../js/main.js?v=11"></script>
+  <script src="../js/main.js?v=12"></script>
   <script src="../js/ticker.js"></script>
   <script>
   (function() {
@@ -234,6 +237,17 @@
       if (activeFilter === 'reported') return items.filter(e => e.epsActual != null);
       if (activeFilter === 'mega')  return items.filter(e => (mcapCache[e.symbol] || 0) > 200e9);
       if (activeFilter === 'large') return items.filter(e => (mcapCache[e.symbol] || 0) > 10e9);
+      // Top N por market cap — selecciona los N símbolos más grandes del mes
+      const topMatch = activeFilter.match(/^top(\d+)$/);
+      if (topMatch) {
+        const N = parseInt(topMatch[1], 10);
+        const topSymbols = new Set(
+          [...new Set(items.map(e => e.symbol))]
+            .sort((a, b) => (mcapCache[b] || 0) - (mcapCache[a] || 0))
+            .slice(0, N)
+        );
+        return items.filter(e => topSymbols.has(e.symbol));
+      }
       return items;
     }
 

@@ -125,7 +125,41 @@
             <li>Repartido en 6 meses ≈ <strong style="color:var(--text)">2.7% mensual implícito</strong> (<span data-term="TEM">TEM</span>).</li>
             <li>Anualizado ≈ 38% <span data-term="TEA">TEA</span> — muy parecido a un préstamo personal.</li>
           </ul>
-          <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Si tu plata rinde 30% <span data-term="TNA">TNA</span> en una cuenta remunerada (≈35% TEA), el contado con descuento te conviene. Si no rinde nada (efectivo guardado), las cuotas zafan apenas.</p>
+          <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65;margin-bottom:1.25rem">Si tu plata rinde 30% <span data-term="TNA">TNA</span> en una cuenta remunerada (≈35% TEA), el contado con descuento te conviene. Si no rinde nada (efectivo guardado), las cuotas zafan apenas.</p>
+
+          <!-- Mini calculadora de tasa implícita -->
+          <div style="background:var(--bg);border:1px solid rgba(96,165,250,0.25);border-radius:10px;padding:1.25rem">
+            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.85rem">🧮 Mini-calculadora — Tasa implícita</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;margin-bottom:0.85rem">
+              <div>
+                <label style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.3rem">Contado</label>
+                <input type="number" id="ti-contado" value="425000" style="width:100%;padding:0.55rem 0.75rem;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:6px;font-size:0.88rem;font-family:var(--font-body)">
+              </div>
+              <div>
+                <label style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.3rem">En cuotas</label>
+                <input type="number" id="ti-cuotas-total" value="500000" style="width:100%;padding:0.55rem 0.75rem;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:6px;font-size:0.88rem;font-family:var(--font-body)">
+              </div>
+              <div>
+                <label style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.3rem">N° cuotas</label>
+                <input type="number" id="ti-n" value="6" min="2" max="24" style="width:100%;padding:0.55rem 0.75rem;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:6px;font-size:0.88rem;font-family:var(--font-body)">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;margin-top:0.85rem">
+              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:0.7rem 0.85rem">
+                <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)"><span data-term="TEM">TEM</span></div>
+                <div style="font-family:var(--font-display);font-size:1.15rem;color:#ff9999;margin-top:0.2rem" id="ti-tem">—%</div>
+              </div>
+              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:0.7rem 0.85rem">
+                <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)"><span data-term="TNA">TNA</span> implícita</div>
+                <div style="font-family:var(--font-display);font-size:1.15rem;color:#ff9999;margin-top:0.2rem" id="ti-tna">—%</div>
+              </div>
+              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:0.7rem 0.85rem">
+                <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle)"><span data-term="TEA">TEA</span> implícita</div>
+                <div style="font-family:var(--font-display);font-size:1.15rem;color:#ff9999;margin-top:0.2rem" id="ti-tea">—%</div>
+              </div>
+            </div>
+            <p id="ti-veredict" style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin-top:0.85rem">—</p>
+          </div>
         </div>
 
         <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:12px;padding:1.5rem">
@@ -158,7 +192,7 @@
     <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
   </footer>
 
-  <script src="../js/main.js?v=11"></script>
+  <script src="../js/main.js?v=12"></script>
   <script>
   const $ = id => document.getElementById(id);
   const fmt = n => '$' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -198,6 +232,41 @@
 
   ['precio','cuotas','tna'].forEach(id => $(id).addEventListener('input', calc));
   calc();
+
+  // Mini-calculadora: Tasa implícita escondida en cuotas
+  function calcTI() {
+    const contado = parseFloat($('ti-contado').value) || 0;
+    const total   = parseFloat($('ti-cuotas-total').value) || 0;
+    const n       = parseInt($('ti-n').value) || 1;
+    if (contado <= 0 || total <= 0 || n < 1) {
+      $('ti-tem').textContent = '—%'; $('ti-tna').textContent = '—%'; $('ti-tea').textContent = '—%';
+      $('ti-veredict').textContent = 'Ingresá valores válidos';
+      return;
+    }
+    const cuota = total / n;
+    // Resolver i tal que: contado = cuota * (1 - (1+i)^-n) / i  (sistema francés / valor presente)
+    let lo = 0, hi = 1; // i mensual entre 0 y 100%
+    if (total <= contado) {
+      $('ti-tem').textContent = '0%'; $('ti-tna').textContent = '0%'; $('ti-tea').textContent = '0%';
+      $('ti-veredict').innerHTML = 'No hay sobrecargo — el precio en cuotas es igual o menor al contado. <strong style="color:var(--accent)">Esa "sin interés" es real</strong>.';
+      return;
+    }
+    for (let k = 0; k < 80; k++) {
+      const mid = (lo + hi) / 2;
+      const vp = mid === 0 ? cuota * n : cuota * (1 - Math.pow(1 + mid, -n)) / mid;
+      if (vp > contado) lo = mid; else hi = mid;
+    }
+    const tem = (lo + hi) / 2;
+    const tna = tem * 12;
+    const tea = Math.pow(1 + tem, 12) - 1;
+    $('ti-tem').textContent = (tem * 100).toFixed(2) + '%';
+    $('ti-tna').textContent = (tna * 100).toFixed(1) + '%';
+    $('ti-tea').textContent = (tea * 100).toFixed(1) + '%';
+    const recargo = (total - contado) / contado * 100;
+    $('ti-veredict').innerHTML = `Te están cobrando un sobrecargo de <strong style="color:#ff9999">${recargo.toFixed(1)}%</strong>, equivalente a una tasa mensual implícita de <strong style="color:#ff9999">${(tem*100).toFixed(2)}%</strong>. Si tu plata rinde más que eso, te conviene contado.`;
+  }
+  ['ti-contado','ti-cuotas-total','ti-n'].forEach(id => $(id).addEventListener('input', calcTI));
+  calcTI();
   </script>
 </body>
 </html>

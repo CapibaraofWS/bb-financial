@@ -1,5 +1,5 @@
-// FinCalc — main.js v11
-window.__BB_MAIN_JS_VERSION = 'v11';
+// FinCalc — main.js v12
+window.__BB_MAIN_JS_VERSION = 'v12';
 
 // ============================================================
 // GLOSARIO — tooltips para términos financieros
@@ -286,11 +286,8 @@ window.BB_GLOSARIO = {
         <p class="donation-sub">El sitio es y va a seguir siendo gratis y sin publicidad. Si te sirvió, sumate con el valor de un café — me ayudás a mantenerlo vivo y a sumar más herramientas.</p>
       </div>
       <div class="donation-buttons">
-        <a href="https://cafecito.app/bbfinancial" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">
+        <a href="https://cafecito.app/bb-financial" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">
           ☕ Invitame un cafecito
-        </a>
-        <a href="https://link.mercadopago.com.ar/bbfinancial" target="_blank" rel="noopener noreferrer" class="donation-btn mp">
-          💛 Mercado Pago
         </a>
       </div>
     </div>
@@ -302,9 +299,10 @@ window.BB_GLOSARIO = {
 const toggle = document.querySelector('.menu-toggle');
 const navEl = document.querySelector('.main-nav');
 if (toggle && navEl) {
-  toggle.addEventListener('click', () => {
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();   // prevent document handlers from interfering
     const open = navEl.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open);
+    toggle.setAttribute('aria-expanded', String(open));
   });
 }
 
