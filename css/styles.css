@@ -770,7 +770,7 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
     max-height: calc(100vh - 64px);
   }
   .main-nav.open .nav-dropdown-menu {
-    display: block;
+    display: none;
     position: static;
     box-shadow: none;
     border: none;
@@ -778,6 +778,10 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
     border-radius: 8px;
     margin-top: 0.25rem;
     padding: 0.25rem;
+  }
+  /* Solo mostrar el menú si el dropdown está abierto explícitamente */
+  .main-nav.open .nav-dropdown.open .nav-dropdown-menu {
+    display: block;
   }
   .main-nav.open .nav-dropdown.open .nav-dropdown-btn,
   .main-nav.open .nav-dropdown-btn { width: 100%; justify-content: space-between; }
