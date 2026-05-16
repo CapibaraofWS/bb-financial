@@ -319,6 +319,7 @@
             answered++;
             if (answered === 3) {
               $$('quiz-score').innerHTML = 'Tu puntaje: <strong>' + correct + '/3</strong> ' + (correct === 3 ? '🎉 ¡Perfecto!' : correct >= 2 ? '👍 Bien' : '📚 Releé el artículo');
+              window.bbTrack && window.bbTrack('quiz_complete', { quiz: 'broker_basics', score: correct, total: 3 });
             }
           });
         });
@@ -338,6 +339,6 @@
   </footer>
 
   <script src="../../js/sanitize.js?v=1"></script>
-  <script src="../../js/main.js?v=17"></script>
+  <script src="../../js/main.js?v=18"></script>
 </body>
 </html>

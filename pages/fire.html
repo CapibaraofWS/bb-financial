@@ -215,11 +215,13 @@
                 </div>
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">¿Qué poner? 🇦🇷 Argentina: ~15% · 🇺🇸 EE.UU.: 15–20% · Sin certeza: usá 15%. Cuentas exentas (IRA, FCI): 0%.</p>
               </div>
-              
+              <div class="form-group">
+                <label for="edad-objetivo">Edad objetivo de retiro <span>(opcional, para Coast FIRE)</span></label>
                 <div class="input-wrap">
-                  <input type="number" id="impuesto-ret" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcularFIRE()" />
-                  <span class="input-suffix">%</span>
+                  <input type="number" id="edad-objetivo" class="has-suffix" value="65" min="30" max="80" oninput="calcularFIRE()" />
+                  <span class="input-suffix">años</span>
                 </div>
+                <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">A esta edad querés llegar al número FIRE. Solo se usa para calcular Coast FIRE.</p>
               </div>
               <div class="form-group">
                 <label for="capital-actual">Capital actual ahorrado <span>(USD)</span></label>
@@ -269,6 +271,22 @@
             <!-- Alerts -->
             <div id="alert-ya-fire" class="alert-box alert-success"></div>
 
+            <!-- COAST FIRE -->
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #60a5fa;border-radius:12px;padding:1.25rem;margin:1rem 0">
+              <p style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.4rem">🌊 Coast FIRE</p>
+              <p style="font-family:var(--font-display);font-size:1.6rem;letter-spacing:-0.01em;color:var(--text);margin-bottom:0.3rem" id="coast-fire-value">—</p>
+              <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.55" id="coast-fire-desc">El monto que, si lo tenés invertido HOY y dejás de aportar, llega solo al número FIRE por interés compuesto.</p>
+              <div id="coast-fire-progress" style="display:none;margin-top:0.85rem">
+                <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-family:var(--font-mono);color:var(--text-subtle);margin-bottom:0.3rem">
+                  <span>Tu progreso</span>
+                  <span id="coast-fire-pct">0%</span>
+                </div>
+                <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden">
+                  <div id="coast-fire-bar" style="height:100%;background:#60a5fa;width:0%;transition:width 0.4s"></div>
+                </div>
+              </div>
+            </div>
+
             <!-- 3 scenarios -->
             <p class="panel-title" style="margin-bottom:0.75rem">Escenarios</p>
             <div class="scenario-grid">
@@ -309,6 +327,70 @@
           </div>
         </section>
       </div>
+
+      <!-- Tipos de FIRE -->
+      <section style="max-width:900px;margin:4rem auto 2rem">
+        <h2 style="font-family:var(--font-display);font-size:1.7rem;letter-spacing:-0.01em;text-align:center;margin-bottom:1.5rem">Los 4 tipos de FIRE</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #60a5fa;border-radius:12px;padding:1.25rem">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:-0.01em;margin-bottom:0.4rem">🌊 Coast FIRE</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Tenés suficiente <strong style="color:var(--text)">invertido hoy</strong> para que, sin aportar más, llegues al número FIRE a tu edad objetivo. Podés <em>"coastear"</em> el resto de tu vida laboral cubriendo solo gastos.</p>
+          </div>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:12px;padding:1.25rem">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:-0.01em;margin-bottom:0.4rem">🍃 Lean FIRE</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Vida <strong style="color:var(--text)">austera</strong>: gastos mensuales bajos (~$1.500-2.500 USD/mes). Número FIRE = $400-700k USD. Llegás antes pero con menos margen.</p>
+          </div>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:12px;padding:1.25rem">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:-0.01em;margin-bottom:0.4rem">🎯 Regular FIRE</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Vida <strong style="color:var(--text)">cómoda de clase media</strong>: ~$3.000-5.000 USD/mes. Número FIRE clásico: $900k-1.5M USD. El target más popular.</p>
+          </div>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #c084fc;border-radius:12px;padding:1.25rem">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:-0.01em;margin-bottom:0.4rem">🥂 Fat FIRE</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.65">Vida <strong style="color:var(--text)">lujosa</strong>: $8.000+ USD/mes. Número FIRE: $2.5M+ USD. Para quienes no quieren bajar ningún estándar al retirarse.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq-section" style="max-width:900px;margin:3rem auto">
+        <h2>Preguntas frecuentes sobre FIRE</h2>
+
+        <details class="faq-item">
+          <summary>¿Funciona la Regla del 4% en Argentina con alta inflación?</summary>
+          <div class="faq-body">La Regla del 4% se basa en datos históricos de <strong>mercados desarrollados (EE.UU.)</strong> donde la inflación promedio es 2-3% anual. En Argentina, con inflación volátil de 30-100%+ anual, la regla NO aplica directamente sobre tu capital en pesos. La estrategia FIRE en Argentina se ejecuta en <strong>dólares</strong>: ahorrás dolarizando, invertís en CEDEAR/ETF dolarizados, y al retirarte vivís con la renta en dólares mientras vendés mensualmente para cubrir gastos en pesos. La calculadora asume que tus inputs ya están en USD.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Qué es Coast FIRE y por qué es importante?</summary>
+          <div class="faq-body">Coast FIRE es el punto donde ya tenés <strong>suficiente capital invertido</strong> para que, sin aportar más, llegues al FIRE a tu edad objetivo solo por interés compuesto. Es psicológicamente importante: una vez que llegás, podés tomar un trabajo que te guste más aunque pague menos (porque solo necesitás cubrir gastos), reducir horas, o tomarte sabáticos sin atrasar tu jubilación.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿La tasa de retiro del 4% es realmente segura?</summary>
+          <div class="faq-body">El Trinity Study original (1998) mostró que el 4% sostiene el capital 30 años con ~95% de éxito en mercados de EE.UU. Estudios más recientes sugieren que con horizontes de 40+ años o mercados internacionales menos previsibles, conviene ser más conservador (3.0-3.5%). <strong>Para retiros muy tempranos (40 años o más), usá 3.25%</strong>. Para retiros tradicionales a 65 años, 4% es razonable.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Cómo afectan los impuestos al cálculo FIRE?</summary>
+          <div class="faq-body">Los impuestos sobre rendimientos reducen tu retorno efectivo. En Argentina, la ganancia por venta de acciones/CEDEARs paga Impuesto a las Ganancias (15% para residentes, con varias exenciones según el instrumento). El input "Impuesto" de la calculadora ajusta el retorno neto: si tu retorno bruto es 8% y el impuesto 15%, el retorno neto es 6.8%. Las cuentas exentas (FCI money market, bonos en pesos con exenciones) pueden tener 0% para efectos prácticos.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Hay alternativas a FIRE más conservadoras?</summary>
+          <div class="faq-body">Sí. <strong>Barista FIRE</strong>: alcanzás el capital para vivir con renta pero seguís trabajando part-time o algo simple por ingreso extra y obra social. <strong>Slow FI</strong>: en lugar de retirarte de golpe a los 40, alargás la carrera pero con mucho menos estrés y más tiempo libre. <strong>FU money</strong>: tener suficiente para tomar 1-2 años sabáticos sin angustia ($50-100k USD), sin renunciar al trabajo definitivamente.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Cuánto se ahorra realmente la gente que llega a FIRE?</summary>
+          <div class="faq-body">Tasa de ahorro típica de la comunidad FIRE: <strong>50-70% del ingreso neto</strong>. A tasas más bajas (10-15%, lo "normal"), llegás a FIRE recién a los 65. A 50% llegás en ~17 años. A 70% en ~8.5 años. No hay magia — es matemática: menos gasto + más ahorro + retorno del mercado = independencia más rápida.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Y si necesito plata antes de FIRE para una emergencia?</summary>
+          <div class="faq-body">Ese es uno de los riesgos. La regla es tener un <strong>fondo de emergencia separado</strong> (3-6 meses de gastos en cuenta remunerada o FCI money market) ANTES de empezar a invertir agresivamente para FIRE. Si retirás del portfolio FIRE para una emergencia, retrasás tu objetivo proporcionalmente.</div>
+        </details>
+      </section>
+
     </div>
   </main>
 
@@ -335,7 +417,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=17"></script>
+  <script src="../js/main.js?v=18"></script>
   <script>
     let fireChart = null;
 
@@ -372,6 +454,7 @@
       const capActual   = parseFloat(document.getElementById('capital-actual').value) || 0;
       const aporteMes   = parseFloat(document.getElementById('aporte-fire').value)   || 0;
       const edadActual  = parseInt(document.getElementById('edad-actual').value)      || null;
+      const edadObjetivo= parseInt(document.getElementById('edad-objetivo')?.value)   || null;
 
       const gastoNeto   = Math.max(0, gastosMes - otrosIng);
       const gastoAnual  = gastoNeto * 12;
@@ -434,6 +517,40 @@
         alertInf.textContent = `⚠️ La inflación (${(inflacion*100).toFixed(0)}%) supera el retorno del portfolio (${(retorno*100).toFixed(0)}%). Estás perdiendo poder adquisitivo real.`;
       } else {
         alertInf.classList.remove('visible');
+      }
+
+      // === COAST FIRE ===
+      // El monto que, si lo dejás invertido sin aportar, crece hasta fireNum a la edad objetivo.
+      // Coast = fireNum / (1 + tasaReal)^anios_hasta_retiro
+      const coastFireEl = document.getElementById('coast-fire-value');
+      const coastDescEl = document.getElementById('coast-fire-desc');
+      const coastProgress = document.getElementById('coast-fire-progress');
+      const coastBar = document.getElementById('coast-fire-bar');
+      const coastPctEl = document.getElementById('coast-fire-pct');
+
+      if (edadActual && edadObjetivo && edadObjetivo > edadActual && tasaRealNet > 0) {
+        const aniosHasta = edadObjetivo - edadActual;
+        const coastFire = fireNum / Math.pow(1 + tasaRealNet, aniosHasta);
+        coastFireEl.textContent = '$' + formatUSD(coastFire);
+        coastDescEl.innerHTML = `Si a los <strong style="color:var(--text)">${edadActual} años</strong> ya tenés <strong style="color:#60a5fa">$${formatUSD(coastFire)}</strong> invertidos a ${(tasaRealNet*100).toFixed(1)}% real, podés <strong style="color:var(--text)">dejar de aportar</strong> y aún así llegás a tu número FIRE de $${formatUSD(fireNum)} a los <strong style="color:var(--text)">${edadObjetivo} años</strong> por puro interés compuesto.`;
+
+        // Progress bar
+        if (capActual > 0) {
+          const pct = Math.min(100, (capActual / coastFire) * 100);
+          coastProgress.style.display = 'block';
+          coastBar.style.width = pct.toFixed(1) + '%';
+          coastPctEl.textContent = pct.toFixed(1) + '%';
+          if (pct >= 100) {
+            coastBar.style.background = '#4ade9a';
+            coastDescEl.innerHTML += `<br><br>✅ <strong style="color:var(--accent)">¡Ya estás en Coast FIRE!</strong> Tu capital actual ya alcanza para llegar al FIRE sin aportar más.`;
+          }
+        } else {
+          coastProgress.style.display = 'none';
+        }
+      } else {
+        coastFireEl.textContent = '—';
+        coastDescEl.textContent = 'Completá edad actual + edad objetivo + retorno mayor a inflación para calcular Coast FIRE.';
+        coastProgress.style.display = 'none';
       }
 
       // Insights dinámicos

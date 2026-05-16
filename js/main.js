@@ -1,5 +1,16 @@
-// FinCalc — main.js v17
-window.__BB_MAIN_JS_VERSION = 'v17';
+// FinCalc — main.js v18
+window.__BB_MAIN_JS_VERSION = 'v18';
+
+// ============================================================
+// GA4 EVENTS — helper centralizado
+// Uso: window.bbTrack('calculation_complete', { calc: 'cuotas' })
+// ============================================================
+window.bbTrack = function (eventName, params) {
+  if (typeof window.gtag !== 'function') return;
+  try {
+    window.gtag('event', eventName, params || {});
+  } catch (e) { /* swallow — no romper UI por analytics */ }
+};
 
 // ============================================================
 // GLOSARIO — tooltips para términos financieros
@@ -69,6 +80,8 @@ window.BB_GLOSARIO = {
     const term = el.dataset.term;
     const g = window.BB_GLOSARIO[term];
     if (!g) return;
+    // GA4 event — tooltip_view
+    window.bbTrack && window.bbTrack('tooltip_view', { term });
     const t = document.createElement('div');
     t.className = 'bb-tooltip';
     t.innerHTML = `<strong>${g.titulo}</strong>${g.def}`;
@@ -297,6 +310,49 @@ window.BB_GLOSARIO = {
   `;
   target.appendChild(div);
 })();
+
+// ============================================================
+// GLOBAL EVENT LISTENERS — calc, share, donate, faq
+// ============================================================
+// Track "Calcular" button clicks per page (calculation_complete)
+document.addEventListener('click', (e) => {
+  const calcBtn = e.target.closest('button.btn.btn-primary');
+  if (calcBtn && /calcular/i.test(calcBtn.textContent)) {
+    // derive calc name from page path
+    const path = location.pathname.split('/').pop().replace('.html', '');
+    window.bbTrack && window.bbTrack('calculation_complete', { calc: path });
+  }
+});
+
+document.addEventListener('click', (e) => {
+  // Donate click
+  const donateBtn = e.target.closest('.donation-btn');
+  if (donateBtn) {
+    const platform = donateBtn.classList.contains('cafecito') ? 'cafecito'
+                   : donateBtn.classList.contains('mp') ? 'mercadopago' : 'other';
+    window.bbTrack && window.bbTrack('donate_click', { platform });
+  }
+  // Share click (calcs)
+  const shareBtn = e.target.closest('.share-btn');
+  if (shareBtn) {
+    const id = shareBtn.id || 'unknown';
+    const channel = id.includes('twitter') ? 'twitter' : id.includes('whatsapp') ? 'whatsapp' : id.includes('link') ? 'copy' : 'other';
+    window.bbTrack && window.bbTrack('share_click', { channel, page: location.pathname });
+  }
+});
+
+// FAQ open tracking (<details class="faq-item">)
+document.addEventListener('toggle', (e) => {
+  const det = e.target;
+  if (det && det.classList && det.classList.contains('faq-item') && det.open) {
+    const q = (det.querySelector('summary')?.textContent || '').trim().slice(0, 60);
+    window.bbTrack && window.bbTrack('faq_open', { question: q, page: location.pathname });
+  }
+  // use-guide open (calculadora "¿Cómo se usa?")
+  if (det && det.classList && det.classList.contains('use-guide') && det.open) {
+    window.bbTrack && window.bbTrack('guide_open', { page: location.pathname });
+  }
+}, true);
 
 // ============================================================
 // DONATIONS — finance-themed creative copy block above footer
