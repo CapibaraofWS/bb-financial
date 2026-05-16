@@ -1,5 +1,5 @@
-// FinCalc — main.js v19
-window.__BB_MAIN_JS_VERSION = 'v19';
+// FinCalc — main.js v20
+window.__BB_MAIN_JS_VERSION = 'v20';
 
 // ============================================================
 // GA4 EVENTS — helper centralizado
