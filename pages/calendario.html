@@ -175,7 +175,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=21"></script>
+  <script src="../js/main.js?v=22"></script>
   <script src="../js/ticker.js"></script>
   <script>
   (function() {
@@ -189,6 +189,22 @@
     let monthEarnings = []; // raw earnings list for visible month
     let activeFilter = 'all';
     let mcapCache = {}; // sym -> mcap (approx via Yahoo on demand)
+
+    // Top 100 empresas por market cap (US listed) — orden referencial 2025-2026.
+    // Se usa como fallback cuando Yahoo no devuelve marketCap (chart endpoint no
+    // siempre lo trae). Garantiza que Top 20/50/100 muestre big tech reales.
+    const TOP_100_BY_MCAP = [
+      'NVDA','MSFT','AAPL','GOOGL','GOOG','AMZN','META','AVGO','TSLA','BRK.B',
+      'WMT','JPM','LLY','V','XOM','MA','ORCL','UNH','COST','HD',
+      'PG','JNJ','NFLX','ABBV','BAC','CRM','KO','CVX','TMUS','AMD',
+      'WFC','CSCO','PM','TM','ABT','IBM','MCD','GE','LIN','MRK',
+      'PEP','AXP','MS','TMO','GS','RTX','ISRG','BX','VZ','NOW',
+      'PLTR','BKNG','UBER','DIS','T','INTU','PFE','SCHW','CAT','SPGI',
+      'BLK','C','LOW','BA','SYK','ANET','BSX','TJX','HON','UNP',
+      'NEE','AMGN','VRTX','PGR','ADP','LMT','DE','CB','GILD','MU',
+      'PANW','MMC','BMY','SBUX','MDT','ELV','AMAT','SO','ETN','ADI',
+      'ETN','MO','REGN','TXN','LRCX','PYPL','KKR','DELL','APH','ICE'
+    ];
 
     function ymd(d) { return d.toISOString().slice(0,10); }
     function firstDayOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
@@ -238,17 +254,28 @@
       if (activeFilter === 'reported') return items.filter(e => e.epsActual != null);
       if (activeFilter === 'mega')  return items.filter(e => (mcapCache[e.symbol] || 0) > 200e9);
       if (activeFilter === 'large') return items.filter(e => (mcapCache[e.symbol] || 0) > 10e9);
-      // Top N por market cap — selecciona los N símbolos MÁS GRANDES del mes.
-      // FIX: solo consideramos los símbolos con marketCap > 0 conocido,
-      // sino los desconocidos (cuando Yahoo no devuelve marketCap) caían al "top" por bug.
+      // Top N: hybrid approach — lista hardcoded de top empresas por market cap
+      // (orden ya jerarquizado) + complemento dinámico con quien tenga marketCap conocido.
+      // Esto soluciona el problema de que Yahoo's chart endpoint no siempre devuelve marketCap.
       const topMatch = activeFilter.match(/^top(\d+)$/);
       if (topMatch) {
         const N = parseInt(topMatch[1], 10);
-        const withCap = [...new Set(items.map(e => e.symbol))]
-          .filter(s => typeof mcapCache[s] === 'number' && mcapCache[s] > 0)
-          .sort((a, b) => mcapCache[b] - mcapCache[a]);
-        const topSymbols = new Set(withCap.slice(0, N));
-        return items.filter(e => topSymbols.has(e.symbol));
+        const monthSymbols = new Set(items.map(e => e.symbol));
+        // Paso 1: tomar los símbolos del top hardcoded en orden, que estén en el mes
+        const fromHardcoded = TOP_100_BY_MCAP.filter(s => monthSymbols.has(s)).slice(0, N);
+        const picked = new Set(fromHardcoded);
+        // Paso 2: si faltan (típicamente Top 50/100 con mes flojo), completar con los
+        // que sí tengan marketCap conocido de Yahoo, ordenados desc
+        if (picked.size < N) {
+          const rest = [...monthSymbols]
+            .filter(s => !picked.has(s) && typeof mcapCache[s] === 'number' && mcapCache[s] > 0)
+            .sort((a, b) => mcapCache[b] - mcapCache[a]);
+          for (const s of rest) {
+            if (picked.size >= N) break;
+            picked.add(s);
+          }
+        }
+        return items.filter(e => picked.has(e.symbol));
       }
       return items;
     }
