@@ -57,6 +57,22 @@
         <p class="page-subtitle">Proyectá cuánto generás en dividendos a lo largo del tiempo, con o sin reinversión, crecimiento del precio y del dividendo.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>Calculá cuánto te van a pagar de dividendos a lo largo del tiempo, y la diferencia entre <strong>cobrar los dividendos</strong> vs <strong>reinvertirlos (DRIP)</strong>.</p>
+      <ol>
+        <li><strong>Cantidad de acciones / precio:</strong> tu inversión inicial total.</li>
+        <li><strong>Dividend Yield:</strong> el % anual que paga la empresa. Empresas estables: 2-4%. REITs/utilities: 4-7%. Crecimiento: 0-1%.</li>
+        <li><strong>Crecimiento del dividendo:</strong> Coca-Cola, Johnson & Johnson son "Dividend Aristocrats" — aumentan dividendos cada año (3-7%). Modelá ese crecimiento acá.</li>
+        <li><strong>DRIP (reinvertir):</strong> usá los dividendos para comprar más acciones, en lugar de cobrarlos. El efecto compuesto es <strong>brutal a 20-30 años</strong>.</li>
+        <li><strong>Impuesto a dividendos:</strong> en Argentina ~7% para residentes en CEDEARs, dependiendo del país emisor.</li>
+      </ol>
+      <div class="tip">💡 <strong>Ejemplo del poder del DRIP:</strong> $10.000 en SPY a 30 años SIN reinvertir → ~$50k. CON DRIP → ~$80k. La diferencia es solo "automatizar" que los dividendos compren más SPY.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65">
@@ -70,7 +86,7 @@
             <div class="form-group">
               <label for="capital-div">Capital inicial <span>(USD)</span></label>
               <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="capital-div" class="has-prefix" value="10000" min="0" oninput="calcDiv()"/></div>
-              <p class="field-note">Cuánto invertís en total en esta acción/ETF.</p>
+              <p class="field-note">Cuánto invertís en total en esta acción/<span data-term="ETF">ETF</span>.</p>
             </div>
             <div class="form-group">
               <label for="precio-accion">Precio de la acción <span>(USD)</span></label>
@@ -158,6 +174,27 @@
         </section>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Qué es el DRIP?</summary>
+          <div class="faq-body">Dividend Re-Investment Plan. En vez de cobrar el dividendo en cash, la empresa (o tu broker) compra automáticamente más acciones con ese dinero. A largo plazo, multiplica tus acciones sin que tengas que hacer nada.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Brokers argentinos ofrecen DRIP automático?</summary>
+          <div class="faq-body">En CEDEARs argentinos generalmente <strong>NO hay DRIP automático</strong> — los dividendos te llegan en pesos a tu cuenta comitente. Vos tenés que reinvertirlos manualmente comprando más acciones. En cuentas USA (Interactive Brokers, Schwab) sí podés activar DRIP nativo.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cuántos impuestos pago por dividendos?</summary>
+          <div class="faq-body">CEDEARs: típicamente ~7% de retención automática para residentes argentinos (depende del país emisor — los de EE.UU. retienen 30% bruto pero hay convenios que bajan). Acciones argentinas locales: dividendos están exentos para personas físicas residentes (Imp. Ganancias).</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Dividendos altos = mejor inversión?</summary>
+          <div class="faq-body">No necesariamente. Un yield muy alto (&gt;8-10%) puede ser una <strong>"trampa de dividendos"</strong>: la empresa está en problemas, la acción cayó y por eso el yield se ve alto. Empresas en problemas suelen recortar el dividendo después. Mirá la estabilidad y crecimiento de los dividendos, no solo el yield actual.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -170,11 +207,11 @@
         <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     let divChart = null;
     function toggleAdv(el) {

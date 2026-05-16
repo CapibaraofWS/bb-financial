@@ -61,6 +61,27 @@
         <p class="page-subtitle">Costo Promedio Ponderado de Capital. La tasa que usás para descontar flujos en cualquier DCF profesional. Incluye CAPM para el costo del equity.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>El <strong>WACC (Weighted Average Cost of Capital)</strong> es la <strong>tasa de descuento</strong> que usás para valuar una empresa o proyecto. Mezcla el costo de la deuda y el costo del capital propio.</p>
+      <ol>
+        <li><strong>Deuda y Equity:</strong> cuánta plata viene de préstamos (deuda) y cuánta de los dueños/accionistas (equity). La proporción importa.</li>
+        <li><strong>Costo de la deuda (Rd):</strong> la tasa que pagás por los préstamos. Si tomás un crédito al 30% TNA, ese es Rd.</li>
+        <li><strong>Costo del equity (Ke):</strong> lo que esperan ganar los accionistas. Se calcula con <strong>CAPM</strong>: Ke = Rf + β × (Rm − Rf).
+          <ul style="margin-top:0.4rem">
+            <li><strong>Rf:</strong> tasa libre de riesgo (bono USA a 10 años, ~4.5%)</li>
+            <li><strong>β (Beta):</strong> volatilidad de tu acción vs el mercado. β=1 = igual al mercado. β=1.5 = 50% más volátil.</li>
+            <li><strong>Rm:</strong> retorno esperado del mercado (~8-10% USA, S&P histórico)</li>
+          </ul>
+        </li>
+        <li><strong>Tasa de impuestos:</strong> los intereses de la deuda son deducibles. Reduce el costo efectivo.</li>
+      </ol>
+      <div class="tip">💡 <strong>Para qué sirve:</strong> el WACC es lo que ponés como "tasa de descuento" en una calculadora de VPN o DDM para valuar empresas. Empresas riesgosas tienen WACC más alto (10-15%); empresas estables tienen WACC más bajo (6-8%).</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
@@ -171,6 +192,27 @@
         </section>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Para qué sirve el WACC en mi día a día?</summary>
+          <div class="faq-body">Si valúas empresas (DCF, DDM, NPV), el WACC es la tasa de descuento que usás. También sirve para comparar: una empresa con WACC bajo (capital barato) puede crecer más fácil que una con WACC alto.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cómo obtengo Beta (β) de una acción?</summary>
+          <div class="faq-body">Yahoo Finance, Finviz o tu broker lo muestran. Es un dato calculado: regresión de los retornos de la acción contra el índice del mercado en los últimos 5 años. β=1 = misma volatilidad que el mercado; β=2 = el doble de volátil.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿El WACC cambia con el tiempo?</summary>
+          <div class="faq-body">Sí, todo el tiempo. Cuando suben las tasas (Fed sube tasas), Rf sube → Ke sube → WACC sube. Cuando cambia la estructura de capital de la empresa (más deuda, menos equity), también cambia. Hay que recalcularlo periódicamente.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Por qué la deuda baja el WACC?</summary>
+          <div class="faq-body">Por dos razones: (1) los intereses de la deuda son <strong>deducibles de impuestos</strong> — el costo efectivo después de impuestos es menor; (2) la deuda suele ser <strong>más barata</strong> que el equity porque tiene menos riesgo (los acreedores cobran antes que los dueños).</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -183,11 +225,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     function calcWACC() {
       const E   = parseFloat(document.getElementById('equity-val').value) || 0;

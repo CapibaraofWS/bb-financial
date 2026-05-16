@@ -1,5 +1,5 @@
-// FinCalc — main.js v18
-window.__BB_MAIN_JS_VERSION = 'v18';
+// FinCalc — main.js v19
+window.__BB_MAIN_JS_VERSION = 'v19';
 
 // ============================================================
 // GA4 EVENTS — helper centralizado
@@ -227,6 +227,7 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Mercado',
       items: [
+        { href: pagesBase + 'ranking-semanal.html', label: 'Ranking semanal 🔥', icon: '📊' },
         { href: pagesBase + 'ticker.html',     label: 'Acciones',     icon: '📈' },
         { href: pagesBase + 'mercado.html',    label: 'Mercado',      icon: '🌐' },
         { href: pagesBase + 'calendario.html', label: 'Calendario',   icon: '📅' },

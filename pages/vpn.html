@@ -76,9 +76,24 @@
       <div class="container">
         <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Valor Presente (VPN)</p>
         <h1 class="page-title">Valor Presente Neto ⏳</h1>
-        <p class="page-subtitle">Traé flujos de caja futuros al presente usando una tasa de descuento. Calculá VPN, TIR y período de repago para evaluar proyectos e inversiones.</p>
+        <p class="page-subtitle">Traé flujos de caja futuros al presente usando una tasa de descuento. Calculá VPN, <span data-term="TIR">TIR</span> y período de repago para evaluar proyectos e inversiones.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>El <strong>VPN (Valor Presente Neto)</strong> te dice si una inversión vale la pena <em>en términos de hoy</em>. Pone todos los flujos futuros al valor que tendrían si los tuvieras YA, y los compara contra lo que invertís.</p>
+      <ol>
+        <li><strong>Inversión inicial (negativa):</strong> lo que ponés hoy. Va con signo negativo (es una salida de dinero).</li>
+        <li><strong>Flujos futuros:</strong> lo que esperás recibir cada año (positivo si entra plata, negativo si pagás más).</li>
+        <li><strong>Tasa de descuento:</strong> tu costo de oportunidad — qué rinde lo mejor que podrías hacer con esa plata. En Argentina: 30-50% si invertís en LECAPs/FCI. Si invertís en USD: 6-10%.</li>
+      </ol>
+      <div class="tip">💡 <strong>Regla simple:</strong> <strong>VPN positivo</strong> = la inversión te da más de lo que rendiría tu mejor alternativa = aceptala. <strong>VPN negativo</strong> = rechazala. <strong>VPN ≈ 0</strong> = es indiferente, decide por otros factores.</div>
+      <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>La TIR es engañosa</strong> sin contexto: una TIR del 80% suena espectacular hasta que recordás que la inflación es 100%. Siempre comparála contra tu tasa real de costo de oportunidad.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
@@ -182,6 +197,27 @@
         </section>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Cuándo tomo una decisión positiva con VPN?</summary>
+          <div class="faq-body">VPN <strong>&gt; 0</strong>: la inversión genera más valor que tu costo de oportunidad — acéptala. VPN <strong>= 0</strong>: indiferente. VPN <strong>&lt; 0</strong>: rechazala, te conviene poner la plata en tu alternativa estándar.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Qué tasa de descuento uso?</summary>
+          <div class="faq-body">Lo más riguroso es tu <strong>WACC</strong> (si valúas un negocio). En decisiones personales, usá el <strong>costo de oportunidad</strong>: ¿qué rinde la mejor alternativa fácil que tenés? Si invertís en LECAPs a 50% TNA, ese 50% es tu tasa. Si invertís en USD al 8%, usá 8%.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Por qué la TIR a veces da resultados raros?</summary>
+          <div class="faq-body">Si los flujos cambian de signo más de una vez (negativos, positivos, negativos), pueden existir múltiples TIRs matemáticamente. En esos casos la TIR pierde sentido y conviene usar el <strong>VPN</strong> directo con tu costo de oportunidad.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿VPN y NPV son lo mismo?</summary>
+          <div class="faq-body">Sí — VPN (Valor Presente Neto) es la traducción castellana de NPV (Net Present Value). Idéntico cálculo, idéntico significado.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -194,11 +230,11 @@
         <li><a href="proyectos.html">Proyectos / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     let vpnChart = null;
     let flujos = [15000, 18000, 20000, 22000, 25000];

@@ -65,6 +65,22 @@
         <p class="page-subtitle">Dividend Discount Model. Calculá el precio intrínseco de una acción descontando sus dividendos futuros. Gordon Growth Model y DDM de dos etapas.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>El <strong>DDM (Dividend Discount Model)</strong> valua una acción a partir de los dividendos futuros que espera repartir. La idea: una acción vale la suma de todos los dividendos que va a pagar, descontados al presente.</p>
+      <ol>
+        <li><strong>Dividendo actual (D₀):</strong> lo que pagó la empresa este año. Buscalo en el reporte anual.</li>
+        <li><strong>Tasa de crecimiento (g):</strong> a qué ritmo crecen los dividendos. Empresas maduras: 2-5%. Tech crecimiento: 7-12%.</li>
+        <li><strong>Tasa de descuento (Ke):</strong> el retorno que vos exigís por el riesgo de esa acción. Calculalo con WACC/CAPM. Típicamente 8-15%.</li>
+        <li><strong>Multietapa (opcional):</strong> si la empresa crece rápido los primeros N años y después se estabiliza, configurá las dos fases.</li>
+      </ol>
+      <div class="tip">💡 <strong>Modelo de Gordon:</strong> V = D₁ / (Ke − g). Solo funciona si <strong>Ke &gt; g</strong>. Si Ke ≤ g, el modelo explota y NO sirve — eso significa que la empresa crece más rápido de lo que la podés descontar, lo cual no es sostenible.</div>
+      <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Limitación crítica:</strong> el DDM solo sirve para empresas que <strong>pagan dividendos estables</strong>. NO sirve para tech (Google, Amazon no pagan), startups, ni empresas en crecimiento que reinvierten todo. Para esas, usá DCF.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
@@ -182,6 +198,27 @@
         </div>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Cuándo NO funciona el DDM?</summary>
+          <div class="faq-body">Cuando la empresa NO paga dividendos (tech, growth como Amazon, Tesla, Google) o cuando crecen más rápido que la tasa de descuento (Ke ≤ g — el modelo explota matemáticamente). Para esos casos usá DCF (Discounted Cash Flow) en vez de DDM.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿De dónde saco la tasa de crecimiento g?</summary>
+          <div class="faq-body">Tres formas: (1) histórico — promedio de crecimiento de dividendos de los últimos 5-10 años; (2) sustentable — g = ROE × (1 − payout); (3) consenso de analistas — Bloomberg, Yahoo. Para empresas maduras lo más común es 2-4%.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Qué hago si el precio que sale es muy distinto al de mercado?</summary>
+          <div class="faq-body">Si tu DDM da un valor mucho mayor al precio actual, podría estar barata. Si da menor, podría estar cara. PERO el DDM es muy sensible a g y Ke — un cambio de 1% mueve el resultado bastante. Calculá un <strong>rango</strong> con varios escenarios antes de decidir.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Sirve para acciones argentinas?</summary>
+          <div class="faq-body">En teoría sí, pero las empresas argentinas tienen políticas de dividendos más irregulares por el contexto macro. Usalo con escepticismo y siempre completá con otros métodos de valuación.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -194,11 +231,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     let ddmChart = null;
 

@@ -30,9 +30,15 @@ export default async function handler(req, res) {
       const prev = m.chartPreviousClose ?? m.previousClose;
       const chg = (price != null && prev) ? price - prev : null;
       const pct = (chg != null && prev) ? (chg / prev) * 100 : null;
-      // Volumen del último día disponible
-      const vols = j?.chart?.result?.[0]?.indicators?.quote?.[0]?.volume || [];
+      // Volumen y closes de los últimos 5 días para calcular cambio semanal
+      const quote0 = j?.chart?.result?.[0]?.indicators?.quote?.[0] || {};
+      const vols = quote0.volume || [];
+      const closes = (quote0.close || []).filter(v => v != null);
       const vol = [...vols].reverse().find(v => v != null) || 0;
+      // weekly = primer close vs último close (~5 días)
+      const weeklyPct = (closes.length >= 2 && closes[0])
+        ? ((closes[closes.length - 1] - closes[0]) / closes[0]) * 100
+        : null;
       return {
         symbol: m.symbol || sym,
         shortName: m.shortName,
@@ -41,6 +47,7 @@ export default async function handler(req, res) {
         regularMarketPrice: price,
         regularMarketChange: chg,
         regularMarketChangePercent: pct,
+        weeklyChangePercent: weeklyPct,
         regularMarketPreviousClose: prev,
         regularMarketVolume: vol,
         marketCap: m.marketCap, // a veces presente, a veces no

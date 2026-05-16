@@ -172,6 +172,21 @@
         <p class="page-subtitle">Tu sueldo bruto no es lo que cobrás, lo que cobrás no es lo que podés gastar. Descubrí cuánto vale realmente tu trabajo.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>Te calcula <strong>cuánto te queda realmente</strong> de tu sueldo después de impuestos, gastos fijos y obligaciones — el "sueldo discrecional" es lo que podés ahorrar o invertir libremente.</p>
+      <ol>
+        <li><strong>Sueldo bruto / neto:</strong> el bruto es antes de descuentos (jubilación, obra social, sindicato). El neto es lo que te depositan. Usalo neto si querés saltearte el cálculo previsional.</li>
+        <li><strong>Gastos fijos:</strong> alquiler, expensas, servicios, suscripciones, supermercado promedio. Todo lo que pagás todos los meses sí o sí.</li>
+        <li><strong>Deudas:</strong> tarjeta, préstamo personal, cuotas en curso. La cuota MENSUAL, no el total.</li>
+        <li><strong>Resultado:</strong> el sueldo discrecional + qué % de tu neto representa. Idealmente debería ser <strong>al menos 20%</strong> para empezar a ahorrar.</li>
+      </ol>
+      <div class="tip">💡 <strong>Si tu discrecional es &lt; 10%:</strong> tenés problema de presupuesto, no de ingreso. Revisá gastos fijos y deudas primero.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
 
@@ -381,6 +396,27 @@
         </section>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Por qué mi sueldo discrecional sale tan bajo?</summary>
+          <div class="faq-body">En Argentina la mayoría de los sueldos se va en gastos fijos básicos por la inflación acumulada. Si tu discrecional es < 10% del neto, no es problema tuyo aisladamente — es estructural. El paso 1 es no caer en deuda; el paso 2 es lograr 5-10% de ahorro aunque sea modesto. La consistencia gana a la magnitud.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cómo afecta Ganancias a mi sueldo?</summary>
+          <div class="faq-body">El Impuesto a las Ganancias se calcula sobre el sueldo bruto anual, escalonado. Mínimo no imponible (2025): ~$2.300.000/mes. Si superás ese umbral, una parte se retiene mes a mes. La calculadora estima usando las escalas vigentes — para el cálculo oficial exacto consultá tu liquidación o ARCA.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Qué porcentaje del sueldo debería ahorrar?</summary>
+          <div class="faq-body">Regla 50-30-20: 50% gastos fijos, 30% discrecionales (ocio, suscripciones), 20% ahorro/inversión. En Argentina con alta inflación es más difícil, pero el objetivo es ≥10% al ahorro como mínimo y crecer desde ahí.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cuento aguinaldo y bonos en mi sueldo mensual?</summary>
+          <div class="faq-body">No los sumes al mes a mes. Manejalos como ingresos extras que tendrían que ir directo a ahorro/inversión, NO a gasto corriente. Esa regla sola sostiene muchas estrategias FIRE.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -404,11 +440,11 @@
         </ul>
       </nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     let salarioChart = null;
     let regimenActual = 'dependencia';

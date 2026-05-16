@@ -65,6 +65,20 @@
         <p class="page-subtitle">Retorno sobre la inversión: absoluto, anualizado y comparado contra benchmarks. Para inversiones, negocios o cualquier proyecto.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>Calculá el rendimiento de una inversión: cuánto ganaste o perdiste, en términos absolutos y anualizado (<strong>CAGR</strong> — la tasa anual compuesta equivalente).</p>
+      <ol>
+        <li><strong>Inversión inicial:</strong> cuánto pusiste al empezar.</li>
+        <li><strong>Valor final:</strong> cuánto vale hoy. Si vendiste, lo que recibiste neto.</li>
+        <li><strong>Años:</strong> el tiempo total transcurrido. Si fue 6 meses, poné 0.5.</li>
+      </ol>
+      <div class="tip">💡 <strong>ROI vs CAGR:</strong> el ROI total puede engañar. Si en 5 años tu inversión hizo +50%, suena bien — pero el CAGR es solo 8.4%/año, menos que muchos plazos fijos. Siempre compará CAGR contra alternativas.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65">
@@ -139,6 +153,27 @@
         </section>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Cuál es la diferencia entre ROI y CAGR?</summary>
+          <div class="faq-body">El ROI es el <strong>rendimiento total acumulado</strong> ("gané 50% en 5 años"). El CAGR es la <strong>tasa anual compuesta equivalente</strong> ("eso es 8.4% por año"). El CAGR es más útil para comparar inversiones de duración distinta.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿El ROI incluye inflación?</summary>
+          <div class="faq-body">Por default NO. Es ROI nominal. Para sacar el ROI real (descontando inflación), restá la inflación acumulada del período. Si el ROI nominal es 50% y la inflación acumulada fue 60%, el ROI real es <strong>negativo</strong>: perdiste poder de compra.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Es bueno un ROI del 15% anual?</summary>
+          <div class="faq-body">Depende de la moneda y el contexto. En USD, el S&P 500 promedio histórico es ~10% anual — un 15% sostenido es <strong>excelente</strong>. En pesos argentinos con inflación 30-100%, un 15% es horrible (real negativo). Siempre evaluá ROI vs inflación y tasa libre de riesgo.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cómo calculo ROI si hubo aportes/retiros durante el período?</summary>
+          <div class="faq-body">Para casos con flujos múltiples NO uses ROI simple — usá la <strong>TIR</strong> (calculadora de VPN). La TIR maneja correctamente entradas y salidas en distintos momentos.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -151,11 +186,11 @@
         <li><a href="interes-compuesto.html">Interés Compuesto</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     let roiChart = null;
 

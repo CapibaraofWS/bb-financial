@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1SF925SGNN');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranking semanal — Acciones y CEDEARs más subas/bajas — BB Financial</title>
+  <meta name="description" content="Top acciones y CEDEARs argentinos con mayores subas y bajas de la semana. Actualizado con datos de Yahoo Finance." />
+  <meta name="keywords" content="ranking acciones, top subas CEDEARs, top bajas, acciones argentinas, mercado semanal" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .rank-hero { padding: 3rem 0 1rem; text-align: center; }
+    .rank-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    .rank-hero p.sub { color: var(--text-muted); max-width: 640px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6; }
+    .freshness { display:inline-block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);background:var(--bg-card);border:1px solid var(--border);padding:0.3rem 0.7rem;border-radius:20px;margin-top:0.85rem; }
+    .filters { display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;margin:1.5rem 0; }
+    .filters button { padding:0.45rem 0.95rem;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-family:var(--font-mono);font-size:0.78rem;cursor:pointer;letter-spacing:0.04em;text-transform:uppercase;transition:all var(--transition); }
+    .filters button.active { background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.4); }
+    .filters button:hover { color:var(--accent); }
+
+    .rank-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0;max-width:1100px;margin-left:auto;margin-right:auto; }
+    @media (max-width: 800px) { .rank-grid { grid-template-columns:1fr; } }
+    .rank-card { background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.5rem; }
+    .rank-card.up { border-left:3px solid var(--accent); }
+    .rank-card.down { border-left:3px solid #ff6b6b; }
+    .rank-card h2 { font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem; }
+    .rank-card.up h2 { color:var(--accent); }
+    .rank-card.down h2 { color:#ff9999; }
+    .rank-list { display:flex;flex-direction:column;gap:0.5rem; }
+    .rank-row { display:grid;grid-template-columns:30px 1fr auto auto;gap:0.85rem;align-items:center;padding:0.7rem 0.85rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:inherit;transition:all var(--transition); }
+    .rank-row:hover { border-color:rgba(74,222,154,0.3);transform:translateX(2px); }
+    .rank-pos { font-family:var(--font-mono);font-size:0.75rem;color:var(--text-subtle);font-weight:600; }
+    .rank-pos.gold { color:var(--gold); }
+    .rank-sym { font-family:var(--font-mono);font-size:0.92rem;color:var(--text);font-weight:600; }
+    .rank-sym small { display:block;color:var(--text-muted);font-size:0.7rem;font-weight:400;margin-top:0.15rem; }
+    .rank-price { font-family:var(--font-mono);font-size:0.82rem;color:var(--text-muted); }
+    .rank-pct { font-family:var(--font-display);font-size:1rem;text-align:right;min-width:65px; }
+    .rank-pct.up { color:var(--accent); }
+    .rank-pct.down { color:#ff6b6b; }
+    .rank-empty { color:var(--text-subtle);font-family:var(--font-mono);font-size:0.78rem;text-align:center;padding:1.5rem 0; }
+    .spinner-mini { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:1rem auto; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* Volumen ranking */
+    .vol-section { max-width:1100px;margin:2rem auto; }
+    .vol-section h2 { font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin-bottom:1rem;text-align:center; }
+    .vol-table { width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:0.85rem; }
+    .vol-table th, .vol-table td { padding:0.75rem 1rem;text-align:left;border-bottom:1px solid var(--border); }
+    .vol-table th { background:rgba(74,222,154,0.05);color:var(--accent);font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase; }
+    .vol-table td { color:var(--text-muted); font-family: var(--font-mono); font-size: 0.82rem; }
+    .vol-table .vol-sym { color: var(--text); font-weight: 600; }
+    .vol-table tr:last-child td { border-bottom:none; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="rank-hero">
+      <div class="container">
+        <h1>📊 Ranking semanal del mercado</h1>
+        <p class="sub">Top acciones y <span data-term="CEDEAR">CEDEARs</span> con mayores subas y bajas de la semana en <span data-term="BYMA">BYMA</span> y NYSE/Nasdaq. Datos en vivo vía Yahoo Finance.</p>
+        <div class="freshness" id="freshness">⏳ Cargando datos del mercado…</div>
+
+        <div class="filters">
+          <button class="active" data-filter="all">Todos</button>
+          <button data-filter="ar">🇦🇷 Acciones AR</button>
+          <button data-filter="cedear">💎 CEDEARs</button>
+          <button data-filter="us">🇺🇸 Acciones USA</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="rank-grid">
+        <div class="rank-card up">
+          <h2>📈 Top 10 subas — semana</h2>
+          <div class="rank-list" id="top-gainers"><div class="spinner-mini"></div></div>
+        </div>
+        <div class="rank-card down">
+          <h2>📉 Top 10 bajas — semana</h2>
+          <div class="rank-list" id="top-losers"><div class="spinner-mini"></div></div>
+        </div>
+      </div>
+
+      <section class="vol-section">
+        <h2>🔥 Más negociadas (por volumen del día)</h2>
+        <table class="vol-table">
+          <thead>
+            <tr><th>#</th><th>Símbolo</th><th>Precio</th><th>Vol. (M)</th><th>Δ día</th><th>Δ semana</th></tr>
+          </thead>
+          <tbody id="vol-tbody"><tr><td colspan="6" class="rank-empty">Cargando…</td></tr></tbody>
+        </table>
+      </section>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:12px;padding:1.25rem 1.5rem;max-width:900px;margin:2rem auto;font-size:0.88rem;color:var(--text-muted);line-height:1.7">
+        <strong style="color:var(--accent)">💡 Cómo leerlo:</strong> ver una acción en "Top subas" NO significa "compraría hoy". Las subas grandes suelen ser <em>reacción</em> a una noticia que ya pasó — el precio se moverá según lo que venga. Igual con las bajas: pueden ser oportunidades o señal de problemas. Usá este ranking como <strong style="color:var(--text)">termómetro del mercado</strong>, no como recomendación.
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Ranking actualizado con datos de Yahoo Finance. No constituye recomendación de inversión.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=19"></script>
+  <script>
+  // ============================================================
+  // RANKING SEMANAL
+  // ============================================================
+  // Universo: ~35 tickers populares en distintos buckets
+  const UNIVERSE = {
+    ar: ['GGAL.BA', 'YPFD.BA', 'PAMP.BA', 'BMA.BA', 'TXAR.BA', 'TGSU2.BA', 'EDN.BA', 'ALUA.BA', 'CRES.BA', 'COME.BA', 'MIRG.BA', 'CEPU.BA'],
+    cedear: ['AAPL.BA', 'MSFT.BA', 'TSLA.BA', 'NVDA.BA', 'GOOGL.BA', 'AMZN.BA', 'META.BA', 'KO.BA', 'JPM.BA', 'SPY.BA', 'QQQ.BA'],
+    us: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN', 'META', 'SPY', 'QQQ', 'JPM', 'V', 'KO'],
+  };
+
+  let activeFilter = 'all';
+  let allQuotes = [];
+
+  const fmtPrice = (n, curr) => {
+    if (n == null) return '—';
+    const symbol = curr === 'ARS' ? '$' : 'US$';
+    return symbol + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 }).format(n);
+  };
+  const fmtVol = v => {
+    if (!v) return '—';
+    if (v >= 1e9) return (v/1e9).toFixed(2) + 'B';
+    if (v >= 1e6) return (v/1e6).toFixed(2) + 'M';
+    if (v >= 1e3) return (v/1e3).toFixed(1) + 'K';
+    return String(v);
+  };
+  const fmtPct = p => p == null ? '—' : (p >= 0 ? '+' : '') + p.toFixed(2) + '%';
+
+  async function loadQuotes() {
+    const allSyms = [...UNIVERSE.ar, ...UNIVERSE.cedear, ...UNIVERSE.us];
+    try {
+      const r = await fetch('/api/quotes?symbols=' + encodeURIComponent(allSyms.join(',')), { signal: AbortSignal.timeout(15000) });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const j = await r.json();
+      allQuotes = (j?.quoteResponse?.result || []).filter(q => q.regularMarketPrice != null);
+
+      // Tag bucket
+      allQuotes.forEach(q => {
+        if (UNIVERSE.ar.includes(q.symbol)) q.bucket = 'ar';
+        else if (UNIVERSE.cedear.includes(q.symbol)) q.bucket = 'cedear';
+        else q.bucket = 'us';
+      });
+
+      document.getElementById('freshness').innerHTML = '✅ Actualizado: ' + new Date().toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      render();
+    } catch (e) {
+      document.getElementById('freshness').innerHTML = '⚠ Error de conexión. Reintentá en unos segundos.';
+      document.getElementById('top-gainers').innerHTML = '<div class="rank-empty">No se pudieron cargar los datos.</div>';
+      document.getElementById('top-losers').innerHTML = '<div class="rank-empty">No se pudieron cargar los datos.</div>';
+      document.getElementById('vol-tbody').innerHTML = '<tr><td colspan="6" class="rank-empty">No se pudieron cargar los datos.</td></tr>';
+    }
+  }
+
+  function render() {
+    const filtered = activeFilter === 'all' ? allQuotes : allQuotes.filter(q => q.bucket === activeFilter);
+
+    // Top gainers — weekly
+    const gainers = [...filtered]
+      .filter(q => q.weeklyChangePercent != null)
+      .sort((a, b) => b.weeklyChangePercent - a.weeklyChangePercent)
+      .slice(0, 10);
+
+    // Top losers — weekly
+    const losers = [...filtered]
+      .filter(q => q.weeklyChangePercent != null)
+      .sort((a, b) => a.weeklyChangePercent - b.weeklyChangePercent)
+      .slice(0, 10);
+
+    const renderRow = (q, idx, isGain) => {
+      const sym = BBSanitize.escHtml(q.symbol);
+      const name = BBSanitize.escHtml((q.shortName || q.longName || q.symbol).slice(0, 28));
+      const pct = q.weeklyChangePercent;
+      const posClass = idx <= 2 ? ' gold' : '';
+      return `<a class="rank-row" href="ticker.html?symbol=${encodeURIComponent(q.symbol)}">
+        <span class="rank-pos${posClass}">#${idx + 1}</span>
+        <div class="rank-sym">${sym}<small>${name}</small></div>
+        <div class="rank-price">${fmtPrice(q.regularMarketPrice, q.currency)}</div>
+        <div class="rank-pct ${isGain ? 'up' : 'down'}">${fmtPct(pct)}</div>
+      </a>`;
+    };
+
+    document.getElementById('top-gainers').innerHTML = gainers.length
+      ? gainers.map((q, i) => renderRow(q, i, true)).join('')
+      : '<div class="rank-empty">Sin datos para este filtro.</div>';
+
+    document.getElementById('top-losers').innerHTML = losers.length
+      ? losers.map((q, i) => renderRow(q, i, false)).join('')
+      : '<div class="rank-empty">Sin datos para este filtro.</div>';
+
+    // Top volumen (10 más negociadas)
+    const byVol = [...filtered]
+      .filter(q => q.regularMarketVolume > 0)
+      .sort((a, b) => b.regularMarketVolume - a.regularMarketVolume)
+      .slice(0, 10);
+
+    document.getElementById('vol-tbody').innerHTML = byVol.length
+      ? byVol.map((q, i) => {
+          const dayPct = q.regularMarketChangePercent;
+          const wkPct = q.weeklyChangePercent;
+          const dayCls = dayPct > 0 ? 'up' : dayPct < 0 ? 'down' : '';
+          const wkCls = wkPct > 0 ? 'up' : wkPct < 0 ? 'down' : '';
+          return `<tr>
+            <td>${i + 1}</td>
+            <td><a href="ticker.html?symbol=${encodeURIComponent(q.symbol)}" class="vol-sym" style="color:var(--text);text-decoration:none">${BBSanitize.escHtml(q.symbol)}</a></td>
+            <td>${fmtPrice(q.regularMarketPrice, q.currency)}</td>
+            <td>${fmtVol(q.regularMarketVolume)}</td>
+            <td><span class="rank-pct ${dayCls}">${fmtPct(dayPct)}</span></td>
+            <td><span class="rank-pct ${wkCls}">${fmtPct(wkPct)}</span></td>
+          </tr>`;
+        }).join('')
+      : '<tr><td colspan="6" class="rank-empty">Sin datos para este filtro.</td></tr>';
+  }
+
+  document.querySelectorAll('.filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  loadQuotes();
+  </script>
+</body>
+</html>

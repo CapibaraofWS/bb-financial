@@ -68,6 +68,21 @@
         <p class="page-subtitle">P/E, EV/EBITDA, P/B y P/S. Calculá múltiplos de una empresa, comparalos con el sector y obtenés el precio objetivo implícito por cada métrica.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>Los <strong>múltiplos</strong> son ratios que comparan el precio de una acción contra alguna métrica fundamental (ganancia, ventas, libros). Sirven para responder: <strong>¿está cara o barata esta acción comparada con sus pares?</strong></p>
+      <ol>
+        <li><strong>P/E (Price/Earnings):</strong> precio / ganancia por acción. Si P/E = 20, pagás $20 por cada $1 de ganancia anual. P/E "razonable": 10-25 según sector.</li>
+        <li><strong>P/B (Price/Book):</strong> precio / valor libros. Si P/B = 1.5, pagás 1.5× los activos netos. Bancos &lt;1 puede ser ganga; tech &gt;5 es normal.</li>
+        <li><strong>P/S (Price/Sales):</strong> precio / ventas por acción. Útil para empresas sin ganancias todavía (startups).</li>
+        <li><strong>EV/EBITDA:</strong> valor de la empresa / EBITDA. Más comparable entre países (excluye estructura de capital e impuestos).</li>
+      </ol>
+      <div class="tip">💡 <strong>Cómo usar bien los múltiplos:</strong> <strong>SIEMPRE comparalos contra (a) la propia historia de la empresa y (b) sus pares del sector</strong>. Un P/E de 20 puede ser carísimo para un banco (peers en 8) o baratísimo para tech (peers en 35). Para mejor comparación de pares, mirá la <a href="guia-multiplos.html" style="color:var(--accent)">guía completa</a>.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
@@ -155,6 +170,27 @@
         </section>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Qué P/E es "barato"?</summary>
+          <div class="faq-body">Depende del <strong>sector</strong> y la <strong>etapa</strong>. Bancos y utilities: 8-15. Industrias maduras: 12-20. Tech crecimiento: 25-50+. El S&P 500 promedio histórico: ~17. Compará SIEMPRE contra peers del mismo sector y la historia de la propia empresa, NUNCA un número aislado.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿P/E vs forward P/E?</summary>
+          <div class="faq-body">P/E (trailing) usa las ganancias de los últimos 12 meses. Forward P/E usa las ganancias <strong>proyectadas</strong> para los próximos 12. Si la empresa crece, el forward P/E es menor (más "barata"). El consensus de analistas suele inflar las proyecciones, así que tomalo con pinzas.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿EV/EBITDA por qué es mejor que P/E para comparar entre países?</summary>
+          <div class="faq-body">EV incluye deuda y excluye caja → es independiente de la estructura de capital. EBITDA excluye intereses, impuestos, depreciación y amortización → es independiente del régimen impositivo y reglas contables del país. Por eso una empresa argentina vs una brasileña vs una colombiana se comparan mejor con EV/EBITDA que con P/E.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Si una empresa tiene múltiplos altos, ¿hay que evitarla?</summary>
+          <div class="faq-body">No. Las empresas más exitosas (Apple, Microsoft, NVIDIA) suelen tener múltiplos altos por su crecimiento. Lo que importa es: <strong>¿el crecimiento justifica el múltiplo?</strong> Una P/E de 40 puede ser barata si la empresa crece 30% anual; una P/E de 12 puede ser cara si la empresa no crece.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -167,11 +203,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=18"></script>
+  <script src="../js/main.js?v=19"></script>
   <script>
     let multChart = null;
 
