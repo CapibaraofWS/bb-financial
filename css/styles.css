@@ -1099,3 +1099,58 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
   font-size: 0.92rem; color: var(--text-muted); line-height: 1.65; margin-top: 0.5rem;
 }
 .mini-widget .mw-result strong { color: var(--accent); }
+
+/* ============================================
+   RESPONSIVE — safety net global
+   ============================================ */
+/* Tablas dentro de artículos: scroll horizontal si no entran */
+@media (max-width: 720px) {
+  .article-body table,
+  .compare-grid,
+  .blog-grid { font-size: 0.82rem; }
+  .article-body { padding: 0 0.5rem; }
+  .article-body table th,
+  .article-body table td { padding: 0.55rem 0.6rem; }
+
+  /* Hero titles más pequeños en mobile */
+  .article-hero h1,
+  .lost-hero h1,
+  .cmp-hero h1,
+  .rank-hero h1,
+  .blog-hero h1 { font-size: clamp(1.6rem, 6vw, 2.2rem) !important; }
+
+  /* Mini-widgets de blog */
+  .mini-widget { padding: 1.1rem; }
+  .mini-widget .mw-inputs { grid-template-columns: 1fr; gap: 0.5rem; }
+
+  /* Quiz padding */
+  .quiz { padding: 1.25rem; }
+  .quiz-q .qopt { padding: 0.6rem 0.8rem; font-size: 0.85rem; }
+
+  /* FAQ summary tap area */
+  .faq-item > summary { padding: 0.9rem 1rem; font-size: 0.9rem; }
+  .faq-body { padding: 0 1rem 1rem; font-size: 0.85rem; }
+
+  /* Ranking weekly */
+  .rank-card { padding: 1.1rem; }
+  .rank-row { padding: 0.55rem 0.7rem; gap: 0.55rem; }
+  .rank-pct { min-width: 56px; font-size: 0.92rem; }
+
+  /* Comparador dólares */
+  .dolar-card { padding: 1.1rem; }
+  .dolar-price { font-size: 1.6rem; }
+}
+
+/* Cualquier tabla que NO esté en wrapper, hacemos display:block para scroll horizontal */
+@media (max-width: 600px) {
+  table:not(.cmp-table):not(.vol-table) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+}
+
+/* code/pre no rompen layout */
+code, pre { word-break: break-word; overflow-wrap: anywhere; max-width: 100%; }
+img { max-width: 100%; height: auto; }

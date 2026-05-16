@@ -10,7 +10,7 @@
     gtag('config', 'G-1SF925SGNN');
   </script>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conversión de Tasas TNA ↔ TEA — BB Financial</title>
+  <title>Conversión de Tasas <span data-term="TNA">TNA</span> ↔ <span data-term="TEA">TEA</span> — BB Financial</title>
   <meta name="description" content="Convertí TNA a TEA, TEA a TNA, tasa mensual a anual y viceversa. Con cualquier frecuencia de capitalización." />
   <meta name="keywords" content="TNA a TEA, TEA a TNA, conversión tasas, tasa nominal efectiva, capitalización mensual" />
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -64,6 +64,25 @@
         <p class="page-subtitle">Convertí entre TNA, TEA y tasas periódicas con cualquier frecuencia de capitalización. En segundos y con la fórmula explicada.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>Convertí entre las distintas formas de expresar una tasa de interés: <strong>TNA</strong> (Nominal Anual), <strong>TEM</strong> (Efectiva Mensual), <strong>TEA</strong> (Efectiva Anual). Cada producto financiero suele anunciarse en una sola — esta calc te permite compararlas todas en el mismo lenguaje.</p>
+      <ol>
+        <li><strong>Ingresá la tasa</strong> que tenés (puede ser TNA, TEM o TEA).</li>
+        <li><strong>Elegí qué tipo es</strong> esa tasa (TNA / TEM / TEA).</li>
+        <li><strong>Mirá el resultado</strong>: las otras dos tasas equivalentes.</li>
+      </ol>
+      <div class="tip">💡 <strong>Fórmulas clave</strong>:<br>
+      • <strong>TNA → TEM</strong>: TEM = TNA / 12<br>
+      • <strong>TEM → TEA</strong>: TEA = (1 + TEM)¹² − 1<br>
+      • <strong>TNA → TEA</strong>: TEA = (1 + TNA/12)¹² − 1<br>
+      La TEA siempre es <strong>mayor</strong> que la TNA por el efecto de reinversión.</div>
+      <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Cuidado al comparar</strong>: si un banco dice "TNA 30%" y otro dice "TEM 2.7%", parecen distintos pero son <strong>casi lo mismo</strong>. Siempre compará usando la MISMA medida (preferentemente TEA).</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
 
@@ -213,6 +232,26 @@
         </div>
       </div>
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+        <details class="faq-item">
+          <summary>¿Por qué la TEA es siempre mayor que la TNA?</summary>
+          <div class="faq-body">Porque la TEA considera la <strong>reinversión</strong> de los intereses. Si tu plata genera intereses cada mes y esos intereses también generan intereses, el rendimiento real anual (TEA) es mayor que el "anunciado" sin capitalización (TNA). Cuanto más frecuente la capitalización, mayor la TEA.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Qué tasa miro para comparar inversiones?</summary>
+          <div class="faq-body"><strong>SIEMPRE la TEA</strong>. Es la única que pone todas las inversiones en el mismo lenguaje, independientemente de cuándo capitalizan. Si un FCI dice "TNA 30%" y otro "TEM 2.7%", calculá ambas TEAs (34.5% y 37.7% respectivamente) — recién ahí podés comparar.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿La CFTEA es lo mismo que TEA?</summary>
+          <div class="faq-body">No exactamente. La <strong>CFTEA</strong> (Costo Financiero Total Efectivo Anual) es para PRÉSTAMOS e incluye TODOS los costos: interés + seguros + comisiones + IVA. La TEA es solo el componente de interés. Para comparar préstamos entre bancos, mirá CFTEA — no TNA ni TEA aisladas.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Y la inflación cómo entra en juego?</summary>
+          <div class="faq-body">Las tasas que ves son <strong>nominales</strong>. Para conocer la tasa REAL, hay que descontar inflación: <code>Tasa real = (1 + Tasa nominal) / (1 + Inflación) − 1</code>. Si la TEA es 50% y la inflación 60%, la tasa real es −6% (perdés poder de compra).</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -225,11 +264,11 @@
         <li><a href="prestamo.html">Préstamo / Cuota</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=20"></script>
+  <script src="../js/main.js?v=21"></script>
   <script>
     function switchTab(name, btn) {
       ['tna-tea','tea-tna','periodica'].forEach(t => document.getElementById('tab-'+t).style.display='none');

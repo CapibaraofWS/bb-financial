@@ -175,7 +175,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=20"></script>
+  <script src="../js/main.js?v=21"></script>
   <script src="../js/ticker.js"></script>
   <script>
   (function() {
@@ -238,15 +238,16 @@
       if (activeFilter === 'reported') return items.filter(e => e.epsActual != null);
       if (activeFilter === 'mega')  return items.filter(e => (mcapCache[e.symbol] || 0) > 200e9);
       if (activeFilter === 'large') return items.filter(e => (mcapCache[e.symbol] || 0) > 10e9);
-      // Top N por market cap — selecciona los N símbolos más grandes del mes
+      // Top N por market cap — selecciona los N símbolos MÁS GRANDES del mes.
+      // FIX: solo consideramos los símbolos con marketCap > 0 conocido,
+      // sino los desconocidos (cuando Yahoo no devuelve marketCap) caían al "top" por bug.
       const topMatch = activeFilter.match(/^top(\d+)$/);
       if (topMatch) {
         const N = parseInt(topMatch[1], 10);
-        const topSymbols = new Set(
-          [...new Set(items.map(e => e.symbol))]
-            .sort((a, b) => (mcapCache[b] || 0) - (mcapCache[a] || 0))
-            .slice(0, N)
-        );
+        const withCap = [...new Set(items.map(e => e.symbol))]
+          .filter(s => typeof mcapCache[s] === 'number' && mcapCache[s] > 0)
+          .sort((a, b) => mcapCache[b] - mcapCache[a]);
+        const topSymbols = new Set(withCap.slice(0, N));
         return items.filter(e => topSymbols.has(e.symbol));
       }
       return items;

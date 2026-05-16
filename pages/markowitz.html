@@ -81,6 +81,22 @@
         <p class="page-subtitle">Analizá tu cartera con la Teoría Moderna de Portafolio. Correlación entre activos, frontera eficiente, Ratio de Sharpe y diversificación óptima.</p>
       </div>
     </section>
+    <div class="container" style="padding-top:1.5rem">
+      <details class="use-guide">
+    <summary>📖 ¿Cómo se usa esta calculadora?</summary>
+    <div class="guide-body">
+      <p>El <strong>Modelo de Markowitz</strong> (1952) te ayuda a armar una cartera de inversión <strong>óptima</strong>: la combinación de activos que <strong>maximiza el retorno para un nivel de riesgo dado</strong> (o minimiza el riesgo para un retorno deseado). Por esto Markowitz ganó el Nobel de Economía en 1990.</p>
+      <ol>
+        <li><strong>Retorno esperado:</strong> el rendimiento promedio anual que esperás de cada activo (basado en histórico o expectativas). Ej: SPY ~10%, bonos ~5%.</li>
+        <li><strong>Volatilidad (desviación estándar):</strong> cuánto fluctúa el retorno alrededor del promedio. Más volatilidad = más riesgo. Ej: SPY ~15-20%, bonos ~5-8%.</li>
+        <li><strong>Correlación entre activos:</strong> qué tan parecido se mueven entre sí. Correlación 1 = se mueven igual; 0 = independientes; −1 = opuestos. La <strong>diversificación funciona</strong> cuando hay correlación baja o negativa.</li>
+        <li><strong>Resultado:</strong> el porcentaje óptimo de cada activo en tu portafolio, según tu tolerancia al riesgo.</li>
+      </ol>
+      <div class="tip">💡 <strong>La idea clave</strong>: NO podés evitar todo el riesgo, pero <strong>combinando activos con baja correlación</strong> reducís el riesgo total SIN bajar el retorno esperado. Es lo más parecido a una "comida gratis" en finanzas.</div>
+      <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Limitación:</strong> el modelo asume que rendimientos pasados predicen los futuros. En la realidad las correlaciones cambian (en crisis tienden a converger a 1). Usalo como guía, no como verdad absoluta.</div>
+    </div>
+  </details>
+    </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
 
@@ -152,6 +168,26 @@
       </div>
 
     </div>
+  
+      <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
+        <h2>Preguntas frecuentes</h2>
+        <details class="faq-item">
+          <summary>¿Por qué la diversificación reduce riesgo?</summary>
+          <div class="faq-body">Porque cuando un activo cae, otro con baja correlación puede mantenerse o subir, compensando. Matemáticamente: <strong>σ(A+B) < σ(A) + σ(B)</strong> cuando la correlación es menor a 1. Es magia matemática, no marketing.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cómo obtengo retorno esperado y volatilidad para mi cálculo?</summary>
+          <div class="faq-body">Hay 2 formas: (1) <strong>Histórico</strong> — calculá retorno promedio y desviación estándar de los últimos 10-20 años desde Yahoo Finance / Investing. (2) <strong>Expectativas a futuro</strong> — usá proyecciones de bancos (Goldman, JP Morgan publican Capital Market Assumptions anualmente).</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿La frontera eficiente es real o un modelo teórico?</summary>
+          <div class="faq-body">Es un modelo. En la práctica, los datos cambian todo el tiempo y la "frontera" se mueve. Sirve como GUÍA para asignar activos, no para timear el mercado. Lo que SÍ es robusto: diversificar reduce riesgo.</div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Sirve Markowitz para inversores individuales?</summary>
+          <div class="faq-body">En forma simplificada, sí. La aplicación práctica más común es el <strong>"60/40 portfolio"</strong> (60% acciones, 40% bonos) que es una solución cercana al óptimo Markowitz para riesgo moderado. Versiones más avanzadas: All Weather de Ray Dalio, Permanent Portfolio de Browne.</div>
+        </details>
+      </section>
   </main>
 
   <footer class="site-footer">
@@ -164,11 +200,11 @@
         <li><a href="wacc.html">WACC</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=20"></script>
+  <script src="../js/main.js?v=21"></script>
   <script>
     // Correlation matrix by asset class pair (historical estimates)
     // 1 = perfect positive, -1 = perfect negative, 0 = uncorrelated
