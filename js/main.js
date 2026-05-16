@@ -1,5 +1,5 @@
-// FinCalc — main.js v16
-window.__BB_MAIN_JS_VERSION = 'v16';
+// FinCalc — main.js v17
+window.__BB_MAIN_JS_VERSION = 'v17';
 
 // ============================================================
 // GLOSARIO — tooltips para términos financieros
@@ -49,16 +49,14 @@ window.BB_GLOSARIO = {
     s.id = 'bb-glossary-styles';
     s.textContent = `
       [data-term] { border-bottom: 1px dotted rgba(74,222,154,0.6); cursor: help; position: relative; }
-      .bb-tooltip { position: absolute; z-index: 1000; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+      .bb-tooltip { position: fixed; z-index: 1000;
         background: #0a0c0f; border: 1px solid rgba(74,222,154,0.35); border-radius: 8px;
-        padding: 0.7rem 0.85rem; width: 280px; max-width: 90vw; font-size: 0.8rem; color: #e8edf5;
+        padding: 0.7rem 0.85rem; width: 280px; max-width: calc(100vw - 16px); font-size: 0.8rem; color: #e8edf5;
         line-height: 1.55; box-shadow: 0 12px 32px rgba(0,0,0,0.5); pointer-events: auto;
         font-family: 'Outfit', sans-serif; font-weight: 400; text-transform: none; letter-spacing: 0; }
       .bb-tooltip strong { color: #4ade9a; display: block; font-family: 'DM Serif Display', serif; font-size: 0.9rem; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
-      .bb-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-        border: 6px solid transparent; border-top-color: rgba(74,222,154,0.35); }
       @media (max-width: 600px) {
-        .bb-tooltip { width: min(260px, 80vw); }
+        .bb-tooltip { width: min(280px, calc(100vw - 16px)); font-size: 0.78rem; }
       }
     `;
     document.head.appendChild(s);
@@ -74,12 +72,36 @@ window.BB_GLOSARIO = {
     const t = document.createElement('div');
     t.className = 'bb-tooltip';
     t.innerHTML = `<strong>${g.titulo}</strong>${g.def}`;
-    el.appendChild(t);
+    document.body.appendChild(t);
     openTip = t;
-    // Reposition if overflows
-    const r = t.getBoundingClientRect();
-    if (r.left < 8) t.style.transform = `translateX(${-r.left + 8}px)`;
-    if (r.right > innerWidth - 8) t.style.transform = `translateX(${innerWidth - r.right - 8}px)`;
+    // Position relative to viewport — anchor to the term element, clamp to viewport edges
+    const er = el.getBoundingClientRect();
+    const tr = t.getBoundingClientRect();
+    let top = er.top - tr.height - 8; // above
+    let placeBelow = false;
+    if (top < 8) { top = er.bottom + 8; placeBelow = true; } // flip if no room above
+    let left = er.left + (er.width / 2) - (tr.width / 2);
+    if (left < 8) left = 8;
+    if (left + tr.width > innerWidth - 8) left = innerWidth - tr.width - 8;
+    t.style.top = top + 'px';
+    t.style.left = left + 'px';
+    t._anchor = el;
+    t._placeBelow = placeBelow;
+  }
+  // Reposition on scroll/resize while open
+  window.addEventListener('scroll', () => { if (openTip && openTip._anchor) reposition(openTip); }, true);
+  window.addEventListener('resize', () => { if (openTip && openTip._anchor) reposition(openTip); });
+  function reposition(t) {
+    const el = t._anchor; if (!el || !el.isConnected) { close(); return; }
+    const er = el.getBoundingClientRect();
+    const tr = t.getBoundingClientRect();
+    let top = er.top - tr.height - 8;
+    if (top < 8) top = er.bottom + 8;
+    let left = er.left + (er.width / 2) - (tr.width / 2);
+    if (left < 8) left = 8;
+    if (left + tr.width > innerWidth - 8) left = innerWidth - tr.width - 8;
+    t.style.top = top + 'px';
+    t.style.left = left + 'px';
   }
 
   document.addEventListener('mouseover', e => {
