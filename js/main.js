@@ -1,5 +1,5 @@
-// FinCalc — main.js v14
-window.__BB_MAIN_JS_VERSION = 'v14';
+// FinCalc — main.js v15
+window.__BB_MAIN_JS_VERSION = 'v15';
 
 // ============================================================
 // GLOSARIO — tooltips para términos financieros

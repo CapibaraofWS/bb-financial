@@ -36,6 +36,10 @@
     .mini { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
     .mini .lbl { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
     .mini .val { font-family: var(--font-display); font-size: 1.3rem; color: var(--text); margin-top: 0.3rem; }
+    .opt-preset { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); padding: 0.45rem 0.85rem; border-radius: 20px; font-size: 0.78rem; font-family: var(--font-mono); cursor: pointer; transition: all var(--transition); }
+    .opt-preset:hover { border-color: var(--accent); color: var(--accent); }
+    .opt-preset.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(74,222,154,0.4); }
+    .row3 label small { font-size: 0.62rem; opacity: 0.7; text-transform: none; letter-spacing: 0; }
   </style>
 </head>
 <body>
@@ -51,46 +55,76 @@
     <section style="padding:3rem 0 1rem;text-align:center">
       <div class="container">
         <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-0.02em;margin-bottom:0.6rem">🛒 ¿Contado o cuotas sin interés?</h1>
-        <p style="color:var(--text-muted);max-width:600px;margin:0 auto;font-size:0.95rem;line-height:1.6">Si te dan cuotas sin interés y tu plata te rinde en una cuenta remunerada, las cuotas suelen convenir más. Calculalo acá:</p>
+        <p style="color:var(--text-muted);max-width:640px;margin:0 auto;font-size:0.95rem;line-height:1.6">La decisión no depende de la inflación — depende de tu <strong style="color:var(--text)">costo de oportunidad</strong>: ¿cuánto rinde la plata que NO gastás de contado? Comparamos el contado real (con descuento) contra el valor presente de las cuotas.</p>
       </div>
     </section>
 
     <div class="container">
       <div class="calc-card">
+
+        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.85rem">📋 La decisión real (con costo de oportunidad)</p>
+
         <div class="row3">
           <div>
-            <label>Precio total</label>
-            <input type="number" id="precio" value="500000" min="0" />
+            <label>Precio CONTADO real <small style="opacity:0.7">(con descuento)</small></label>
+            <input type="number" id="precio-contado" value="85000" min="0" inputmode="numeric" />
+          </div>
+          <div>
+            <label>Precio TOTAL en cuotas</label>
+            <input type="number" id="precio-cuotas" value="100000" min="0" inputmode="numeric" />
           </div>
           <div>
             <label>Cantidad de cuotas</label>
             <input type="number" id="cuotas" value="6" min="1" max="60" />
           </div>
-          <div>
-            <label>TNA de tu cuenta (%)</label>
-            <input type="number" id="tna" value="32" step="0.1" min="0" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.4rem">¿Dónde está tu plata? (define tu costo de oportunidad)</label>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.6rem">
+            <button type="button" class="opt-preset" data-tna="0">💵 Efectivo (0%)</button>
+            <button type="button" class="opt-preset" data-tna="28">💳 Cuenta remunerada (28%)</button>
+            <button type="button" class="opt-preset active" data-tna="32">🏦 Plazo fijo (32%)</button>
+            <button type="button" class="opt-preset" data-tna="40">📜 FCI / LECAP (40%)</button>
+            <button type="button" class="opt-preset" data-tna="55">📈 Cartera activa (55%)</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
+            <div>
+              <label style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.35rem">TNA personalizada</label>
+              <input type="number" id="tna" value="32" step="0.1" min="0" max="500" />
+            </div>
+            <div>
+              <label style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.35rem">TEM equivalente</label>
+              <input type="text" id="tem-display" value="2.66%" readonly style="background:var(--bg-card);color:var(--text-subtle);cursor:not-allowed" />
+            </div>
           </div>
         </div>
 
-        <div id="verdict" class="verdict cuotas">
+        <div id="verdict" class="verdict cuotas" style="margin-top:1.5rem">
           <h3 id="v-title">Calculando...</h3>
           <p id="v-text">—</p>
         </div>
 
         <div class="breakdown">
           <div class="mini">
-            <div class="lbl">Pagás al contado</div>
+            <div class="lbl">Precio contado real</div>
             <div class="val" id="b-contado">$—</div>
           </div>
           <div class="mini">
-            <div class="lbl">Costo real cuotas (valor presente)</div>
+            <div class="lbl">VP cuotas (descontado a tu tasa)</div>
             <div class="val" id="b-cuotas">$—</div>
           </div>
         </div>
 
-        <p style="color:var(--text-subtle);font-size:0.78rem;line-height:1.6;margin-top:1.5rem">
-          <strong style="color:var(--text)">Cómo funciona:</strong> calculamos cuánto tendrías que tener hoy invertido a tu <span data-term="TNA">TNA</span> para pagar cada cuota futura. Esa suma es el "valor presente" real de pagar en cuotas. Si es menor que el precio al contado, te conviene cuotas.
-        </p>
+        <details style="margin-top:1.25rem">
+          <summary style="cursor:pointer;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);padding:0.5rem 0;list-style:none">📖 ¿Cómo se calcula esto?</summary>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-top:0.5rem;font-size:0.82rem;color:var(--text-muted);line-height:1.7">
+            <p style="margin-bottom:0.6rem"><strong style="color:var(--text)">Valor Presente de N cuotas:</strong></p>
+            <p style="font-family:var(--font-mono);background:var(--bg-card);padding:0.6rem 0.85rem;border-radius:6px;color:var(--accent);font-size:0.78rem;margin-bottom:0.85rem">VA = Σ Cuota / (1 + k)^t  &nbsp;(t = 1 a N)</p>
+            <p>Donde <code>k</code> es tu <strong style="color:var(--text)">tasa efectiva mensual</strong> (TEM) de costo de oportunidad. Si el VP &lt; precio contado, conviene cuotas. Si VP &gt; precio contado, conviene contado.</p>
+            <p style="margin-top:0.6rem"><strong style="color:var(--text)">Importante:</strong> el "costo de oportunidad" es la tasa REAL a la que vas a invertir la plata que NO pagás de contado. Si la dejás en el cajón (0%), las cuotas casi nunca convienen.</p>
+          </div>
+        </details>
       </div>
 
       <section style="max-width:760px;margin:3rem auto 0;display:flex;flex-direction:column;gap:1rem">
@@ -193,45 +227,81 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=14"></script>
+  <script src="../js/main.js?v=15"></script>
   <script>
   const $ = id => document.getElementById(id);
   const fmt = n => '$' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
 
   function calc() {
-    const precio = parseFloat($('precio').value) || 0;
-    const cuotas = parseInt($('cuotas').value) || 1;
-    const tnaAnual = parseFloat($('tna').value) / 100 || 0;
-    const tnaMensual = tnaAnual / 12;
+    const precioContado = parseFloat($('precio-contado').value) || 0;
+    const precioCuotas  = parseFloat($('precio-cuotas').value)  || 0;
+    const n             = parseInt($('cuotas').value) || 1;
+    const tnaAnual      = (parseFloat($('tna').value) || 0) / 100;
 
-    const cuotaMensual = precio / cuotas;
+    // TEM real (capitalización mensual): TEM = (1 + TNA/12) - 1 = TNA/12.
+    // Usamos TEM directa para descontar mes a mes — más fiel a cómo te paga la cuenta remunerada.
+    const tem = tnaAnual / 12;
+    $('tem-display').value = (tem * 100).toFixed(2) + '%';
 
-    // Valor presente de N cuotas iguales: VP = cuota * (1 - (1+i)^-n) / i
-    let vp;
-    if (tnaMensual === 0) {
-      vp = precio;
-    } else {
-      vp = cuotaMensual * (1 - Math.pow(1 + tnaMensual, -cuotas)) / tnaMensual;
+    if (precioContado <= 0 || precioCuotas <= 0 || n < 1) {
+      $('v-title').textContent = '—';
+      $('v-text').textContent = 'Completá los valores.';
+      $('b-contado').textContent = '$—'; $('b-cuotas').textContent = '$—';
+      return;
     }
 
-    $('b-contado').textContent = fmt(precio);
-    $('b-cuotas').textContent = fmt(vp);
+    const cuotaMensual = precioCuotas / n;
 
-    const ahorro = precio - vp;
-    const ahorroPct = precio > 0 ? (ahorro / precio * 100) : 0;
+    // VP de N cuotas iguales descontadas a TEM
+    let vp;
+    if (tem === 0) {
+      vp = precioCuotas;
+    } else {
+      // VP = C * (1 - (1+i)^-n) / i
+      vp = cuotaMensual * (1 - Math.pow(1 + tem, -n)) / tem;
+    }
+
+    $('b-contado').textContent = fmt(precioContado);
+    $('b-cuotas').textContent  = fmt(vp);
+
+    const diff = precioContado - vp;   // > 0 → cuotas convienen
+    const diffAbsPct = precioContado > 0 ? Math.abs(diff) / precioContado * 100 : 0;
     const v = $('verdict');
-    if (vp < precio - 1) {
+
+    // Sobrecargo de las cuotas vs contado (tasa implícita escondida)
+    const recargo = precioContado > 0 ? (precioCuotas - precioContado) / precioContado * 100 : 0;
+
+    if (Math.abs(diff) < precioContado * 0.005) {
+      // Diferencia menor al 0.5% — empate
+      v.className = 'verdict contado';
+      v.style.background = 'rgba(255,184,77,0.06)';
+      v.style.borderColor = 'rgba(255,184,77,0.3)';
+      $('v-title').textContent = '🤝 Da casi lo mismo';
+      $('v-text').innerHTML = `Pagar ${n} cuotas de <strong>${fmt(cuotaMensual)}</strong> equivale a tener <strong>${fmt(vp)}</strong> hoy. La diferencia con el contado real (${fmt(precioContado)}) es menos del 0.5%. Elegí lo que te resulte más cómodo.`;
+    } else if (diff > 0) {
       v.className = 'verdict cuotas';
+      v.style.background = ''; v.style.borderColor = '';
       $('v-title').textContent = '✅ Te conviene en cuotas';
-      $('v-text').innerHTML = `Pagar en ${cuotas} cuotas sin interés equivale a pagar <strong>${fmt(vp)}</strong> hoy. Te <strong>ahorrás ${fmt(ahorro)}</strong> (${ahorroPct.toFixed(1)}%) porque la inflación y tu rendimiento erosionan el valor de las cuotas futuras.`;
+      $('v-text').innerHTML = `Pagar ${n} cuotas de <strong>${fmt(cuotaMensual)}</strong> equivale a tener <strong>${fmt(vp)}</strong> hoy. Como el contado real es <strong>${fmt(precioContado)}</strong>, te <strong>ahorrás ${fmt(diff)}</strong> (${diffAbsPct.toFixed(1)}%) invirtiendo la diferencia a tu TNA.${recargo > 0 ? ` <em>(El sobrecargo nominal de pagar en cuotas es +${recargo.toFixed(1)}%, pero tu rendimiento lo compensa.)</em>` : ''}`;
     } else {
       v.className = 'verdict contado';
-      $('v-title').textContent = '⚠ Mejor al contado (o da igual)';
-      $('v-text').innerHTML = `Tu TNA no compensa la diferencia. Pagar al contado sale lo mismo o menos en este caso.`;
+      v.style.background = ''; v.style.borderColor = '';
+      $('v-title').textContent = '⚠ Te conviene al contado';
+      $('v-text').innerHTML = `El sobrecargo de las cuotas (<strong>+${recargo.toFixed(1)}%</strong> sobre el contado) <strong>supera</strong> el rendimiento que conseguís con tu plata. Pagando ${n} cuotas de ${fmt(cuotaMensual)} es como pagar <strong>${fmt(vp)}</strong> hoy — más que los <strong>${fmt(precioContado)}</strong> del contado real. Diferencia: <strong>${fmt(-diff)}</strong> a favor del contado.`;
     }
   }
 
-  ['precio','cuotas','tna'].forEach(id => $(id).addEventListener('input', calc));
+  // Presets de TNA según dónde está tu plata
+  document.querySelectorAll('.opt-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.opt-preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      $('tna').value = btn.dataset.tna;
+      calc();
+    });
+  });
+
+  ['precio-contado','precio-cuotas','cuotas','tna'].forEach(id => $(id).addEventListener('input', calc));
   calc();
 
   // Mini-calculadora: Tasa implícita escondida en cuotas
