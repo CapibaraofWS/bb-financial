@@ -1003,3 +1003,99 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
   margin: 0.75rem 0;
   font-size: 0.85rem;
 }
+
+/* ============================================
+   FAQ — preguntas frecuentes (acordeón al pie)
+   ============================================ */
+.faq-section { max-width: 760px; margin: 3rem auto; padding: 0 1rem; }
+.faq-section h2 {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 1.9rem);
+  letter-spacing: -0.01em; margin-bottom: 1.25rem; text-align: center;
+}
+.faq-item {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 0.6rem; overflow: hidden;
+  transition: border-color var(--transition);
+}
+.faq-item:hover { border-color: rgba(74,222,154,0.25); }
+.faq-item > summary {
+  padding: 1rem 1.25rem; cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.95rem;
+  color: var(--text); user-select: none;
+}
+.faq-item > summary::-webkit-details-marker { display: none; }
+.faq-item > summary::after {
+  content: '+'; font-family: var(--font-mono); font-size: 1.4rem;
+  color: var(--accent); transition: transform 0.2s; line-height: 1;
+}
+.faq-item[open] > summary::after { content: '−'; }
+.faq-body {
+  padding: 0 1.25rem 1.1rem;
+  color: var(--text-muted); font-size: 0.9rem; line-height: 1.75;
+}
+.faq-body strong { color: var(--text); }
+
+/* ============================================
+   QUIZ — al final de artículos
+   ============================================ */
+.quiz {
+  background: linear-gradient(135deg, rgba(74,222,154,0.06), rgba(96,165,250,0.04));
+  border: 1px solid rgba(74,222,154,0.2);
+  border-radius: 14px; padding: 1.75rem; margin: 2.5rem 0;
+}
+.quiz h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+.quiz > p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem; }
+.quiz-q { margin-bottom: 1.5rem; }
+.quiz-q .qtext { font-weight: 500; color: var(--text); margin-bottom: 0.75rem; font-size: 0.95rem; line-height: 1.5; }
+.quiz-q .qopts { display: flex; flex-direction: column; gap: 0.4rem; }
+.quiz-q .qopt {
+  text-align: left; padding: 0.7rem 1rem; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-muted); cursor: pointer; font-size: 0.88rem;
+  font-family: var(--font-body); transition: all var(--transition);
+}
+.quiz-q .qopt:hover { border-color: var(--text-muted); color: var(--text); }
+.quiz-q .qopt.correct { background: rgba(74,222,154,0.12); border-color: var(--accent); color: var(--accent); }
+.quiz-q .qopt.wrong { background: rgba(255,107,107,0.08); border-color: #ff6b6b; color: #ff9999; }
+.quiz-q .qopt.disabled { pointer-events: none; }
+.quiz-q .qexplain {
+  margin-top: 0.7rem; padding: 0.7rem 0.9rem; background: var(--bg-card);
+  border-left: 3px solid var(--accent); border-radius: 6px;
+  font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
+  display: none;
+}
+.quiz-q.answered .qexplain { display: block; }
+.quiz-q .qexplain strong { color: var(--text); }
+.quiz-score {
+  text-align: center; padding-top: 1rem; border-top: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);
+}
+.quiz-score strong { color: var(--accent); font-size: 1.1rem; }
+
+/* ============================================
+   EMBEDDED MINI-WIDGETS (interactive in articles)
+   ============================================ */
+.mini-widget {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-left: 3px solid #60a5fa;
+  border-radius: 12px; padding: 1.5rem; margin: 2rem 0;
+}
+.mini-widget .mw-head {
+  font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #60a5fa; margin-bottom: 0.5rem;
+}
+.mini-widget h3 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.85rem; letter-spacing: -0.01em; }
+.mini-widget .mw-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+@media(max-width:560px) { .mini-widget .mw-inputs { grid-template-columns: 1fr; } }
+.mini-widget label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-subtle); display: block; margin-bottom: 0.3rem; }
+.mini-widget input, .mini-widget select {
+  width: 100%; padding: 0.55rem 0.75rem; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; font-size: 0.88rem;
+  font-family: var(--font-body);
+}
+.mini-widget .mw-result {
+  padding: 1rem; background: var(--bg); border-radius: 8px;
+  font-size: 0.92rem; color: var(--text-muted); line-height: 1.65; margin-top: 0.5rem;
+}
+.mini-widget .mw-result strong { color: var(--accent); }

@@ -60,6 +60,29 @@
     </section>
 
     <div class="container">
+
+      <!-- Guía paso a paso para principiantes -->
+      <details class="use-guide" style="max-width:760px;margin:0 auto 1.5rem;">
+        <summary>📖 Paso a paso: cómo usar esta calculadora (4 pasos)</summary>
+        <div class="guide-body">
+          <ol>
+            <li><strong>Precio CONTADO real:</strong> es lo que pagarías HOY si pagás todo de una. Importante: si el comercio te ofrece <em>"15% off pagando en efectivo o transferencia"</em>, restá ese descuento — ese precio con el descuento aplicado es el "contado real". Ejemplo: producto vale $100.000 lista, te dan 15% off = $85.000 contado real.</li>
+            <li><strong>Precio TOTAL en cuotas:</strong> la suma de todas las cuotas. Sin descuento. Ejemplo: 6 cuotas de $16.666 = $100.000.</li>
+            <li><strong>Cantidad de cuotas:</strong> en cuántos meses pagás (3, 6, 12, 18, 24…).</li>
+            <li><strong>¿Dónde está tu plata?</strong> Acá elegís dónde guardás la plata que NO usaste de contado. Cada opción tiene una <span data-term="TNA">TNA</span> aproximada:
+              <ul style="margin-top:0.4rem;padding-left:1rem">
+                <li>💵 <strong>Efectivo / Cajón:</strong> 0% — la plata no rinde nada</li>
+                <li>💳 <strong>Cuenta remunerada:</strong> ~28% — Mercado Pago, Ualá, Brubank</li>
+                <li>🏦 <strong>Plazo fijo:</strong> ~32% — bloqueada 30 días</li>
+                <li>📜 <strong>FCI / LECAP:</strong> ~40% — rinde más, requiere broker</li>
+                <li>📈 <strong>Cartera activa:</strong> ~55% — acciones/bonos, riesgo y trabajo activo</li>
+              </ul>
+            </li>
+          </ol>
+          <div class="tip">💡 <strong>Tip rápido:</strong> si dejás la plata en el cajón (0%), las cuotas casi nunca te convienen. Si tu plata rinde 40%+ al año, las cuotas suelen ganar contra el sobrecargo. La verdadera diferencia depende del <strong>rendimiento concreto</strong> que conseguís — por eso elegimos eso, no la inflación.</div>
+        </div>
+      </details>
+
       <div class="calc-card">
 
         <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.85rem">📋 La decisión real (con costo de oportunidad)</p>
@@ -122,7 +145,7 @@
             <p style="margin-bottom:0.6rem"><strong style="color:var(--text)">Valor Presente de N cuotas:</strong></p>
             <p style="font-family:var(--font-mono);background:var(--bg-card);padding:0.6rem 0.85rem;border-radius:6px;color:var(--accent);font-size:0.78rem;margin-bottom:0.85rem">VA = Σ Cuota / (1 + k)^t  &nbsp;(t = 1 a N)</p>
             <p>Donde <code>k</code> es tu <strong style="color:var(--text)">tasa efectiva mensual</strong> (TEM) de costo de oportunidad. Si el VP &lt; precio contado, conviene cuotas. Si VP &gt; precio contado, conviene contado.</p>
-            <p style="margin-top:0.6rem"><strong style="color:var(--text)">Importante:</strong> el "costo de oportunidad" es la tasa REAL a la que vas a invertir la plata que NO pagás de contado. Si la dejás en el cajón (0%), las cuotas casi nunca convienen.</p>
+            <p style="margin-top:0.6rem"><strong style="color:var(--text)">Importante:</strong> el "costo de oportunidad" es <strong style="color:var(--text)">el rendimiento concreto que te da tu plata</strong> en el instrumento donde la tenés (cuenta remunerada, plazo fijo, FCI, etc.). Si la dejás en el cajón (0%), las cuotas casi nunca convienen. <em style="font-size:0.78rem;color:var(--text-subtle)">Nota técnica: no confundir con "tasa real" del análisis macro, que significa tasa nominal menos inflación.</em></p>
           </div>
         </details>
       </div>
@@ -227,7 +250,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=15"></script>
+  <script src="../js/main.js?v=16"></script>
   <script>
   const $ = id => document.getElementById(id);
   const fmt = n => '$' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -301,6 +324,16 @@
     });
   });
 
+  // Cuando el usuario tipea manualmente la TNA, sacamos el active de los presets
+  $('tna').addEventListener('input', () => {
+    const currentVal = parseFloat($('tna').value);
+    let matchedPreset = null;
+    document.querySelectorAll('.opt-preset').forEach(b => {
+      if (parseFloat(b.dataset.tna) === currentVal) matchedPreset = b;
+      b.classList.remove('active');
+    });
+    if (matchedPreset) matchedPreset.classList.add('active');
+  });
   ['precio-contado','precio-cuotas','cuotas','tna'].forEach(id => $(id).addEventListener('input', calc));
   calc();
 

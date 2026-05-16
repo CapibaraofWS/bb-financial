@@ -165,8 +165,166 @@
         <li>💡 Para principiantes en 2026: <strong>Cocos</strong> o <strong>Balanz</strong> son las opciones más accesibles y con app pulida.</li>
       </ul>
 
+      <!-- Mini-widget interactivo -->
+      <div class="mini-widget">
+        <p class="mw-head">🧮 Mini-herramienta</p>
+        <h3>¿Qué broker te conviene según cuánto invertís?</h3>
+        <div class="mw-inputs">
+          <div>
+            <label>Monto a operar por mes (ARS)</label>
+            <input type="number" id="mw-monto" value="100000" min="0" step="10000">
+          </div>
+          <div>
+            <label>¿Qué vas a operar?</label>
+            <select id="mw-tipo">
+              <option value="fci">Solo FCI (money market, conservador)</option>
+              <option value="cedear">CEDEARs / acciones extranjeras</option>
+              <option value="mep">Dólar MEP</option>
+              <option value="bonos">Bonos argentinos</option>
+              <option value="mix">Mix completo</option>
+            </select>
+          </div>
+        </div>
+        <div class="mw-result" id="mw-result">—</div>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h3>🧠 Quiz: ¿entendiste todo?</h3>
+        <p>3 preguntas rápidas. Hacé click en la que creas correcta.</p>
+
+        <div class="quiz-q" data-correct="b">
+          <div class="qtext">1. ¿Qué significa que un broker está "registrado en CNV"?</div>
+          <div class="qopts">
+            <button class="qopt" data-opt="a">Que el broker tiene seguro contra pérdidas en el mercado</button>
+            <button class="qopt" data-opt="b">Que está autorizado y fiscalizado por el organismo regulador estatal del mercado de capitales</button>
+            <button class="qopt" data-opt="c">Que las ganancias están exentas de impuestos</button>
+          </div>
+          <div class="qexplain">✅ <strong>Correcto:</strong> la CNV es el organismo del Estado que autoriza y supervisa a brokers, fondos y asesores. Si alguien no figura en su registro, no puede operar legalmente. <strong>NO te garantiza ganancias</strong> ni te exime de impuestos.</div>
+        </div>
+
+        <div class="quiz-q" data-correct="c">
+          <div class="qtext">2. ¿Quién custodia físicamente tus inversiones cuando operás en bolsa?</div>
+          <div class="qopts">
+            <button class="qopt" data-opt="a">El broker (Cocos, IOL, Balanz…)</button>
+            <button class="qopt" data-opt="b">El BCRA</button>
+            <button class="qopt" data-opt="c">Caja de Valores S.A., una entidad independiente regulada por CNV</button>
+          </div>
+          <div class="qexplain">✅ <strong>Correcto:</strong> tus inversiones quedan en una <strong>cuenta comitente</strong> a tu nombre en Caja de Valores. El broker solo ejecuta tus órdenes. Si tu broker quiebra, tus inversiones se transfieren a otro broker.</div>
+        </div>
+
+        <div class="quiz-q" data-correct="a">
+          <div class="qtext">3. Alguien te promete "rendimiento garantizado del 10% mensual operando acciones". ¿Qué es?</div>
+          <div class="qopts">
+            <button class="qopt" data-opt="a">Una estafa — en mercados de capitales nada está garantizado</button>
+            <button class="qopt" data-opt="b">Una oportunidad legal pero riesgosa</button>
+            <button class="qopt" data-opt="c">El rendimiento normal de un broker grande</button>
+          </div>
+          <div class="qexplain">✅ <strong>Correcto:</strong> en mercados de capitales <strong>NADA está garantizado</strong>. Solo el plazo fijo bancario tiene rendimiento fijo (y bajo). Si te prometen un % fijo mensual, es estafa clásica.</div>
+        </div>
+
+        <div class="quiz-score" id="quiz-score">Respondé las 3 preguntas para ver tu puntaje</div>
+      </div>
+
+      <!-- FAQ -->
+      <section class="faq-section" style="margin:3rem 0 1rem;padding:0;max-width:none">
+        <h2 style="text-align:left;font-family:var(--font-display);font-size:1.6rem;letter-spacing:-0.01em;margin-bottom:1rem">Preguntas frecuentes</h2>
+
+        <details class="faq-item">
+          <summary>¿Puedo tener cuentas en varios brokers al mismo tiempo?</summary>
+          <div class="faq-body">Sí, sin problemas. Cada broker te abre su propia cuenta comitente y las inversiones quedan separadas. Muchos inversores combinan, por ejemplo, <strong>Cocos para FCI</strong> + <strong>IOL para bonos</strong>. La única "carga" es sumar los reportes de cada uno al hacer la declaración anual.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Es seguro pasarle mi DNI y datos al broker?</summary>
+          <div class="faq-body">Los brokers registrados en CNV están obligados a cumplir con protección de datos y prevención de lavado (PLA). Te van a pedir foto de DNI + selfie + comprobante de domicilio + un test de conveniencia (perfil de inversor). Es estándar y obligatorio — si te pide menos, sospechá.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Qué pasa con mis inversiones si quiebra el broker?</summary>
+          <div class="faq-body">Tus inversiones están a <strong>tu nombre</strong> en Caja de Valores, no del broker. Si el broker quiebra, la CNV te transfiere la cuenta comitente a otro broker. Lo que SÍ podés perder es el <strong>efectivo en pesos sin invertir</strong> que tengas en la cuenta del broker — por eso conviene tener ese saldo en una cuenta remunerada o FCI money market.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Hay comisión por abrir cuenta o mantenerla?</summary>
+          <div class="faq-body">En 2026 ningún broker grande argentino cobra apertura ni mantenimiento. Sí pueden cobrar comisiones <strong>por operación</strong>, aunque varios tienen plan Free.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Puedo operar desde el celular o necesito una compu?</summary>
+          <div class="faq-body">Todos los brokers principales tienen app móvil completa. Para operatoria habitual la app alcanza. La web sirve para reportes complejos y gráficos más grandes.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Cuánto tarda en abrir una cuenta?</summary>
+          <div class="faq-body">Cocos y Balanz: 5-10 minutos online (DNI + selfie). Activación inmediata. IOL puede tardar 24h. PPI suele incluir una llamada breve. Tradicionales (Allaria, SBS) pueden pedir reunión presencial.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Tengo que declarar mis inversiones a AFIP?</summary>
+          <div class="faq-body">Sí. Las ganancias por venta de activos financieros están alcanzadas por <strong>Bienes Personales</strong> (si tu patrimonio supera el mínimo no imponible) y por <strong>Impuesto a las Ganancias</strong> (con varias exenciones — bonos en pesos, dividendos de acciones argentinas locales, etc.). Tu broker te emite el reporte anual que tenés que cargar.</div>
+        </details>
+      </section>
+
       <p style="margin-top:2rem;font-size:0.85rem;color:var(--text-subtle);font-style:italic">Este artículo es informativo y educativo. No constituye recomendación de inversión. Los productos mencionados son ejemplos del mercado argentino.</p>
     </article>
+
+    <script>
+    (function() {
+      const $$ = id => document.getElementById(id);
+      const recommend = (monto, tipo) => {
+        if (monto <= 0) return 'Ingresá un monto para ver la recomendación.';
+        const small = monto < 100000;
+        const medium = monto >= 100000 && monto < 1000000;
+        let primary = '', backup = '', why = '';
+        if (tipo === 'fci' || (tipo === 'mix' && small)) {
+          primary = 'Cocos Capital'; backup = 'Mercado Pago (FCI básico)';
+          why = 'Cero comisiones en FCI propios (Cocos Daruma). App muy pulida. Para money market y conservador, lo más ágil.';
+        } else if (tipo === 'cedear') {
+          primary = small ? 'Cocos Capital' : 'IOL Invertironline'; backup = 'Balanz';
+          why = small ? 'CEDEARs sin comisión en su plan Free.' : 'Lista más amplia y reportes detallados, útil para montos mayores.';
+        } else if (tipo === 'mep') {
+          primary = 'Cocos Capital'; backup = 'Balanz';
+          why = 'MEP sin parking (compra y vende mismo día). Spread competitivo.';
+        } else if (tipo === 'bonos') {
+          primary = 'IOL Invertironline'; backup = 'PPI';
+          why = 'Mejor curador de renta fija y herramientas de TIR. PPI también es fuerte en bonos.';
+        } else {
+          primary = 'Cocos Capital + IOL'; backup = '—';
+          why = 'Combinación común: Cocos para operatoria diaria/MEP/FCI, IOL para bonos y análisis detallado.';
+        }
+        const tierLabel = small ? 'inversor que recién empieza con saldo chico' : medium ? 'inversor de saldo medio' : 'inversor con saldo grande';
+        return `Para un <strong>${tierLabel}</strong> enfocado en <strong>${tipo === 'mix' ? 'mix completo' : tipo.toUpperCase()}</strong>:<br><br>✅ <strong>Primaria:</strong> ${primary}<br>🔄 <strong>Alternativa:</strong> ${backup}<br><br><em style="font-size:0.85rem">${why}</em>`;
+      };
+      const upd = () => {
+        $$('mw-result').innerHTML = recommend(parseFloat($$('mw-monto').value) || 0, $$('mw-tipo').value);
+      };
+      ['mw-monto','mw-tipo'].forEach(id => { $$(id).addEventListener('input', upd); $$(id).addEventListener('change', upd); });
+      upd();
+
+      let answered = 0, correct = 0;
+      document.querySelectorAll('.quiz-q').forEach(q => {
+        const right = q.dataset.correct;
+        q.querySelectorAll('.qopt').forEach(opt => {
+          opt.addEventListener('click', () => {
+            if (q.classList.contains('answered')) return;
+            q.classList.add('answered');
+            q.querySelectorAll('.qopt').forEach(o => o.classList.add('disabled'));
+            const picked = opt.dataset.opt;
+            if (picked === right) { opt.classList.add('correct'); correct++; }
+            else {
+              opt.classList.add('wrong');
+              q.querySelector('.qopt[data-opt="' + right + '"]').classList.add('correct');
+            }
+            answered++;
+            if (answered === 3) {
+              $$('quiz-score').innerHTML = 'Tu puntaje: <strong>' + correct + '/3</strong> ' + (correct === 3 ? '🎉 ¡Perfecto!' : correct >= 2 ? '👍 Bien' : '📚 Releé el artículo');
+            }
+          });
+        });
+      });
+    })();
+    </script>
   </main>
 
   <footer class="site-footer">
@@ -180,6 +338,6 @@
   </footer>
 
   <script src="../../js/sanitize.js?v=1"></script>
-  <script src="../../js/main.js?v=15"></script>
+  <script src="../../js/main.js?v=16"></script>
 </body>
 </html>
