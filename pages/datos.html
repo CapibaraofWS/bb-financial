@@ -1006,23 +1006,53 @@
     document.getElementById('grid-eeuu').innerHTML = skeleton(7);
     const cards = [];
 
-    /* Fed Funds Rate — FRED (proxied via /api/fred para no exponer key) */
+    /* FRED — múltiples series (Fed Funds + indicadores macro) */
+    const fredInds = [
+      { id: 'FEDFUNDS',     cat: 'Fed Reserve',   name: 'Fed Funds Rate',         fv: v => fmtNum(v,2)+'%', cls: 'blue-card' },
+      { id: 'CPILFESL',     cat: 'BLS · FRED',    name: 'Core CPI (YoY)',         fv: v => fmtNum(v,2)+'%', yoy: true },
+      { id: 'PCEPILFE',     cat: 'BEA · FRED',    name: 'Core PCE (YoY) — Fed pref.', fv: v => fmtNum(v,2)+'%', yoy: true },
+      { id: 'UNRATE',       cat: 'BLS · FRED',    name: 'Tasa de Desempleo',      fv: v => fmtNum(v,1)+'%' },
+      { id: 'ICSA',         cat: 'DOL · FRED',    name: 'Initial Jobless Claims', fv: v => fmtBig(v) },
+      { id: 'MORTGAGE30US', cat: 'Freddie · FRED',name: 'Mortgage 30Y',           fv: v => fmtNum(v,2)+'%' },
+      { id: 'BAMLC0A0CM',   cat: 'ICE · FRED',    name: 'Credit Spread IG (OAS)', fv: v => Math.round(v*100)+' bps' },
+      { id: 'BAMLH0A0HYM2', cat: 'ICE · FRED',    name: 'Credit Spread HY (OAS)', fv: v => Math.round(v*100)+' bps' },
+      { id: 'VIXCLS',       cat: 'CBOE · FRED',   name: 'VIX (volatilidad)',      fv: v => fmtNum(v,2) },
+      { id: 'DCOILWTICO',   cat: 'EIA · FRED',    name: 'Petróleo WTI',           fv: v => 'USD '+fmtNum(v,2) },
+      { id: 'M2SL',         cat: 'Fed · FRED',    name: 'M2 Money Supply',        fv: v => 'USD '+fmtBig(v*1e9) },
+      { id: 'INDPRO',       cat: 'Fed · FRED',    name: 'Producción Industrial (YoY)',  fv: v => fmtNum(v,2)+'%', yoy: true },
+    ];
+
+    /* Batch fetch FRED — limit 13 para series con YoY y 2 para deltas día/día */
     try {
-      const r = await fetch(
-        '/api/fred',
-        { signal: AbortSignal.timeout(8000) }
-      );
+      const ids = fredInds.map(i => i.id).join(',');
+      const r = await fetch('/api/fred?series_ids=' + encodeURIComponent(ids) + '&limit=16', { signal: AbortSignal.timeout(10000) });
       if (r.ok) {
-        const j = await r.json();
-        const obs = j.observations?.filter(o => o.value !== '.');
-        if (obs?.length) {
-          const last = obs[0], prev = obs[1];
-          const chg = prev ? parseFloat(last.value) - parseFloat(prev.value) : null;
+        const data = await r.json();
+        for (const ind of fredInds) {
+          const obs = data[ind.id]?.observations?.filter(o => o.value !== '.');
+          if (!obs?.length) continue;
+          const last = obs[0];
+          let value = parseFloat(last.value);
+          let chg = null;
+          let chgPct = null;
+          if (ind.yoy && obs.length >= 13) {
+            // YoY: comparar con observación de hace 12 meses
+            const yoyBase = parseFloat(obs[12].value);
+            value = (value / yoyBase - 1) * 100;
+            // Para YoY, mostrar el último valor; el delta vs período previo es la diff de YoY recientes
+            const prevYoY = obs.length >= 14 ? (parseFloat(obs[1].value) / parseFloat(obs[13].value) - 1) * 100 : null;
+            if (Number.isFinite(prevYoY)) chg = value - prevYoY;
+          } else if (obs.length >= 2) {
+            const prev = parseFloat(obs[1].value);
+            chg = value - prev;
+            chgPct = prev !== 0 ? (value - prev) / Math.abs(prev) * 100 : null;
+          }
           cards.push(datoCard({
-            cat:'Fed Reserve', name:'Fed Funds Rate',
-            value: fmtNum(parseFloat(last.value),2)+'%',
-            changeAbs: chg,
-            period: fmtDate(last.date), source:'FRED', cls:'blue-card'
+            cat: ind.cat, name: ind.name,
+            value: ind.fv(value),
+            changeAbs: ind.yoy ? chg : null,
+            changePct: ind.yoy ? null : chgPct,
+            period: fmtDate(last.date), source: 'FRED', cls: ind.cls || ''
           }));
         }
       }
@@ -1030,9 +1060,8 @@
 
     /* World Bank indicators */
     const WB = 'https://api.worldbank.org/v2/country/US/indicator/';
+    /* World Bank: solo lo que NO viene de FRED (CPI y desempleo ya están en FRED, más recientes) */
     const wbInds = [
-      { id:'FP.CPI.TOTL.ZG',    name:'Inflación Anual (CPI)',       fv: v => fmtNum(v,1)+'%' },
-      { id:'SL.UEM.TOTL.ZS',    name:'Tasa de Desempleo',           fv: v => fmtNum(v,1)+'%' },
       { id:'NY.GDP.MKTP.CD',    name:'PBI Nominal',                  fv: v => 'USD '+fmtBig(v) },
       { id:'NY.GDP.MKTP.KD.ZG', name:'Crecimiento PBI Real',        fv: v => fmtNum(v,1)+'%' },
       { id:'GC.BAL.CASH.GD.ZS', name:'Balance Fiscal (% PBI)',      fv: v => fmtNum(v,2)+'%' },

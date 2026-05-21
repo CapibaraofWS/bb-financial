@@ -14,6 +14,18 @@ const ALLOWED_SERIES = new Set([
   'T5YIE', 'T10YIE',
   // Spreads
   'T10Y2Y', 'T10Y3M',
+  // Inflation
+  'CPIAUCSL', 'CPILFESL', 'PCEPI', 'PCEPILFE',
+  // Empleo / actividad
+  'UNRATE', 'ICSA', 'PAYEMS', 'INDPRO', 'UMCSENT', 'RSAFS',
+  // Vivienda / hipotecas
+  'MORTGAGE30US', 'HOUST',
+  // Crédito corporativo (OAS — Option-Adjusted Spread)
+  'BAMLH0A0HYM2', 'BAMLC0A0CM',
+  // Money supply / volatilidad / commodities / dólar
+  'M2SL', 'VIXCLS', 'DCOILWTICO', 'DTWEXBGS',
+  // GDP
+  'A191RL1Q225SBEA',
 ]);
 
 async function fetchSeries(seriesId, apiKey, limit) {

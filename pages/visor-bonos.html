@@ -153,6 +153,16 @@
           <div class="chart-canvas-wrap"><canvas id="curve-chart"></canvas></div>
         </div>
 
+        <div class="chart-wrap">
+          <h3>YTM vs Duration — Treasuries &amp; TIPS</h3>
+          <p class="ch-desc">Cada punto es un bono. Eje X: <strong>Modified Duration</strong> (sensibilidad a tasa). Eje Y: <strong>YTM</strong> (rendimiento). Cuanto más a la derecha y arriba, más rendimiento pero más riesgo de tasa. Treasuries (verde), TIPS (azul — yield real).</p>
+          <div class="chart-canvas-wrap"><canvas id="scatter-chart"></canvas></div>
+        </div>
+
+        <h2 class="section-title">Credit Spreads — Crédito corporativo</h2>
+        <p class="section-desc">Spread sobre Treasuries que paga el mercado por bonos corporativos USA. Cuando suben, el mercado descuenta más riesgo de default. Históricamente: HY &gt; 800 bps = stress severo; IG &gt; 200 bps = recesión inminente.</p>
+        <div class="yield-grid" id="grid-credit"></div>
+
         <h2 class="section-title">Treasuries — Yields nominales</h2>
         <p class="section-desc">Bonos del Tesoro de EE.UU. denominados en USD. Tasa libre de riesgo de referencia global.</p>
         <div class="yield-grid" id="grid-treasuries"></div>
@@ -398,6 +408,10 @@
       spreads: [
         { id: 'T10Y2Y', label: '10Y − 2Y' },
         { id: 'T10Y3M', label: '10Y − 3M' },
+      ],
+      credit: [
+        { id: 'BAMLC0A0CM',   label: 'IG OAS', subtitle: 'Investment Grade (BBB+)' },
+        { id: 'BAMLH0A0HYM2', label: 'HY OAS', subtitle: 'High Yield (BB y debajo)' },
       ]
     };
 
@@ -406,6 +420,7 @@
       ...BONDS.tips.map(b => b.id),
       ...BONDS.breakeven.map(b => b.id),
       ...BONDS.spreads.map(b => b.id),
+      ...BONDS.credit.map(b => b.id),
     ];
 
     // ===== FETCH FRED =====
@@ -443,9 +458,16 @@
     }
 
     // ===== RENDER CARDS =====
-    function renderCardGrid(containerId, items, source) {
+    // opts.format: 'pct' (default — N.NN%) | 'bps' (N bps, FRED publica el OAS en %)
+    function renderCardGrid(containerId, items, source, opts) {
       const el = document.getElementById(containerId);
       el.textContent = '';
+      const fmt = opts?.format || 'pct';
+      const formatValue = (v) => fmt === 'bps' ? Math.round(v * 100) + ' bps' : v.toFixed(2) + '%';
+      const formatDelta = (d) => {
+        const sign = d > 0 ? '+' : '';
+        return fmt === 'bps' ? sign + Math.round(d * 100) + ' bps' : sign + d.toFixed(2) + ' pp';
+      };
       for (const b of items) {
         const d = source[b.id];
         const card = document.createElement('div');
@@ -456,17 +478,23 @@
         const val = document.createElement('p'); val.className = 'yc-value';
 
         if (d && Number.isFinite(d.value)) {
-          val.textContent = d.value.toFixed(2) + '%';
+          val.textContent = formatValue(d.value);
         } else {
           val.classList.add('muted');
           val.textContent = '—';
         }
 
+        if (b.subtitle) {
+          const st = document.createElement('p'); st.className = 'yc-sub'; st.style.marginTop = '0.15rem';
+          st.textContent = b.subtitle; card.appendChild(lbl); card.appendChild(nm); card.appendChild(val); card.appendChild(st);
+        } else {
+          card.appendChild(lbl); card.appendChild(nm); card.appendChild(val);
+        }
+
         const sub = document.createElement('p'); sub.className = 'yc-sub';
         if (d && Number.isFinite(d.value) && Number.isFinite(d.prev)) {
           const delta = d.value - d.prev;
-          const sign = delta > 0 ? '+' : '';
-          sub.textContent = sign + delta.toFixed(2) + ' pp vs día prev. (' + d.date + ')';
+          sub.textContent = formatDelta(delta) + ' vs día prev. (' + d.date + ')';
           if (delta > 0) sub.classList.add('up');
           else if (delta < 0) sub.classList.add('down');
         } else if (d && d.date) {
@@ -474,8 +502,7 @@
         } else {
           sub.textContent = 'Sin dato';
         }
-
-        card.appendChild(lbl); card.appendChild(nm); card.appendChild(val); card.appendChild(sub);
+        card.appendChild(sub);
         el.appendChild(card);
       }
     }
@@ -578,6 +605,66 @@
               ticks: { color: '#7a8599', callback: v => v.toFixed(1) + '%' },
               grid: { color: 'rgba(255,255,255,0.04)' }
             }
+          }
+        }
+      });
+    }
+
+    // ===== SCATTER: YTM vs DURATION =====
+    // Para Treasuries (cupón = yield, par = 100): Modified Duration. Para TIPS lo mismo en yield real.
+    let scatterChart = null;
+    function computeBondMetrics(yieldsObj, list, isTIPS) {
+      const out = [];
+      for (const b of list) {
+        const y = yieldsObj[b.id]?.value;
+        if (!Number.isFinite(y)) continue;
+        const yDec = y / 100;
+        let sched, dMod;
+        if (b.plazoAnios < 1) {
+          // Zero-coupon
+          sched = [{ t: b.plazoAnios, cf: 100 * Math.pow(1 + Math.max(yDec, 0.0001), b.plazoAnios) }];
+          const tir = BondMath.ytmFromSchedule(100, sched);
+          const dMac = BondMath.macaulayDuration(100, sched, tir);
+          dMod = BondMath.modifiedDuration(dMac, tir, 1);
+        } else {
+          sched = BondMath.bulletSchedule(100, Math.max(yDec, 0.0001), 2, b.plazoAnios);
+          const tir = BondMath.ytmFromSchedule(100, sched);
+          if (!Number.isFinite(tir)) continue;
+          const dMac = BondMath.macaulayDuration(100, sched, tir);
+          dMod = BondMath.modifiedDuration(dMac, tir, 1);
+        }
+        if (!Number.isFinite(dMod)) continue;
+        out.push({ x: dMod, y, label: b.label, isTIPS: !!isTIPS });
+      }
+      return out;
+    }
+
+    function renderScatterChart(yields) {
+      const treas = computeBondMetrics(yields, BONDS.treasuries, false);
+      const tips  = computeBondMetrics(yields, BONDS.tips, true);
+      if (treas.length + tips.length < 2) return;
+
+      const ctx = document.getElementById('scatter-chart').getContext('2d');
+      if (scatterChart) scatterChart.destroy();
+      scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            { label: 'Treasuries (nominal)', data: treas, backgroundColor: '#4ade9a', borderColor: '#4ade9a', pointRadius: 7, pointHoverRadius: 9 },
+            { label: 'TIPS (real)',          data: tips,  backgroundColor: '#60a5fa', borderColor: '#60a5fa', pointRadius: 7, pointHoverRadius: 9 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          parsing: false,
+          plugins: {
+            legend: { labels: { color: '#e8edf5' } },
+            tooltip: { callbacks: { label: (it) => it.raw.label + ' — Duration ' + it.raw.x.toFixed(2) + ' / YTM ' + it.raw.y.toFixed(2) + '%' } }
+          },
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Modified Duration (años)', color: '#7a8599' }, ticks: { color: '#7a8599' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+            y: { type: 'linear', title: { display: true, text: 'YTM (%)', color: '#7a8599' }, ticks: { color: '#7a8599', callback: v => v.toFixed(1) + '%' }, grid: { color: 'rgba(255,255,255,0.04)' } }
           }
         }
       });
@@ -764,7 +851,7 @@
     // ===== INIT =====
     async function init() {
       // Skeletons mientras cargan datos
-      for (const cid of ['grid-treasuries', 'grid-tips', 'grid-breakeven', 'grid-spreads']) {
+      for (const cid of ['grid-treasuries', 'grid-tips', 'grid-breakeven', 'grid-spreads', 'grid-credit']) {
         const el = document.getElementById(cid);
         el.textContent = '';
         for (let i = 0; i < 4; i++) {
@@ -792,7 +879,9 @@
       renderCardGrid('grid-tips', BONDS.tips, y);
       renderCardGrid('grid-breakeven', BONDS.breakeven, y);
       renderCardGrid('grid-spreads', BONDS.spreads, y);
+      renderCardGrid('grid-credit', BONDS.credit, y, { format: 'bps' });
       renderCurveChart(y);
+      renderScatterChart(y);
       renderCurveAlert(y);
       renderComp();
 
