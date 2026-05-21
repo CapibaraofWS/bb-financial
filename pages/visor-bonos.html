@@ -147,7 +147,9 @@
 
         <div class="chart-wrap">
           <h3>Yield Curve — Tesoro EE.UU.</h3>
-          <p class="ch-desc">Eje X: plazo (escala log). Eje Y: yield anual %. Última actualización: <span id="curve-updated">—</span></p>
+          <p class="ch-desc">Eje X: plazo (escala log con etiquetas fijas en cada Treasury). Eje Y: yield anual %. Última actualización: <span id="curve-updated">—</span></p>
+          <p style="font-size:0.75rem;color:var(--text-subtle);margin:0 0 0.5rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;">Filtrar instrumentos:</p>
+          <div class="selector-grid" id="curve-filter" style="margin-bottom:1rem;"></div>
           <div class="chart-canvas-wrap"><canvas id="curve-chart"></canvas></div>
         </div>
 
@@ -479,12 +481,48 @@
     }
 
     // ===== CURVE CHART =====
+    // Filtros del usuario sobre qué Treasuries mostrar (default: todos)
+    const curveFilter = new Set(BONDS.treasuries.map(b => b.id));
+
+    // Mapeo plazo→label canónico para ticks fijos del eje X
+    const CURVE_TICK_LABELS = {
+      0.0833: '1M', 0.25: '3M', 0.5: '6M',
+      1: '1Y', 2: '2Y', 5: '5Y', 10: '10Y', 30: '30Y'
+    };
+
+    function renderCurveFilter() {
+      const el = document.getElementById('curve-filter');
+      if (!el) return;
+      el.textContent = '';
+      for (const b of BONDS.treasuries) {
+        const chip = document.createElement('div');
+        chip.className = 'sel-chip';
+        if (curveFilter.has(b.id)) chip.classList.add('selected');
+        chip.textContent = b.label;
+        chip.addEventListener('click', () => {
+          if (curveFilter.has(b.id)) curveFilter.delete(b.id);
+          else curveFilter.add(b.id);
+          renderCurveFilter();
+          renderCurveChart(state.yields);
+        });
+        el.appendChild(chip);
+      }
+    }
+
     let curveChart = null;
     function renderCurveChart(yields) {
       const points = BONDS.treasuries
+        .filter(b => curveFilter.has(b.id))
         .map(b => ({ x: b.plazoAnios, y: yields[b.id] && Number.isFinite(yields[b.id].value) ? yields[b.id].value : null, label: b.label }))
         .filter(p => p.y !== null);
-      if (points.length < 2) return;
+      if (points.length < 2) {
+        // Si quedan menos de 2 puntos, no se puede dibujar curva
+        if (curveChart) { curveChart.destroy(); curveChart = null; }
+        return;
+      }
+
+      // Ticks fijos: solo los plazos seleccionados
+      const tickPositions = points.map(p => p.x).sort((a, b) => a - b);
 
       const ctx = document.getElementById('curve-chart').getContext('2d');
       if (curveChart) curveChart.destroy();
@@ -518,12 +556,19 @@
           scales: {
             x: {
               type: 'logarithmic',
-              title: { display: true, text: 'Plazo (años, log)', color: '#7a8599' },
+              min: tickPositions[0] * 0.9,
+              max: tickPositions[tickPositions.length - 1] * 1.1,
+              title: { display: true, text: 'Plazo', color: '#7a8599' },
+              afterBuildTicks: (axis) => { axis.ticks = tickPositions.map(v => ({ value: v })); },
               ticks: {
                 color: '#7a8599',
+                autoSkip: false,
                 callback: (v) => {
-                  if (v < 1) return (v * 12).toFixed(0) + 'M';
-                  return v + 'Y';
+                  // Buscar el label canónico más cercano (las posiciones provienen del array tickPositions)
+                  for (const [k, lbl] of Object.entries(CURVE_TICK_LABELS)) {
+                    if (Math.abs(parseFloat(k) - v) < 1e-3) return lbl;
+                  }
+                  return v < 1 ? Math.round(v * 12) + 'M' : v + 'Y';
                 }
               },
               grid: { color: 'rgba(255,255,255,0.04)' }
@@ -602,18 +647,25 @@
 
       const bonds = ids.map(id => BONDS.treasuries.find(b => b.id === id)).filter(Boolean);
 
-      // Calcular métricas (asumimos bullet, cupón = yield actual, par = 100)
+      // Calcular métricas. T-Bills (plazo < 1Y) son zero-coupon (un solo flujo).
+      // T-Notes / T-Bonds (>= 1Y) son bullet semestrales con cupón = yield (par).
       const metrics = bonds.map(b => {
         const y = state.yields[b.id]?.value;
         if (!Number.isFinite(y) || y <= 0) return { b, ok: false };
         const yDec = y / 100;
-        const m = 2; // semestral típico Treasuries
-        const sched = BondMath.bulletSchedule(100, yDec, m, b.plazoAnios);
+        let sched;
+        if (b.plazoAnios < 1) {
+          // Zero-coupon: un único flujo al vencimiento. Precio=100, flujo = 100*(1+y)^t para que TIR = y.
+          sched = [{ t: b.plazoAnios, cf: 100 * Math.pow(1 + yDec, b.plazoAnios) }];
+        } else {
+          sched = BondMath.bulletSchedule(100, yDec, 2, b.plazoAnios);
+        }
         const tir = BondMath.ytmFromSchedule(100, sched);
+        if (!Number.isFinite(tir)) return { b, ok: false };
         const dMac = BondMath.macaulayDuration(100, sched, tir);
         const dMod = BondMath.modifiedDuration(dMac, tir, 1);
         const conv = BondMath.convexity(100, sched, tir);
-        return { b, ok: true, y, tir, dMac, dMod, conv };
+        return { b, ok: true, y, tir, dMac, dMod, conv, isZC: b.plazoAnios < 1 };
       });
 
       // Tabla
@@ -647,15 +699,24 @@
       }
       tbl.appendChild(tbody);
 
-      // Gráfico precio-yield
+      // Gráfico precio-yield. Para T-Bills usamos zero-coupon; para bonos con cupón, bullet par.
       const COLORS = ['#4ade9a', '#60a5fa', '#e8c97a', '#ff9999'];
       const datasets = [];
       metrics.forEach((m, i) => {
         if (!m.ok) return;
         const pts = [];
-        for (let yPct = 0; yPct <= 12; yPct += 0.25) {
-          const p = BondMath.priceBullet(100, m.y / 100, 2, m.b.plazoAnios, yPct / 100);
-          pts.push({ x: yPct, y: p });
+        const yMin = 0, yMax = 12, step = 0.25;
+        for (let yPct = yMin; yPct <= yMax + 1e-9; yPct += step) {
+          const yDec = yPct / 100;
+          let p;
+          if (m.isZC) {
+            // Precio zero-coupon: CF al vencimiento descontado a yPct
+            const cf = 100 * Math.pow(1 + m.y / 100, m.b.plazoAnios);
+            p = cf / Math.pow(1 + yDec, m.b.plazoAnios);
+          } else {
+            p = BondMath.priceBullet(100, m.y / 100, 2, m.b.plazoAnios, yDec);
+          }
+          if (Number.isFinite(p)) pts.push({ x: yPct, y: p });
         }
         datasets.push({
           label: m.b.label,
@@ -676,13 +737,25 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          parsing: false,
           plugins: {
             legend: { labels: { color: '#e8edf5' } },
             tooltip: { callbacks: { label: (it) => it.dataset.label + ': $' + it.raw.y.toFixed(2) + ' @ yield ' + it.raw.x.toFixed(2) + '%' } }
           },
           scales: {
-            x: { title: { display: true, text: 'Yield %', color: '#7a8599' }, ticks: { color: '#7a8599' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-            y: { title: { display: true, text: 'Precio (VN=100)', color: '#7a8599' }, ticks: { color: '#7a8599' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+            x: {
+              type: 'linear',
+              min: 0, max: 12,
+              title: { display: true, text: 'Yield %', color: '#7a8599' },
+              ticks: { color: '#7a8599', callback: v => v + '%' },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              type: 'linear',
+              title: { display: true, text: 'Precio (VN=100)', color: '#7a8599' },
+              ticks: { color: '#7a8599', callback: v => '$' + v.toFixed(0) },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            }
           }
         }
       });
@@ -701,6 +774,7 @@
         }
       }
       renderCompSelector();
+      renderCurveFilter();
 
       const y = await fetchAllYields();
       if (!y) {
