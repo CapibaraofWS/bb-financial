@@ -230,6 +230,7 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'ranking-semanal.html', label: 'Ranking semanal 🔥', icon: '📊' },
         { href: pagesBase + 'ticker.html',     label: 'Acciones',     icon: '📈' },
         { href: pagesBase + 'mercado.html',    label: 'Mercado',      icon: '🌐' },
+        { href: pagesBase + 'visor-bonos.html',label: 'Visor de Bonos USA', icon: '💵' },
         { href: pagesBase + 'calendario.html', label: 'Calendario',   icon: '📅' },
         { href: pagesBase + 'noticias.html',   label: 'Noticias',     icon: '📰' },
         { href: pagesBase + 'datos.html',      label: 'Datos macro',  icon: '📊' },

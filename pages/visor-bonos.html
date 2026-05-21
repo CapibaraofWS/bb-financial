@@ -82,6 +82,12 @@
     .acc-body ul{padding-left:1.25rem;}
     .acc-body li{margin-bottom:0.4rem;}
     .formula-mini{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.85rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin:0.5rem 0;}
+    .concept-box{background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.20);border-left:3px solid #60a5fa;border-radius:8px;padding:0.85rem 1rem;margin:1rem 0;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .concept-box strong{color:#60a5fa;}
+    .concept-box .cb-title{display:block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.35rem;font-weight:600;}
+    .concept-box.warn{background:rgba(255,153,153,0.05);border-color:rgba(255,153,153,0.20);border-left-color:#ff9999;}
+    .concept-box.warn strong, .concept-box.warn .cb-title{color:#ff9999;}
+    .source-cite{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-subtle);margin-top:0.5rem;display:block;}
 
     .loading-skel{display:inline-block;width:60px;height:1.4rem;background:linear-gradient(90deg,var(--bg-card),var(--bg-card-hover),var(--bg-card));background-size:200% 100%;animation:skel 1.5s infinite;border-radius:4px;}
     @keyframes skel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
@@ -235,6 +241,10 @@
             <div class="formula-mini">Intereses corridos = Cupón × (días desde último pago / días entre pagos)</div>
             <h4>Relación inversa precio-tasa</h4>
             <p>Si la tasa de mercado <strong>sube</strong>, los bonos viejos (con cupón fijo más bajo) <strong>bajan de precio</strong> — porque los nuevos pagan más. Y viceversa. Esta es la mecánica central de la renta fija.</p>
+            <div class="concept-box">
+              <span class="cb-title">Concepto clave: función precio-TIR</span>
+              La relación precio-yield no es lineal sino <strong>convexa</strong>. Esta convexidad es propiedad fundamental de los flujos descontados: el precio cae menos cuando la tasa sube de lo que sube cuando la tasa baja la misma magnitud. Por eso un bono con alta convexidad es deseable en escenarios de volatilidad de tasas.
+            </div>
             <h4>Paridad</h4>
             <p><code>Paridad = Precio sucio / Valor técnico × 100</code>. Sobre 100 → sobre la par. Bajo 100 → bajo la par. A 100 → a la par.</p>
           </div>
@@ -254,6 +264,11 @@
             <p>El <strong>cupón</strong> es fijo (definido en el prospecto). La <strong>TIR</strong> varía con el precio. Si el precio cae, la TIR sube — el bono se vuelve más atractivo porque "compensa" el riesgo.</p>
             <h4>Spread</h4>
             <p>Diferencia entre la TIR de un bono y la del Treasury del mismo plazo. Se expresa en <strong>basis points (bps)</strong>: 100 bps = 1%. Spread alto = más riesgo de crédito percibido por el mercado.</p>
+            <div class="concept-box warn">
+              <span class="cb-title">⚠ Atención: la TIR no siempre es el rendimiento real</span>
+              La TIR asume que <strong>todos los cupones se reinvierten a la misma TIR</strong>. Si las tasas bajan, vas a reinvertir a tasas menores y tu rendimiento total será inferior a la TIR. Si suben, será superior. Para bonos cortos sin cupón, TIR = rendimiento realizado. Para bonos largos con cupones, no.
+              <span class="source-cite">Fuente: Dumrauf, Análisis Cuantitativo de BONOS, Cap. 14</span>
+            </div>
           </div>
         </div>
 
@@ -337,6 +352,103 @@
               <li><strong>Corporativos investment-grade:</strong> riesgo de tasa + algo de crédito</li>
               <li><strong>High-yield / emergentes:</strong> riesgo de crédito domina; el spread sobre Treasuries es la compensación</li>
             </ul>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">7 — Total Return: lo que realmente ganás<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>La TIR es una promesa. El <strong>total return</strong> (rendimiento total) es lo que efectivamente recibís. Tiene tres componentes:</p>
+            <ul>
+              <li><strong>Cupones cobrados</strong> durante el horizonte de inversión</li>
+              <li><strong>Reinversión de esos cupones</strong> a la tasa que haya cuando los cobrás</li>
+              <li><strong>Precio de venta o valor de reembolso</strong> al final del horizonte</li>
+            </ul>
+            <div class="formula-mini">Total Return = (Valor final / Precio compra)^(1/n) − 1</div>
+            <p>Donde <em>Valor final</em> = cupones acumulados con reinversión + precio de venta.</p>
+            <div class="concept-box">
+              <span class="cb-title">Ejemplo numérico</span>
+              Comprás un Treasury 10Y a yield 4.50% pero pensás venderlo en 3 años. Si las tasas suben a 5.50% en ese plazo, vas a recuperar &lt; precio de compra (pérdida de capital) + 3 años de cupones reinvertidos a tasas variables. El total return puede ser bien diferente a la TIR original.
+              <span class="source-cite">Fuente: Dumrauf, Cap. 3; Fabozzi, Bond Markets 8e, Cap. 3</span>
+            </div>
+            <p><strong>Implicancia práctica:</strong> elegir el bono no solo por su TIR sino por el escenario de tasas y tu horizonte de inversión. Un bono corto con TIR menor puede dar mejor total return si esperás suba de tasas.</p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">8 — Curva de rendimientos: tres teorías que la explican<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>¿Por qué la curva tiene la forma que tiene? Tres teorías clásicas (no excluyentes — el mercado real es una combinación):</p>
+            <h4>1. Teoría de las expectativas puras</h4>
+            <p>Las tasas largas son el <strong>promedio geométrico esperado</strong> de las tasas cortas futuras. Si el mercado espera que la Fed suba tasas, la curva se empina. Si espera bajadas, se aplana o invierte.</p>
+            <div class="formula-mini">(1 + r_largo)^n = (1+r_1)(1+E[r_2])...(1+E[r_n])</div>
+            <p><strong>Predicción:</strong> tasas forward implícitas son insesgadas. <strong>Crítica:</strong> empíricamente no lo son — el mercado paga premio por liquidez.</p>
+            <h4>2. Teoría de la preferencia por liquidez</h4>
+            <p>Los inversores <strong>prefieren plazos cortos</strong> (menor riesgo de tasa). Para que acepten plazos largos, exigen un premio adicional ("term premium"). Por eso la curva normal es ascendente incluso si no se esperan subas de tasa.</p>
+            <h4>3. Teoría de la segmentación de mercado</h4>
+            <p>Cada plazo tiene su propia oferta/demanda. Los bancos compran corto, las aseguradoras compran largo. Si la demanda institucional cambia, la curva se mueve sin que cambien expectativas.</p>
+            <div class="concept-box">
+              <span class="cb-title">¿Por qué importa para vos?</span>
+              Si creés en (1), te interesa lo que <em>vos</em> esperás de tasas futuras. Si creés en (2), un bono largo te paga premio que cobrás aunque las tasas no se muevan ("rolldown"). Si creés en (3), miras flujos institucionales (Treasury issuance, pension funds rebalancing).
+              <span class="source-cite">Fuente: Dumrauf, Cap. 15; Fabozzi, Cap. 5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">9 — Inmunización de portafolio<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>Tenés un pasivo futuro (ej. pagar USD 1M en 7 años) y querés que la cartera te dé exactamente eso, sin importar cómo se muevan las tasas. Eso es <strong>inmunización</strong>.</p>
+            <h4>Regla básica (Redington, 1952)</h4>
+            <ul>
+              <li><strong>Duration de la cartera = Duration del pasivo</strong> (matching)</li>
+              <li><strong>Convexidad de la cartera ≥ Convexidad del pasivo</strong></li>
+              <li><strong>Valor presente coincide</strong></li>
+            </ul>
+            <p>Si se cumplen estas 3 condiciones, ante cualquier <em>movimiento paralelo pequeño</em> de la curva, el valor de la cartera al horizonte coincide con el del pasivo. La pérdida de capital por suba de tasas se compensa exactamente con la mayor reinversión de cupones.</p>
+            <div class="concept-box">
+              <span class="cb-title">Ejemplo: liability de 7 años</span>
+              Si comprás un solo bono con duration 7, lo inmunizás. Alternativa: combinar un bono de duration 3 y otro de duration 12. Por ejemplo 50%/50% si la duration promedio ponderada da 7. La segunda opción tiene <em>mayor convexidad</em> — mejor protección si los movimientos de tasa son grandes.
+            </div>
+            <h4>Limitaciones</h4>
+            <ul>
+              <li>Solo protege contra <strong>movimientos paralelos</strong>. Si la curva cambia de forma (steepening, flattening), la inmunización falla.</li>
+              <li>Requiere <strong>rebalanceo periódico</strong> — la duration de los bonos cambia con el tiempo, hay que ajustar.</li>
+              <li>No protege contra default — solo riesgo de tasa.</li>
+            </ul>
+            <span class="source-cite">Fuente: Dumrauf, Cap. 17; Fabozzi, Cap. 24</span>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">10 — Estrategias de cartera: bullet, barbell, ladder<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>Tres formas clásicas de distribuir una cartera de bonos para una misma duration objetivo:</p>
+            <h4>Bullet</h4>
+            <p>Todos los bonos concentrados en un plazo similar al objetivo. Ej: duration objetivo 7 → toda la plata en T-Notes 7Y.</p>
+            <ul>
+              <li>✅ Predecible, fácil de gestionar</li>
+              <li>❌ Baja convexidad → vulnerable a movimientos grandes de tasa</li>
+            </ul>
+            <h4>Barbell ("pesa")</h4>
+            <p>Mitad en bonos muy cortos, mitad en bonos muy largos. Para duration objetivo 7: 50% T-Bills 1Y + 50% T-Bonds 13Y. La duration promedio ponderada da 7.</p>
+            <ul>
+              <li>✅ Alta convexidad → gana en escenarios volátiles</li>
+              <li>✅ Liquidez (parte corta se renueva pronto)</li>
+              <li>❌ Worse total return si las tasas se mantienen estables (das resigna roll-down de la parte media)</li>
+            </ul>
+            <h4>Ladder (escalera)</h4>
+            <p>Cantidades iguales en plazos escalonados: 1Y, 3Y, 5Y, 7Y, 9Y. Cuando vence el corto, lo reinvertís en el plazo más largo.</p>
+            <ul>
+              <li>✅ Suaviza el riesgo de reinversión</li>
+              <li>✅ Flujo de caja periódico (un vencimiento por año)</li>
+              <li>❌ Convexidad intermedia entre bullet y barbell</li>
+            </ul>
+            <div class="concept-box">
+              <span class="cb-title">¿Cuál elegir?</span>
+              <strong>Bullet</strong> si tenés vista direccional clara (creés que las tasas se mantienen). <strong>Barbell</strong> si esperás volatilidad o no tenés vista. <strong>Ladder</strong> para inversores buy-and-hold que quieren ingresos periódicos sin pensar mucho.
+              <span class="source-cite">Fuente: Dumrauf, Cap. 18; Fabozzi, Cap. 22</span>
+            </div>
           </div>
         </div>
       </div>

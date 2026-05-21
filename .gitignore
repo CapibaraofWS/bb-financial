@@ -40,3 +40,8 @@ desktop.ini
 
 .vercel
 .env*.local
+
+# Libros PDF (uso interno, no van al repo — son referencia bibliográfica)
+data/Renta fija/
+data/Mas libros/
+*.pdf
