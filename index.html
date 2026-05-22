@@ -381,12 +381,13 @@
   <script>
   /* ---- Homepage news carousel ---- */
   (function () {
-    const PROXY = 'https://api.allorigins.win/get?url=';
+    // Proxy server-side propio (/api/rss?source=X) — más confiable que allorigins
     const RSS_SOURCES = [
-      { url: 'https://www.ambito.com/rss/economia.xml',       name: 'Ámbito'    },
-      { url: 'https://www.cronista.com/files/rss/economia.xml',name: 'Cronista'  },
-      { url: 'https://news.google.com/rss/search?q=economia+finanzas+argentina&hl=es-419&gl=AR&ceid=AR:es-419',
-        name: 'Google News' },
+      { id: 'ambito',    name: 'Ámbito' },
+      { id: 'infobae',   name: 'Infobae' },
+      { id: 'cronista',  name: 'Cronista' },
+      { id: 'bae',       name: 'BAE Negocios' },
+      { id: 'google_ar', name: 'Google News AR' },
     ];
 
     function fmtDate(str) {
@@ -395,18 +396,15 @@
       catch { return ''; }
     }
 
-    function parseRSS(xml, name) {
-      const doc = new DOMParser().parseFromString(xml, 'text/xml');
-      return Array.from(doc.querySelectorAll('item')).slice(0, 6).map(item => {
-        const title = (item.querySelector('title')?.textContent || '').replace(/\s+-\s+[\w\s]+$/, '').trim();
-        const link  = item.querySelector('link')?.textContent?.trim()
-                   || item.querySelector('link')?.nextSibling?.textContent?.trim() || '#';
-        const date  = item.querySelector('pubDate')?.textContent || '';
-        const desc  = item.querySelector('description')?.textContent || '';
-        const img   = item.querySelector('enclosure')?.getAttribute('url')
-                   || (desc.match(/<img[^>]+src=["']([^"']+)["']/i) || [])[1] || '';
-        return { title, link, date, img, source: name };
-      }).filter(i => i.title);
+    // Adapter para items que vienen de /api/rss
+    function adaptItem(item, sourceName) {
+      return {
+        title: item.title || '',
+        link: item.link || '#',
+        date: item.pubDate || '',
+        img: item.img || '',
+        source: sourceName,
+      };
     }
 
     const carousel  = document.getElementById('newsCarousel');
@@ -499,9 +497,10 @@
       const results = await Promise.all(
         RSS_SOURCES.map(async s => {
           try {
-            const res = await fetch(PROXY + encodeURIComponent(s.url), { signal: AbortSignal.timeout(8000) });
-            const w = await res.json();
-            return parseRSS(w.contents, s.name);
+            const res = await fetch('/api/rss?source=' + s.id, { signal: AbortSignal.timeout(9000) });
+            if (!res.ok) return [];
+            const data = await res.json();
+            return (data.items || []).slice(0, 6).map(it => adaptItem(it, s.name));
           } catch { return []; }
         })
       );

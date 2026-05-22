@@ -12,11 +12,22 @@ const ALLOWED_PATHS = [
   // Tasas en vivo
   'finanzas/tasas/plazoFijo',
   'finanzas/tasas/depositos30Dias',
-  // FCI
+  // FCI - ultimo
   'finanzas/fci/mercadoDinero/ultimo',
   'finanzas/fci/rentaVariable/ultimo',
   'finanzas/fci/rentaFija/ultimo',
   'finanzas/fci/rentaMixta/ultimo',
+  'finanzas/fci/otros/ultimo',
+  'finanzas/fci/variables/ultimo',
+  'finanzas/fci/retornoTotal/ultimo',
+  // FCI - penultimo (para calcular TNA estimada)
+  'finanzas/fci/mercadoDinero/penultimo',
+  'finanzas/fci/rentaVariable/penultimo',
+  'finanzas/fci/rentaFija/penultimo',
+  'finanzas/fci/rentaMixta/penultimo',
+  // Tasas adicionales
+  'finanzas/tasas/plazoFijoPrecancelable',
+  'finanzas/tasas/plazoFijoUvaPagoPeriodico',
   // Rendimientos en vivo (cripto + ARS via wallets cripto + USD)
   'finanzas/rendimientos',
   'finanzas/criptopesos',

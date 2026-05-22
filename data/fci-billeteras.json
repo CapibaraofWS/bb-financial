@@ -1,0 +1,41 @@
+{
+  "accounts": {
+    "Mercado Fondo - Clase A": "Mercado Pago",
+    "Delta Pesos - Clase X": "Personal Pay",
+    "Fima Premium - Clase P": "Lemon",
+    "Cocos Rendimiento - Clase A": "Cocos Rendimiento FCI",
+    "Cocos Pesos Plus - Clase A": "Cocos Pesos Plus",
+    "IOL Cash Management - Clase A": "IOL Cash Management",
+    "Allaria Ahorro - Clase E": "Prex",
+    "ST Zero - Clase D": "AstroPay",
+    "IEB Ahorro - Clase A": "IEB+",
+    "Ualintec Ahorro Pesos - Clase A": "Ualá",
+    "Ualintec Pesos Plus - Clase A": "Ualá",
+    "SBS Ahorro Pesos - Clase A": "Claro Pay",
+    "Delta Pesos - Clase A": "Fiwind"
+  },
+  "funds": {
+    "Mercado Fondo - Clase A": "Mercado Pago",
+    "Delta Pesos - Clase X": "Personal Pay",
+    "Fima Premium - Clase A": "Galicia",
+    "Super Ahorro $ - Clase A": "Santander",
+    "Fima Premium - Clase P": "Lemon",
+    "Cocos Ahorro - Clase A": "Cocos Ahorro",
+    "Cocos Rendimiento - Clase A": "Cocos Rendimiento FCI",
+    "Cocos Pesos Plus - Clase A": "Cocos Pesos Plus",
+    "IOL Cash Management - Clase A": "IOL Cash Management",
+    "Allaria Ahorro - Clase E": "Prex",
+    "ST Zero - Clase D": "AstroPay",
+    "Premier Renta CP en Pesos - Clase A": "Supervielle",
+    "Adcap Ahorro Pesos Fondo de Dinero - Clase A": "Adcap",
+    "Balanz Capital Money Market - Clase A": "Balanz",
+    "IEB Ahorro - Clase A": "IEB+",
+    "Pionero Pesos - Clase A": "Macro",
+    "Alpha Pesos - Clase A": "ICBC",
+    "Ualintec Ahorro Pesos - Clase A": "Ualá",
+    "Ualintec Pesos Plus - Clase A": "Ualá",
+    "SBS Ahorro Pesos - Clase A": "Claro Pay",
+    "Toronto Trust Ahorro - Clase A": "Toronto Ahorro",
+    "Delta Pesos - Clase A": "Fiwind"
+  }
+}
