@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1SF925SGNN');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de Tasas — Plazo Fijo, FCI, Cuentas Remuneradas — BB Financial</title>
+  <meta name="description" content="Compará en tiempo real tasas de plazo fijo por banco, FCI Money Market, cuentas remuneradas de billeteras y ALyCs, y simulá crédito hipotecario UVA. Datos vivos del BCRA y CAFCI." />
+  <meta name="keywords" content="comparador tasas, plazo fijo bancos, FCI money market, cuentas remuneradas, mercado pago, ualá, UVA hipotecario, BCRA" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+    .info-box.warn{border-left-color:#ffb84d;}
+    .tab-bar{display:flex;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.35rem;margin-bottom:1.75rem;flex-wrap:wrap;}
+    .tab-btn{flex:1 1 140px;padding:0.7rem 0.5rem;border-radius:7px;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--transition);background:transparent;border:none;text-align:center;}
+    .tab-btn.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+
+    .tasa-table{width:100%;border-collapse:collapse;font-size:0.88rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+    .tasa-table th{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);padding:0.85rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);}
+    .tasa-table td{padding:0.7rem 1rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text);}
+    .tasa-table tr:hover td{background:rgba(255,255,255,0.02);}
+    .tasa-table tr.featured td{background:rgba(74,222,154,0.04);}
+    .tasa-table .bank-cell{display:flex;align-items:center;gap:0.75rem;}
+    .bank-logo{width:28px;height:28px;border-radius:6px;background:#fff;flex-shrink:0;object-fit:contain;padding:2px;}
+    .bank-name{font-size:0.85rem;color:var(--text);}
+    .tna-value{font-family:var(--font-mono);font-size:1rem;color:var(--accent);font-weight:600;}
+    .tea-value{font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted);}
+    .badge-top{display:inline-block;padding:0.1rem 0.45rem;border-radius:6px;background:var(--gold-dim);color:var(--gold);font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;margin-left:0.5rem;}
+    .controls{display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
+    .input-mini{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:0.45rem 0.7rem;color:var(--text);font-size:0.85rem;font-family:var(--font-mono);min-width:180px;}
+    .ord-label{font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;}
+    .top-banks-note{font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-mono);margin-bottom:0.5rem;letter-spacing:0.04em;}
+    .loading-skel{display:inline-block;width:80px;height:1.2rem;background:linear-gradient(90deg,var(--bg-card),var(--bg-card-hover),var(--bg-card));background-size:200% 100%;animation:skel 1.5s infinite;border-radius:4px;}
+    @keyframes skel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .empty-state{text-align:center;padding:3rem 1rem;color:var(--text-subtle);font-size:0.9rem;}
+
+    /* UVA simulador */
+    .sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:1.5rem;}
+    .sim-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
+    .sim-card .label{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);}
+    .sim-card .value{font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-top:0.3rem;}
+    .sim-card .sub{font-size:0.75rem;color:var(--text-muted);margin-top:0.4rem;}
+
+    @media(max-width:640px){
+      .tasa-table{font-size:0.78rem;}
+      .tasa-table th,.tasa-table td{padding:0.55rem 0.55rem;}
+      .bank-logo{width:22px;height:22px;}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Comparador de Tasas</p>
+        <h1 class="page-title">Comparador de Tasas</h1>
+        <p class="page-subtitle">Plazo fijo por banco, FCI Money Market, cuentas remuneradas y simulador UVA. Datos en vivo del <strong>BCRA</strong> y <strong>CAFCI</strong> vía ArgentinaDatos.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="pf">🏦 Plazos Fijos</button>
+        <button class="tab-btn" data-tab="fci">📊 FCI Money Market</button>
+        <button class="tab-btn" data-tab="cr">💳 Cuentas Remuneradas</button>
+        <button class="tab-btn" data-tab="uva">🏠 Crédito UVA</button>
+      </div>
+
+      <!-- ===== PLAZOS FIJOS ===== -->
+      <div class="tab-panel active" id="tab-pf">
+        <div class="info-box">
+          <strong>Plazo fijo tradicional:</strong> tasa nominal anual (TNA) que paga cada banco a 30 días para clientes vs no-clientes. Bancos grandes (Nación, BBVA, Santander, Galicia, Macro) suelen aparecer primero para fácil comparación. Datos en vivo del <strong>BCRA</strong> vía ArgentinaDatos.
+        </div>
+
+        <div class="controls">
+          <span class="ord-label">Ordenar:</span>
+          <select class="input-mini" id="pf-sort">
+            <option value="priority">Por relevancia (top bancos primero)</option>
+            <option value="tnaClientes-desc">TNA Clientes (mayor)</option>
+            <option value="tnaClientes-asc">TNA Clientes (menor)</option>
+            <option value="tnaNoClientes-desc">TNA No-Clientes (mayor)</option>
+            <option value="nombre">Alfabético</option>
+          </select>
+          <input class="input-mini" id="pf-search" placeholder="Buscar banco…" />
+          <span class="top-banks-note" id="pf-updated">—</span>
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="tasa-table" id="pf-table">
+            <thead>
+              <tr>
+                <th>Banco / Entidad</th>
+                <th>TNA Clientes</th>
+                <th>TEA Clientes</th>
+                <th>TNA No-Clientes</th>
+              </tr>
+            </thead>
+            <tbody id="pf-body"><tr><td colspan="4" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== FCI MONEY MARKET ===== -->
+      <div class="tab-panel" id="tab-fci">
+        <div class="info-box">
+          <strong>FCI Money Market:</strong> Fondos Comunes de Inversión de mercado de dinero (T+0, sin riesgo de capital). Es lo que ofrecen Mercado Pago, Ualá y la mayoría de billeteras "remuneradas" detrás. Acá ves los fondos directos desde CAFCI vía ArgentinaDatos. Mostramos la <strong>variación diaria</strong> del valor de cuotaparte (VCP) que aproxima la TNA implícita.
+        </div>
+
+        <div class="controls">
+          <span class="ord-label">Ordenar:</span>
+          <select class="input-mini" id="fci-sort">
+            <option value="patrimonio-desc">Por patrimonio (más grandes primero)</option>
+            <option value="fondo-asc">Alfabético</option>
+          </select>
+          <input class="input-mini" id="fci-search" placeholder="Buscar fondo…" />
+          <span class="top-banks-note" id="fci-updated">—</span>
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="tasa-table" id="fci-table">
+            <thead>
+              <tr>
+                <th>Fondo</th>
+                <th>Horizonte</th>
+                <th>VCP (último)</th>
+                <th>Patrimonio (M)</th>
+              </tr>
+            </thead>
+            <tbody id="fci-body"><tr><td colspan="4" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== CUENTAS REMUNERADAS ===== -->
+      <div class="tab-panel" id="tab-cr">
+        <div class="info-box warn">
+          <strong>⚠ Actualización manual:</strong> ArgentinaDatos no expone endpoint para tasas de billeteras virtuales y ALyCs. Estos datos se actualizan periódicamente con verificación en sitios oficiales. Última actualización: <span id="cr-updated">—</span>. <strong>Siempre verificá en la app/sitio oficial</strong> antes de operar.
+        </div>
+
+        <div class="controls">
+          <span class="ord-label">Ordenar:</span>
+          <select class="input-mini" id="cr-sort">
+            <option value="tna-desc">TNA (mayor)</option>
+            <option value="tna-asc">TNA (menor)</option>
+            <option value="nombre">Alfabético</option>
+            <option value="tipo">Por tipo</option>
+          </select>
+          <input class="input-mini" id="cr-search" placeholder="Buscar…" />
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="tasa-table" id="cr-table">
+            <thead>
+              <tr>
+                <th>Entidad</th>
+                <th>Tipo</th>
+                <th>TNA</th>
+                <th>Instrumento</th>
+                <th>Límite</th>
+              </tr>
+            </thead>
+            <tbody id="cr-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== UVA HIPOTECARIO ===== -->
+      <div class="tab-panel" id="tab-uva">
+        <div class="info-box">
+          <strong>Crédito hipotecario UVA:</strong> el capital se ajusta diariamente por el índice UVA (sigue al CER, ~inflación). La cuota crece nominalmente pero se mantiene relativamente estable en términos reales. Simulamos con el último valor UVA publicado por el BCRA.
+        </div>
+
+        <div class="sim-grid">
+          <div class="sim-card">
+            <p class="label">Valor UVA actual</p>
+            <p class="value" id="uva-actual">—</p>
+            <p class="sub" id="uva-fecha">—</p>
+          </div>
+          <div class="sim-card">
+            <p class="label">Capital a financiar</p>
+            <input class="input-mini" id="uva-capital" type="number" value="80000000" min="1000000" step="1000000" style="width:100%;margin-top:0.3rem" />
+            <p class="sub">En pesos (ARS)</p>
+          </div>
+          <div class="sim-card">
+            <p class="label">Plazo (años) — TNA real</p>
+            <div style="display:flex;gap:0.4rem;margin-top:0.3rem">
+              <input class="input-mini" id="uva-years" type="number" value="20" min="5" max="30" step="5" style="flex:1" />
+              <input class="input-mini" id="uva-tna" type="number" value="6" min="2" max="12" step="0.5" style="flex:1" />
+            </div>
+            <p class="sub">TNA real estimada del crédito (sobre UVA)</p>
+          </div>
+        </div>
+
+        <div class="sim-grid">
+          <div class="sim-card">
+            <p class="label">Cuota inicial (mensual)</p>
+            <p class="value" id="uva-cuota">—</p>
+            <p class="sub">En UVAs y en pesos al valor actual</p>
+          </div>
+          <div class="sim-card">
+            <p class="label">Capital en UVAs</p>
+            <p class="value" id="uva-cap-uvas">—</p>
+            <p class="sub">Equivalente del capital al valor UVA actual</p>
+          </div>
+          <div class="sim-card">
+            <p class="label">Intereses totales (en UVAs)</p>
+            <p class="value" id="uva-intereses">—</p>
+            <p class="sub">Total pagado − capital, sin contar inflación</p>
+          </div>
+        </div>
+
+        <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.65;margin-top:1rem">
+          <strong style="color:var(--text)">Cómo funciona:</strong> el crédito se denomina en UVAs (no en pesos). Si pedís $80M y la UVA vale $1.956, debés <em>$80M / $1.956 = 40.900 UVAs</em>. Cada mes pagás la cuota en UVAs, que se traduce a pesos al valor del día. Si la inflación es 5%, la UVA sube ~5%, y la cuota en pesos también — pero relativa a tu sueldo (que también debería subir) se mantiene estable. La TNA real (6-8% típico) es sobre las UVAs ya ajustadas por inflación.
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio <strong>educativo</strong>. La información NO constituye asesoramiento financiero ni recomendación de inversión. Las tasas cambian; verificá siempre en el sitio oficial de cada entidad.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes: BCRA, CAFCI (vía ArgentinaDatos). Cuentas remuneradas: verificación manual periódica.</p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=22"></script>
+  <script>
+    // ===== Tabs =====
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== Plazos Fijos =====
+    // Lista de "bancos importantes" para mostrar primero (orden de relevancia)
+    const TOP_BANKS = [
+      'NACION',
+      'PROVINCIA',
+      'BBVA',
+      'SANTANDER',
+      'GALICIA',
+      'MACRO',
+      'ICBC',
+      'HSBC',
+      'CIUDAD',
+      'CREDICOOP',
+      'PATAGONIA',
+      'COMAFI',
+      'SUPERVIELLE',
+      'HIPOTECARIO',
+      'ITAU',
+    ];
+
+    function normalize(s) { return (s || '').toUpperCase().replace(/[^A-Z]/g, ''); }
+    function getPriority(entidad) {
+      const u = normalize(entidad);
+      for (let i = 0; i < TOP_BANKS.length; i++) {
+        if (u.includes(TOP_BANKS[i])) return i;
+      }
+      return 999;
+    }
+
+    // TEA = (1 + TNA/12)^12 - 1
+    function teaFromTna(tna) {
+      return Math.pow(1 + tna / 12, 12) - 1;
+    }
+
+    let pfData = [];
+    async function loadPF() {
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/tasas/plazoFijo', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+        pfData = data.filter(b => b && b.entidad && Number.isFinite(b.tnaClientes));
+        renderPF();
+        document.getElementById('pf-updated').textContent = '✓ ' + pfData.length + ' entidades · BCRA en vivo';
+      } catch (e) {
+        document.getElementById('pf-body').textContent = '';
+        const tr = document.createElement('tr'); const td = document.createElement('td');
+        td.colSpan = 4; td.className = 'empty-state';
+        td.textContent = 'No se pudieron cargar las tasas. Reintentá en unos minutos.';
+        tr.appendChild(td); document.getElementById('pf-body').appendChild(tr);
+      }
+    }
+
+    function renderPF() {
+      const body = document.getElementById('pf-body');
+      const sort = document.getElementById('pf-sort').value;
+      const q = normalize(document.getElementById('pf-search').value);
+      let rows = pfData.slice();
+
+      if (q) rows = rows.filter(b => normalize(b.entidad).includes(q));
+
+      if (sort === 'priority') {
+        rows.sort((a, b) => getPriority(a.entidad) - getPriority(b.entidad) || b.tnaClientes - a.tnaClientes);
+      } else if (sort === 'tnaClientes-desc') {
+        rows.sort((a, b) => b.tnaClientes - a.tnaClientes);
+      } else if (sort === 'tnaClientes-asc') {
+        rows.sort((a, b) => a.tnaClientes - b.tnaClientes);
+      } else if (sort === 'tnaNoClientes-desc') {
+        rows.sort((a, b) => (b.tnaNoClientes || 0) - (a.tnaNoClientes || 0));
+      } else if (sort === 'nombre') {
+        rows.sort((a, b) => a.entidad.localeCompare(b.entidad));
+      }
+
+      body.textContent = '';
+      if (rows.length === 0) {
+        const tr = document.createElement('tr'); const td = document.createElement('td');
+        td.colSpan = 4; td.className = 'empty-state'; td.textContent = 'Sin resultados';
+        tr.appendChild(td); body.appendChild(tr); return;
+      }
+
+      rows.forEach((b, i) => {
+        const tr = document.createElement('tr');
+        if (sort === 'priority' && i < 6) tr.classList.add('featured');
+
+        const tdBank = document.createElement('td');
+        const wrap = document.createElement('div'); wrap.className = 'bank-cell';
+        if (b.logo) {
+          const img = document.createElement('img'); img.src = b.logo; img.alt = ''; img.className = 'bank-logo';
+          img.onerror = () => img.remove();
+          wrap.appendChild(img);
+        }
+        const nm = document.createElement('span'); nm.className = 'bank-name'; nm.textContent = b.entidad;
+        wrap.appendChild(nm);
+        if (sort === 'priority' && i < 5) {
+          const badge = document.createElement('span'); badge.className = 'badge-top'; badge.textContent = 'TOP'; wrap.appendChild(badge);
+        }
+        tdBank.appendChild(wrap); tr.appendChild(tdBank);
+
+        const tdTna = document.createElement('td');
+        const tnaSpan = document.createElement('span'); tnaSpan.className = 'tna-value';
+        tnaSpan.textContent = (b.tnaClientes * 100).toFixed(2) + '%';
+        tdTna.appendChild(tnaSpan); tr.appendChild(tdTna);
+
+        const tdTea = document.createElement('td');
+        const teaSpan = document.createElement('span'); teaSpan.className = 'tea-value';
+        teaSpan.textContent = (teaFromTna(b.tnaClientes) * 100).toFixed(2) + '%';
+        tdTea.appendChild(teaSpan); tr.appendChild(tdTea);
+
+        const tdNoCli = document.createElement('td');
+        if (b.tnaNoClientes && b.tnaNoClientes > 0) {
+          const span = document.createElement('span'); span.className = 'tea-value';
+          span.textContent = (b.tnaNoClientes * 100).toFixed(2) + '%';
+          tdNoCli.appendChild(span);
+        } else {
+          tdNoCli.textContent = '—';
+          tdNoCli.style.color = 'var(--text-subtle)';
+        }
+        tr.appendChild(tdNoCli);
+
+        body.appendChild(tr);
+      });
+    }
+
+    document.getElementById('pf-sort').addEventListener('change', renderPF);
+    document.getElementById('pf-search').addEventListener('input', renderPF);
+
+    // ===== FCI Money Market =====
+    let fciData = [];
+    async function loadFCI() {
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/fci/mercadoDinero/ultimo', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+        // Solo fondos con datos recientes (último mes)
+        const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 1);
+        fciData = data.filter(f => f && f.fondo && Number.isFinite(f.vcp) && new Date(f.fecha) >= cutoff);
+        renderFCI();
+        document.getElementById('fci-updated').textContent = '✓ ' + fciData.length + ' fondos · CAFCI';
+      } catch {
+        document.getElementById('fci-body').textContent = '';
+        const tr = document.createElement('tr'); const td = document.createElement('td');
+        td.colSpan = 4; td.className = 'empty-state';
+        td.textContent = 'No se pudieron cargar los fondos.';
+        tr.appendChild(td); document.getElementById('fci-body').appendChild(tr);
+      }
+    }
+
+    function renderFCI() {
+      const body = document.getElementById('fci-body');
+      const sort = document.getElementById('fci-sort').value;
+      const q = normalize(document.getElementById('fci-search').value);
+      let rows = fciData.slice();
+      if (q) rows = rows.filter(f => normalize(f.fondo).includes(q));
+      if (sort === 'patrimonio-desc') rows.sort((a, b) => (b.patrimonio || 0) - (a.patrimonio || 0));
+      else if (sort === 'fondo-asc') rows.sort((a, b) => a.fondo.localeCompare(b.fondo));
+
+      body.textContent = '';
+      if (rows.length === 0) {
+        const tr = document.createElement('tr'); const td = document.createElement('td');
+        td.colSpan = 4; td.className = 'empty-state'; td.textContent = 'Sin resultados';
+        tr.appendChild(td); body.appendChild(tr); return;
+      }
+
+      rows.slice(0, 80).forEach(f => {
+        const tr = document.createElement('tr');
+        const tdName = document.createElement('td'); tdName.textContent = f.fondo; tr.appendChild(tdName);
+        const tdHor = document.createElement('td'); tdHor.textContent = f.horizonte || '—'; tdHor.style.color = 'var(--text-muted)'; tr.appendChild(tdHor);
+        const tdVcp = document.createElement('td');
+        const span = document.createElement('span'); span.className = 'tna-value'; span.textContent = '$' + (f.vcp || 0).toLocaleString('es-AR', { maximumFractionDigits: 2 });
+        tdVcp.appendChild(span); tr.appendChild(tdVcp);
+        const tdPat = document.createElement('td');
+        const patM = (f.patrimonio || 0) / 1e6;
+        const patSpan = document.createElement('span'); patSpan.className = 'tea-value';
+        patSpan.textContent = '$ ' + patM.toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' M';
+        tdPat.appendChild(patSpan); tr.appendChild(tdPat);
+        body.appendChild(tr);
+      });
+    }
+
+    document.getElementById('fci-sort').addEventListener('change', renderFCI);
+    document.getElementById('fci-search').addEventListener('input', renderFCI);
+
+    // ===== Cuentas Remuneradas (curated JSON) =====
+    let crData = [];
+    async function loadCR() {
+      try {
+        const r = await fetch('/data/cuentas-remuneradas.json', { signal: AbortSignal.timeout(5000) });
+        if (!r.ok) throw new Error();
+        const data = await r.json();
+        crData = data.billeteras || [];
+        document.getElementById('cr-updated').textContent = data.metadata?.actualizacion || '—';
+        renderCR();
+      } catch {
+        document.getElementById('cr-body').textContent = '';
+      }
+    }
+
+    function renderCR() {
+      const body = document.getElementById('cr-body');
+      const sort = document.getElementById('cr-sort').value;
+      const q = normalize(document.getElementById('cr-search').value);
+      let rows = crData.slice();
+      if (q) rows = rows.filter(b => normalize(b.nombre).includes(q));
+      if (sort === 'tna-desc') rows.sort((a, b) => b.tna - a.tna);
+      else if (sort === 'tna-asc') rows.sort((a, b) => a.tna - b.tna);
+      else if (sort === 'nombre') rows.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      else if (sort === 'tipo') rows.sort((a, b) => a.tipo.localeCompare(b.tipo));
+
+      body.textContent = '';
+      rows.forEach((b, i) => {
+        const tr = document.createElement('tr');
+        if (sort === 'tna-desc' && i < 5) tr.classList.add('featured');
+
+        const td1 = document.createElement('td');
+        if (b.url) {
+          const a = document.createElement('a'); a.href = b.url; a.target = '_blank'; a.rel = 'noopener';
+          a.style.color = 'var(--text)'; a.textContent = b.nombre; td1.appendChild(a);
+        } else {
+          td1.textContent = b.nombre;
+        }
+        tr.appendChild(td1);
+
+        const td2 = document.createElement('td'); td2.textContent = b.tipo; td2.style.color = 'var(--text-muted)'; tr.appendChild(td2);
+        const td3 = document.createElement('td');
+        const sp = document.createElement('span'); sp.className = 'tna-value'; sp.textContent = (b.tna * 100).toFixed(2) + '%';
+        td3.appendChild(sp); tr.appendChild(td3);
+        const td4 = document.createElement('td'); td4.textContent = b.instrumento || '—'; td4.style.color = 'var(--text-muted)'; td4.style.fontSize = '0.8rem'; tr.appendChild(td4);
+        const td5 = document.createElement('td');
+        td5.textContent = b.limite ? '$ ' + b.limite.toLocaleString('es-AR') : 'Sin límite';
+        td5.style.color = 'var(--text-muted)'; td5.style.fontSize = '0.8rem';
+        tr.appendChild(td5);
+
+        body.appendChild(tr);
+      });
+    }
+    document.getElementById('cr-sort').addEventListener('change', renderCR);
+    document.getElementById('cr-search').addEventListener('input', renderCR);
+
+    // ===== UVA Simulador =====
+    let uvaValor = null;
+
+    async function loadUVA() {
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/indices/uva', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const data = await r.json();
+        if (!Array.isArray(data) || !data.length) throw new Error();
+        const last = data[data.length - 1];
+        uvaValor = parseFloat(last.valor);
+        document.getElementById('uva-actual').textContent = '$ ' + uvaValor.toLocaleString('es-AR', { maximumFractionDigits: 2 });
+        document.getElementById('uva-fecha').textContent = 'Última obs: ' + last.fecha;
+        calcUVA();
+      } catch {
+        document.getElementById('uva-actual').textContent = '—';
+      }
+    }
+
+    function calcUVA() {
+      if (!Number.isFinite(uvaValor) || uvaValor <= 0) return;
+      const cap = parseFloat(document.getElementById('uva-capital').value) || 0;
+      const years = parseFloat(document.getElementById('uva-years').value) || 20;
+      const tnaPct = parseFloat(document.getElementById('uva-tna').value) || 6;
+      if (cap <= 0 || years <= 0) return;
+
+      const capUvas = cap / uvaValor;
+      // Cuota francesa: c = K * i / (1 - (1+i)^-n)
+      const i = (tnaPct / 100) / 12;
+      const n = years * 12;
+      const cuotaUvas = capUvas * i / (1 - Math.pow(1 + i, -n));
+      const cuotaArs = cuotaUvas * uvaValor;
+      const totalUvas = cuotaUvas * n;
+      const intereses = totalUvas - capUvas;
+
+      document.getElementById('uva-cuota').textContent = cuotaUvas.toFixed(2) + ' UVAs';
+      document.getElementById('uva-cap-uvas').textContent = capUvas.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' UVAs';
+      document.getElementById('uva-intereses').textContent = intereses.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' UVAs';
+
+      const sub1 = document.querySelectorAll('#uva-cuota')[0].nextElementSibling;
+      sub1.textContent = '≈ $ ' + cuotaArs.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' / mes (al valor UVA actual)';
+    }
+
+    ['uva-capital', 'uva-years', 'uva-tna'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calcUVA);
+    });
+
+    // ===== Init =====
+    loadPF();
+    loadFCI();
+    loadCR();
+    loadUVA();
+  </script>
+</body>
+</html>

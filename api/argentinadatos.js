@@ -9,6 +9,14 @@ const ALLOWED_PATHS = [
   'finanzas/indices/uva',
   'finanzas/indices/canasta/basica/alimentaria',
   'finanzas/indices/canasta/basica/total',
+  // Tasas en vivo
+  'finanzas/tasas/plazoFijo',
+  'finanzas/tasas/depositos30Dias',
+  // FCI
+  'finanzas/fci/mercadoDinero/ultimo',
+  'finanzas/fci/rentaVariable/ultimo',
+  'finanzas/fci/rentaFija/ultimo',
+  'finanzas/fci/rentaMixta/ultimo',
 ];
 
 export default async function handler(req, res) {

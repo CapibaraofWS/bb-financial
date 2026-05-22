@@ -149,18 +149,60 @@
       </div>
     </section>
 
-    <!-- ===== NEW INVESTOR CTA ===== -->
+    <!-- ===== CTA GRID (4 cajas) ===== -->
     <section style="padding:2.5rem 0">
       <div class="container">
-        <a href="pages/empezar-a-invertir.html" style="display:flex;align-items:center;gap:2rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(96,165,250,0.25);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(96,165,250,0.5)';this.style.boxShadow='0 10px 30px rgba(96,165,250,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(96,165,250,0.25)';this.style.boxShadow=''">
-          <div style="font-size:2.8rem;flex-shrink:0">🚀</div>
-          <div style="flex:1;min-width:240px">
-            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.45rem">Si sos nuevo en inversiones</p>
-            <h2 style="font-family:var(--font-display);font-size:1.5rem;letter-spacing:-0.01em;margin-bottom:0.5rem;color:var(--text)">Empezá por acá</h2>
-            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6">Guía paso a paso: cómo elegir broker confiable, banderas rojas de estafas, renta fija vs. variable, BYMA, custodia, impuestos. Todo en un solo lugar.</p>
-          </div>
-          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#60a5fa;white-space:nowrap">Ver guía →</span>
-        </a>
+        <style>
+          .home-cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;}
+          .home-cta{display:flex;flex-direction:column;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:1.5rem 1.65rem;text-decoration:none;color:inherit;transition:all 0.25s;min-height:200px;}
+          .home-cta:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 30px rgba(74,222,154,0.08);}
+          .home-cta.blue{border-color:rgba(96,165,250,0.25);}
+          .home-cta.blue:hover{border-color:rgba(96,165,250,0.6);box-shadow:0 10px 30px rgba(96,165,250,0.08);}
+          .home-cta.gold{border-color:rgba(232,201,122,0.25);}
+          .home-cta.gold:hover{border-color:rgba(232,201,122,0.6);box-shadow:0 10px 30px rgba(232,201,122,0.08);}
+          .home-cta.green{border-color:rgba(74,222,154,0.25);}
+          .home-cta-icon{font-size:2.2rem;margin-bottom:0.75rem;}
+          .home-cta-eyebrow{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;}
+          .home-cta.blue .home-cta-eyebrow{color:#60a5fa;}
+          .home-cta.gold .home-cta-eyebrow{color:#e8c97a;}
+          .home-cta.green .home-cta-eyebrow{color:#4ade9a;}
+          .home-cta-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.5rem;color:var(--text);}
+          .home-cta-desc{color:var(--text-muted);font-size:0.85rem;line-height:1.55;flex:1;}
+          .home-cta-link{font-family:var(--font-mono);font-size:0.78rem;margin-top:0.85rem;display:inline-flex;align-items:center;gap:0.3rem;}
+          .home-cta.blue .home-cta-link{color:#60a5fa;}
+          .home-cta.gold .home-cta-link{color:#e8c97a;}
+          .home-cta.green .home-cta-link{color:#4ade9a;}
+        </style>
+        <div class="home-cta-grid">
+          <a href="pages/empezar-a-invertir.html" class="home-cta blue">
+            <span class="home-cta-icon">🚀</span>
+            <p class="home-cta-eyebrow">Si sos nuevo</p>
+            <h3 class="home-cta-title">Empezá por acá</h3>
+            <p class="home-cta-desc">Guía paso a paso: cómo elegir broker, banderas rojas, renta fija vs variable, BYMA, custodia e impuestos.</p>
+            <span class="home-cta-link">Ver guía →</span>
+          </a>
+          <a href="pages/visor-bonos.html" class="home-cta green">
+            <span class="home-cta-icon">💵</span>
+            <p class="home-cta-eyebrow">Renta Fija USA</p>
+            <h3 class="home-cta-title">Visor de Bonos</h3>
+            <p class="home-cta-desc">Curva de rendimientos del Tesoro EE.UU., TIPS, breakeven inflation, credit spreads y comparador.</p>
+            <span class="home-cta-link">Ver bonos →</span>
+          </a>
+          <a href="pages/comparador-tasas.html" class="home-cta gold">
+            <span class="home-cta-icon">📊</span>
+            <p class="home-cta-eyebrow">Datos en vivo</p>
+            <h3 class="home-cta-title">Comparador de Tasas</h3>
+            <p class="home-cta-desc">Plazo fijo por banco, FCI Money Market, cuentas remuneradas (Mercado Pago, Ualá) y simulador UVA.</p>
+            <span class="home-cta-link">Comparar →</span>
+          </a>
+          <a href="pages/test-inversor.html" class="home-cta blue">
+            <span class="home-cta-icon">🧪</span>
+            <p class="home-cta-eyebrow">1 minuto</p>
+            <h3 class="home-cta-title">Test del Inversor</h3>
+            <p class="home-cta-desc">¿Conservador, moderado o agresivo? 10 preguntas + cartera modelo con instrumentos reales AR y USA.</p>
+            <span class="home-cta-link">Hacer test →</span>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -186,16 +228,16 @@
             <a href="pages/interes-compuesto.html" class="card-link">Calcular →</a>
           </article>
 
-          <article class="tool-card" aria-labelledby="card-simple">
-            <div class="card-icon" aria-hidden="true">◎</div>
-            <h3 id="card-simple" class="card-title">Interés Simple y Ahorro</h3>
-            <p class="card-desc">Calculá el rendimiento de plazos fijos y préstamos con tasa lineal, y proyectá tu ahorro mensual a 1, 5 o 20 años.</p>
+          <article class="tool-card" aria-labelledby="card-fire">
+            <div class="card-icon" aria-hidden="true">🔥</div>
+            <h3 id="card-fire" class="card-title">FIRE — Libertad financiera</h3>
+            <p class="card-desc">¿En cuántos años podés dejar de trabajar? Calculá tu número FIRE, Coast FIRE y tasa de ahorro necesaria.</p>
             <ul class="card-features">
-              <li>Interés simple con comparativa de plazos</li>
-              <li>Proyección de ahorro a largo plazo</li>
-              <li>Tasa de ahorro sobre ingresos</li>
+              <li>4 tipos de FIRE (Lean, Coast, Fat, Barista)</li>
+              <li>Edad estimada para retirarte</li>
+              <li>Barra de progreso a tu objetivo</li>
             </ul>
-            <a href="pages/interes-simple.html" class="card-link">Calcular →</a>
+            <a href="pages/fire.html" class="card-link">Calcular →</a>
           </article>
 
           <article class="tool-card tool-card--highlight" aria-labelledby="card-meta">
@@ -280,6 +322,26 @@
 
         <!-- Loading state -->
         <div id="newsCarouselLoader" style="text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
+
+        <!-- News quick-links -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem">
+          <a href="pages/noticias.html?cat=argentina" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(74,222,154,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+            <span style="font-size:1.8rem">🇦🇷</span>
+            <div>
+              <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Mercado Local</p>
+              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Argentina</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Merval, BCRA, dólar, FMI</p>
+            </div>
+          </a>
+          <a href="pages/noticias.html?cat=internacional" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+            <span style="font-size:1.8rem">🌐</span>
+            <div>
+              <p style="font-family:var(--font-mono);font-size:0.65rem;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Global</p>
+              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Internacionales</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Fed, S&amp;P 500, tasas USA, cripto</p>
+            </div>
+          </a>
+        </div>
       </div>
     </section>
 

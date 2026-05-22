@@ -220,6 +220,11 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Comparadores',
       items: [
+        { href: pagesBase + 'comparador-tasas.html',      label: 'Tasas (PF, FCI, billeteras, UVA)', icon: '📊' },
+        { href: pagesBase + 'comparador-plazos-fijos.html', label: 'Plazos Fijos (legacy)',  icon: '🏦' },
+        { href: pagesBase + 'comparador-cuentas.html',    label: 'Cuentas remuneradas',    icon: '💳' },
+        { href: pagesBase + 'comparador-creditos-uva.html', label: 'Créditos UVA',         icon: '🏠' },
+        { href: pagesBase + 'comparador-dolares.html',    label: 'Tipos de dólar',         icon: '💵' },
         { href: pagesBase + 'contado-vs-cuotas.html',     label: 'Contado vs cuotas',      icon: '🛒' },
       ],
     },
