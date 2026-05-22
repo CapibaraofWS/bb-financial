@@ -17,6 +17,12 @@ const ALLOWED_PATHS = [
   'finanzas/fci/rentaVariable/ultimo',
   'finanzas/fci/rentaFija/ultimo',
   'finanzas/fci/rentaMixta/ultimo',
+  // Rendimientos en vivo (cripto + ARS via wallets cripto + USD)
+  'finanzas/rendimientos',
+  'finanzas/criptopesos',
+  'finanzas/cuentas-remuneradas-usd',
+  // Letras del Tesoro
+  'finanzas/letras',
 ];
 
 export default async function handler(req, res) {

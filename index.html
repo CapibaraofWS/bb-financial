@@ -206,6 +206,48 @@
       </div>
     </section>
 
+    <!-- ===== NEWS CAROUSEL ===== -->
+    <section class="tools-section" style="padding-top:1rem;padding-bottom:4rem" aria-labelledby="noticias-title">
+      <div class="container">
+        <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias del mercado</h2>
+            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">EN VIVO</span>
+          </div>
+          <a href="pages/noticias.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);display:flex;align-items:center;gap:0.3rem">Ver todas &rsaquo;</a>
+        </div>
+
+        <!-- Carousel wrapper -->
+        <div style="position:relative">
+          <div id="newsCarousel" style="display:flex;gap:1rem;overflow:hidden;scroll-behavior:smooth"></div>
+          <button id="newsPrev" aria-label="Anterior" style="position:absolute;top:50%;left:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">‹</button>
+          <button id="newsNext" aria-label="Siguiente" style="position:absolute;top:50%;right:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">›</button>
+        </div>
+
+        <div id="newsCarouselLoader" style="text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
+
+        <!-- News quick-links -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem">
+          <a href="pages/noticias.html?cat=argentina" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(74,222,154,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+            <span style="font-size:1.8rem">🇦🇷</span>
+            <div>
+              <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Mercado Local</p>
+              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Argentina</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Merval, BCRA, dólar, FMI</p>
+            </div>
+          </a>
+          <a href="pages/noticias.html?cat=internacional" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+            <span style="font-size:1.8rem">🌐</span>
+            <div>
+              <p style="font-family:var(--font-mono);font-size:0.65rem;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Global</p>
+              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Internacionales</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Fed, S&amp;P 500, tasas USA, cripto</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== TOOLS GRID ===== -->
     <section id="calculadoras" class="tools-section" aria-labelledby="tools-title">
       <div class="container">
@@ -297,50 +339,6 @@
             <p style="color:var(--text-muted);font-size:0.875rem;max-width:480px;line-height:1.65">DCF, valuaciones por múltiplos y modelos de proyección financiera. Disponibles próximamente al finalizar la certificación.</p>
           </div>
           <a href="pages/proyectos.html" class="btn btn-secondary" style="white-space:nowrap">Ver proyectos →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== NEWS CAROUSEL ===== -->
-    <section class="tools-section" style="padding-top:0;padding-bottom:4rem" aria-labelledby="noticias-title">
-      <div class="container">
-        <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
-          <div style="display:flex;align-items:center;gap:0.75rem">
-            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias</h2>
-            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">NUEVO</span>
-          </div>
-          <a href="pages/noticias.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);display:flex;align-items:center;gap:0.3rem">Ver todas &rsaquo;</a>
-        </div>
-
-        <!-- Carousel wrapper -->
-        <div style="position:relative">
-          <div id="newsCarousel" style="display:flex;gap:1rem;overflow:hidden;scroll-behavior:smooth"></div>
-          <!-- Arrow buttons -->
-          <button id="newsPrev" aria-label="Anterior" style="position:absolute;top:50%;left:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">‹</button>
-          <button id="newsNext" aria-label="Siguiente" style="position:absolute;top:50%;right:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">›</button>
-        </div>
-
-        <!-- Loading state -->
-        <div id="newsCarouselLoader" style="text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
-
-        <!-- News quick-links -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem">
-          <a href="pages/noticias.html?cat=argentina" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(74,222,154,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
-            <span style="font-size:1.8rem">🇦🇷</span>
-            <div>
-              <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Mercado Local</p>
-              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Argentina</p>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Merval, BCRA, dólar, FMI</p>
-            </div>
-          </a>
-          <a href="pages/noticias.html?cat=internacional" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
-            <span style="font-size:1.8rem">🌐</span>
-            <div>
-              <p style="font-family:var(--font-mono);font-size:0.65rem;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Global</p>
-              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Internacionales</p>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Fed, S&amp;P 500, tasas USA, cripto</p>
-            </div>
-          </a>
         </div>
       </div>
     </section>

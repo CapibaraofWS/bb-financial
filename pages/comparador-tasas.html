@@ -78,9 +78,10 @@
 
       <div class="tab-bar">
         <button class="tab-btn active" data-tab="pf">🏦 Plazos Fijos</button>
-        <button class="tab-btn" data-tab="fci">📊 FCI Money Market</button>
-        <button class="tab-btn" data-tab="cr">💳 Cuentas Remuneradas</button>
-        <button class="tab-btn" data-tab="uva">🏠 Crédito UVA</button>
+        <button class="tab-btn" data-tab="fci">📊 FCI</button>
+        <button class="tab-btn" data-tab="cr">💳 Rendimientos ARS</button>
+        <button class="tab-btn" data-tab="usd">💵 Cuentas USD</button>
+        <button class="tab-btn" data-tab="uva">🏠 UVA Hipotecario</button>
       </div>
 
       <!-- ===== PLAZOS FIJOS ===== -->
@@ -117,19 +118,27 @@
         </div>
       </div>
 
-      <!-- ===== FCI MONEY MARKET ===== -->
+      <!-- ===== FCI ===== -->
       <div class="tab-panel" id="tab-fci">
         <div class="info-box">
-          <strong>FCI Money Market:</strong> Fondos Comunes de Inversión de mercado de dinero (T+0, sin riesgo de capital). Es lo que ofrecen Mercado Pago, Ualá y la mayoría de billeteras "remuneradas" detrás. Acá ves los fondos directos desde CAFCI vía ArgentinaDatos. Mostramos la <strong>variación diaria</strong> del valor de cuotaparte (VCP) que aproxima la TNA implícita.
+          <strong>¿Qué es un FCI?</strong> Fondo Común de Inversión — un patrimonio de muchos inversores administrado por una <strong>Sociedad Gerente</strong> (BBVA Asset, Galicia Fondos, Pellegrini, etc.). Cada peso comprás <em>cuotapartes</em>. El <strong>Money Market</strong> (mercado de dinero) es el más conservador: invierte solo en cauciones y plazos fijos, no tiene riesgo de capital y rescate en el día (T+0). Es lo que está detrás de Mercado Pago, Ualá y otras billeteras "remuneradas". Datos en vivo de <strong>CAFCI</strong> vía ArgentinaDatos.
+          <br><br><strong>Para más detalle:</strong> <a href="etfs-fci.html" style="color:var(--accent)">Guía completa de ETFs y FCI →</a>
         </div>
 
         <div class="controls">
-          <span class="ord-label">Ordenar:</span>
-          <select class="input-mini" id="fci-sort">
-            <option value="patrimonio-desc">Por patrimonio (más grandes primero)</option>
-            <option value="fondo-asc">Alfabético</option>
+          <span class="ord-label">Categoría:</span>
+          <select class="input-mini" id="fci-cat">
+            <option value="mercadoDinero">Money Market (T+0)</option>
+            <option value="rentaFija">Renta Fija</option>
+            <option value="rentaMixta">Renta Mixta</option>
+            <option value="rentaVariable">Renta Variable</option>
           </select>
-          <input class="input-mini" id="fci-search" placeholder="Buscar fondo…" />
+          <select class="input-mini" id="fci-sort">
+            <option value="patrimonio-desc">Por patrimonio (más grandes)</option>
+            <option value="fondo-asc">Alfabético</option>
+            <option value="administradora">Por administradora</option>
+          </select>
+          <input class="input-mini" id="fci-search" placeholder="Buscar fondo o administradora…" />
           <span class="top-banks-note" id="fci-updated">—</span>
         </div>
 
@@ -138,31 +147,37 @@
             <thead>
               <tr>
                 <th>Fondo</th>
+                <th>Administradora</th>
                 <th>Horizonte</th>
                 <th>VCP (último)</th>
                 <th>Patrimonio (M)</th>
               </tr>
             </thead>
-            <tbody id="fci-body"><tr><td colspan="4" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
+            <tbody id="fci-body"><tr><td colspan="5" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
           </table>
         </div>
+
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-top:1rem;line-height:1.65">
+          <strong style="color:var(--text)">¿Cómo se calcula la TNA implícita de un FCI?</strong> A grandes rasgos: <em>(VCP_hoy / VCP_ayer − 1) × 365</em>. La API de CAFCI solo expone el último valor, así que para ver la TNA estimada de cada fondo conviene ir directo a la web del fondo o a <a href="https://www.cafci.org.ar" target="_blank" rel="noopener" style="color:var(--accent)">CAFCI</a>. Los Money Market top suelen pagar TNA cercana a la tasa BADLAR.
+        </p>
       </div>
 
-      <!-- ===== CUENTAS REMUNERADAS ===== -->
+      <!-- ===== RENDIMIENTOS ARS (Cripto-wallets + Cripto-pesos) ===== -->
       <div class="tab-panel" id="tab-cr">
         <div class="info-box warn">
-          <strong>⚠ Actualización manual:</strong> ArgentinaDatos no expone endpoint para tasas de billeteras virtuales y ALyCs. Estos datos se actualizan periódicamente con verificación en sitios oficiales. Última actualización: <span id="cr-updated">—</span>. <strong>Siempre verificá en la app/sitio oficial</strong> antes de operar.
+          <strong>⚠ Importante — qué muestra esta tabla:</strong> ArgentinaDatos NO expone endpoint para tasas de billeteras virtuales tradicionales como <strong>Mercado Pago, Ualá, Naranja X</strong> (los datos cambian a diario y cada billetera los publica en su app). Por debajo, esas billeteras ofrecen <strong>FCI Money Market</strong> — podés ver esos fondos en la pestaña <a href="#" onclick="document.querySelector('[data-tab=fci]').click();return false" style="color:var(--accent)">FCI</a>.
+          <br><br>Acá mostramos en cambio los <strong>rendimientos en vivo de billeteras cripto que pagan APY en pesos</strong> (Fiwind, Belo, Ripio, etc.) — son las únicas alternativas con API pública en tiempo real.
         </div>
 
         <div class="controls">
           <span class="ord-label">Ordenar:</span>
           <select class="input-mini" id="cr-sort">
-            <option value="tna-desc">TNA (mayor)</option>
-            <option value="tna-asc">TNA (menor)</option>
-            <option value="nombre">Alfabético</option>
-            <option value="tipo">Por tipo</option>
+            <option value="tna-desc">APY/TNA (mayor)</option>
+            <option value="tna-asc">APY/TNA (menor)</option>
+            <option value="entidad">Por entidad</option>
           </select>
-          <input class="input-mini" id="cr-search" placeholder="Buscar…" />
+          <input class="input-mini" id="cr-search" placeholder="Buscar entidad…" />
+          <span class="top-banks-note" id="cr-updated">—</span>
         </div>
 
         <div style="overflow-x:auto">
@@ -171,21 +186,47 @@
               <tr>
                 <th>Entidad</th>
                 <th>Tipo</th>
-                <th>TNA</th>
-                <th>Instrumento</th>
-                <th>Límite</th>
+                <th>Token / Producto</th>
+                <th>APY / TNA</th>
+                <th>Fecha</th>
               </tr>
             </thead>
-            <tbody id="cr-body"></tbody>
+            <tbody id="cr-body"><tr><td colspan="5" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== CUENTAS USD ===== -->
+      <div class="tab-panel" id="tab-usd">
+        <div class="info-box">
+          <strong>Cuentas remuneradas en USD:</strong> tasas que ofrecen los bancos para depósitos en dólares en cuenta a la vista. Son tasas bajas (típicamente 0.5%-2% TNA) porque el depósito es a la vista, sin plazo. Datos en vivo del BCRA vía ArgentinaDatos.
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="tasa-table" id="usd-table">
+            <thead>
+              <tr>
+                <th>Banco</th>
+                <th>TNA USD</th>
+                <th>Tope USD</th>
+              </tr>
+            </thead>
+            <tbody id="usd-body"><tr><td colspan="3" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
           </table>
         </div>
       </div>
 
       <!-- ===== UVA HIPOTECARIO ===== -->
       <div class="tab-panel" id="tab-uva">
-        <div class="info-box">
-          <strong>Crédito hipotecario UVA:</strong> el capital se ajusta diariamente por el índice UVA (sigue al CER, ~inflación). La cuota crece nominalmente pero se mantiene relativamente estable en términos reales. Simulamos con el último valor UVA publicado por el BCRA.
+        <div class="info-box warn">
+          <strong>⚠ Las tasas hipotecarias por banco NO están disponibles vía API pública.</strong> Ni BCRA ni ArgentinaDatos exponen un endpoint con la TNA real que cobra cada banco por crédito UVA — esos datos los publica cada banco en su sitio. Lo que SÍ tenemos en vivo es el valor del <strong>índice UVA</strong> (BCRA). El simulador de abajo es matemática real (sistema francés), pero la TNA es input — ponela según el banco que estés comparando.
+          <br><br><strong>Verificá tasas reales en:</strong>
+          <a href="https://www.bcra.gob.ar/SistemasFinancierosYDePagos/Tasas_intereses_referencia_diaria.asp" target="_blank" rel="noopener" style="color:var(--accent)">BCRA — Tasas de interés</a> ·
+          <a href="https://comparatasas.ar/credito-hipotecario" target="_blank" rel="noopener" style="color:var(--accent)">ComparaTasas.ar — Hipotecario</a> ·
+          <a href="comparador-creditos-uva.html" style="color:var(--accent)">Comparador completo UVA</a>
         </div>
+
+        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin:1.25rem 0 0.6rem">Simulador de cuota — datos UVA en vivo</p>
 
         <div class="sim-grid">
           <div class="sim-card">
@@ -383,50 +424,119 @@
     document.getElementById('pf-sort').addEventListener('change', renderPF);
     document.getElementById('pf-search').addEventListener('input', renderPF);
 
-    // ===== FCI Money Market =====
-    let fciData = [];
-    async function loadFCI() {
+    // ===== FCI =====
+    // Cache por categoría
+    const fciCache = {};
+
+    // Extraer administradora del nombre del fondo (heurística — funciona para los grandes)
+    function extractAdmin(fondo) {
+      if (!fondo) return '—';
+      const f = fondo.toUpperCase();
+      // Patrones de Sociedades Gerentes conocidas
+      const map = [
+        ['MERCADO FONDO', 'Banco Galicia'],
+        ['FIMA ', 'Galicia Asset Management'],
+        ['GALICIA ', 'Galicia Fondos'],
+        ['FBA ', 'BBVA Asset Management'],
+        ['BBVA ', 'BBVA Asset Management'],
+        ['SUPER AHORRO', 'Santander Asset Management'],
+        ['SUPERFONDO', 'Santander Asset Management'],
+        ['SUPER ', 'Santander Asset Management'],
+        ['SANTANDER ', 'Santander Asset Management'],
+        ['SCHRODER ', 'Schroder Argentina'],
+        ['CONSULTATIO ', 'Consultatio Asset'],
+        ['MEGAINVER ', 'MegaInver'],
+        ['ICBC ', 'ICBC Investments'],
+        ['ICBC-', 'ICBC Investments'],
+        ['HSBC ', 'HSBC Administradora'],
+        ['MACRO ', 'Macro Fondos'],
+        ['ALPHA ', 'Banco Patagonia'],
+        ['PATAGONIA ', 'Banco Patagonia'],
+        ['CIUDAD ', 'Banco Ciudad'],
+        ['PROVINCIA ', 'Provinfondos'],
+        ['PROVINFONDOS', 'Provinfondos'],
+        ['NACION ', 'Nación AM'],
+        ['1810 ', 'Banco Hipotecario'],
+        ['HIPOTECARIO', 'Banco Hipotecario'],
+        ['BALANZ ', 'Balanz Capital'],
+        ['ALLARIA ', 'Allaria Ledesma'],
+        ['ADCAP ', 'Adcap Asset Management'],
+        ['COCOS ', 'Cocos Capital'],
+        ['IEB ', 'IEB Asset Management'],
+        ['SBS ', 'SBS Asset Management'],
+        ['DELTA ', 'Delta Asset Management'],
+        ['QUINQUELA ', 'Quinquela Asset'],
+        ['PIONERO ', 'Banco Comafi'],
+        ['COMAFI ', 'Banco Comafi'],
+        ['ITAU ', 'Itaú Asset Management'],
+        ['CREDICOOP ', 'Credicoop'],
+        ['CITIBANK ', 'Citi'],
+        ['INVERTIRONLINE', 'InvertirOnline'],
+        ['IOL ', 'InvertirOnline'],
+        ['PELLEGRINI ', 'Pellegrini SGFCI'],
+        ['ST. JAMES', 'St James Asset'],
+        ['BIND ', 'BIND Inversiones'],
+        ['1822 ', 'Banco Provincia'],
+        ['INDEPENDENCIA', 'Mariva Asset'],
+        ['MARIVA ', 'Mariva Asset'],
+        ['BULL MARKET', 'Bull Market Brokers'],
+        ['INVERTIR ', 'InvertirOnline'],
+      ];
+      for (const [k, v] of map) {
+        if (f.startsWith(k) || f.includes(' ' + k.trim() + ' ') || f.includes(' ' + k.trim() + '-')) return v;
+      }
+      // Fallback: primer "palabra" del fondo
+      const parts = fondo.split(/\s+/);
+      return parts[0] || '—';
+    }
+
+    async function loadFCI(categoria) {
+      if (fciCache[categoria]) { renderFCI(); return; }
       try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/fci/mercadoDinero/ultimo', { signal: AbortSignal.timeout(8000) });
+        const r = await fetch('/api/argentinadatos?path=finanzas/fci/' + categoria + '/ultimo', { signal: AbortSignal.timeout(8000) });
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const data = await r.json();
         if (!Array.isArray(data)) throw new Error('Formato inválido');
-        // Solo fondos con datos recientes (último mes)
         const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 1);
-        fciData = data.filter(f => f && f.fondo && Number.isFinite(f.vcp) && new Date(f.fecha) >= cutoff);
+        fciCache[categoria] = data.filter(f => f && f.fondo && Number.isFinite(f.vcp) && new Date(f.fecha) >= cutoff);
         renderFCI();
-        document.getElementById('fci-updated').textContent = '✓ ' + fciData.length + ' fondos · CAFCI';
       } catch {
         document.getElementById('fci-body').textContent = '';
         const tr = document.createElement('tr'); const td = document.createElement('td');
-        td.colSpan = 4; td.className = 'empty-state';
+        td.colSpan = 5; td.className = 'empty-state';
         td.textContent = 'No se pudieron cargar los fondos.';
         tr.appendChild(td); document.getElementById('fci-body').appendChild(tr);
       }
     }
 
     function renderFCI() {
+      const categoria = document.getElementById('fci-cat').value;
+      const data = fciCache[categoria] || [];
       const body = document.getElementById('fci-body');
       const sort = document.getElementById('fci-sort').value;
       const q = normalize(document.getElementById('fci-search').value);
-      let rows = fciData.slice();
-      if (q) rows = rows.filter(f => normalize(f.fondo).includes(q));
+      let rows = data.map(f => ({ ...f, administradora: extractAdmin(f.fondo) }));
+      if (q) rows = rows.filter(f => normalize(f.fondo).includes(q) || normalize(f.administradora).includes(q));
       if (sort === 'patrimonio-desc') rows.sort((a, b) => (b.patrimonio || 0) - (a.patrimonio || 0));
       else if (sort === 'fondo-asc') rows.sort((a, b) => a.fondo.localeCompare(b.fondo));
+      else if (sort === 'administradora') rows.sort((a, b) => a.administradora.localeCompare(b.administradora) || (b.patrimonio || 0) - (a.patrimonio || 0));
 
       body.textContent = '';
+      document.getElementById('fci-updated').textContent = '✓ ' + rows.length + ' fondos · CAFCI en vivo';
+
       if (rows.length === 0) {
         const tr = document.createElement('tr'); const td = document.createElement('td');
-        td.colSpan = 4; td.className = 'empty-state'; td.textContent = 'Sin resultados';
+        td.colSpan = 5; td.className = 'empty-state'; td.textContent = 'Sin resultados';
         tr.appendChild(td); body.appendChild(tr); return;
       }
 
-      rows.slice(0, 80).forEach(f => {
+      rows.slice(0, 100).forEach(f => {
         const tr = document.createElement('tr');
         const tdName = document.createElement('td'); tdName.textContent = f.fondo; tr.appendChild(tdName);
-        const tdHor = document.createElement('td'); tdHor.textContent = f.horizonte || '—'; tdHor.style.color = 'var(--text-muted)'; tr.appendChild(tdHor);
+        const tdAdm = document.createElement('td'); tdAdm.textContent = f.administradora; tdAdm.style.color = 'var(--text-muted)'; tdAdm.style.fontSize = '0.82rem'; tr.appendChild(tdAdm);
+        const tdHor = document.createElement('td'); tdHor.textContent = f.horizonte || '—'; tdHor.style.color = 'var(--text-muted)'; tdHor.style.fontSize = '0.78rem'; tr.appendChild(tdHor);
         const tdVcp = document.createElement('td');
-        const span = document.createElement('span'); span.className = 'tna-value'; span.textContent = '$' + (f.vcp || 0).toLocaleString('es-AR', { maximumFractionDigits: 2 });
+        const span = document.createElement('span'); span.className = 'tna-value'; span.textContent = '$ ' + (f.vcp || 0).toLocaleString('es-AR', { maximumFractionDigits: 2 });
         tdVcp.appendChild(span); tr.appendChild(tdVcp);
         const tdPat = document.createElement('td');
         const patM = (f.patrimonio || 0) / 1e6;
@@ -437,22 +547,58 @@
       });
     }
 
+    document.getElementById('fci-cat').addEventListener('change', () => loadFCI(document.getElementById('fci-cat').value));
     document.getElementById('fci-sort').addEventListener('change', renderFCI);
     document.getElementById('fci-search').addEventListener('input', renderFCI);
 
-    // ===== Cuentas Remuneradas (curated JSON) =====
+    // ===== Rendimientos ARS (cripto-wallets + criptopesos en vivo) =====
     let crData = [];
     async function loadCR() {
+      const out = [];
+      const skipEnt = (e) => !e || /^test$/i.test(e.trim());
       try {
-        const r = await fetch('/data/cuentas-remuneradas.json', { signal: AbortSignal.timeout(5000) });
-        if (!r.ok) throw new Error();
-        const data = await r.json();
-        crData = data.billeteras || [];
-        document.getElementById('cr-updated').textContent = data.metadata?.actualizacion || '—';
-        renderCR();
-      } catch {
-        document.getElementById('cr-body').textContent = '';
+        const r1 = await fetch('/api/argentinadatos?path=finanzas/rendimientos', { signal: AbortSignal.timeout(8000) });
+        if (r1.ok) {
+          const data = await r1.json();
+          if (Array.isArray(data)) {
+            for (const ent of data) {
+              if (skipEnt(ent.entidad)) continue;
+              for (const r of (ent.rendimientos || [])) {
+                if (r.moneda === 'ARS' && Number.isFinite(r.apy) && r.apy > 0) {
+                  out.push({ entidad: ent.entidad, tipo: 'Wallet cripto', token: 'ARS (APY)', tasa: r.apy / 100, fecha: r.fecha, fuente: 'rendimientos' });
+                }
+              }
+            }
+          }
+        }
+      } catch {}
+
+      try {
+        const r2 = await fetch('/api/argentinadatos?path=finanzas/criptopesos', { signal: AbortSignal.timeout(8000) });
+        if (r2.ok) {
+          const data = await r2.json();
+          if (Array.isArray(data)) {
+            for (const it of data) {
+              if (skipEnt(it.entidad)) continue;
+              if (Number.isFinite(it.tna) && it.tna > 0) {
+                out.push({ entidad: it.entidad, tipo: 'Cripto-pesos', token: it.token, tasa: it.tna, fecha: null, fuente: 'criptopesos' });
+              }
+            }
+          }
+        }
+      } catch {}
+
+      // Deduplicar: si entidad ya está en mayúsc/minúsc/cualquier case, mantener la de mejor tasa
+      const dedup = new Map();
+      for (const it of out) {
+        const key = (it.entidad || '').toLowerCase() + '|' + (it.token || '').toLowerCase();
+        const prev = dedup.get(key);
+        if (!prev || it.tasa > prev.tasa) dedup.set(key, it);
       }
+
+      crData = Array.from(dedup.values());
+      document.getElementById('cr-updated').textContent = '✓ ' + crData.length + ' rendimientos · vivo';
+      renderCR();
     }
 
     function renderCR() {
@@ -460,41 +606,70 @@
       const sort = document.getElementById('cr-sort').value;
       const q = normalize(document.getElementById('cr-search').value);
       let rows = crData.slice();
-      if (q) rows = rows.filter(b => normalize(b.nombre).includes(q));
-      if (sort === 'tna-desc') rows.sort((a, b) => b.tna - a.tna);
-      else if (sort === 'tna-asc') rows.sort((a, b) => a.tna - b.tna);
-      else if (sort === 'nombre') rows.sort((a, b) => a.nombre.localeCompare(b.nombre));
-      else if (sort === 'tipo') rows.sort((a, b) => a.tipo.localeCompare(b.tipo));
+      if (q) rows = rows.filter(b => normalize(b.entidad).includes(q) || normalize(b.token).includes(q));
+      if (sort === 'tna-desc') rows.sort((a, b) => b.tasa - a.tasa);
+      else if (sort === 'tna-asc') rows.sort((a, b) => a.tasa - b.tasa);
+      else if (sort === 'entidad') rows.sort((a, b) => a.entidad.localeCompare(b.entidad));
 
       body.textContent = '';
+      if (rows.length === 0) {
+        const tr = document.createElement('tr'); const td = document.createElement('td');
+        td.colSpan = 5; td.className = 'empty-state'; td.textContent = 'Sin resultados de la API en este momento.';
+        tr.appendChild(td); body.appendChild(tr); return;
+      }
       rows.forEach((b, i) => {
         const tr = document.createElement('tr');
-        if (sort === 'tna-desc' && i < 5) tr.classList.add('featured');
-
-        const td1 = document.createElement('td');
-        if (b.url) {
-          const a = document.createElement('a'); a.href = b.url; a.target = '_blank'; a.rel = 'noopener';
-          a.style.color = 'var(--text)'; a.textContent = b.nombre; td1.appendChild(a);
-        } else {
-          td1.textContent = b.nombre;
-        }
-        tr.appendChild(td1);
-
-        const td2 = document.createElement('td'); td2.textContent = b.tipo; td2.style.color = 'var(--text-muted)'; tr.appendChild(td2);
-        const td3 = document.createElement('td');
-        const sp = document.createElement('span'); sp.className = 'tna-value'; sp.textContent = (b.tna * 100).toFixed(2) + '%';
-        td3.appendChild(sp); tr.appendChild(td3);
-        const td4 = document.createElement('td'); td4.textContent = b.instrumento || '—'; td4.style.color = 'var(--text-muted)'; td4.style.fontSize = '0.8rem'; tr.appendChild(td4);
+        if (sort === 'tna-desc' && i < 3) tr.classList.add('featured');
+        const td1 = document.createElement('td'); td1.textContent = b.entidad; td1.style.textTransform = 'capitalize'; tr.appendChild(td1);
+        const td2 = document.createElement('td'); td2.textContent = b.tipo; td2.style.color = 'var(--text-muted)'; td2.style.fontSize = '0.82rem'; tr.appendChild(td2);
+        const td3 = document.createElement('td'); td3.textContent = b.token; td3.style.color = 'var(--text-muted)'; td3.style.fontSize = '0.82rem'; tr.appendChild(td3);
+        const td4 = document.createElement('td');
+        const sp = document.createElement('span'); sp.className = 'tna-value'; sp.textContent = (b.tasa * 100).toFixed(2) + '%';
+        td4.appendChild(sp); tr.appendChild(td4);
         const td5 = document.createElement('td');
-        td5.textContent = b.limite ? '$ ' + b.limite.toLocaleString('es-AR') : 'Sin límite';
-        td5.style.color = 'var(--text-muted)'; td5.style.fontSize = '0.8rem';
+        td5.textContent = b.fecha || '—'; td5.style.color = 'var(--text-subtle)'; td5.style.fontSize = '0.78rem';
         tr.appendChild(td5);
-
         body.appendChild(tr);
       });
     }
     document.getElementById('cr-sort').addEventListener('change', renderCR);
     document.getElementById('cr-search').addEventListener('input', renderCR);
+
+    // ===== Cuentas remuneradas USD =====
+    async function loadUSD() {
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/cuentas-remuneradas-usd', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const data = await r.json();
+        const body = document.getElementById('usd-body');
+        body.textContent = '';
+        if (!Array.isArray(data) || data.length === 0) {
+          const tr = document.createElement('tr'); const td = document.createElement('td');
+          td.colSpan = 3; td.className = 'empty-state'; td.textContent = 'Sin datos.';
+          tr.appendChild(td); body.appendChild(tr); return;
+        }
+        data.sort((a, b) => (b.tasa || 0) - (a.tasa || 0));
+        data.forEach(b => {
+          const tr = document.createElement('tr');
+          const td1 = document.createElement('td'); td1.textContent = b.entidad; tr.appendChild(td1);
+          const td2 = document.createElement('td');
+          const sp = document.createElement('span'); sp.className = 'tna-value';
+          sp.textContent = (b.tasa * 100).toFixed(2) + '%';
+          td2.appendChild(sp); tr.appendChild(td2);
+          const td3 = document.createElement('td');
+          td3.textContent = b.tope ? 'USD ' + b.tope.toLocaleString('es-AR') : 'Sin tope';
+          td3.style.color = 'var(--text-muted)';
+          tr.appendChild(td3);
+          body.appendChild(tr);
+        });
+      } catch {
+        const body = document.getElementById('usd-body');
+        body.textContent = '';
+        const tr = document.createElement('tr'); const td = document.createElement('td');
+        td.colSpan = 3; td.className = 'empty-state'; td.textContent = 'No se pudieron cargar las tasas USD.';
+        tr.appendChild(td); body.appendChild(tr);
+      }
+    }
 
     // ===== UVA Simulador =====
     let uvaValor = null;
@@ -545,8 +720,9 @@
 
     // ===== Init =====
     loadPF();
-    loadFCI();
+    loadFCI('mercadoDinero');
     loadCR();
+    loadUSD();
     loadUVA();
   </script>
 </body>
