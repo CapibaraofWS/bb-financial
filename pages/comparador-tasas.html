@@ -6,8 +6,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comparador de Tasas — Plazo Fijo, FCI, Cuentas Remuneradas — BB Financial</title>
-  <meta name="description" content="Compará en tiempo real tasas de plazo fijo por banco, FCI Money Market, cuentas remuneradas de billeteras y ALyCs, y simulá crédito hipotecario UVA. Datos vivos del BCRA y CAFCI." />
-  <meta name="keywords" content="comparador tasas, plazo fijo bancos, FCI money market, cuentas remuneradas, mercado pago, ualá, UVA hipotecario, BCRA" />
+  <meta name="description" content="Compará en tiempo real tasas de plazo fijo por banco, FCI Money Market, cuentas remuneradas de billeteras (Mercado Pago, Ualá, Naranja X), y cuentas USD. Datos vivos del BCRA y CAFCI." />
+  <meta name="keywords" content="comparador tasas, plazo fijo bancos, FCI money market, cuentas remuneradas, mercado pago, ualá, naranja x, BCRA, argentinadatos" />
   <meta name="robots" content="index, follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,13 +42,6 @@
     @keyframes skel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
     .empty-state{text-align:center;padding:3rem 1rem;color:var(--text-subtle);font-size:0.9rem;}
 
-    /* UVA simulador */
-    .sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:1.5rem;}
-    .sim-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
-    .sim-card .label{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);}
-    .sim-card .value{font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-top:0.3rem;}
-    .sim-card .sub{font-size:0.75rem;color:var(--text-muted);margin-top:0.4rem;}
-
     @media(max-width:640px){
       .tasa-table{font-size:0.78rem;}
       .tasa-table th,.tasa-table td{padding:0.55rem 0.55rem;}
@@ -70,7 +63,7 @@
       <div class="container">
         <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Comparador de Tasas</p>
         <h1 class="page-title">Comparador de Tasas</h1>
-        <p class="page-subtitle">Plazo fijo por banco, FCI Money Market, cuentas remuneradas y simulador UVA. Datos en vivo del <strong>BCRA</strong> y <strong>CAFCI</strong> vía ArgentinaDatos.</p>
+        <p class="page-subtitle">Plazo fijo por banco, FCI Money Market, cuentas remuneradas (Mercado Pago, Ualá, etc.) y cuentas USD. Datos en vivo del <strong>BCRA</strong> y <strong>CAFCI</strong> vía ArgentinaDatos.</p>
       </div>
     </section>
 
@@ -81,7 +74,6 @@
         <button class="tab-btn" data-tab="pf">🏦 Plazos Fijos</button>
         <button class="tab-btn" data-tab="fci">📊 FCI Money Market</button>
         <button class="tab-btn" data-tab="usd">💵 Cuentas USD</button>
-        <button class="tab-btn" data-tab="uva">🏠 UVA Hipotecario</button>
       </div>
 
       <!-- ===== PLAZOS FIJOS ===== -->
@@ -220,62 +212,6 @@
             <tbody id="usd-body"><tr><td colspan="4" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
           </table>
         </div>
-      </div>
-
-      <!-- ===== UVA HIPOTECARIO ===== -->
-      <div class="tab-panel" id="tab-uva">
-        <div class="info-box warn">
-          <strong>⚠ Las tasas hipotecarias por banco NO están disponibles vía API pública.</strong> Ni BCRA ni ArgentinaDatos exponen un endpoint con la TNA real que cobra cada banco por crédito UVA — esos datos los publica cada banco en su sitio. Lo que SÍ tenemos en vivo es el valor del <strong>índice UVA</strong> (BCRA). El simulador de abajo es matemática real (sistema francés), pero la TNA es input — ponela según el banco que estés comparando.
-          <br><br><strong>Verificá tasas reales en:</strong>
-          <a href="https://www.bcra.gob.ar/SistemasFinancierosYDePagos/Tasas_intereses_referencia_diaria.asp" target="_blank" rel="noopener" style="color:var(--accent)">BCRA — Tasas de interés</a> ·
-          <a href="https://comparatasas.ar/credito-hipotecario" target="_blank" rel="noopener" style="color:var(--accent)">ComparaTasas.ar — Hipotecario</a> ·
-          <a href="comparador-creditos-uva.html" style="color:var(--accent)">Comparador completo UVA</a>
-        </div>
-
-        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin:1.25rem 0 0.6rem">Simulador de cuota — datos UVA en vivo</p>
-
-        <div class="sim-grid">
-          <div class="sim-card">
-            <p class="label">Valor UVA actual</p>
-            <p class="value" id="uva-actual">—</p>
-            <p class="sub" id="uva-fecha">—</p>
-          </div>
-          <div class="sim-card">
-            <p class="label">Capital a financiar</p>
-            <input class="input-mini" id="uva-capital" type="number" value="80000000" min="1000000" step="1000000" style="width:100%;margin-top:0.3rem" />
-            <p class="sub">En pesos (ARS)</p>
-          </div>
-          <div class="sim-card">
-            <p class="label">Plazo (años) — TNA real</p>
-            <div style="display:flex;gap:0.4rem;margin-top:0.3rem">
-              <input class="input-mini" id="uva-years" type="number" value="20" min="5" max="30" step="5" style="flex:1" />
-              <input class="input-mini" id="uva-tna" type="number" value="6" min="2" max="12" step="0.5" style="flex:1" />
-            </div>
-            <p class="sub">TNA real estimada del crédito (sobre UVA)</p>
-          </div>
-        </div>
-
-        <div class="sim-grid">
-          <div class="sim-card">
-            <p class="label">Cuota inicial (mensual)</p>
-            <p class="value" id="uva-cuota">—</p>
-            <p class="sub">En UVAs y en pesos al valor actual</p>
-          </div>
-          <div class="sim-card">
-            <p class="label">Capital en UVAs</p>
-            <p class="value" id="uva-cap-uvas">—</p>
-            <p class="sub">Equivalente del capital al valor UVA actual</p>
-          </div>
-          <div class="sim-card">
-            <p class="label">Intereses totales (en UVAs)</p>
-            <p class="value" id="uva-intereses">—</p>
-            <p class="sub">Total pagado − capital, sin contar inflación</p>
-          </div>
-        </div>
-
-        <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.65;margin-top:1rem">
-          <strong style="color:var(--text)">Cómo funciona:</strong> el crédito se denomina en UVAs (no en pesos). Si pedís $80M y la UVA vale $1.956, debés <em>$80M / $1.956 = 40.900 UVAs</em>. Cada mes pagás la cuota en UVAs, que se traduce a pesos al valor del día. Si la inflación es 5%, la UVA sube ~5%, y la cuota en pesos también — pero relativa a tu sueldo (que también debería subir) se mantiene estable. La TNA real (6-8% típico) es sobre las UVAs ya ajustadas por inflación.
-        </p>
       </div>
 
     </div>
@@ -838,59 +774,11 @@
       });
     }
 
-    // ===== UVA Simulador =====
-    let uvaValor = null;
-
-    async function loadUVA() {
-      try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/indices/uva', { signal: AbortSignal.timeout(8000) });
-        if (!r.ok) throw new Error();
-        const data = await r.json();
-        if (!Array.isArray(data) || !data.length) throw new Error();
-        const last = data[data.length - 1];
-        uvaValor = parseFloat(last.valor);
-        document.getElementById('uva-actual').textContent = '$ ' + uvaValor.toLocaleString('es-AR', { maximumFractionDigits: 2 });
-        document.getElementById('uva-fecha').textContent = 'Última obs: ' + last.fecha;
-        calcUVA();
-      } catch {
-        document.getElementById('uva-actual').textContent = '—';
-      }
-    }
-
-    function calcUVA() {
-      if (!Number.isFinite(uvaValor) || uvaValor <= 0) return;
-      const cap = parseFloat(document.getElementById('uva-capital').value) || 0;
-      const years = parseFloat(document.getElementById('uva-years').value) || 20;
-      const tnaPct = parseFloat(document.getElementById('uva-tna').value) || 6;
-      if (cap <= 0 || years <= 0) return;
-
-      const capUvas = cap / uvaValor;
-      // Cuota francesa: c = K * i / (1 - (1+i)^-n)
-      const i = (tnaPct / 100) / 12;
-      const n = years * 12;
-      const cuotaUvas = capUvas * i / (1 - Math.pow(1 + i, -n));
-      const cuotaArs = cuotaUvas * uvaValor;
-      const totalUvas = cuotaUvas * n;
-      const intereses = totalUvas - capUvas;
-
-      document.getElementById('uva-cuota').textContent = cuotaUvas.toFixed(2) + ' UVAs';
-      document.getElementById('uva-cap-uvas').textContent = capUvas.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' UVAs';
-      document.getElementById('uva-intereses').textContent = intereses.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' UVAs';
-
-      const sub1 = document.querySelectorAll('#uva-cuota')[0].nextElementSibling;
-      sub1.textContent = '≈ $ ' + cuotaArs.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' / mes (al valor UVA actual)';
-    }
-
-    ['uva-capital', 'uva-years', 'uva-tna'].forEach(id => {
-      document.getElementById(id).addEventListener('input', calcUVA);
-    });
-
     // ===== Init =====
     loadPF();
     loadFCI('mercadoDinero');
     loadCR();
     loadUSD();
-    loadUVA();
   </script>
 </body>
 </html>
