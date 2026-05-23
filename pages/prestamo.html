@@ -185,6 +185,31 @@
         <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Cuidado:</strong> los préstamos "cuota 0% tasa" suelen ocultar comisiones y seguros. Siempre mirá el <strong>CFTEA</strong> antes de firmar.</div>
       </div>
     </details>
+
+    <details class="tool-info">
+      <summary><strong>ℹ️ Sobre esta calculadora</strong> — sistemas, fórmulas, supuestos</summary>
+      <div class="ti-content">
+        <p>La calculadora resuelve la cuota y la tabla de amortización para los tres sistemas estándar.</p>
+        <p><strong>Sistemas:</strong></p>
+        <ul>
+          <li><strong>Francés</strong> (el más usado en Argentina/Latam): cuota constante. <code>Cuota = P × i / (1 − (1+i)^−n)</code>. Al principio pagás mucho interés, poco capital; al final al revés.</li>
+          <li><strong>Alemán</strong>: amortización de capital constante. <code>Amort = P/n</code>. La cuota arranca alta y baja con el tiempo (porque pagás menos interés).</li>
+          <li><strong>Americano</strong>: solo pagás intereses durante el plazo; el capital se devuelve completo al final. Útil para bullet loans corporativos.</li>
+        </ul>
+        <p><strong>Supuestos:</strong></p>
+        <ul>
+          <li>La <strong>tasa es constante</strong>. Si el préstamo es UVA o de tasa variable, la cuota va a cambiar mes a mes — recalculá.</li>
+          <li>NO incluimos <strong>seguros, gastos administrativos ni IVA</strong>. La cuota real puede ser 5-15% más. Para el costo verdadero pedile el <strong>CFTEA</strong> (Costo Financiero Total Efectivo Anual) al banco.</li>
+          <li>Asumimos pagos <strong>mensuales constantes</strong> (no quincenales, no bullet de fin de año).</li>
+        </ul>
+        <p><strong>Limitaciones:</strong></p>
+        <ul>
+          <li>No simula <strong>pre-cancelación parcial</strong>. La mayoría de bancos cobra comisión por adelanto en sistema francés.</li>
+          <li>Para créditos UVA: la cuota nominal sube con la inflación, pero la cuota en UVAs es constante. Esta calc no modela eso — usá el <a href="comparador-creditos-uva.html" style="color:var(--accent)">comparador UVA</a>.</li>
+        </ul>
+        <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> Antes de firmar un préstamo, compará al menos 3 ofertas y verificá el CFTEA. <span class="cite">Fuente: principios estándar de matemática financiera (Brealey, Myers, Allen — Principles of Corporate Finance).</span></p>
+      </div>
+    </details>
     </div>
 
     <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">

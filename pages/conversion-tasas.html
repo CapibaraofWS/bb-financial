@@ -82,6 +82,32 @@
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Cuidado al comparar</strong>: si un banco dice "TNA 30%" y otro dice "TEM 2.7%", parecen distintos pero son <strong>casi lo mismo</strong>. Siempre compará usando la MISMA medida (preferentemente TEA).</div>
     </div>
   </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta calculadora</strong> — fórmulas, qué significa cada tasa, errores comunes</summary>
+    <div class="ti-content">
+      <p>Saber convertir entre TNA, TEA y tasas periódicas no es trivia académica — es lo que te permite comparar oferta de bancos, productos de inversión y créditos en términos justos.</p>
+      <p><strong>Las tasas y sus fórmulas:</strong></p>
+      <ul>
+        <li><strong>TNA (Tasa Nominal Anual)</strong>: convención bancaria. Es la tasa periódica × cantidad de períodos en un año. <em>No</em> refleja el efecto de capitalización. Si TNA = 36% mensual: tasa mensual = 36/12 = 3%.</li>
+        <li><strong>TEA (Tasa Efectiva Anual)</strong>: la tasa "real" cuando se capitaliza. <code>TEA = (1 + TNA/m)^m − 1</code>. Si TNA = 36% mensual → TEA = (1.03)^12 − 1 ≈ 42.6%.</li>
+        <li><strong>TEM (Tasa Efectiva Mensual)</strong>: la tasa de un mes, lista para usar. <code>TEM = (1 + TEA)^(1/12) − 1</code>.</li>
+        <li><strong>Tasa diaria, trimestral, etc.</strong>: misma lógica, ajustá el exponente.</li>
+      </ul>
+      <p><strong>Supuestos:</strong></p>
+      <ul>
+        <li>Las conversiones asumen <strong>capitalización compuesta</strong> (que es lo estándar). No usamos interés simple.</li>
+        <li>Asumimos que el año tiene <strong>365 días</strong> para tasas diarias. Algunos contratos usan 360 (convención bancaria internacional) — verificá en cada caso.</li>
+      </ul>
+      <p><strong>Errores comunes:</strong></p>
+      <ul>
+        <li>Comparar TNA contra TEA es trampa. <strong>Siempre comparar TEA contra TEA</strong>.</li>
+        <li>Confundir "TNA simple" con "TNA capitalizable". TNA Simple no es composición compuesta (común en algunos plazos fijos cortos).</li>
+        <li>La <strong>CFT/CFTEA</strong> en créditos incluye comisiones y gastos — siempre es mayor que la TEA pura.</li>
+      </ul>
+      <p><strong style="color:#ffb84d">⚠ Es solo conversión matemática.</strong> No considera impuestos (ej. Bienes Personales, retenciones a no residentes) ni la calidad crediticia del producto.</p>
+    </div>
+  </details>
     </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">

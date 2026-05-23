@@ -107,6 +107,30 @@
         <div class="tip">💡 <strong>Realidad cruda:</strong> si la meta requiere un aporte mensual mayor a 30% de tu ingreso, no es realista. Achicá la meta, alargá el plazo, o mejorá tus ingresos antes.</div>
       </div>
     </details>
+
+    <details class="tool-info">
+      <summary><strong>ℹ️ Sobre esta calculadora</strong> — qué calcula, supuestos, limitaciones</summary>
+      <div class="ti-content">
+        <p>Esta calculadora compara dos estrategias para llegar a una meta: <em>ahorrar puro</em> (la plata queda quieta en una cuenta) vs <em>invertir</em> (la plata genera interés compuesto). La diferencia en años puede ser brutal — esa es la lección.</p>
+        <p><strong>Las dos fórmulas:</strong></p>
+        <ul>
+          <li><strong>Solo ahorro</strong>: <code>Años = (Meta − VP) / (PMT × 12)</code> — lineal.</li>
+          <li><strong>Inversión</strong>: resolver <code>VP × (1+r)^n + PMT × ((1+r)^n − 1) / r = Meta</code> para n.</li>
+        </ul>
+        <p><strong>Supuestos:</strong></p>
+        <ul>
+          <li>Aportes <strong>al final de cada mes</strong>, constantes en términos nominales (no ajustamos por inflación los aportes).</li>
+          <li>La <strong>tasa de retorno</strong> que vos ingresás es constante. En la práctica oscila — usá una estimación conservadora.</li>
+          <li>NO contemplamos <strong>inflación de la meta</strong> ni impuestos. Si querés "una casa de USD 100k de hoy en 10 años", ajustá la meta al USD-CPI esperado.</li>
+        </ul>
+        <p><strong>Limitaciones:</strong></p>
+        <ul>
+          <li>Es proyección determinística — la realidad es volátil. Considerá un margen de seguridad de 10-20% sobre la meta o el plazo.</li>
+          <li>Asume que vas a poder mantener el aporte mensual TODOS los meses. Si te quedás sin trabajo 6 meses, el plan se atrasa.</li>
+        </ul>
+        <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> Es una proyección educativa para comparar dos estrategias. Para metas grandes (casa, jubilación) consultá un asesor.</p>
+      </div>
+    </details>
     </div>
 
     <div class="container calc-layout">

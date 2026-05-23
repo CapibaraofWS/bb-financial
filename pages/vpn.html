@@ -93,6 +93,32 @@
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>La TIR es engañosa</strong> sin contexto: una TIR del 80% suena espectacular hasta que recordás que la inflación es 100%. Siempre comparála contra tu tasa real de costo de oportunidad.</div>
     </div>
   </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta calculadora</strong> — fórmulas, supuestos, trampas comunes</summary>
+    <div class="ti-content">
+      <p>El VPN es la herramienta más importante de finanzas corporativas. Responde: ¿esta inversión crea o destruye valor? Si VPN &gt; 0, sí. Suena simple, traiciona en los detalles.</p>
+      <p><strong>Fórmulas:</strong></p>
+      <ul>
+        <li><strong>VPN</strong> = <code>−CF₀ + Σ CFₜ / (1+r)^t</code> donde r = tasa de descuento.</li>
+        <li><strong>TIR (IRR)</strong> = la tasa r* que hace VPN = 0. Si TIR &gt; r del proyecto, conviene.</li>
+        <li><strong>Período de repago</strong> = en qué año los flujos acumulados igualan la inversión inicial (ignora el costo del tiempo).</li>
+      </ul>
+      <p><strong>Supuestos críticos:</strong></p>
+      <ul>
+        <li>La <strong>tasa de descuento</strong> es la pieza más sensible. 1% de diferencia puede cambiar la decisión. Para empresas usar WACC; para proyectos personales, costo de oportunidad realista.</li>
+        <li>Asumimos <strong>flujos de fin de período</strong> (anualidades ordinarias). Si los flujos son al inicio, sumá un período al exponente.</li>
+        <li>NO contemplamos <strong>impuestos, depreciación, ni efectos de inflación</strong> — para proyectos serios hacé sensibilidad sobre estos.</li>
+      </ul>
+      <p><strong>Trampas comunes:</strong></p>
+      <ul>
+        <li><strong>TIR puede dar múltiples soluciones</strong> si hay flujos negativos intermedios (no es monótona). Mejor usar VPN como criterio.</li>
+        <li><strong>TIR asume reinversión a la misma TIR</strong> — irreal para TIRs altas. Para corregir, usar MIRR (modified IRR).</li>
+        <li><strong>Comparar VPN entre proyectos de distinta escala</strong> es engañoso. Un VPN $1M sobre $10M invertidos &lt; un VPN $500k sobre $1M.</li>
+      </ul>
+      <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> El VPN da UN número con muchos supuestos. Para decisiones reales hacé sensibilidad sobre la tasa y los flujos. <span class="cite">Fuente: Brealey, Myers, Allen — Principles of Corporate Finance.</span></p>
+    </div>
+  </details>
     </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">

@@ -135,6 +135,30 @@
         <div class="tip">💡 <strong>Para comparar:</strong> después de calcular acá, usá la <a href="cuanto-perdi.html" style="color:var(--accent)">calculadora "¿Cuánto perdí ahorrando?"</a> con datos REALES del IPC histórico para ver cuánto te comió la inflación los últimos meses.</div>
       </div>
     </details>
+
+    <details class="tool-info">
+      <summary><strong>ℹ️ Sobre esta calculadora</strong> — fórmula, supuestos, diferencia con calc "¿cuánto perdí?"</summary>
+      <div class="ti-content">
+        <p>Esta es una proyección <em>hacia adelante</em> con una tasa de inflación que vos definís. La calculadora hermana "¿Cuánto perdí ahorrando?" usa el IPC histórico REAL del INDEC vía ArgentinaDatos.</p>
+        <p><strong>Fórmula:</strong></p>
+        <ul>
+          <li>Poder adquisitivo en N años = <code>VP / (1 + π)^N</code> donde π = tasa de inflación anual.</li>
+          <li>Inverso: precio del mismo bien en N años = <code>P × (1 + π)^N</code>.</li>
+        </ul>
+        <p><strong>Supuestos:</strong></p>
+        <ul>
+          <li>La <strong>inflación es constante</strong> en el período. En Argentina la inflación oscila mucho — esto da una aproximación promedio.</li>
+          <li>NO contemplamos <strong>inflación heterogénea</strong>: el IPC mide canasta general, pero educación, salud o alquileres pueden subir más rápido que esa canasta.</li>
+          <li>Asumimos <strong>composición discreta anual</strong>. Si querés mensual (más realista), usá <code>(1 + π_mensual)^12 = (1 + π_anual)</code> para convertir.</li>
+        </ul>
+        <p><strong>Limitaciones:</strong></p>
+        <ul>
+          <li>La "inflación esperada" que ingresás es subjetiva. Para estimaciones serias usá el <strong>REM</strong> (Relevamiento de Expectativas de Mercado, BCRA) o el breakeven inflation de bonos CER.</li>
+          <li>NO contempla devaluación cambiaria: si guardás en pesos, perdés contra USD también, no solo contra precios locales.</li>
+        </ul>
+        <p><strong style="color:#ffb84d">⚠ Es proyección educativa.</strong> Para datos reales pasados usá la calc "¿Cuánto perdí ahorrando?" que toma IPC INDEC en vivo.</p>
+      </div>
+    </details>
     </div>
 
     <div class="container calc-layout" style="padding-top:2.5rem;padding-bottom:6rem">
