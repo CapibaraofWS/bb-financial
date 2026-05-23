@@ -14,7 +14,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://api.bcra.gob.ar/estadisticas/v4.0/${endpoint}?limit=1000`;
+    // limit 2000 cubre los 1220 indicadores totales (incluye TIM id 1197 y bandas cambiarias 1187-1188)
+    const url = `https://api.bcra.gob.ar/estadisticas/v4.0/${endpoint}?limit=2000`;
     const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
     if (!response.ok) return res.status(response.status).json({ error: 'Error desde BCRA API' });
     const data = await response.json();

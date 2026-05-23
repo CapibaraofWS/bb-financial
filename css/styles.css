@@ -224,11 +224,13 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
-  line-height: 1.05;
+  font-size: clamp(2rem, 7vw, 5.5rem);
+  line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--text);
   margin-bottom: 1.5rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .hero-title em {
   font-style: italic;

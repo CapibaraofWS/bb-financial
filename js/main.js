@@ -142,15 +142,29 @@ window.BB_GLOSARIO = {
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
 // ============================================================
-// Inyectar Noto Color Emoji como fallback para flags 🇦🇷🇺🇸🇧🇷
-// Windows 11 quitó banderas de su Segoe UI Emoji por default → este fallback las garantiza
-(function injectEmojiFont() {
-  if (document.querySelector('link[data-emoji-font]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap';
-  link.setAttribute('data-emoji-font', '1');
-  document.head.appendChild(link);
+// Inyectar Twemoji — convierte cada emoji en SVG inline para render consistente en TODOS los OS/browsers
+// Windows 11 removió banderas del Segoe UI Emoji por default; esto las fixea de forma bulletproof.
+(function injectTwemoji() {
+  if (window.twemoji) return;
+  const sc = document.createElement('script');
+  sc.src = 'https://cdn.jsdelivr.net/npm/@discordapp/twemoji@latest/dist/twemoji.min.js';
+  sc.async = true;
+  sc.onload = () => {
+    const parse = () => {
+      if (!window.twemoji) return;
+      // Sin options custom — usa default base que apunta a jsdelivr@16.0.1 (URL valida)
+      window.twemoji.parse(document.body);
+    };
+    parse();
+    window.twemojiParse = parse; // disponible para llamar tras renders dinamicos (ticker, blog cards)
+    // Re-parsear cada 1s durante los primeros 8s para capturar contenido async (RSS, fetches, etc.)
+    let i = 0; const t = setInterval(() => { parse(); if (++i >= 8) clearInterval(t); }, 1000);
+  };
+  document.head.appendChild(sc);
+  // CSS para emojis inline (Twemoji por default usa .emoji class)
+  const st = document.createElement('style');
+  st.textContent = 'img.emoji,img.tw-emoji{height:1em;width:auto;vertical-align:-0.12em;display:inline-block;}';
+  document.head.appendChild(st);
 })();
 
 (function injectFavicon() {
