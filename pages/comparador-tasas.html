@@ -17,6 +17,17 @@
     .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
     .info-box strong{color:var(--text);}
     .info-box.warn{border-left-color:#ffb84d;}
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.5rem; overflow:hidden; }
+    .tool-info summary { padding:0.85rem 1.15rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; } .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.95rem 1.15rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.75; }
+    .tool-info .ti-content p { margin:0 0 0.7rem; }
+    .tool-info .ti-content code { background:var(--bg); padding:0.05rem 0.4rem; border-radius:4px; font-family:var(--font-mono); font-size:0.78rem; color:var(--accent); }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.3rem; }
     .tab-bar{display:flex;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.35rem;margin-bottom:1.75rem;flex-wrap:wrap;}
     .tab-btn{flex:1 1 140px;padding:0.7rem 0.5rem;border-radius:7px;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--transition);background:transparent;border:none;text-align:center;}
     .tab-btn.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
@@ -68,6 +79,33 @@
     </section>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — qué datos usa, cómo se calculan, limitaciones</summary>
+        <div class="ti-content">
+          <p><strong>Qué datos usa:</strong> todas las tasas vienen en vivo de <strong>ArgentinaDatos</strong> (vía proxy propio <code>/api/argentinadatos</code>), que a su vez consume BCRA y CAFCI:</p>
+          <ul>
+            <li><strong>Cuentas Remuneradas:</strong> <code>/fci/otros/ultimo</code> (Brubank, Fiwind, Ualá, Carrefour, BNA, etc. — TNA publicada) + <code>/fci/variables/ultimo</code> (billeteras con FCI variable como Global66) + <code>/fci/mercadoDinero/ultimo + /penultimo</code> para billeteras MM (Mercado Pago = Mercado Fondo, Personal Pay = Delta Pesos, Lemon = Fima Premium, Cocos, IOL, Prex).</li>
+            <li><strong>Plazos Fijos:</strong> <code>/tasas/plazoFijo</code> — TNA clientes y no-clientes por banco directo del BCRA.</li>
+            <li><strong>FCI Money Market:</strong> <code>/fci/mercadoDinero/ultimo</code> + <code>/penultimo</code> — VCP de cada fondo en dos fechas para calcular TNA implícita.</li>
+            <li><strong>Cuentas USD:</strong> <code>/cuentas-remuneradas-usd</code> (bancos) + <code>/rendimientos</code> (wallets cripto con APY en USDC/USDT/DAI).</li>
+          </ul>
+          <p><strong>Supuestos:</strong></p>
+          <ul>
+            <li><strong>TNA estimada de FCI:</strong> <code>(VCP_último / VCP_penúltimo − 1) × (365/días)</code>. Es la <em>tasa diaria anualizada</em>. Un día puede no ser representativo — para promedio de 30 días usá CAFCI directo.</li>
+            <li><strong>Mapeo billetera → fondo:</strong> el catálogo de qué FCI está detrás de cada billetera (Mercado Pago, Ualá, etc.) lo tomamos del bundle público de comparatasas.ar. Si una billetera cambia de FCI, hay que actualizarlo.</li>
+            <li><strong>TEA</strong> = <code>(1 + TNA/m)^m − 1</code>, con capitalización mensual o diaria según corresponda.</li>
+          </ul>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>Las tasas cambian todos los días — refrescá la página para ver la última.</li>
+            <li>Algunos fondos tienen fechas atípicas (último valor de hace 2 semanas porque no operaron); los filtramos.</li>
+            <li>Los topes y condiciones (ej. "solo cuenta sueldo") los publica cada entidad — verificá en su app antes de operar.</li>
+            <li>El BCRA solo expone 3 bancos con TNA USD a la vista — la oferta real es mayor pero no está en API pública.</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Es una herramienta informativa para comparar. La mejor opción para vos depende de tu monto, tu necesidad de liquidez, comisiones específicas, y a qué FCI estás dispuesto a exponerte. Consultá un asesor matriculado en CNV antes de decisiones importantes.</p>
+        </div>
+      </details>
 
       <div class="tab-bar">
         <button class="tab-btn active" data-tab="cr">💳 Cuentas Remuneradas</button>

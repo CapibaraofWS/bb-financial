@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1SF925SGNN');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de PIX — Tasas BRL/ARS y BRL/USDT en vivo — BB Financial</title>
+  <meta name="description" content="Compará en tiempo real las cotizaciones de PIX de 25+ proveedores: Fiwind, Belo, Lemon, Mercado Pago, Ualá, Astropay y más. BRL/ARS y BRL/USDT en vivo." />
+  <meta name="keywords" content="comparador pix, pix argentina, brl ars, brl usdt, fiwind, belo, lemon, mercado pago pix, comparapix, viaje brasil" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.5rem; overflow:hidden; }
+    .tool-info summary { padding:0.85rem 1.15rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; } .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.95rem 1.15rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.75; }
+    .tool-info .ti-content p { margin:0 0 0.7rem; }
+    .tool-info .ti-content code { background:var(--bg); padding:0.05rem 0.4rem; border-radius:4px; font-family:var(--font-mono); font-size:0.78rem; color:var(--accent); }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.3rem; }
+
+    .controls{display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+    .seg{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:9px;padding:0.25rem;gap:0.25rem;}
+    .seg button{background:transparent;border:none;color:var(--text-muted);font-family:var(--font-body);font-size:0.85rem;padding:0.4rem 0.85rem;border-radius:6px;cursor:pointer;transition:all var(--transition);}
+    .seg button.active{background:var(--bg);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.25);}
+    .input-mini{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:0.45rem 0.7rem;color:var(--text);font-size:0.85rem;font-family:var(--font-mono);min-width:180px;}
+    .ord-label{font-size:0.75rem;color:var(--text-subtle);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;}
+
+    .pix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+    .pix-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem;transition:all var(--transition);}
+    .pix-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover);}
+    .pix-card.best{border-color:var(--accent);background:linear-gradient(135deg,var(--accent-dim),var(--bg-card-hover));}
+    .pix-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;}
+    .pix-logo{width:32px;height:32px;border-radius:6px;background:#fff;padding:3px;object-fit:contain;flex-shrink:0;}
+    .pix-name{font-size:1rem;color:var(--text);font-weight:500;text-transform:capitalize;flex:1;}
+    .pix-badge{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.1rem 0.45rem;border-radius:4px;background:var(--accent-dim);color:var(--accent);}
+    .pix-rates{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+    .pix-rate{padding:0.5rem 0.7rem;background:var(--bg);border-radius:7px;}
+    .pix-rate .pl{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.25rem;}
+    .pix-rate .pv{font-family:var(--font-mono);font-size:1.05rem;color:var(--accent);font-weight:600;}
+    .pix-spread{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);margin-top:0.7rem;padding-top:0.7rem;border-top:1px solid var(--border);}
+    .pix-spread .label{color:var(--text-subtle);font-family:var(--font-mono);text-transform:uppercase;font-size:0.62rem;letter-spacing:0.08em;}
+    .pix-link{display:inline-flex;align-items:center;gap:0.25rem;color:var(--accent);text-decoration:none;font-family:var(--font-mono);font-size:0.72rem;margin-top:0.6rem;}
+
+    .empty-state{text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.9rem;grid-column:1/-1;}
+    .skel{display:inline-block;width:60%;height:1.2rem;background:linear-gradient(90deg,var(--bg-card),var(--bg-card-hover),var(--bg-card));background-size:200% 100%;animation:sk 1.5s infinite;border-radius:4px;}
+    @keyframes sk{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+    .summary-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .summary-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1.1rem;}
+    .summary-stat .ll{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);}
+    .summary-stat .vv{font-family:var(--font-display);font-size:1.5rem;color:var(--accent);margin-top:0.3rem;}
+    .summary-stat .ss{font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="comparador-tasas.html">Comparadores</a><span>/</span>Comparador PIX</p>
+        <h1 class="page-title">Comparador PIX 🇧🇷</h1>
+        <p class="page-subtitle">Cotizaciones de PIX (BRL ↔ ARS / USDT) en vivo de <strong>25+ proveedores</strong>: Fiwind, Belo, Lemon, Mercado Pago, Ualá, Astropay y más. Datos en tiempo real vía API de ComparaPix.ar.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <details class="tool-info" open>
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — qué muestra, supuestos y limitaciones</summary>
+        <div class="ti-content">
+          <p><strong>¿Qué es PIX?</strong> Sistema de pagos instantáneos de Brasil (Banco Central do Brasil, 2020). Permite enviar dinero entre cuentas usando una llave (CPF, email, teléfono o QR). Para argentinos viajando a Brasil, es la forma más eficiente de pagar en BRL.</p>
+          <p><strong>Qué datos usa:</strong> cotizaciones de 25 proveedores (Fiwind, Belo, Lemon, Mercado Pago, Ualá, etc.) vía API pública de <code>api.comparapix.ar</code>, en tiempo real. Tomamos el precio de venta (lo que pagás vos) en ambos pares: <code>BRL/ARS</code> (cuánto pagás por un real) y <code>BRL/USDT</code> (con dólares cripto).</p>
+          <p><strong>Cómo calcular cuánto recibís:</strong></p>
+          <ul>
+            <li>Si tenés ARS: <code>BRL_recibís = ARS_gastás / sell_BRLARS</code> (donde sell es lo que el proveedor cobra por 1 BRL)</li>
+            <li>Si tenés USDT: <code>BRL_recibís = USDT_gastás / sell_BRLUSDT</code></li>
+          </ul>
+          <p><strong>Spread:</strong> diferencia entre buy y sell del proveedor — es lo que se queda como comisión implícita. Cuanto menor, mejor para vos.</p>
+          <p><strong>Supuestos:</strong></p>
+          <ul>
+            <li>Tomamos las cotizaciones tal como las publica cada proveedor — no incluimos comisiones bancarias adicionales (transferencia, IVA, etc.) que cada exchange puede cobrar aparte.</li>
+            <li>"Mejor tasa" se determina por el menor <strong>spread</strong>, no por la mejor cotización aislada (que puede estar inflada).</li>
+            <li>Algunos proveedores ofrecen PIX directo, otros requieren conversión vía USDT primero. La columna <code>isPix</code> indica método directo.</li>
+          </ul>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>No incluye comisiones bancarias por transferir de tu banco a la billetera/exchange.</li>
+            <li>Las tasas cambian minuto a minuto — refrescá la página para ver el último valor.</li>
+            <li>Algunos proveedores aplican límites mensuales o requieren KYC. Verificá en la app antes de operar.</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión ni de uso.</strong> Es una herramienta informativa. La elección del proveedor depende de tu situación (residencia, KYC, monto, urgencia). Verificá siempre en la app/sitio oficial antes de operar.</p>
+        </div>
+      </details>
+
+      <div class="summary-bar" id="summary-bar"></div>
+
+      <div class="controls">
+        <div class="seg" id="pair-seg">
+          <button class="active" data-pair="BRLARS">BRL → ARS</button>
+          <button data-pair="BRLUSDT">BRL → USDT</button>
+        </div>
+        <span class="ord-label" style="margin-left:0.5rem">Ordenar:</span>
+        <select class="input-mini" id="sort-sel">
+          <option value="best">Mejor tasa (sell menor)</option>
+          <option value="spread">Menor spread</option>
+          <option value="name">Alfabético</option>
+        </select>
+        <input class="input-mini" id="search" placeholder="Buscar proveedor…" />
+        <label style="font-size:0.75rem;color:var(--text-subtle);display:flex;align-items:center;gap:0.4rem">
+          <input type="checkbox" id="only-pix" /> Solo PIX directo
+        </label>
+        <span class="ord-label" id="updated">—</span>
+      </div>
+
+      <div class="pix-grid" id="pix-grid">
+        <div class="empty-state"><span class="skel"></span></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio <strong>educativo</strong>. La información NO constituye asesoramiento financiero. Verificá tasas y comisiones en cada proveedor antes de operar.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuente: api.comparapix.ar (vía proxy propio). Tasas en vivo, cambian minuto a minuto.</p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=22"></script>
+  <script>
+    let data = {}; // raw response
+    let activePair = 'BRLARS';
+
+    function normalize(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+    function nameOf(key) {
+      // Convierte "mercado-pago" -> "Mercado Pago", "satoshitango" -> "Satoshi Tango"
+      const map = {
+        'mercado-pago': 'Mercado Pago', 'satoshitango': 'Satoshi Tango', 'p2pme': 'P2P.me',
+        'yodl-pay': 'Yodl Pay', 'personal-pay': 'Personal Pay', 'real-tarjeta': 'Tarjeta (Real)',
+        'real-tarjeta-mep': 'Tarjeta (Real MEP)', 'global66': 'Global66', 'arq': 'ARQ',
+      };
+      if (map[key]) return map[key];
+      return key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    async function load() {
+      try {
+        const r = await fetch('/api/comparapix', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        data = await r.json();
+        document.getElementById('updated').textContent = '✓ ' + Object.keys(data).length + ' proveedores · vivo';
+        render();
+      } catch {
+        const grid = document.getElementById('pix-grid');
+        grid.textContent = '';
+        const div = document.createElement('div'); div.className = 'empty-state';
+        div.textContent = 'No se pudo cargar las cotizaciones. Reintentá en un minuto.';
+        grid.appendChild(div);
+      }
+    }
+
+    function render() {
+      const grid = document.getElementById('pix-grid');
+      const sumBar = document.getElementById('summary-bar');
+      const sort = document.getElementById('sort-sel').value;
+      const q = normalize(document.getElementById('search').value);
+      const onlyPix = document.getElementById('only-pix').checked;
+
+      // Extraer rates para el pair activo
+      const rows = [];
+      for (const [key, prov] of Object.entries(data)) {
+        const quote = (prov.quotes || []).find(q => q.symbol === activePair);
+        if (!quote) continue;
+        if (onlyPix && !prov.isPix) continue;
+        const dispName = nameOf(key);
+        if (q && !normalize(dispName).includes(q)) continue;
+        // El API expone `buy` para todos los proveedores (cotización efectiva al pagar PIX).
+        // Solo algunos (Fiwind, Belo) exponen también `sell` + `spread` (compra/venta separadas).
+        const buy = Number.isFinite(quote.buy) ? quote.buy : null;
+        const sell = Number.isFinite(quote.sell) ? quote.sell : null;
+        if (buy == null) continue;
+        const spreadPct = (Number.isFinite(quote.spread_pct) && quote.spread_pct > 0) ? quote.spread_pct : null;
+        rows.push({
+          key, name: dispName, logo: prov.logo, url: prov.url, isPix: !!prov.isPix,
+          buy, sell, spreadPct,
+        });
+      }
+
+      // Sort — usar buy como tasa principal (efectiva PIX)
+      if (sort === 'best') rows.sort((a, b) => a.buy - b.buy); // menor = mejor (pagás menos)
+      else if (sort === 'spread') rows.sort((a, b) => (a.spreadPct ?? 999) - (b.spreadPct ?? 999));
+      else if (sort === 'name') rows.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Summary
+      sumBar.textContent = '';
+      if (rows.length) {
+        // Mejor = menor "buy" (es lo que pagás por 1 BRL)
+        const bestBuy = rows.reduce((m, r) => r.buy < m.buy ? r : m, rows[0]);
+        const worstBuy = rows.reduce((m, r) => r.buy > m.buy ? r : m, rows[0]);
+        const dec = activePair === 'BRLARS' ? 2 : 4;
+        const unit = activePair === 'BRLARS' ? 'ARS' : 'USDT';
+
+        const mkStat = (lbl, val, sub) => {
+          const c = document.createElement('div'); c.className = 'summary-stat';
+          const l = document.createElement('p'); l.className = 'll'; l.textContent = lbl;
+          const v = document.createElement('p'); v.className = 'vv'; v.textContent = val;
+          const s = document.createElement('p'); s.className = 'ss'; s.textContent = sub;
+          c.appendChild(l); c.appendChild(v); c.appendChild(s); return c;
+        };
+        sumBar.appendChild(mkStat('Mejor tasa', bestBuy.buy.toFixed(dec) + ' ' + unit + '/BRL', bestBuy.name));
+        sumBar.appendChild(mkStat('Peor tasa', worstBuy.buy.toFixed(dec) + ' ' + unit + '/BRL', worstBuy.name));
+        const diff = ((worstBuy.buy - bestBuy.buy) / bestBuy.buy) * 100;
+        sumBar.appendChild(mkStat('Diferencia', diff.toFixed(1) + '%', 'entre el mejor y el peor (' + rows.length + ' proveedores)'));
+      }
+
+      // Cards
+      grid.textContent = '';
+      if (!rows.length) {
+        const div = document.createElement('div'); div.className = 'empty-state'; div.textContent = 'Sin resultados';
+        grid.appendChild(div); return;
+      }
+
+      const bestBuy = rows.reduce((m, r) => r.buy < m.buy ? r : m, rows[0]);
+      const dec = activePair === 'BRLARS' ? 2 : 4;
+      const unit = activePair === 'BRLARS' ? 'ARS' : 'USDT';
+      rows.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'pix-card' + (r.key === bestBuy.key ? ' best' : '');
+
+        const head = document.createElement('div'); head.className = 'pix-head';
+        if (r.logo && /^https?:\/\//.test(r.logo)) {
+          const img = document.createElement('img'); img.src = r.logo; img.alt = ''; img.className = 'pix-logo';
+          img.onerror = () => img.remove();
+          head.appendChild(img);
+        }
+        const nm = document.createElement('span'); nm.className = 'pix-name'; nm.textContent = r.name;
+        head.appendChild(nm);
+        if (r.isPix) {
+          const b = document.createElement('span'); b.className = 'pix-badge'; b.textContent = 'PIX'; head.appendChild(b);
+        }
+        if (r.key === bestBuy.key) {
+          const b = document.createElement('span'); b.className = 'pix-badge'; b.style.background = 'rgba(232,201,122,0.15)'; b.style.color = '#e8c97a'; b.textContent = '★ Mejor tasa'; head.appendChild(b);
+        }
+        card.appendChild(head);
+
+        // Tasa principal (siempre presente)
+        const mainRate = document.createElement('div');
+        mainRate.style.cssText = 'padding:0.7rem 0.85rem;background:var(--bg);border-radius:8px;margin-bottom:0.6rem;';
+        const mrL = document.createElement('p');
+        mrL.style.cssText = 'font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.25rem';
+        mrL.textContent = 'Tasa PIX (1 BRL = X ' + unit + ')';
+        const mrV = document.createElement('p');
+        mrV.style.cssText = 'font-family:var(--font-mono);font-size:1.35rem;color:var(--accent);font-weight:600';
+        mrV.textContent = r.buy.toFixed(dec) + ' ' + unit;
+        mainRate.appendChild(mrL); mainRate.appendChild(mrV);
+        card.appendChild(mainRate);
+
+        // Sub-detail: cuánto BRL recibís por 100 unidades
+        const sub = document.createElement('p');
+        sub.style.cssText = 'font-size:0.78rem;color:var(--text-muted);margin-bottom:0.5rem';
+        const got = (100 / r.buy);
+        sub.textContent = 'Por 100 ' + unit + ' → recibís ' + got.toFixed(2) + ' BRL';
+        card.appendChild(sub);
+
+        // Spread (si existe)
+        if (Number.isFinite(r.spreadPct) && Number.isFinite(r.sell)) {
+          const spread = document.createElement('div'); spread.className = 'pix-spread';
+          const lbl = document.createElement('span'); lbl.className = 'label'; lbl.textContent = 'Spread (compra/venta)';
+          const val = document.createElement('span'); val.textContent = r.spreadPct.toFixed(2) + '%';
+          if (r.spreadPct < 2) val.style.color = '#4ade9a';
+          else if (r.spreadPct > 5) val.style.color = '#ff9999';
+          spread.appendChild(lbl); spread.appendChild(val);
+          card.appendChild(spread);
+        }
+
+        if (r.url && /^https?:\/\//.test(r.url)) {
+          const link = document.createElement('a'); link.href = r.url; link.target = '_blank'; link.rel = 'noopener'; link.className = 'pix-link';
+          link.textContent = 'Ir al sitio →';
+          card.appendChild(link);
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('pair-seg').addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      document.querySelectorAll('#pair-seg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      activePair = b.dataset.pair;
+      render();
+    });
+    document.getElementById('sort-sel').addEventListener('change', render);
+    document.getElementById('search').addEventListener('input', render);
+    document.getElementById('only-pix').addEventListener('change', render);
+
+    load();
+  </script>
+</body>
+</html>

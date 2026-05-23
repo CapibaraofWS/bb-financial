@@ -437,10 +437,11 @@
   async function loadCripto() {
     const wrap = document.getElementById('treemap-cripto');
     try {
-      const r = await fetch('/api/crypto?path=coins/markets&vs_currency=usd&per_page=60&order=market_cap_desc', { signal: AbortSignal.timeout(10000) });
+      // Top 30 (no 60) para evitar que la cola se aplaste y se solape texto en el corner
+      const r = await fetch('/api/crypto?path=coins/markets&vs_currency=usd&per_page=30&order=market_cap_desc', { signal: AbortSignal.timeout(10000) });
       if (!r.ok) throw new Error();
       const arr = await r.json();
-      const data = arr.filter(c => c.market_cap && c.price_change_percentage_24h != null).map(c => ({
+      let data = arr.filter(c => c.market_cap && c.price_change_percentage_24h != null).map(c => ({
         sym: c.symbol.toUpperCase(),
         name: c.name,
         cap: c.market_cap,
@@ -448,6 +449,9 @@
         price: c.current_price,
         link: `https://www.coingecko.com/en/coins/${c.id}`,
       }));
+      // Compresión logarítmica para suavizar el dominio de BTC/ETH y dar mejor visualidad
+      // sqrt(cap) suaviza la curva: BTC sigue siendo el más grande pero no aplasta a los demás
+      data = data.map(d => ({ ...d, cap: Math.sqrt(d.cap) }));
       renderTreemap(wrap, data, { cryptoLinks: true });
     } catch {
       wrap.innerHTML = '<div class="loading-cell">No se pudo conectar con CoinGecko. Intentá en un minuto.</div>';

@@ -377,6 +377,39 @@
       </div>
     </section>
 
+    <!-- Reddit-feedback panel -->
+    <div class="container" style="padding-top:1rem">
+      <details style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0;margin:0 0 1.25rem;overflow:hidden">
+        <summary style="padding:0.85rem 1.15rem;cursor:pointer;font-size:0.85rem;color:var(--text-muted);list-style:none"><strong style="color:var(--text)">ℹ️ Sobre esta página</strong> — fuentes, frecuencia, limitaciones</summary>
+        <div style="padding:0.95rem 1.15rem 1.1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.75;border-top:1px solid var(--border)">
+          <p><strong style="color:var(--text)">Qué datos mostramos:</strong> snapshot de los principales indicadores macro/financieros, todo via proxies propios (sin exponer API keys). Las fuentes oficiales son:</p>
+          <ul style="padding-left:1.4rem;margin:0.3rem 0">
+            <li><strong style="color:var(--text)">Argentina:</strong> DolarAPI (cotizaciones), ArgentinaDatos (riesgo país, reservas BCRA, UVA, IPC, canasta), datos.gob.ar (deuda, INDEC para tablas más profundas)</li>
+            <li><strong style="color:var(--text)">EE.UU.:</strong> FRED — St. Louis Fed (Fed Funds, CPI/PCE, desempleo, mortgage, OAS credit spreads, M2, VIX, INDPRO) + World Bank (PBI nominal, cuenta corriente)</li>
+            <li><strong style="color:var(--text)">Cripto:</strong> CoinGecko (precios, market cap, variación 24h)</li>
+            <li><strong style="color:var(--text)">Forex:</strong> ExchangeRate-API (paridades mayores)</li>
+            <li><strong style="color:var(--text)">Acciones:</strong> Yahoo Finance vía <code style="background:var(--bg);padding:0.05rem 0.4rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent)">/api/quotes</code></li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:var(--text)">Frecuencia de actualización:</strong></p>
+          <ul style="padding-left:1.4rem;margin:0.3rem 0">
+            <li><strong style="color:var(--text)">Diaria</strong>: dólar oficial/blue/MEP, FRED Treasuries, UVA, riesgo país</li>
+            <li><strong style="color:var(--text)">Mensual</strong>: inflación, desempleo, IPC argentino, Core CPI/PCE USA</li>
+            <li><strong style="color:var(--text)">Anual</strong>: PBI, cuenta corriente (World Bank)</li>
+            <li><strong style="color:var(--text)">Cripto</strong>: precios en vivo (cache 1 min), 24h delta</li>
+          </ul>
+          <p><strong style="color:var(--text)">Cómo se calcula YoY:</strong> tomamos la última observación de FRED y la dividimos por la de 12 meses atrás. Para indicadores trimestrales o mensuales que requieren YoY (Core CPI, PCE, INDPRO) usamos esta fórmula y publicamos como <code style="background:var(--bg);padding:0.05rem 0.4rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent)">(X_hoy/X_hace_12m − 1) × 100</code>.</p>
+          <p><strong style="color:var(--text)">Limitaciones:</strong></p>
+          <ul style="padding-left:1.4rem;margin:0.3rem 0">
+            <li>Algunos datos tienen retraso de 1-30 días según frecuencia de publicación de la fuente.</li>
+            <li>Las APIs públicas pueden estar caídas — si ves "—" o "Sin dato", reintentá en unos minutos.</li>
+            <li>Los <strong style="color:var(--text)">tipos de dólar</strong> (compra/venta) son de DolarAPI — la mayoría de bancos cotizan distinto a estos valores referenciales.</li>
+            <li>El INDEC publica varios datos solo en PDF/Excel — para esos, linkeamos a la página oficial.</li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> Datos en vivo para informarte, no para decidir por vos.</p>
+        </div>
+      </details>
+    </div>
+
     <!-- TABS -->
     <div class="datos-tabs-wrap" role="navigation" aria-label="Categorías de datos">
       <div class="container">

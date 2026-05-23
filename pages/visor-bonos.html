@@ -25,6 +25,17 @@
     .info-box strong{color:var(--text);}
     .info-box.warn{border-left-color:#ff9999;}
     .info-box.warn strong{color:#ff9999;}
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.5rem; overflow:hidden; }
+    .tool-info summary { padding:0.85rem 1.15rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; } .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.95rem 1.15rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.75; }
+    .tool-info .ti-content p { margin:0 0 0.7rem; }
+    .tool-info .ti-content code { background:var(--bg); padding:0.05rem 0.4rem; border-radius:4px; font-family:var(--font-mono); font-size:0.78rem; color:var(--accent); }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.3rem; }
     .tab-bar{display:flex;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.35rem;margin-bottom:1.75rem;flex-wrap:wrap;}
     .tab-btn{flex:1 1 140px;padding:0.7rem 0.5rem;border-radius:7px;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--transition);background:transparent;border:none;text-align:center;}
     .tab-btn.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
@@ -133,6 +144,34 @@
     </section>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — datos, supuestos, limitaciones</summary>
+        <div class="ti-content">
+          <p><strong>Qué datos usa:</strong> todo viene en vivo de <strong>FRED</strong> (Federal Reserve Bank of St. Louis) vía proxy <code>/api/fred</code>. Series consultadas:</p>
+          <ul>
+            <li><strong>Treasuries</strong> nominales: DGS1MO, DGS3MO, DGS6MO, DGS1, DGS2, DGS5, DGS10, DGS30 (yield "constant maturity" — tasa hipotética a la par)</li>
+            <li><strong>TIPS</strong> (yields reales): DFII5, DFII10, DFII30 — yield ya descontada la inflación</li>
+            <li><strong>Breakeven inflation</strong>: T5YIE, T10YIE (inflación esperada implícita)</li>
+            <li><strong>Spreads</strong>: T10Y2Y, T10Y3M (indicadores recesión)</li>
+            <li><strong>Credit spreads</strong>: BAMLC0A0CM (IG OAS), BAMLH0A0HYM2 (HY OAS)</li>
+          </ul>
+          <p><strong>Supuestos en el comparador y scatter:</strong></p>
+          <ul>
+            <li>Para T-Bills (&lt;1 año) modelamos como <strong>zero-coupon</strong>: un único flujo al vencimiento.</li>
+            <li>Para T-Notes y T-Bonds (≥1Y) modelamos como <strong>bullet par</strong>: cupón = yield actual, precio = 100. Esto es razonable para on-the-run Treasuries (cupón se fija cerca del yield al emitir).</li>
+            <li><strong>TIR</strong> se resuelve por bisección. <strong>Macaulay duration</strong> = Σ t·CF/(1+y)^t / P. <strong>Modified duration</strong> = Macaulay / (1+y). <strong>Convexidad</strong> = Σ t(t+1)·CF/(1+y)^(t+2) / P.</li>
+          </ul>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>El yield curve chart muestra solo Treasuries (nominales) — para ver TIPS y comparar real vs nominal, usá la tab "TIPS &amp; Inflación".</li>
+            <li>La sensibilidad precio-yield asume <strong>movimiento paralelo</strong> de la curva. Cambios de forma (steepening, flattening) no se capturan.</li>
+            <li>Datos diarios — FRED actualiza tras cierre de mercado USA (no es intraday).</li>
+            <li>Para bonos argentinos, ver la próxima fase (no implementado todavía).</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Modelos teóricos. Los precios reales del mercado pueden diferir por liquidez, off-the-run, repo, etc. Para operar bonos consultá un asesor matriculado.</p>
+        </div>
+      </details>
 
       <div class="tab-bar">
         <button class="tab-btn active" data-tab="curva">Curva de Rendimientos</button>

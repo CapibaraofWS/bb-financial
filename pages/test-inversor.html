@@ -18,6 +18,16 @@
     .info-box strong{color:var(--text);}
     .info-box.warn{border-left-color:#ffb84d;background:rgba(255,184,77,0.05);}
     .info-box.warn strong{color:#ffb84d;}
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.5rem; overflow:hidden; }
+    .tool-info summary { padding:0.85rem 1.15rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; } .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.95rem 1.15rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.75; }
+    .tool-info .ti-content p { margin:0 0 0.7rem; }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.3rem; }
 
     .progress-bar{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;height:8px;overflow:hidden;margin-bottom:2rem;}
     .progress-fill{background:linear-gradient(90deg,#4ade9a,#60a5fa);height:100%;transition:width 0.4s cubic-bezier(0.4,0,0.2,1);}
@@ -91,6 +101,24 @@
       <div class="info-box warn">
         <strong>⚠ Disclaimer obligatorio:</strong> Este test es educativo. NO constituye asesoramiento financiero, recomendación de inversión, ni oferta de compra/venta de instrumentos. Los instrumentos mencionados son <em>ejemplos ilustrativos</em>. Cada perfil cambia según tu situación particular — consultá un asesor matriculado en <span data-term="CNV">CNV</span> antes de operar.
       </div>
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — metodología, limitaciones, qué hace y qué no hace</summary>
+        <div class="ti-content">
+          <p><strong>Qué hace este test:</strong> 10 preguntas que miden 3 dimensiones — <em>tolerancia al riesgo</em>, <em>horizonte temporal</em> y <em>conocimientos previos</em>. Cada respuesta suma 1 (conservador), 2 (moderado) o 3 (agresivo) puntos. El total (entre 10 y 30) se mapea a uno de los 3 perfiles.</p>
+          <p><strong>De dónde vienen las preguntas:</strong> el cuestionario está inspirado en los <em>perfiles de inversor</em> que usan las ALyCs reguladas por CNV (similar a lo que te haría firmar un broker al abrir cuenta), pero adaptado a la realidad del mercado argentino. No es un test psicológico formal — es una herramienta educativa para que te conozcas como inversor.</p>
+          <p><strong>Cómo se construyen las carteras modelo:</strong> son <em>asignaciones tipo</em> ampliamente recomendadas en la literatura (Bogle, Ferri, Markowitz). Los porcentajes no son únicos — un asesor experto puede ajustar según tu impuesto, tus ingresos, tu edad. Los instrumentos mencionados (CEDEARs, ONs, FCI específicos) son ejemplos reales del mercado argentino y USA, NO recomendaciones individuales.</p>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>El test no considera tu <strong>situación impositiva</strong> (residente fiscal, monotributo, etc.) — afecta qué instrumentos te convienen.</li>
+            <li>No considera tu <strong>capital total</strong> — la cartera ideal para alguien con USD 5k difiere de alguien con USD 500k.</li>
+            <li>No mide tu <strong>estabilidad de ingresos</strong> (sueldo fijo vs freelance) — clave para decidir cuánto efectivo guardar.</li>
+            <li>Las respuestas son <strong>autoreportadas</strong> — la gente suele sobreestimar su tolerancia al riesgo (hasta que ven una caída del 30% en pantalla).</li>
+            <li>Los <strong>instrumentos mencionados</strong> cambian: un FCI puede cerrar, un CEDEAR puede dejar de listar, una ON puede defaultear. Verificá disponibilidad antes de operar.</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero personalizado.</strong> Si vas a comprometer una porción significativa de tu patrimonio, consultá un asesor matriculado en CNV.</p>
+        </div>
+      </details>
 
       <!-- Intro screen -->
       <div id="intro">
