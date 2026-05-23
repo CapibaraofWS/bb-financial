@@ -75,6 +75,35 @@
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
 
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta calculadora</strong> — fórmulas, supuestos, limitaciones</summary>
+        <div class="ti-content">
+          <p>Calculá las medidas centrales de un bono con cupón: TIR (Yield to Maturity), Current Yield, Duration Macaulay, Modified Duration y Convexidad. Las fórmulas siguen los estándares de Fabozzi (Bond Markets 8e) y Dumrauf (Análisis Cuantitativo de BONOS, cap. 4).</p>
+          <p><strong>Fórmulas que aplica:</strong></p>
+          <ul>
+            <li><strong>Precio</strong>: <code>P = Σ C/(1+y/m)^k + VN/(1+y/m)^(n·m)</code> donde m = frecuencia anual, n = años.</li>
+            <li><strong>TIR (YTM)</strong>: se resuelve por Newton-Raphson sobre NPV(y) = P (acotada entre -99% y 500%).</li>
+            <li><strong>Macaulay Duration</strong>: <code>D = Σ t × PV(CF_t) / P</code></li>
+            <li><strong>Modified Duration</strong>: <code>D_Mod = D_Mac / (1 + y/m)</code></li>
+            <li><strong>Convexity</strong>: <code>C = Σ t(t+1) × CF_t / (1+y/m)^(t·m+2) / P</code></li>
+            <li><strong>Cambio % precio (Fabozzi)</strong>: <code>ΔP/P ≈ −ModDur × Δy + 0.5 × Conv × Δy²</code></li>
+          </ul>
+          <p><strong>Supuestos críticos:</strong></p>
+          <ul>
+            <li><strong>Solo bonos BULLET</strong> — capital al final, cupones constantes. NO sirve para bonos amortizantes (como AL30, GD30, etc.). Para esos vas a necesitar el flujo de caja específico.</li>
+            <li><strong>Cupón fijo</strong> — no modela step-up (variantes 2020), CER, dollar-linked ni floating.</li>
+            <li><strong>Sin riesgo de crédito</strong> — TIR descontada al yield. NO ajusta por probabilidad de default — para bonos riesgosos, la TIR es "promesa", no "expectativa".</li>
+            <li><strong>Aproximación duration + convexity</strong> es válida para movimientos pequeños (&lt; 200 bps). Movimientos grandes requieren recalcular precio.</li>
+          </ul>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>Para Treasuries USA y curva en vivo: <a href="visor-bonos.html" style="color:var(--accent)">Visor de Bonos USA</a>.</li>
+            <li>Para bonos argentinos: leé primero el <a href="blog/como-leer-prospecto-bono.html" style="color:var(--accent)">artículo sobre prospectos AL30</a> y entendé que la mayoría son amortizantes — necesitás schedule específico.</li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es asesoramiento de inversión.</strong> Los modelos asumen mercados eficientes y comportamiento "normal" del bono. La realidad puede diferir por liquidez, off-the-run, eventos crediticios. <span class="cite">Fuentes: Fabozzi Bond Markets 8e; Dumrauf Análisis Cuantitativo de BONOS (Alfaomega 2014).</span></p>
+        </div>
+      </details>
+
       <div class="tab-bar">
         <button class="tab-btn active" data-tab="bono">Bonos / ON con cupón</button>
         <button class="tab-btn" data-tab="letra">Letras (cero cupón)</button>
@@ -149,6 +178,16 @@
                   <p class="rs-label">Duration modificada</p>
                   <p class="rs-value" id="b-mdur">—</p>
                   <p class="rs-sub">% por cada 1% de tasa</p>
+                </div>
+                <div class="result-stat">
+                  <p class="rs-label">Convexidad</p>
+                  <p class="rs-value" id="b-conv">—</p>
+                  <p class="rs-sub">Corrección 2do orden</p>
+                </div>
+                <div class="result-stat">
+                  <p class="rs-label">ΔP si yield +100 bps</p>
+                  <p class="rs-value" id="b-dp">—</p>
+                  <p class="rs-sub">Estimación con duration+convexity</p>
                 </div>
               </div>
 
@@ -393,11 +432,27 @@
       const dur = pvSum > 0 ? weightedSum / pvSum : 0;
       const mdur = dur / (1 + y/m);
 
+      // Convexity = Σ [t(t+1) × CF / (1+y/m)^(t·m+2)] / P  con t en años (Fabozzi cap. 4)
+      let convSum = 0;
+      for (let k = 1; k <= n; k++) {
+        const t = k / m;
+        const tm = t * m + 2;
+        convSum += (t * (t + 1) * cFlow) / Math.pow(1 + y/m, tm);
+      }
+      const tVN = years;
+      convSum += (tVN * (tVN + 1) * VN) / Math.pow(1 + y/m, n + 2);
+      const conv = pvSum > 0 ? convSum / pvSum : 0;
+      // Cambio % estimado precio si yield sube 100 bps (Fabozzi): ΔP/P ≈ -ModDur × Δy + 0.5 × Conv × Δy²
+      const deltaY = 0.01;
+      const dpPct = (-mdur * deltaY + 0.5 * conv * deltaY * deltaY) * 100;
+
       document.getElementById('b-tir').textContent = SM.fmtSafe(yPct, n => n.toFixed(2) + '%');
       document.getElementById('b-tir-sub').textContent = !Number.isFinite(yPct) ? 'No calculable con estos datos' : yPct > cuponPct ? 'Bajo la par' : yPct < cuponPct ? 'Sobre la par' : 'A la par';
       document.getElementById('b-cy').textContent = SM.fmtSafe(cy, n => n.toFixed(2) + '%');
       document.getElementById('b-dur').textContent = SM.fmtSafe(dur, n => n.toFixed(2));
       document.getElementById('b-mdur').textContent = SM.fmtSafe(mdur, n => n.toFixed(2));
+      document.getElementById('b-conv').textContent = SM.fmtSafe(conv, n => n.toFixed(2));
+      document.getElementById('b-dp').textContent = SM.fmtSafe(dpPct, n => (n>=0?'+':'') + n.toFixed(2) + '%');
       document.getElementById('b-formula').textContent =
         `Precio = Σ (${cFlow.toFixed(2)}) / (1 + ${(yPct).toFixed(2)}%/${m})^k + ${VN.toFixed(0)} / (1 + ${(yPct).toFixed(2)}%/${m})^${n}`;
 

@@ -17,8 +17,9 @@
     .blog-hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -0.02em; margin-bottom: 0.6rem; }
     .blog-hero p { color: var(--text-muted); max-width: 580px; margin: 0 auto; font-size: 1rem; line-height: 1.6; }
     .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 3rem auto 6rem; max-width: 1100px; }
-    .blog-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all var(--transition); }
-    .blog-card:hover { border-color: rgba(74,222,154,0.3); transform: translateY(-2px); }
+    .blog-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all var(--transition); cursor: pointer; }
+    .blog-card:not(.soon):hover { border-color: rgba(74,222,154,0.3); transform: translateY(-2px); }
+    .blog-card.soon { cursor: default; }
     .blog-card .blog-cat { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
     .blog-card h2 { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: -0.01em; margin: 0.5rem 0 0.6rem; line-height: 1.25; }
     .blog-card h2 a { color: var(--text); text-decoration: none; }
@@ -48,6 +49,27 @@
 
     <div class="container">
       <div class="blog-grid">
+
+        <article class="blog-card">
+          <p class="blog-cat">Hábitos · Conducta financiera</p>
+          <h2><a href="caja-ahorro-perdes-plata.html">Tu caja de ahorro está perdiendo plata. Y no es culpa tuya.</a></h2>
+          <p class="blog-desc">Hablamos de hábitos y conducta del dinero (no de productos): del ahorro a la inversión, los 5 errores comunes y por qué la paciencia gana más que el ticker recomendado por un influencer.</p>
+          <p class="blog-meta">9 min de lectura · Mayo 2026</p>
+        </article>
+
+        <article class="blog-card">
+          <p class="blog-cat">Dólar · Para principiantes</p>
+          <h2><a href="dolares-en-el-colchon.html">Tengo dólares en el colchón. ¿Qué hago?</a></h2>
+          <p class="blog-desc">5 opciones reales con sus pros y contras: caja de ahorro USD, FCI MM en USD, Treasuries, bonos AR hard dollar, CEDEARs. Sin pánico, con cuidado normativo.</p>
+          <p class="blog-meta">10 min de lectura · Mayo 2026</p>
+        </article>
+
+        <article class="blog-card">
+          <p class="blog-cat">Seguridad · Protección</p>
+          <h2><a href="7-banderas-rojas-estafas.html">7 banderas rojas para detectar estafas financieras</a></h2>
+          <p class="blog-desc">Esquemas Ponzi, asesores no matriculados, ALyCs truchas, mesas trading falsas. Cómo verificar en CNV y los 6 pasos antes de poner un peso.</p>
+          <p class="blog-meta">11 min de lectura · Mayo 2026</p>
+        </article>
 
         <article class="blog-card">
           <p class="blog-cat">Planificación · Para todos</p>
@@ -135,5 +157,19 @@
 
   <script src="../../js/sanitize.js?v=1"></script>
   <script src="../../js/main.js?v=22"></script>
+  <script>
+    // Hacer toda la blog-card cliqueable (no solo el título)
+    document.querySelectorAll('.blog-card:not(.soon)').forEach(card => {
+      const link = card.querySelector('h2 a');
+      if (!link) return;
+      card.addEventListener('click', (e) => {
+        // Si el click ya fue sobre el link u otro <a>, no interferir
+        if (e.target.closest('a')) return;
+        // Permitir selección de texto: no navegar si el usuario está seleccionando
+        if (window.getSelection && window.getSelection().toString().length > 0) return;
+        window.location.href = link.href;
+      });
+    });
+  </script>
 </body>
 </html>
