@@ -72,6 +72,18 @@
     @keyframes spin { to { transform:rotate(360deg); } }
 
     .info-box { background:rgba(96,165,250,0.06); border:1px solid rgba(96,165,250,0.18); border-radius:8px; padding:0.8rem 1rem; font-size:0.78rem; color:var(--text-muted); margin-top:1.5rem; line-height:1.55; }
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.25rem; overflow:hidden; }
+    .tool-info summary { padding:0.75rem 1.1rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; }
+    .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.85rem 1.1rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.7; }
+    .tool-info .ti-content p { margin:0 0 0.65rem; }
+    .tool-info .ti-content code { background:var(--bg); padding:0.05rem 0.35rem; border-radius:4px; font-family:var(--font-mono); font-size:0.78rem; color:var(--accent); }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.6rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.25rem; }
 
     /* Detail panel */
     .day-detail { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.25rem 1.5rem; margin-top:1.5rem; display:none; }
@@ -135,15 +147,32 @@
           <button id="today-btn" style="margin-left:0.5rem">Hoy</button>
         </div>
         <div class="cal-filter" id="cal-filter">
-          <button class="active" data-filter="all">Todas</button>
-          <button data-filter="top20">Top 20</button>
+          <button class="active" data-filter="top20">Top 20</button>
           <button data-filter="top50">Top 50</button>
           <button data-filter="top100">Top 100</button>
-          <button data-filter="large">Large Cap</button>
           <button data-filter="mega">Mega (&gt;$200B)</button>
+          <button data-filter="large">Large Cap</button>
           <button data-filter="reported">Ya reportaron</button>
+          <button data-filter="all">Todas</button>
         </div>
       </div>
+
+      <!-- Reddit-feedback compliance: qué datos, supuestos, limitaciones, no-asesoramiento -->
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — datos, supuestos y limitaciones</summary>
+        <div class="ti-content">
+          <p><strong>Qué datos usa:</strong> calendario de <em>earnings</em> (presentación de resultados trimestrales) de <strong>Finnhub</strong> + market cap y precio actual de <strong>Yahoo Finance</strong> (vía nuestros proxies <code>/api/finnhub</code> y <code>/api/quotes</code>). Datos en vivo, no hardcoded.</p>
+          <p><strong>Cómo se calcula "beat / miss":</strong> compara <code>EPS reportado</code> vs <code>EPS estimado de consenso</code> (analistas Wall Street). Verde = beat (real ≥ estimado), rojo = miss. La columna <em>Surprise %</em> es <code>(EPS real − EPS est) / |EPS est|</code>.</p>
+          <p><strong>Supuestos:</strong> "Top N" ordena por market cap usando una lista de las 100 empresas más grandes del S&amp;P 500 (orden 2026). Si Yahoo no devuelve marketCap para algún ticker, lo complementa dinámicamente. "Mega" = &gt; USD 200B; "Large" = &gt; USD 10B.</p>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>Solo empresas listadas en <strong>EE.UU.</strong> (NYSE/NASDAQ). No incluye CEDEARs argentinos como tales — buscá los originales (e.g. NVDA, MSFT) que es lo mismo.</li>
+            <li>La "variación del día" muestra el % <strong>actual de hoy</strong> de cada acción — solo es informativo para earnings de hoy. Para earnings pasados, Yahoo no devuelve la variación del día específico vía esta API.</li>
+            <li>Algunos earnings pueden anunciarse fuera del horario regular ("BMO" = before market open, "AMC" = after market close). El precio post-earnings recién aparece al día siguiente.</li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Un beat de EPS no implica que la acción suba (a veces baja por guidance débil, o ya estaba "priced in"). Esto es una herramienta informativa.</p>
+        </div>
+      </details>
 
       <div id="cal-banner" style="display:none; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.25); border-radius:8px; padding:0.85rem 1.1rem; margin-bottom:1rem; font-size:0.85rem; color:#fda4af; line-height:1.55"></div>
 
@@ -187,8 +216,9 @@
 
     let currentMonth = new Date(); // first day will be set when rendering
     let monthEarnings = []; // raw earnings list for visible month
-    let activeFilter = 'all';
+    let activeFilter = 'top20';
     let mcapCache = {}; // sym -> mcap (approx via Yahoo on demand)
+    let quoteCache = {}; // sym -> { changePct, price } via Yahoo Quotes
 
     // Top 100 empresas por market cap (US listed) — orden referencial 2025-2026.
     // Se usa como fallback cuando Yahoo no devuelve marketCap (chart endpoint no
@@ -243,9 +273,13 @@
           if (!r.ok) { chunk.forEach(s => mcapCache[s] = null); continue; }
           const j = await r.json();
           const result = j?.quoteResponse?.result || [];
-          const map = Object.fromEntries(result.map(q => [q.symbol, q.marketCap]));
-          chunk.forEach(s => { mcapCache[s] = map[s] ?? null; });
-        } catch { chunk.forEach(s => mcapCache[s] = null); }
+          const map = Object.fromEntries(result.map(q => [q.symbol, q]));
+          chunk.forEach(s => {
+            const q = map[s];
+            mcapCache[s] = q?.marketCap ?? null;
+            quoteCache[s] = q ? { changePct: q.regularMarketChangePercent, price: q.regularMarketPrice } : null;
+          });
+        } catch { chunk.forEach(s => { mcapCache[s] = null; quoteCache[s] = null; }); }
       }
     }
 
@@ -356,12 +390,20 @@
         return;
       }
       const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const todayLocal = new Date(); todayLocal.setHours(0,0,0,0);
+      const isClickedDayToday = date.getTime() === todayLocal.getTime();
       const rows = filtered.map(e => {
         const beat = e.epsActual != null && e.epsEstimate != null ? (e.epsActual >= e.epsEstimate) : null;
         const surprise = (e.epsActual != null && e.epsEstimate != null && e.epsEstimate !== 0)
           ? ((e.epsActual - e.epsEstimate) / Math.abs(e.epsEstimate)) * 100 : null;
         const cap = mcapCache[e.symbol];
         const capStr = cap ? (cap>=1e12 ? '$'+(cap/1e12).toFixed(1)+'T' : cap>=1e9 ? '$'+(cap/1e9).toFixed(1)+'B' : '$'+(cap/1e6).toFixed(0)+'M') : '—';
+        // Variación del día: solo significativa para earnings de hoy
+        const q = quoteCache[e.symbol];
+        const dayPct = (isClickedDayToday && q && Number.isFinite(q.changePct)) ? q.changePct : null;
+        const dayCell = dayPct != null
+          ? `<td class="${dayPct>0?'pos':dayPct<0?'neg':''}">${(dayPct>=0?'+':'')+dayPct.toFixed(2)}%</td>`
+          : `<td style="color:var(--text-subtle)">—</td>`;
         return `<tr onclick="location.href='ticker.html?symbol=${encodeURIComponent(e.symbol)}'">
           <td class="dd-sym">${esc(e.symbol)}</td>
           <td>${capStr}</td>
@@ -369,16 +411,20 @@
           <td>${fmtN(e.epsEstimate, 2)}</td>
           <td class="${beat===true?'pos':beat===false?'neg':''}">${fmtN(e.epsActual, 2)}</td>
           <td class="${surprise>0?'pos':surprise<0?'neg':''}">${surprise!=null?(surprise>=0?'+':'')+surprise.toFixed(1)+'%':'—'}</td>
+          ${dayCell}
           <td>${e.revenueEstimate ? '$'+(e.revenueEstimate/1e9).toFixed(2)+'B' : '—'}</td>
           <td>${e.revenueActual ? '$'+(e.revenueActual/1e9).toFixed(2)+'B' : '—'}</td>
         </tr>`;
       }).join('');
+      const dayCol = isClickedDayToday
+        ? '<th title="Variación de la acción hoy (cierre vs apertura)">Día %</th>'
+        : '<th title="Solo disponible para earnings de hoy">Día %</th>';
       panel.innerHTML = `
         <h3>${date.toLocaleDateString('es-AR',{weekday:'long', day:'numeric', month:'long', year:'numeric'})} — ${filtered.length} empresa${filtered.length!==1?'s':''}</h3>
         <div style="overflow-x:auto">
         <table class="dd-table">
           <thead><tr>
-            <th>Ticker</th><th>Mkt Cap</th><th>Horario</th><th>EPS Est.</th><th>EPS Real</th><th>Surprise</th><th>Rev Est.</th><th>Rev Real</th>
+            <th>Ticker</th><th>Mkt Cap</th><th>Horario</th><th>EPS Est.</th><th>EPS Real</th><th>Surprise</th>${dayCol}<th>Rev Est.</th><th>Rev Real</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>

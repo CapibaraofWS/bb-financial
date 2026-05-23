@@ -149,6 +149,53 @@
       </div>
     </section>
 
+    <!-- ===== MARKET BRIEF — live snapshot del mercado ===== -->
+    <section style="padding:2rem 0 0">
+      <div class="container">
+        <style>
+          .brief-card{background:linear-gradient(135deg,#0e1318,#11141a);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.65rem;}
+          .brief-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;}
+          .brief-title{font-family:var(--font-display);font-size:1.2rem;color:var(--text);margin:0;}
+          .brief-sub{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-subtle);letter-spacing:0.06em;}
+          .brief-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.85rem;}
+          .b-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;}
+          .b-stat .lbl{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem;}
+          .b-stat .val{font-family:var(--font-display);font-size:1.25rem;color:var(--text);line-height:1.1;letter-spacing:-0.01em;}
+          .b-stat .delta{font-family:var(--font-mono);font-size:0.72rem;margin-top:0.3rem;}
+          .b-stat .delta.up{color:#4ade9a;}
+          .b-stat .delta.down{color:#ff9999;}
+          .b-stat .delta.flat{color:var(--text-subtle);}
+          .b-stat.loading .val{color:var(--text-subtle);}
+          .brief-disclaimer{font-size:0.72rem;color:var(--text-subtle);margin-top:0.85rem;line-height:1.55;}
+          .brief-disclaimer a{color:var(--text-muted);}
+          .brief-loading-skel{display:inline-block;width:60px;height:1.2rem;background:linear-gradient(90deg,var(--bg-card),var(--bg-card-hover),var(--bg-card));background-size:200% 100%;animation:briefSkel 1.5s infinite;border-radius:4px;}
+          @keyframes briefSkel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+        </style>
+        <div class="brief-card">
+          <div class="brief-head">
+            <div>
+              <h2 class="brief-title" id="brief-title">Snapshot del mercado</h2>
+              <p class="brief-sub" id="brief-sub">Cargando datos…</p>
+            </div>
+            <a href="pages/datos.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);text-decoration:none">Ver datos completos &rsaquo;</a>
+          </div>
+          <div class="brief-grid" id="brief-grid">
+            <div class="b-stat loading"><p class="lbl">Dólar Oficial</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Dólar Blue</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Dólar MEP</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Riesgo País</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">S&amp;P 500</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Nasdaq 100</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Bitcoin</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Treasury 10Y</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+          </div>
+          <p class="brief-disclaimer">
+            <strong style="color:var(--text-muted)">Datos en vivo</strong> de DolarAPI, Yahoo Finance, ArgentinaDatos, FRED y CoinGecko (vía proxies propios). Pueden tener retrasos de 10-15 min según mercado. <strong>No es recomendación de inversión.</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== CTA GRID (4 cajas) ===== -->
     <section style="padding:2.5rem 0">
       <div class="container">
@@ -503,6 +550,139 @@
     }
 
     loadCarousel();
+  })();
+
+  /* ---- Market Brief — live snapshot ---- */
+  (function() {
+    const $ = (id) => document.getElementById(id);
+    const grid = $('brief-grid');
+    if (!grid) return;
+
+    function fmtMoney(n, dec) {
+      if (!Number.isFinite(n)) return '—';
+      return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: dec ?? 0 });
+    }
+    function fmtPct(n, dec) {
+      if (!Number.isFinite(n)) return '—';
+      return (n >= 0 ? '+' : '') + n.toFixed(dec ?? 2) + '%';
+    }
+    function deltaCls(n) {
+      if (!Number.isFinite(n)) return 'flat';
+      return n > 0 ? 'up' : n < 0 ? 'down' : 'flat';
+    }
+    function setStat(idx, label, val, delta, deltaText) {
+      const node = grid.children[idx];
+      if (!node) return;
+      node.classList.remove('loading');
+      node.textContent = '';
+      const l = document.createElement('p'); l.className = 'lbl'; l.textContent = label;
+      const v = document.createElement('p'); v.className = 'val'; v.textContent = val;
+      node.appendChild(l); node.appendChild(v);
+      if (deltaText != null) {
+        const d = document.createElement('p'); d.className = 'delta ' + deltaCls(delta);
+        d.textContent = deltaText;
+        node.appendChild(d);
+      }
+    }
+
+    // Layout: 0 Oficial · 1 Blue · 2 MEP · 3 Riesgo País · 4 S&P 500 · 5 Nasdaq · 6 BTC · 7 Treasury 10Y
+    async function loadDolares() {
+      try {
+        const r = await fetch('/api/dolar', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        const byName = (n) => d.find(x => x.nombre?.toLowerCase().includes(n));
+        const ofi = byName('oficial');
+        const blue = byName('blue');
+        const mep = byName('bolsa') || byName('mep');
+        if (ofi) setStat(0, 'Dólar Oficial', fmtMoney(ofi.venta), null, 'venta · ' + (ofi.fechaActualizacion?.slice(11, 16) || ''));
+        if (blue) setStat(1, 'Dólar Blue', fmtMoney(blue.venta), null, 'venta · ' + (blue.fechaActualizacion?.slice(11, 16) || ''));
+        if (mep) setStat(2, 'Dólar MEP', fmtMoney(mep.venta), null, 'venta · ' + (mep.fechaActualizacion?.slice(11, 16) || ''));
+      } catch {}
+    }
+
+    async function loadRiesgo() {
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        if (!Array.isArray(d) || d.length < 2) return;
+        const last = d[d.length - 1];
+        const prev = d[d.length - 2];
+        const v = parseFloat(last.valor);
+        const pv = parseFloat(prev.valor);
+        const delta = Number.isFinite(pv) ? v - pv : null;
+        setStat(3, 'Riesgo País', Math.round(v) + ' pb', delta, delta != null ? (delta >= 0 ? '+' : '') + Math.round(delta) + ' pb vs ayer' : null);
+      } catch {}
+    }
+
+    async function loadIndices() {
+      try {
+        const r = await fetch('/api/quotes?symbols=' + encodeURIComponent('^GSPC,^NDX,^MERV'), { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const j = await r.json();
+        const res = j?.quoteResponse?.result || [];
+        const map = Object.fromEntries(res.map(q => [q.symbol, q]));
+        const gspc = map['^GSPC']; const ndx = map['^NDX']; const merv = map['^MERV'];
+        if (gspc && Number.isFinite(gspc.regularMarketPrice)) {
+          setStat(4, 'S&P 500', gspc.regularMarketPrice.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+            gspc.regularMarketChangePercent, fmtPct(gspc.regularMarketChangePercent));
+        }
+        if (ndx && Number.isFinite(ndx.regularMarketPrice)) {
+          setStat(5, 'Nasdaq 100', ndx.regularMarketPrice.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+            ndx.regularMarketChangePercent, fmtPct(ndx.regularMarketChangePercent));
+        }
+      } catch {}
+    }
+
+    async function loadCrypto() {
+      try {
+        const r = await fetch('/api/crypto?ids=bitcoin', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        const btc = d.bitcoin;
+        if (btc && Number.isFinite(btc.usd)) {
+          setStat(6, 'Bitcoin', '$' + btc.usd.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+            btc.usd_24h_change, fmtPct(btc.usd_24h_change) + ' / 24h');
+        }
+      } catch {}
+    }
+
+    async function loadTreasury() {
+      try {
+        const r = await fetch('/api/fred?series_ids=DGS10&limit=2', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        const obs = d.DGS10?.observations?.filter(o => o.value !== '.') || [];
+        if (obs.length === 0) return;
+        const v = parseFloat(obs[0].value);
+        const pv = obs.length > 1 ? parseFloat(obs[1].value) : null;
+        const delta = Number.isFinite(pv) ? (v - pv) * 100 : null; // en bps
+        setStat(7, 'Treasury 10Y', v.toFixed(2) + '%', delta, delta != null ? (delta >= 0 ? '+' : '') + delta.toFixed(0) + ' bps vs ayer' : 'fecha: ' + obs[0].date);
+      } catch {}
+    }
+
+    // Título dinámico según hora ARG
+    const hour = new Date().getHours();
+    const titleEl = $('brief-title');
+    const subEl = $('brief-sub');
+    if (hour < 14) {
+      titleEl.textContent = '☕ Buen día — Snapshot del mercado';
+      subEl.textContent = 'Cierres de ayer + apertura de hoy. Datos en vivo.';
+    } else if (hour < 19) {
+      titleEl.textContent = '📊 Snapshot del mercado';
+      subEl.textContent = 'Mercados abiertos · datos en vivo.';
+    } else {
+      titleEl.textContent = '🌃 Cierre del día';
+      subEl.textContent = 'Resumen del mercado · datos en vivo.';
+    }
+
+    // Lanzar todos en paralelo — cada uno se renderiza independiente
+    loadDolares();
+    loadRiesgo();
+    loadIndices();
+    loadCrypto();
+    loadTreasury();
   })();
   </script>
 </body>
