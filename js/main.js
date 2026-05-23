@@ -142,29 +142,68 @@ window.BB_GLOSARIO = {
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
 // ============================================================
-// Inyectar Twemoji — convierte cada emoji en SVG inline para render consistente en TODOS los OS/browsers
-// Windows 11 removió banderas del Segoe UI Emoji por default; esto las fixea de forma bulletproof.
-(function injectTwemoji() {
-  if (window.twemoji) return;
-  const sc = document.createElement('script');
-  sc.src = 'https://cdn.jsdelivr.net/npm/@discordapp/twemoji@latest/dist/twemoji.min.js';
-  sc.async = true;
-  sc.onload = () => {
-    const parse = () => {
-      if (!window.twemoji) return;
-      // Sin options custom — usa default base que apunta a jsdelivr@16.0.1 (URL valida)
-      window.twemoji.parse(document.body);
-    };
-    parse();
-    window.twemojiParse = parse; // disponible para llamar tras renders dinamicos (ticker, blog cards)
-    // Re-parsear cada 1s durante los primeros 8s para capturar contenido async (RSS, fetches, etc.)
-    let i = 0; const t = setInterval(() => { parse(); if (++i >= 8) clearInterval(t); }, 1000);
+// Fix flags 🇦🇷🇺🇸🇧🇷 que no se renderizan bien en Windows 11 (Microsoft quitó banderas de Segoe UI Emoji).
+// Solución custom sin librería externa: reemplazo manual de 3 banderas con <img> SVG.
+// Cumple con CSP estricto (no usa eval). Bulletproof cross-platform.
+(function flagFix() {
+  // Mapa: secuencia regional-indicator → SVG en flagcdn (CDN gratuito + img-src 'https:' ya permitido en CSP)
+  const FLAGS = {
+    '🇦🇷': 'ar', // 🇦🇷
+    '🇺🇸': 'us', // 🇺🇸
+    '🇧🇷': 'br', // 🇧🇷
   };
-  document.head.appendChild(sc);
-  // CSS para emojis inline (Twemoji por default usa .emoji class)
+  const FLAG_RE = new RegExp('(' + Object.keys(FLAGS).join('|') + ')', 'g');
+
+  // CSS para flag images inline
   const st = document.createElement('style');
-  st.textContent = 'img.emoji,img.tw-emoji{height:1em;width:auto;vertical-align:-0.12em;display:inline-block;}';
+  st.textContent = 'img.bb-flag{height:1em;width:auto;vertical-align:-0.15em;display:inline-block;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,0.06);}';
   document.head.appendChild(st);
+
+  // Walk text nodes y reemplazá emoji con <img> SIN usar innerHTML (XSS-safe)
+  // Approach: split por emoji, intercalar createTextNode (texto original) y createElement('img')
+  function parseNode(root) {
+    if (!root) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(n) {
+        const p = n.parentNode;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        const tag = p.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') return NodeFilter.FILTER_REJECT;
+        return FLAG_RE.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const targets = [];
+    let n; while ((n = walker.nextNode())) targets.push(n);
+    for (const t of targets) {
+      const text = t.nodeValue;
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      FLAG_RE.lastIndex = 0;
+      let m;
+      while ((m = FLAG_RE.exec(text)) !== null) {
+        if (m.index > lastIdx) frag.appendChild(document.createTextNode(text.slice(lastIdx, m.index)));
+        const code = FLAGS[m[0]];
+        const img = document.createElement('img');
+        img.className = 'bb-flag';
+        img.src = 'https://flagcdn.com/w40/' + code + '.png';
+        img.alt = ({ ar: 'Argentina', us: 'Estados Unidos', br: 'Brasil' })[code] || code;
+        img.loading = 'lazy';
+        frag.appendChild(img);
+        lastIdx = m.index + m[0].length;
+      }
+      if (lastIdx < text.length) frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+      t.parentNode.replaceChild(frag, t);
+    }
+  }
+
+  // Run cuando DOM listo, luego re-run cada 1s × 8 para contenido async (ticker, RSS, etc.)
+  const start = () => {
+    parseNode(document.body);
+    window.bbFlagParse = parseNode; // expuesto para llamar tras renders dinamicos
+    let i = 0; const tt = setInterval(() => { parseNode(document.body); if (++i >= 8) clearInterval(tt); }, 1000);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 })();
 
 (function injectFavicon() {
