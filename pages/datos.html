@@ -455,6 +455,19 @@
         </div>
       </div>
 
+      <!-- BCRA Principales Variables -->
+      <div class="container datos-section">
+        <div class="datos-sec-hdr">
+          <span class="dsec-icon">🏦</span>
+          <h2 class="dsec-title">Principales Variables BCRA</h2>
+          <span class="dsec-src" id="bcra-upd">BCRA — API v4.0 en vivo</span>
+        </div>
+        <div class="datos-grid" id="grid-bcra" aria-live="polite"></div>
+        <div class="info-box">
+          ℹ️ Datos en tiempo real de la API oficial del Banco Central (<code>api.bcra.gob.ar/estadisticas/v4.0/Monetarias</code>). Incluye base monetaria, inflación, tasas TAMAR y BADLAR, UVA, CER y reservas. Verificá los datos en <a href="https://www.bcra.gob.ar" target="_blank" rel="noopener">bcra.gob.ar</a>.
+        </div>
+      </div>
+
     </div><!-- /tab-argentina -->
 
 
@@ -723,54 +736,58 @@
   }
 
   /* ══════════════════════════════════════════
-     FETCH: BCRA (deshabilitado — APIs inestables)
+     FETCH: BCRA — Principales variables v4.0
+     IDs específicos identificados del endpoint /Monetarias
   ══════════════════════════════════════════ */
-  async function loadBCRA_DISABLED() {
-    document.getElementById('grid-bcra').innerHTML = skeleton(4);
+  async function loadBCRA() {
+    const grid = document.getElementById('grid-bcra');
+    if (!grid) return;
+    grid.innerHTML = skeleton(12);
     const cards = [];
 
-    /* Reservas — ArgentinaDatos (más estable para CORS) */
+    // Variables BCRA — IDs verificados contra v4.0/Monetarias
+    const VARS = [
+      { id: 15,  name: 'Base Monetaria',                    fmt: v => '$ ' + fmtBig(v * 1e6),       cls: 'blue-card' },
+      { id: 1,   name: 'Reservas Internacionales BCRA',     fmt: v => 'USD ' + fmtBig(v * 1e6),     cls: 'green-card' },
+      { id: 27,  name: 'Inflación mensual',                 fmt: v => fmtNum(v, 2) + '%' },
+      { id: 28,  name: 'Inflación interanual',              fmt: v => fmtNum(v, 1) + '%' },
+      { id: 29,  name: 'Inflación esperada (REM) — 12m',    fmt: v => fmtNum(v, 1) + '%' },
+      { id: 4,   name: 'TC Minorista (promedio vendedor)',  fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 5,   name: 'TC Mayorista (referencia)',         fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 44,  name: 'TAMAR bancos privados (TNA)',       fmt: v => fmtNum(v, 2) + '%' },
+      { id: 45,  name: 'TAMAR bancos privados (TEA)',       fmt: v => fmtNum(v, 2) + '%' },
+      { id: 139, name: 'BADLAR bancos privados (TNA)',      fmt: v => fmtNum(v, 2) + '%' },
+      { id: 140, name: 'BADLAR bancos privados (TEA)',      fmt: v => fmtNum(v, 2) + '%' },
+      { id: 31,  name: 'UVA (Unidad de Valor Adquisitivo)', fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 30,  name: 'CER (Coef. Estabilización)',        fmt: v => fmtNum(v, 4) },
+    ];
+
     try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/reservas', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const arr = await r.json();
-        if (arr?.length >= 2) {
-          const last = arr.at(-1), prev = arr.at(-2);
-          const chg = ((last.valor - prev.valor) / prev.valor * 100);
-          cards.push(datoCard({
-            cat: 'BCRA', name: 'Reservas Internacionales',
-            value: 'USD ' + fmtBig(last.valor * 1e6),
-            changePct: chg, period: fmtDate(last.fecha),
-            source: 'BCRA', cls: 'green-card'
-          }));
-        }
+      const r = await fetch('/api/bcra?endpoint=Monetarias', { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      const results = data.results || [];
+      const byId = {};
+      for (const v of results) byId[v.idVariable] = v;
+
+      for (const vdef of VARS) {
+        const v = byId[vdef.id];
+        if (!v || !Number.isFinite(v.ultValorInformado)) continue;
+        cards.push(datoCard({
+          cat: 'BCRA',
+          name: vdef.name,
+          value: vdef.fmt(v.ultValorInformado),
+          period: v.ultFechaInformada,
+          source: 'BCRA v4',
+          cls: vdef.cls || ''
+        }));
       }
     } catch {}
 
-    /* Variables oficiales BCRA */
-    try {
-      const r = await fetch('/api/bcra', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const { results = [] } = await r.json();
-        const find = kw => results.find(v => v.descripcion?.toLowerCase().includes(kw));
-
-        const bm = find('base monetaria');
-        if (bm) cards.push(datoCard({ cat:'BCRA', name:'Base Monetaria', value:'$'+fmtBig(bm.valor*1e6), period:fmtDate(bm.fecha), source:'BCRA' }));
-
-        const tc = results.find(v => v.descripcion?.toLowerCase().includes('tipo de cambio') && v.descripcion?.toLowerCase().includes('mayorista'));
-        if (tc) cards.push(datoCard({ cat:'BCRA', name:'TC Mayorista', value:'$'+fmtNum(tc.valor,2), period:fmtDate(tc.fecha), source:'BCRA' }));
-
-        const tpm = find('política monetaria');
-        if (tpm) cards.push(datoCard({ cat:'BCRA', name:'Tasa Política Monetaria', value:fmtNum(tpm.valor,2)+'%', period:fmtDate(tpm.fecha), source:'BCRA' }));
-
-        const badlar = find('badlar');
-        if (badlar) cards.push(datoCard({ cat:'BCRA', name:'Tasa BADLAR', value:fmtNum(badlar.valor,2)+'%', period:fmtDate(badlar.fecha), source:'BCRA' }));
-      }
-    } catch {}
-
-    if (!cards.length) cards.push(errorCard('BCRA', 'No se pudo conectar con la API del BCRA'));
-    document.getElementById('grid-bcra').innerHTML = cards.join('');
-    document.getElementById('bcra-upd').textContent = 'Act. ' + nowTime();
+    if (!cards.length) cards.push(errorCard('BCRA', 'No se pudo conectar con la API del BCRA. Intentá en unos minutos.'));
+    grid.innerHTML = cards.join('');
+    const upd = document.getElementById('bcra-upd');
+    if (upd) upd.textContent = '✓ ' + cards.length + ' indicadores · BCRA v4 en vivo';
   }
 
   /* ══════════════════════════════════════════
@@ -1300,7 +1317,7 @@
   });
 
   /* Carga inicial: Argentina */
-  Promise.all([loadDolares(), loadINDEC()]);
+  Promise.all([loadDolares(), loadINDEC(), loadBCRA()]);
 
   </script>
 </body>

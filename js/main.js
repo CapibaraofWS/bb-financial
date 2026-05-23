@@ -142,6 +142,17 @@ window.BB_GLOSARIO = {
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
 // ============================================================
+// Inyectar Noto Color Emoji como fallback para flags 🇦🇷🇺🇸🇧🇷
+// Windows 11 quitó banderas de su Segoe UI Emoji por default → este fallback las garantiza
+(function injectEmojiFont() {
+  if (document.querySelector('link[data-emoji-font]')) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap';
+  link.setAttribute('data-emoji-font', '1');
+  document.head.appendChild(link);
+})();
+
 (function injectFavicon() {
   if (document.querySelector('link[rel="icon"]')) return;
   // Path is relative to where the document lives.
