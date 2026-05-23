@@ -1,0 +1,9 @@
+# NUNCA exponer al deploy público
+CLAUDE.md
+.claude-memory/
+data/Mas libros/
+data/Renta fija/
+*.pdf
+.claude/
+.git/
+node_modules/

@@ -45,3 +45,7 @@ desktop.ini
 data/Renta fija/
 data/Mas libros/
 *.pdf
+
+# Memoria interna de Claude Code (privada, NO subir al repo)
+CLAUDE.md
+.claude-memory/
