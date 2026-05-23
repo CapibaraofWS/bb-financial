@@ -195,9 +195,6 @@
 
     bar.innerHTML = buildTrack(items);
 
-    // Reemplazar flags 🇦🇷🇺🇸🇧🇷 por <img> (CSP-safe, sin emoji glyphs faltantes en Windows)
-    if (typeof window.bbFlagParse === 'function') window.bbFlagParse(bar);
-
     // Timestamp "Actualizado HH:MM:SS" — solo si al menos 1 dato cargó
     const hasData = items.some(it => it.priceStr && it.priceStr !== '—');
     if (hasData) {

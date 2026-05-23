@@ -21,9 +21,9 @@
   --gold: #e8c97a;
   --gold-dim: rgba(232,201,122,0.12);
 
-  --font-display: 'DM Serif Display', Georgia, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif;
-  --font-body: 'Outfit', system-ui, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
-  --font-mono: 'DM Mono', 'SF Mono', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', monospace;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'DM Mono', monospace;
 
   --radius: 12px;
   --radius-lg: 20px;
