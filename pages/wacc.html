@@ -81,6 +81,39 @@
       <div class="tip">💡 <strong>Para qué sirve:</strong> el WACC es lo que ponés como "tasa de descuento" en una calculadora de VPN o DDM para valuar empresas. Empresas riesgosas tienen WACC más alto (10-15%); empresas estables tienen WACC más bajo (6-8%).</div>
     </div>
   </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta herramienta</strong> — fórmulas, fuentes, supuestos, limitaciones</summary>
+    <div class="ti-content">
+      <p>El WACC representa el "costo de oportunidad" que la empresa enfrenta para usar capital. Te lo explicamos como si fuera una conversación, no una lista mecánica de fórmulas.</p>
+
+      <p><strong>La idea de fondo:</strong> una empresa se financia con dos fuentes — deuda (préstamos, bonos) y equity (lo que ponen los accionistas). Cada una cuesta diferente. La deuda es más barata (los acreedores tienen prioridad de cobro y pueden cobrar interés deducible de impuestos), pero usar mucha deuda aumenta el riesgo de quiebra. El equity es más caro porque los accionistas asumen el riesgo residual. El WACC promedia estos dos costos, ponderando por la proporción que usa la empresa de cada uno.</p>
+
+      <p><strong>Fórmula que aplicamos:</strong> <code>WACC = (E/V) × Ke + (D/V) × Kd × (1 − t)</code></p>
+      <ul>
+        <li><strong>Ke</strong> (costo del equity) lo calculamos con <strong>CAPM</strong>: <code>Ke = Rf + β × ERP + CRP</code>. Donde Rf es la tasa libre de riesgo (Treasury 10Y USA), β es la sensibilidad de la acción al mercado, ERP es la prima de riesgo equity (~5.5% USA según Damodaran), y CRP es la prima de riesgo país (sumando para mercados emergentes como Argentina).</li>
+        <li><strong>Kd × (1−t)</strong> es el costo de deuda <em>después</em> de impuestos: los intereses son deducibles, lo que reduce el costo efectivo (el famoso "tax shield").</li>
+        <li>Las ponderaciones <strong>E/V y D/V</strong> usan <em>valores de mercado</em>, no contables — el equity vale lo que vale en bolsa (market cap), no su valor libro.</li>
+      </ul>
+
+      <p><strong>Supuestos importantes:</strong></p>
+      <ul>
+        <li>El <strong>CAPM</strong> asume un único factor de riesgo (el mercado) y eficiencia informacional. En la práctica funciona como aproximación; modelos multifactor (Fama-French) refinan.</li>
+        <li>El <strong>ERP</strong> que sugerimos (5.5%) es la estimación de <em>implied equity risk premium</em> de Damodaran (publicada anualmente en pages.stern.nyu.edu/~adamodar/). Cifras alternativas: histórico geométrico (~4.5%), implícito Fed model, etc.</li>
+        <li>Para empresas argentinas o emergentes, sumamos <strong>CRP</strong> (Country Risk Premium) directamente al Ke. Es un atajo aceptado — alternativa más sofisticada: ajustar el ERP usando el método de Damodaran (CRP × λ donde λ mide exposición al país).</li>
+        <li>Beta es <strong>levered</strong> (refleja la estructura de capital actual). Para comparar entre empresas se usa "unlevered beta" = β / (1 + (1−t) × D/E). Si vas a remodelar la estructura, recalcular.</li>
+      </ul>
+
+      <p><strong>Limitaciones:</strong></p>
+      <ul>
+        <li>WACC es estática — asume capital structure constante. Empresas que crecen rápido o reestructuran necesitan WACC variable en el tiempo (o método APV — Adjusted Present Value).</li>
+        <li>Para empresas con MUCHA deuda riesgosa, Kd no debería ser solo la tasa contractual del préstamo, sino la <em>expected return</em> ajustada por probabilidad de default. Si la empresa rating BB paga 8%, el expected return real puede ser ~7%.</li>
+        <li>Beta histórica (5 años, mensual) es ruidosa para empresas chicas o sin historia. Damodaran sugiere <strong>bottom-up beta</strong>: promediar betas unlevered del sector y re-levrar con la estructura propia.</li>
+      </ul>
+
+      <p><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> El WACC es una <em>aproximación</em> al verdadero costo de capital, sujeto a múltiples supuestos. Para una valoración profesional, hacé sensibilidad sobre Rf, β, ERP y CRP — el rango de salida suele ser ±300 bps. <span class="cite">Fuentes: Damodaran, Investment Valuation 4e (Cap. 7-8); Koller et al., Valuation 8e.</span></p>
+    </div>
+  </details>
     </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">

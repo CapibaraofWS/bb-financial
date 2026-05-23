@@ -96,6 +96,46 @@
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Limitación:</strong> el modelo asume que rendimientos pasados predicen los futuros. En la realidad las correlaciones cambian (en crisis tienden a converger a 1). Usalo como guía, no como verdad absoluta.</div>
     </div>
   </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta herramienta</strong> — origen del modelo, supuestos, limitaciones críticas</summary>
+    <div class="ti-content">
+      <p>Harry Markowitz publicó "Portfolio Selection" en 1952 en el Journal of Finance. La idea era simple pero revolucionaria: <em>los inversores no eligen activos uno por uno, sino carteras enteras</em>. Y el riesgo de una cartera no es la suma de los riesgos individuales — depende de cómo se mueven los activos <strong>en conjunto</strong>.</p>
+
+      <p><strong>Qué hace esta calculadora:</strong> tomás activos (acciones, bonos, cripto, etc.) con sus retornos esperados, volatilidades y correlaciones entre sí. Calcula:</p>
+      <ul>
+        <li><strong>Retorno esperado de la cartera</strong>: <code>E(R_p) = Σ w_i × E(R_i)</code> — promedio ponderado.</li>
+        <li><strong>Volatilidad de la cartera</strong>: <code>σ_p = √(Σ Σ w_i × w_j × σ_i × σ_j × ρ_ij)</code>. Esta es la fórmula clave — la doble suma captura el efecto de correlación. Cuando ρ &lt; 1, la cartera tiene MENOS riesgo que el promedio ponderado.</li>
+        <li><strong>Ratio de Sharpe</strong>: <code>(E(R_p) − Rf) / σ_p</code>. Mide retorno por unidad de riesgo. Mayor = mejor.</li>
+        <li><strong>Frontera eficiente</strong>: la curva de carteras que para cada nivel de riesgo dan el máximo retorno. Mostramos las opciones ponderadas con un slider.</li>
+      </ul>
+
+      <p><strong>Supuestos del modelo (todos heroicos):</strong></p>
+      <ul>
+        <li><strong>Retornos normalmente distribuidos.</strong> Falso: los retornos reales tienen <em>colas gordas</em> (movimientos extremos más frecuentes que lo que predice la normal). Crisis de 2008 fue un "evento de 25 sigmas" según modelos VAR de la época — imposible si la distribución fuera normal.</li>
+        <li><strong>Correlaciones estables.</strong> Falso: en crisis las correlaciones tienden a converger a 1 ("correlación va a 1 cuando más la necesitás"). Esto es lo que hizo fallar a Long-Term Capital Management en 1998.</li>
+        <li><strong>Inversores racionales que solo miran media y varianza.</strong> Falso: la gente real es sensible a pérdidas (loss aversion, Kahneman/Tversky), no a varianza simétrica.</li>
+        <li><strong>Rendimientos pasados predicen futuros.</strong> Falso: la regla más rota en finanzas. Esta calculadora usa <em>tus inputs de retornos esperados</em>, no históricos automáticos — pero típicamente la gente usa historia.</li>
+      </ul>
+
+      <p><strong>Limitaciones prácticas:</strong></p>
+      <ul>
+        <li>Optimización de Markowitz es <strong>extremadamente sensible</strong> a los inputs. Cambiar el retorno esperado de un activo en 1% puede mover la asignación 30 puntos. Por eso en práctica institucional se usan <strong>shrinkage</strong> (acercar correlaciones al promedio) o el modelo <strong>Black-Litterman</strong> (mezcla expectativas del inversor con equilibrio de mercado).</li>
+        <li>No considera <strong>costos de transacción, impuestos, ni rebalanceo</strong>. La cartera "óptima" puede ser óptima en teoría pero costosa de mantener.</li>
+        <li>Asume <strong>variables continuas</strong> — en práctica no podés comprar 0.47 acciones (sí podés en algunos brokers con fractional shares).</li>
+        <li>La <strong>diversificación máxima</strong> ya se logra con 15-20 activos no correlacionados (Statman, 1987). Más allá es ruido.</li>
+      </ul>
+
+      <p><strong>Lecciones para usarlo bien:</strong></p>
+      <ul>
+        <li>Tratá la cartera "óptima" como un <strong>punto de partida</strong>, no un veredicto. Hacé sensibilidad: ¿qué pasa si bajo el retorno esperado de cripto del 30% al 10%?</li>
+        <li>Diversificá entre <strong>clases de activos</strong> con correlaciones bajas (acciones + bonos + commodities + cash), no entre acciones del mismo sector.</li>
+        <li>Bogle (Vanguard): para la gran mayoría, un index fund global + bonos es mejor que la "óptima Markowitz" — más simple, menor costo, menos error de estimación.</li>
+      </ul>
+
+      <p><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Markowitz es marco conceptual. Para tu cartera real considerá tu situación impositiva, horizonte temporal, fondos de emergencia, y si necesitás ayuda — un asesor matriculado en CNV. <span class="cite">Fuentes: Markowitz (1952) Portfolio Selection, Journal of Finance; Bodie-Kane-Marcus, Investments 12e; Bogle, The Little Book of Common Sense Investing.</span></p>
+    </div>
+  </details>
     </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">

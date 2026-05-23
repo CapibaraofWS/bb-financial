@@ -80,6 +80,38 @@
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Limitación crítica:</strong> el DDM solo sirve para empresas que <strong>pagan dividendos estables</strong>. NO sirve para tech (Google, Amazon no pagan), startups, ni empresas en crecimiento que reinvierten todo. Para esas, usá DCF.</div>
     </div>
   </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta herramienta</strong> — origen, fórmulas, supuestos, cuándo NO usarla</summary>
+    <div class="ti-content">
+      <p>El DDM es uno de los modelos más viejos de valuación (Williams, 1938 — anterior incluso al CAPM). La intuición: si una acción es una promesa de pagos futuros (dividendos), entonces vale lo que valgan esos pagos descontados al presente. Simple en concepto, traicionero en la práctica.</p>
+
+      <p><strong>Las dos variantes que ofrecemos:</strong></p>
+      <ul>
+        <li><strong>Gordon Growth (1 etapa):</strong> <code>P = D₁ / (Ke − g)</code>. Asume que los dividendos crecen a tasa constante g <em>para siempre</em>. Es exacta solo si g es realmente constante — para una empresa en madurez estable. Si Ke ≤ g el modelo explota (no tiene sentido económico: ninguna empresa puede crecer eternamente más rápido que la economía).</li>
+        <li><strong>DDM 2 etapas:</strong> períodos de alto crecimiento (g_high por N años) + crecimiento estable (g_stable) en perpetuidad. <code>P = Σ D_t/(1+Ke)^t + TerminalValue/(1+Ke)^N</code>. Más realista para empresas en transición. Damodaran (Cap. 14) lo recomienda sobre Gordon para 90% de los casos.</li>
+      </ul>
+
+      <p><strong>Qué supuestos hacemos:</strong></p>
+      <ul>
+        <li>El <strong>dividendo crece a tasa constante</strong> dentro de cada etapa. Real-life los dividendos son lumpy (algunos años nada, otros mucho); usamos el average esperado.</li>
+        <li>La <strong>tasa de descuento (Ke)</strong> es estática. Si la cambiás (cambia Rf, β, ERP), el resultado se mueve. Probá sensibilidad: bajar Ke 1% típicamente sube el precio justo 10-15%.</li>
+        <li>Asumimos que el <strong>payout ratio</strong> es estable. Si la empresa decide bajar/subir dividendos (vía buybacks o nuevas inversiones), el modelo se rompe. Damodaran sugiere usar <strong>FCFE (Free Cash Flow to Equity)</strong> en su lugar para esos casos.</li>
+      </ul>
+
+      <p><strong>Cuándo NO usarlo:</strong></p>
+      <ul>
+        <li>Empresas que no pagan dividendos (Tesla, Amazon, Berkshire). El modelo da P = 0 o NaN. Usar DCF/FCFE.</li>
+        <li>Empresas en pérdida o muy cíclicas — dividendos volátiles o futuros sin claridad.</li>
+        <li>Cuando g se acerca a Ke — el resultado se vuelve hipersensible y poco confiable.</li>
+        <li>Para empresas en mercados emergentes con flujos de caja erráticos — ajustar Ke con CRP y bajar la confianza del output.</li>
+      </ul>
+
+      <p><strong>Hint útil de Damodaran:</strong> la "g sostenible" de cualquier empresa madura no puede superar el crecimiento nominal del PBI del país (~5-7%). Si tu estimación de g_stable es 8% o más, estás siendo agresivo: revisar.</p>
+
+      <p><strong style="color:#ffb84d">⚠ NO es recomendación.</strong> El DDM da UN número con muchos supuestos. Para decisiones reales hacé DCF completo, comparé contra múltiplos del sector, y aplicá margen de seguridad (Graham: comprá a 70% del precio justo). <span class="cite">Fuentes: Damodaran, Investment Valuation 4e (Cap. 14); Williams (1938) The Theory of Investment Value.</span></p>
+    </div>
+  </details>
     </div>
 
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
