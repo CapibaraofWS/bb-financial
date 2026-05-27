@@ -30,9 +30,14 @@ function getClientIp(req) {
  * @param {object} opts - { limit?: number, windowSecs?: number, key?: string }
  * @returns {Promise<boolean>} true si rate-limited (la función debe abortar)
  */
+function stripEnv(v) {
+  if (!v) return v;
+  return v.trim().replace(/^["']|["']$/g, '');
+}
+
 export async function denyRateLimited(req, res, opts = {}) {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = stripEnv(process.env.UPSTASH_REDIS_REST_URL);
+  const token = stripEnv(process.env.UPSTASH_REDIS_REST_TOKEN);
   if (!url || !token) return false; // sin Upstash configurado, no rate-limit
 
   const limit = opts.limit || DEFAULT_LIMIT;
