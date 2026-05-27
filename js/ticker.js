@@ -98,13 +98,11 @@
 
   async function getRiesgoPais() {
     try {
-      const res = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(8000) });
+      const res = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais/ultimo', { signal: AbortSignal.timeout(8000) });
       if (!res.ok) return null;
-      const arr = await res.json();
-      if (!Array.isArray(arr) || arr.length < 2) return null;
-      const last = arr.at(-1), prev = arr.at(-2);
-      if (last?.valor == null) return null;
-      return { price: last.valor, chg: prev?.valor != null ? last.valor - prev.valor : null };
+      const obj = await res.json();
+      if (obj?.valor == null) return null;
+      return { price: obj.valor, chg: null };
     } catch {
       return null;
     }

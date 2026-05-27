@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
+<style>html{background:#0a0c0f;color-scheme:dark}</style>
+    <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -11,19 +12,31 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ===== OPEN GRAPH / TWITTER CARDS ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="BB Financial — Tu hub de inversión en Argentina" />
+  <meta property="og:description" content="Calculadoras, tasas en vivo (plazos fijos, billeteras, FCI, dólar), datos macro del BCRA e INDEC y guías para invertir bien en Argentina." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:image:width" content="2752" />
+  <meta property="og:image:height" content="1536" />
+  <meta property="og:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BB Financial — Tu hub de inversión en Argentina" />
+  <meta name="twitter:description" content="Calculadoras, tasas en vivo (plazos fijos, billeteras, FCI, dólar), datos macro del BCRA e INDEC y guías para invertir bien en Argentina." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta name="twitter:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
+  <!-- ===== / OPEN GRAPH ===== -->
   <title>BB Financial | Calculadora de Plazo Fijo, Dólar y Finanzas Argentina</title>
 
   <meta name="description" content="Calculadoras financieras gratuitas: interés compuesto, interés simple, ahorro y planificador de metas. Compará ahorrar vs. invertir y tomá mejores decisiones." />
   <meta name="keywords" content="calculadora interés compuesto, calculadora ahorro, calculadora financiera, interés simple, inversión, metas financieras, modelado financiero" />
   <meta name="author" content="BB Financial" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://bb.app/" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/" />
 
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="BB — Calculadoras Financieras" />
-  <meta property="og:description" content="Herramientas financieras gratuitas para calcular interés, ahorro e inversión. Tomá mejores decisiones con tu dinero." />
-  <meta property="og:url" content="https://bb.app/" />
-  <meta property="og:locale" content="es_AR" />
 
   <script type="application/ld+json">
   {
@@ -32,7 +45,7 @@
     "name": "BB Financial",
     "author": { "@type": "Organization", "name": "BB Financial" },
     "description": "Calculadoras financieras gratuitas para interés compuesto, simple, ahorro y metas de inversión.",
-    "url": "https://bb.app",
+    "url": "https://bb-financial.vercel.app",
     "applicationCategory": "FinanceApplication",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
@@ -149,18 +162,101 @@
       </div>
     </section>
 
-    <!-- ===== NEW INVESTOR CTA ===== -->
+    <!-- ===== TASAS HOY (banner ancho) ===== -->
+    <section style="padding:2rem 0 0">
+      <div class="container">
+        <a href="pages/tasas-hoy.html" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(90deg,rgba(74,222,154,0.08),rgba(96,165,250,0.05));border:1px solid rgba(74,222,154,0.3);border-radius:14px;padding:1.25rem 1.75rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(74,222,154,0.55)';this.style.boxShadow='0 8px 24px rgba(74,222,154,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.3)';this.style.boxShadow=''">
+          <div style="font-size:2rem;flex-shrink:0">📊</div>
+          <div style="flex:1;min-width:240px">
+            <p style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem">Nuevo · En vivo</p>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.25rem;color:var(--text)">Tasas hoy — ¿dónde rinde más mi plata?</h3>
+            <p style="color:var(--text-muted);font-size:0.86rem;line-height:1.5">Plazos fijos por banco, billeteras virtuales (Naranja X, Ualá, Mercado Pago…), FCI Money Market (Cocos, Balanz, Adcap…) y cotizaciones del dólar — todo en vivo y ordenado por rendimiento real.</p>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--accent);white-space:nowrap">Ver tasas →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== NEW INVESTOR CTA + QUIZ ===== -->
     <section style="padding:2.5rem 0">
       <div class="container">
-        <a href="pages/empezar-a-invertir.html" style="display:flex;align-items:center;gap:2rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(96,165,250,0.25);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(96,165,250,0.5)';this.style.boxShadow='0 10px 30px rgba(96,165,250,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(96,165,250,0.25)';this.style.boxShadow=''">
-          <div style="font-size:2.8rem;flex-shrink:0">🚀</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem" class="onboard-grid">
+          <a href="pages/empezar-a-invertir.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:1rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(96,165,250,0.25);border-radius:16px;padding:1.75rem 2rem;text-decoration:none;color:inherit;transition:all 0.25s" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(96,165,250,0.5)';this.style.boxShadow='0 10px 30px rgba(96,165,250,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(96,165,250,0.25)';this.style.boxShadow=''">
+            <div>
+              <div style="font-size:2.2rem;margin-bottom:0.5rem">🚀</div>
+              <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.4rem">Si sos nuevo en inversiones</p>
+              <h2 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin-bottom:0.45rem;color:var(--text)">Empezá por acá</h2>
+              <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6">Guía paso a paso: broker confiable, banderas rojas de estafas, renta fija vs. variable, BYMA, custodia e impuestos.</p>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:#60a5fa">Ver guía →</span>
+          </a>
+
+          <a href="pages/perfil-inversor.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:1rem;background:linear-gradient(135deg,#11201a,#0f1820);border:1px solid rgba(74,222,154,0.3);border-radius:16px;padding:1.75rem 2rem;text-decoration:none;color:inherit;transition:all 0.25s" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(74,222,154,0.55)';this.style.boxShadow='0 10px 30px rgba(74,222,154,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.3)';this.style.boxShadow=''">
+            <div>
+              <div style="font-size:2.2rem;margin-bottom:0.5rem">🧠</div>
+              <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">Nuevo · Test 2 min</p>
+              <h2 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin-bottom:0.45rem;color:var(--text)">¿Qué tipo de inversor sos?</h2>
+              <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6">Descubrí tu perfil — <strong style="color:var(--accent)">conservador</strong>, <strong style="color:#60a5fa">moderado</strong> o <strong style="color:#ffb84d">agresivo</strong> — y qué instrumentos se ajustan a vos.</p>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--accent)">Hacer el test →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+    <style>@media (max-width:760px){.onboard-grid{grid-template-columns:1fr !important}}</style>
+
+    <!-- ===== MACRO INDICADORES CTA ===== -->
+    <section style="padding:2rem 0">
+      <div class="container">
+        <a href="pages/datos.html" style="display:flex;align-items:center;gap:2rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(255,184,77,0.25);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(255,184,77,0.5)';this.style.boxShadow='0 10px 30px rgba(255,184,77,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,184,77,0.25)';this.style.boxShadow=''">
+          <div style="font-size:2.8rem;flex-shrink:0">📊</div>
           <div style="flex:1;min-width:240px">
-            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.45rem">Si sos nuevo en inversiones</p>
-            <h2 style="font-family:var(--font-display);font-size:1.5rem;letter-spacing:-0.01em;margin-bottom:0.5rem;color:var(--text)">Empezá por acá</h2>
-            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6">Guía paso a paso: cómo elegir broker confiable, banderas rojas de estafas, renta fija vs. variable, BYMA, custodia, impuestos. Todo en un solo lugar.</p>
+            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#ffb84d;margin-bottom:0.45rem">Datos macro · En vivo</p>
+            <h2 style="font-family:var(--font-display);font-size:1.5rem;letter-spacing:-0.01em;margin-bottom:0.5rem;color:var(--text)">Indicadores de Argentina en tiempo real</h2>
+            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6">Riesgo país, reservas BCRA, inflación (IPC), bandas cambiarias, TAMAR, BADLAR, UVA, CER, TIM y más — todos los indicadores claves de Argentina actualizados automáticamente desde BCRA + INDEC.</p>
           </div>
-          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#60a5fa;white-space:nowrap">Ver guía →</span>
+          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#ffb84d;white-space:nowrap">Ver datos →</span>
         </a>
+      </div>
+    </section>
+
+    <!-- ===== NEWS GRID + CTAs ===== -->
+    <section class="tools-section" style="padding-top:0;padding-bottom:4rem" aria-labelledby="noticias-title">
+      <div class="container">
+        <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias del día</h2>
+            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">En vivo</span>
+          </div>
+          <a href="pages/noticias.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);display:flex;align-items:center;gap:0.3rem">Ver todas &rsaquo;</a>
+        </div>
+
+        <!-- Grid de 3-6 noticias, responsive -->
+        <div id="newsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem">
+          <div id="newsGridLoader" style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
+        </div>
+
+        <!-- CTAs por categoría -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.85rem">
+          <a href="pages/noticias.html#argentina" style="display:flex;align-items:center;gap:0.85rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)';this.style.borderColor='var(--accent)'" onmouseout="this.style.transform='';this.style.borderLeftColor='var(--accent)';this.style.borderColor='var(--border)';this.style.borderLeftWidth='3px';this.style.borderLeftStyle='solid';this.style.borderLeftColor='var(--accent)'">
+            <span style="font-size:1.6rem">🇦🇷</span>
+            <div style="flex:1">
+              <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.15rem">Argentina</div>
+              <div style="font-size:0.92rem;color:var(--text);font-weight:500">Más noticias económicas locales</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem">Ámbito, Infobae, La Nación, iProfesional…</div>
+            </div>
+            <span style="color:var(--accent);font-family:var(--font-mono);font-size:0.85rem">→</span>
+          </a>
+          <a href="pages/noticias.html#internacional" style="display:flex;align-items:center;gap:0.85rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #60a5fa;border-radius:10px;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)';this.style.borderColor='#60a5fa'" onmouseout="this.style.transform='';this.style.borderColor='var(--border)'">
+            <span style="font-size:1.6rem">🌎</span>
+            <div style="flex:1">
+              <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.15rem">EE.UU. e Internacional</div>
+              <div style="font-size:0.92rem;color:var(--text);font-weight:500">Wall Street, Fed, mercados globales</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem">Bloomberg, Reuters, CNBC, MarketWatch…</div>
+            </div>
+            <span style="color:#60a5fa;font-family:var(--font-mono);font-size:0.85rem">→</span>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -168,51 +264,57 @@
     <section id="calculadoras" class="tools-section" aria-labelledby="tools-title">
       <div class="container">
         <div class="section-header">
-          <h2 id="tools-title" class="section-title">Calculadoras</h2>
-          <p class="section-sub">Herramientas simples para decisiones inteligentes</p>
+          <h2 id="tools-title" class="section-title">Las más usadas</h2>
+          <p class="section-sub">Las 3 herramientas que más usa la gente para tomar decisiones reales con su plata</p>
         </div>
         <div class="tools-grid">
 
-          <article class="tool-card tool-card--featured" aria-labelledby="card-compuesto">
-            <div class="card-badge">Más popular</div>
-            <div class="card-icon" aria-hidden="true">⬡</div>
-            <h3 id="card-compuesto" class="card-title">Interés Compuesto</h3>
-            <p class="card-desc">La octava maravilla del mundo. Calculá cómo tu dinero crece exponencialmente cuando los intereses generan más intereses.</p>
+          <article class="tool-card tool-card--featured" aria-labelledby="card-cuanto-perdi">
+            <div class="card-badge">🔥 Más usada</div>
+            <div class="card-icon" aria-hidden="true">📉</div>
+            <h3 id="card-cuanto-perdi" class="card-title">¿Cuánto perdiste con la inflación?</h3>
+            <p class="card-desc">Descubrí en segundos cuánto poder de compra te robó la inflación si guardaste pesos en el cajón o caja de ahorro. <strong>Aviso: duele.</strong></p>
             <ul class="card-features">
-              <li>Capital inicial + aportes periódicos</li>
-              <li>Frecuencia de capitalización ajustable</li>
-              <li>Gráfico de crecimiento visual</li>
+              <li>Ingresá monto y fecha de inicio</li>
+              <li>Te muestra el "agujero" en pesos y en USD</li>
+              <li>Comparativo vs. dólar, plazo fijo y S&P 500</li>
             </ul>
-            <a href="pages/interes-compuesto.html" class="card-link">Calcular →</a>
+            <a href="pages/cuanto-perdi.html" class="card-link">Ver cuánto perdí →</a>
           </article>
 
-          <article class="tool-card" aria-labelledby="card-simple">
-            <div class="card-icon" aria-hidden="true">◎</div>
-            <h3 id="card-simple" class="card-title">Interés Simple y Ahorro</h3>
-            <p class="card-desc">Calculá el rendimiento de plazos fijos y préstamos con tasa lineal, y proyectá tu ahorro mensual a 1, 5 o 20 años.</p>
+          <article class="tool-card" aria-labelledby="card-cuotas">
+            <div class="card-badge" style="background:rgba(96,165,250,0.12);color:#60a5fa;border-color:rgba(96,165,250,0.25)">💳 Top consultas</div>
+            <div class="card-icon" aria-hidden="true">🛒</div>
+            <h3 id="card-cuotas" class="card-title">¿Contado o cuotas sin interés?</h3>
+            <p class="card-desc">La decisión que TODOS los argentinos dudamos al comprar. Calcula el costo real de las cuotas según dónde tengas la plata invertida.</p>
             <ul class="card-features">
-              <li>Interés simple con comparativa de plazos</li>
-              <li>Proyección de ahorro a largo plazo</li>
-              <li>Tasa de ahorro sobre ingresos</li>
+              <li>Detecta cuotas "sin interés" con sobreprecio</li>
+              <li>Tasa implícita escondida (TNA / TEA)</li>
+              <li>Compara contra plazo fijo, FCI, cuenta remunerada</li>
             </ul>
-            <a href="pages/interes-simple.html" class="card-link">Calcular →</a>
+            <a href="pages/contado-vs-cuotas.html" class="card-link">Calcular →</a>
           </article>
 
-          <article class="tool-card tool-card--highlight" aria-labelledby="card-meta">
-            <div class="card-icon" aria-hidden="true">◇</div>
-            <h3 id="card-meta" class="card-title">Meta Financiera</h3>
-            <p class="card-desc">¿Cuánto tiempo necesitás para llegar a tu objetivo? Compará ahorro puro vs. inversión y descubrí cuántos años ganás.</p>
+          <article class="tool-card tool-card--highlight" aria-labelledby="card-fire">
+            <div class="card-badge" style="background:rgba(255,184,77,0.12);color:#ffb84d;border-color:rgba(255,184,77,0.25)">🔥 Tendencia</div>
+            <div class="card-icon" aria-hidden="true">🏝</div>
+            <h3 id="card-fire" class="card-title">FIRE — ¿Cuánto necesito para retirarme?</h3>
+            <p class="card-desc">La regla del 4%: cuánto capital necesitás invertido para vivir de tus inversiones <strong>el resto de tu vida</strong> sin volver a trabajar.</p>
             <ul class="card-features">
-              <li>Objetivo en USD</li>
-              <li>Comparación ahorro vs. inversión</li>
-              <li>Diferencia de años visualizada</li>
+              <li>Gasto mensual deseado → capital objetivo</li>
+              <li>Años hasta tu independencia financiera</li>
+              <li>Comparativa de tasas de retiro seguras</li>
             </ul>
-            <a href="pages/meta-financiera.html" class="card-link">Calcular →</a>
+            <a href="pages/fire.html" class="card-link">Calcular FIRE →</a>
           </article>
 
         </div>
+        <div style="text-align:center;margin-top:1.5rem">
+          <a href="pages/calculadoras.html" style="display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);text-decoration:none;border:1px solid rgba(74,222,154,0.3);background:var(--accent-dim);padding:0.65rem 1.4rem;border-radius:8px;transition:all 0.2s" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'" onmouseout="this.style.background='var(--accent-dim)';this.style.color='var(--accent)'">Ver las 20+ calculadoras →</a>
+        </div>
       </div>
     </section>
+
 
     <!-- ===== WHY SECTION ===== -->
     <section class="why-section" aria-labelledby="why-title">
@@ -259,29 +361,6 @@
       </div>
     </section>
 
-    <!-- ===== NEWS CAROUSEL ===== -->
-    <section class="tools-section" style="padding-top:0;padding-bottom:4rem" aria-labelledby="noticias-title">
-      <div class="container">
-        <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
-          <div style="display:flex;align-items:center;gap:0.75rem">
-            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias</h2>
-            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">NUEVO</span>
-          </div>
-          <a href="pages/noticias.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);display:flex;align-items:center;gap:0.3rem">Ver todas &rsaquo;</a>
-        </div>
-
-        <!-- Carousel wrapper -->
-        <div style="position:relative">
-          <div id="newsCarousel" style="display:flex;gap:1rem;overflow:hidden;scroll-behavior:smooth"></div>
-          <!-- Arrow buttons -->
-          <button id="newsPrev" aria-label="Anterior" style="position:absolute;top:50%;left:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">‹</button>
-          <button id="newsNext" aria-label="Siguiente" style="position:absolute;top:50%;right:-18px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);z-index:2">›</button>
-        </div>
-
-        <!-- Loading state -->
-        <div id="newsCarouselLoader" style="text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
-      </div>
-    </section>
 
     <!-- CONTACT SECTION: temporalmente deshabilitado -->
 
@@ -319,63 +398,33 @@
   <script src="js/main.js?v=22"></script>
   <script src="js/ticker.js"></script>
   <script>
-  /* ---- Homepage news carousel ---- */
+  /* ---- Homepage news grid (responsive, sin carrusel) ---- */
   (function () {
-    const PROXY = 'https://api.allorigins.win/get?url=';
     const RSS_SOURCES = [
-      { url: 'https://www.ambito.com/rss/economia.xml',       name: 'Ámbito'    },
-      { url: 'https://www.cronista.com/files/rss/economia.xml',name: 'Cronista'  },
-      { url: 'https://news.google.com/rss/search?q=economia+finanzas+argentina&hl=es-419&gl=AR&ceid=AR:es-419',
-        name: 'Google News' },
+      { id: 'ambito',       name: 'Ámbito'       },
+      { id: 'infobae',      name: 'Infobae'      },
+      { id: 'iprofesional', name: 'iProfesional' },
+      { id: 'google_ar',    name: 'Google News'  },
     ];
+
+    const grid   = document.getElementById('newsGrid');
+    const loader = document.getElementById('newsGridLoader');
 
     function fmtDate(str) {
       if (!str) return '';
       try { return new Date(str).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }); }
       catch { return ''; }
     }
-
-    function parseRSS(xml, name) {
-      const doc = new DOMParser().parseFromString(xml, 'text/xml');
-      return Array.from(doc.querySelectorAll('item')).slice(0, 6).map(item => {
-        const title = (item.querySelector('title')?.textContent || '').replace(/\s+-\s+[\w\s]+$/, '').trim();
-        const link  = item.querySelector('link')?.textContent?.trim()
-                   || item.querySelector('link')?.nextSibling?.textContent?.trim() || '#';
-        const date  = item.querySelector('pubDate')?.textContent || '';
-        const desc  = item.querySelector('description')?.textContent || '';
-        const img   = item.querySelector('enclosure')?.getAttribute('url')
-                   || (desc.match(/<img[^>]+src=["']([^"']+)["']/i) || [])[1] || '';
-        return { title, link, date, img, source: name };
-      }).filter(i => i.title);
-    }
-
-    const carousel  = document.getElementById('newsCarousel');
-    const loader    = document.getElementById('newsCarouselLoader');
-    const prevBtn   = document.getElementById('newsPrev');
-    const nextBtn   = document.getElementById('newsNext');
-
-    const CARD_W    = 300; // px per card
-    const VISIBLE   = 3;
-    let offset      = 0;
-    let items       = [];
-
-    function safeUrl(url) {
-      return url && /^https?:\/\//i.test(url) ? url : null;
-    }
+    function safeUrl(url) { return url && /^https?:\/\//i.test(url) ? url : null; }
 
     function buildCard(item) {
-      const div = document.createElement('a');
-      div.href = safeUrl(item.link) || '#';
-      div.target = '_blank';
-      div.rel = 'noopener noreferrer';
-      div.style.cssText = `
-        flex:0 0 ${CARD_W}px;min-width:${CARD_W}px;
-        background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
-        overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;
-        transition:border-color 0.25s,transform 0.25s;
-      `;
-      div.addEventListener('mouseenter', () => { div.style.borderColor = 'rgba(255,255,255,0.12)'; div.style.transform = 'translateY(-2px)'; });
-      div.addEventListener('mouseleave', () => { div.style.borderColor = ''; div.style.transform = ''; });
+      const a = document.createElement('a');
+      a.href = safeUrl(item.link) || '#';
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.style.cssText = 'background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:all 0.25s';
+      a.addEventListener('mouseenter', () => { a.style.borderColor = 'rgba(74,222,154,0.4)'; a.style.transform = 'translateY(-2px)'; });
+      a.addEventListener('mouseleave', () => { a.style.borderColor = ''; a.style.transform = ''; });
 
       const PLACEHOLDER = 'img/imagen-para-noticias.png';
       const img = document.createElement('img');
@@ -383,14 +432,14 @@
       img.alt = '';
       img.style.cssText = 'width:100%;aspect-ratio:16/9;object-fit:cover;background:#1a1f2a';
       img.loading = 'lazy';
-      img.onerror = () => { if (img.src !== PLACEHOLDER && !img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER; };
-      div.appendChild(img);
+      img.onerror = () => { if (!img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER; };
+      a.appendChild(img);
 
       const body = document.createElement('div');
       body.style.cssText = 'padding:1rem 1.1rem 1.2rem;flex:1;display:flex;flex-direction:column';
 
       const badge = document.createElement('span');
-      badge.style.cssText = 'display:inline-block;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border-radius:20px;padding:0.12rem 0.55rem;margin-bottom:0.6rem';
+      badge.style.cssText = 'display:inline-block;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border-radius:20px;padding:0.12rem 0.55rem;margin-bottom:0.6rem;align-self:flex-start';
       badge.textContent = 'Economía';
 
       const meta = document.createElement('div');
@@ -398,7 +447,7 @@
       meta.textContent = fmtDate(item.date);
 
       const title = document.createElement('div');
-      title.style.cssText = 'font-size:0.875rem;font-weight:600;color:var(--text);line-height:1.5;flex:1';
+      title.style.cssText = 'font-size:0.92rem;font-weight:600;color:var(--text);line-height:1.5;flex:1';
       title.textContent = item.title;
 
       const source = document.createElement('div');
@@ -406,73 +455,47 @@
       source.textContent = `— ${item.source}`;
 
       body.append(badge, meta, title, source);
-      div.appendChild(body);
-      return div;
+      a.appendChild(body);
+      return a;
     }
 
-    function updateArrows() {
-      const maxOffset = Math.max(0, items.length - VISIBLE);
-      prevBtn.style.opacity = offset === 0 ? '0.3' : '1';
-      nextBtn.style.opacity = offset >= maxOffset ? '0.3' : '1';
-    }
-
-    function slide(dir) {
-      const maxOffset = Math.max(0, items.length - VISIBLE);
-      offset = Math.max(0, Math.min(maxOffset, offset + dir));
-      carousel.style.transform = `translateX(-${offset * (CARD_W + 16)}px)`;
-      carousel.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
-      updateArrows();
-    }
-
-    prevBtn.addEventListener('click', () => slide(-1));
-    nextBtn.addEventListener('click', () => slide(1));
-
-    // Auto-advance
-    let autoTimer = setInterval(() => slide(1), 5000);
-    carousel.addEventListener('mouseenter', () => clearInterval(autoTimer));
-    carousel.addEventListener('mouseleave', () => { autoTimer = setInterval(() => slide(1), 5000); });
-
-    // Overflow container
-    carousel.parentElement.style.overflow = 'hidden';
-
-    async function loadCarousel() {
+    async function loadGrid() {
       const results = await Promise.all(
         RSS_SOURCES.map(async s => {
           try {
-            const res = await fetch(PROXY + encodeURIComponent(s.url), { signal: AbortSignal.timeout(8000) });
+            const res = await fetch(`/api/rss?source=${encodeURIComponent(s.id)}`, { signal: AbortSignal.timeout(10000) });
+            if (!res.ok) return [];
             const w = await res.json();
-            return parseRSS(w.contents, s.name);
+            if (!Array.isArray(w.items)) return [];
+            return w.items.map(it => ({
+              title: it.title || '',
+              link:  it.link  || '#',
+              date:  it.pubDate || '',
+              img:   it.img || '',
+              source: s.name,
+            })).filter(i => i.title);
           } catch { return []; }
         })
       );
       const seen = new Set();
-      items = results.flat().filter(i => {
+      const items = results.flat().filter(i => {
         const k = i.title.toLowerCase().slice(0, 35);
         if (seen.has(k)) return false;
         seen.add(k); return true;
-      }).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 12);
+      }).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6);
 
-      loader.remove();
+      loader?.remove();
       if (!items.length) {
-        const wrap = document.createElement('div');
-        wrap.style.cssText = 'flex:1;padding:2rem 1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.8rem';
-        const icon = document.createElement('div'); icon.style.cssText = 'font-size:2rem;opacity:0.5'; icon.textContent = '📰';
-        const msg = document.createElement('p'); msg.style.cssText = 'color:var(--text-muted);font-size:0.88rem;line-height:1.6;max-width:420px';
-        msg.textContent = 'No pudimos cargar el feed en vivo. Probá refrescar la página o entrá directamente a la sección de Noticias.';
-        const link = document.createElement('a'); link.href = 'pages/noticias.html';
-        link.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.55rem 1rem;font-size:0.85rem;text-decoration:none';
-        link.textContent = 'Ir a Noticias →';
-        wrap.append(icon, msg, link);
-        carousel.appendChild(wrap);
-        carousel.parentElement.style.overflow = 'visible';
-        prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
+        const empty = document.createElement('div');
+        empty.style.cssText = 'grid-column:1/-1;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);text-align:center;color:var(--text-muted);font-size:0.88rem';
+        empty.textContent = 'No pudimos cargar las noticias en vivo. Probá refrescar.';
+        grid.appendChild(empty);
         return;
       }
-      items.forEach(item => carousel.appendChild(buildCard(item)));
-      updateArrows();
+      items.forEach(item => grid.appendChild(buildCard(item)));
     }
 
-    loadCarousel();
+    loadGrid();
   })();
   </script>
 </body>

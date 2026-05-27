@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<style>html{background:#0a0c0f;color-scheme:dark}</style>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ===== OPEN GRAPH / TWITTER CARDS ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tasas hoy — Plazos fijos, billeteras y dólar en vivo" />
+  <meta property="og:description" content="TNA real de plazos fijos por banco (BCRA), billeteras virtuales (Naranja X, Ualá, Mercado Pago), FCI Money Market (Cocos, Balanz, Adcap) y dólar — todo en vivo, ordenado por rendimiento real." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/tasas-hoy.html" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:image:width" content="2752" />
+  <meta property="og:image:height" content="1536" />
+  <meta property="og:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tasas hoy — Plazos fijos, billeteras y dólar en vivo" />
+  <meta name="twitter:description" content="TNA real de plazos fijos por banco (BCRA), billeteras virtuales (Naranja X, Ualá, Mercado Pago), FCI Money Market (Cocos, Balanz, Adcap) y dólar — todo en vivo, ordenado por rendimiento real." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta name="twitter:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
+  <!-- ===== / OPEN GRAPH ===== -->
+  <title>Tasas Hoy — Plazos Fijos y Dólar en vivo — BB Financial</title>
+  <meta name="description" content="Tasas de plazo fijo por banco en vivo (BCRA), dólar MEP/CCL/Blue y rendimiento real ajustado por inflación. Todo en una sola pantalla." />
+  <meta name="keywords" content="tasas hoy, plazo fijo, dólar MEP, dólar blue, rendimiento real, BCRA, Argentina" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+
+    .controls-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem 1.75rem;
+      margin-bottom: 1.5rem;
+      display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;
+    }
+    .infl-control { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; flex: 1; min-width: 260px; }
+    .infl-control label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle);
+    }
+    .infl-control input[type="range"] { width: 200px; accent-color: var(--accent); }
+    .infl-value { font-family: var(--font-display); font-size: 1.4rem; color: var(--accent); min-width: 70px; text-align: right; }
+    .infl-source { font-size: 0.72rem; color: var(--text-subtle); font-family: var(--font-mono); width: 100%; }
+
+    .section-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin: 2.5rem 0 1rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .section-header h2 {
+      font-family: var(--font-display); font-size: 1.5rem;
+      letter-spacing: -0.01em; color: var(--text);
+    }
+    .section-header .src {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--text-subtle); letter-spacing: 0.05em;
+    }
+
+    /* Tabla plazo fijo */
+    .rates-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: visible; /* permitir tooltips fuera de la tabla */
+    }
+    .rates-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .rates-table thead th:first-child { border-top-left-radius: 13px; }
+    .rates-table thead th:last-child  { border-top-right-radius: 13px; }
+    .rates-table tbody tr:last-child td:first-child { border-bottom-left-radius: 13px; }
+    .rates-table tbody tr:last-child td:last-child  { border-bottom-right-radius: 13px; }
+    .rates-table th {
+      background: rgba(74,222,154,0.04); color: var(--accent);
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 1rem 1.1rem; text-align: right;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none; transition: background 0.15s;
+    }
+    .rates-table th:first-child { text-align: left; }
+    .rates-table th:hover { background: rgba(74,222,154,0.08); }
+    .rates-table th .sort-arrow { opacity: 0; margin-left: 0.3rem; font-size: 0.7rem; }
+    .rates-table th.sorted .sort-arrow { opacity: 1; }
+    .rates-table td {
+      padding: 0.9rem 1.1rem; text-align: right; color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle;
+    }
+    .rates-table td:first-child { text-align: left; color: var(--text); }
+    .rates-table tr:last-child td { border-bottom: none; }
+    .rates-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+    .bank-cell { display: flex; align-items: center; gap: 0.75rem; }
+    .bank-logo {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--bg); border: 1px solid var(--border);
+      object-fit: contain; padding: 4px; flex-shrink: 0;
+    }
+    .bank-name { font-weight: 500; color: var(--text); font-size: 0.9rem; }
+
+    .rate-value { font-family: var(--font-display); font-size: 1.05rem; color: var(--text); }
+    .rate-real { font-family: var(--font-display); font-size: 1.1rem; font-weight: 500; }
+    .rate-real.positive { color: var(--accent); }
+    .rate-real.negative { color: #ff9999; }
+    .rate-real.neutral  { color: var(--text-muted); }
+
+    /* Dólar cards */
+    .dollar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 0.85rem;
+    }
+    .dollar-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.2rem 1.3rem;
+      transition: all 0.2s;
+    }
+    .dollar-card:hover { border-color: rgba(74,222,154,0.4); transform: translateY(-2px); }
+    .dollar-card .name {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-subtle); margin-bottom: 0.5rem;
+    }
+    .dollar-card .price {
+      font-family: var(--font-display); font-size: 1.6rem;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    .dollar-card .spread {
+      font-size: 0.75rem; color: var(--text-muted);
+      margin-top: 0.4rem; font-family: var(--font-mono);
+    }
+    .dollar-card.mep .price    { color: var(--accent); }
+    .dollar-card.ccl .price    { color: #60a5fa; }
+    .dollar-card.blue .price   { color: #ffb84d; }
+
+    .loading-state {
+      padding: 3rem 2rem; text-align: center;
+      color: var(--text-subtle); font-family: var(--font-mono); font-size: 0.85rem;
+    }
+    .loading-state .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 2px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      margin-bottom: 0.85rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .freshness {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 0.35rem 0.85rem;
+      font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-subtle);
+    }
+    .freshness::before { content: '●'; color: var(--accent); }
+
+    .info-callout {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-left: 3px solid #60a5fa; border-radius: 10px;
+      padding: 1rem 1.3rem; font-size: 0.85rem;
+      color: var(--text-muted); line-height: 1.65; margin: 1rem 0;
+    }
+    .info-callout strong { color: var(--text); }
+
+    .pf-stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .pf-stat {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.85rem 1.1rem;
+    }
+    .pf-stat .lbl {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle);
+    }
+    .pf-stat .val {
+      font-family: var(--font-display); font-size: 1.2rem;
+      color: var(--text); margin-top: 0.25rem;
+    }
+    .pf-stat .val.green { color: var(--accent); }
+    .pf-stat .val.red { color: #ff9999; }
+
+    /* Tooltip "?" en headers */
+    .th-help {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 14px; height: 14px; margin-left: 0.35rem; vertical-align: middle;
+      border: 1px solid var(--text-subtle); border-radius: 50%;
+      font-family: var(--font-mono); font-size: 0.62rem;
+      color: var(--text-subtle); font-weight: 500;
+      cursor: help; position: relative;
+      text-transform: none; letter-spacing: 0;
+    }
+    .th-help:hover { color: var(--accent); border-color: var(--accent); }
+    .th-help[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: #0a0d12; color: var(--text); border: 1px solid var(--border);
+      padding: 0.7rem 0.9rem; border-radius: 8px;
+      font-family: var(--font-body); font-size: 0.78rem; line-height: 1.5;
+      letter-spacing: 0; text-transform: none; font-weight: 400;
+      width: 280px; text-align: left; white-space: normal;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 100; pointer-events: none;
+    }
+    .th-help[data-tip]:hover::before {
+      content: ''; position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%);
+      border: 6px solid transparent; border-top-color: var(--border);
+      z-index: 100;
+    }
+    @media (max-width: 780px) { .th-help[data-tip]:hover::after { width: 220px; left: auto; right: 0; transform: none; } }
+
+    @media (max-width: 780px) {
+      .rates-table thead { display: none; }
+      .rates-table tr { display: block; padding: 1rem; border-bottom: 1px solid var(--border); }
+      .rates-table tr:last-child { border-bottom: none; }
+      .rates-table td { display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0; border: none; text-align: right; }
+      .rates-table td:first-child { margin-bottom: 0.5rem; padding-bottom: 0.65rem; border-bottom: 1px solid var(--border); }
+      .rates-table td:not(:first-child)::before {
+        content: attr(data-label);
+        font-family: var(--font-mono); font-size: 0.65rem;
+        letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link active">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="datos.html">Datos</a><span>/</span>Tasas hoy</p>
+        <h1 class="page-title">📊 Tasas hoy <span class="beta-badge" style="background:rgba(74,222,154,0.12);color:var(--accent);border-color:rgba(74,222,154,0.3)">Vivo</span></h1>
+        <p class="page-subtitle">Cuentas remuneradas, billeteras virtuales, plazos fijos por banco y dólar <strong>en vivo</strong>. Sin valores hardcodeados: todo viene de BCRA, ArgentinaDatos/CAFCI, DolarAPI e INDEC y se actualiza solo.</p>
+        <div id="freshness" class="freshness" style="margin-top:1rem">Cargando…</div>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <!-- CONTROL DE INFLACIÓN -->
+      <div class="controls-bar">
+        <div class="infl-control">
+          <label>Inflación esperada anual</label>
+          <input type="range" id="inflSlider" min="0" max="200" value="30" step="1" />
+          <span class="infl-value" id="inflValue">30%</span>
+          <span class="infl-source" id="inflSource">Cargando IPC INDEC…</span>
+        </div>
+      </div>
+
+      <!-- ===== CUENTAS REMUNERADAS / BILLETERAS ===== -->
+      <div class="section-header">
+        <h2>💳 Cuentas remuneradas y billeteras</h2>
+        <span class="src">Fuente: CAFCI vía ArgentinaDatos</span>
+      </div>
+
+      <div class="rates-table-wrap" style="margin-bottom:1rem">
+        <table class="rates-table" id="crTable">
+          <thead>
+            <tr>
+              <th data-sort="name">Billetera / Cuenta <span class="sort-arrow">↓</span></th>
+              <th data-sort="tna" class="sorted">TNA <span class="sort-arrow">↓</span></th>
+              <th data-sort="tea">TEA <span class="sort-arrow">↓</span></th>
+              <th data-sort="real">Real anual<span class="th-help" data-tip="Lo que efectivamente ganás (o perdés) en poder de compra después de descontar la inflación esperada. Fórmula de Fisher: (1+TEA)/(1+inflación) − 1. En verde: le ganás a la inflación. En rojo: perdés poder de compra.">?</span> <span class="sort-arrow">↓</span></th>
+              <th data-sort="tope">Tope remunerado<span class="th-help" data-tip="Monto máximo sobre el cual la billetera paga la TNA. Si tenés más plata que ese tope, lo que excede no rinde nada. Conviene diversificar entre varias o pasar el excedente a plazo fijo / FCI.">?</span> <span class="sort-arrow">↓</span></th>
+            </tr>
+          </thead>
+          <tbody id="crBody">
+            <tr><td colspan="5"><div class="loading-state"><div class="spinner"></div>Cargando billeteras…</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-callout" style="border-left-color:var(--accent)">
+        <strong>💡 Sobre el tope remunerado:</strong> casi todas las billeteras pagan TNA solo hasta un monto máximo (ej: Naranja X $1M, BNA $2M). Lo que excede ese tope no rinde nada. Si tenés más plata, conviene <strong>diversificar entre varias</strong> o pasar el excedente a plazo fijo / FCI.
+      </div>
+
+      <!-- ===== FCI MONEY MARKET ===== -->
+      <div class="section-header">
+        <h2>📜 FCI Money Market — gestoras y ALYCs</h2>
+        <span class="src">Fuente: CAFCI vía ArgentinaDatos</span>
+      </div>
+
+      <div class="rates-table-wrap" style="margin-bottom:1rem">
+        <table class="rates-table" id="fciTable">
+          <thead>
+            <tr>
+              <th data-sort="name">Fondo <span class="sort-arrow">↓</span></th>
+              <th data-sort="tna" class="sorted">TNA <span class="sort-arrow">↓</span></th>
+              <th data-sort="tea">TEA <span class="sort-arrow">↓</span></th>
+              <th data-sort="real">Real anual<span class="th-help" data-tip="Lo que efectivamente ganás (o perdés) en poder de compra después de descontar la inflación esperada. Fórmula de Fisher: (1+TEA)/(1+inflación) − 1. En verde: le ganás a la inflación. En rojo: perdés poder de compra.">?</span> <span class="sort-arrow">↓</span></th>
+            </tr>
+          </thead>
+          <tbody id="fciBody">
+            <tr><td colspan="4"><div class="loading-state"><div class="spinner"></div>Cargando FCI Money Market…</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-callout">
+        <strong>📖 Diferencia con cuentas remuneradas:</strong> los FCI Money Market los suscribís desde tu <strong>broker o ALYC</strong> (Cocos, Balanz, IOL, Adcap…). El rendimiento sale de un fondo común administrado por una gestora. Liquidez T+0 (rescate inmediato) y sin tope de monto remunerado, pero requieren cuenta comitente.
+      </div>
+
+      <details style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.3rem;margin:1rem 0;font-size:0.86rem">
+        <summary style="cursor:pointer;color:var(--accent);font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.05em;list-style:none;display:flex;align-items:center;gap:0.4rem">
+          <span style="display:inline-block;transition:transform 0.2s">▶</span>
+          ¿Por qué los rendimientos pueden diferir de los que muestra cada app?
+        </summary>
+        <div style="margin-top:1rem;color:var(--text-muted);line-height:1.7">
+          <p>Nuestros rendimientos se calculan comparando los <strong style="color:var(--text)">últimos dos valores cuotaparte (VCP)</strong> reportados por la <strong style="color:var(--text)">Cámara Argentina de Fondos Comunes de Inversión (CAFCI)</strong>, y anualizando el rendimiento entre ambas fechas. Es la misma metodología que usan agregadores como ComparaTasas.</p>
+          <p style="margin-top:0.7rem">Las diferencias con lo que ves en Mercado Pago, Personal Pay, Cocos, Balanz, etc. pueden deberse a:</p>
+          <ul style="padding-left:1.25rem;margin-top:0.5rem;line-height:1.85">
+            <li>Las apps muestran rendimientos <strong style="color:var(--text)">estimados o esperados</strong>, no los efectivos del último período.</li>
+            <li>Diferente <strong style="color:var(--text)">ventana de cálculo</strong> (últimos 7, 30 días vs. último día disponible).</li>
+            <li>Distintas <strong style="color:var(--text)">fechas de referencia</strong> para los VCP usados.</li>
+            <li>Algunas plataformas exponen un VCP propio que <strong style="color:var(--text)">difiere del reportado a CAFCI</strong>.</li>
+          </ul>
+          <p style="margin-top:0.85rem"><strong style="color:#ffb84d">⚠ Siempre verificá los rendimientos actuales directamente en cada plataforma antes de invertir.</strong></p>
+        </div>
+      </details>
+      <style>details[open] > summary > span:first-child { transform: rotate(90deg); }</style>
+
+      <!-- ===== PLAZOS FIJOS ===== -->
+      <div class="section-header">
+        <h2>🏦 Plazos fijos online — TNAs reales por banco</h2>
+        <span class="src" id="pfSrc">Fuente: BCRA vía ArgentinaDatos</span>
+      </div>
+
+      <div class="pf-stats" id="pfStats" style="display:none">
+        <div class="pf-stat"><div class="lbl">Mejor TNA</div><div class="val green" id="pfMejor">—</div></div>
+        <div class="pf-stat"><div class="lbl">Promedio</div><div class="val" id="pfProm">—</div></div>
+        <div class="pf-stat"><div class="lbl">Mejor real anual</div><div class="val" id="pfReal">—</div></div>
+        <div class="pf-stat"><div class="lbl">Bancos relevados</div><div class="val" id="pfCount">—</div></div>
+      </div>
+
+      <div class="rates-table-wrap">
+        <table class="rates-table" id="pfTable">
+          <thead>
+            <tr>
+              <th data-sort="name">Banco <span class="sort-arrow">↓</span></th>
+              <th data-sort="tna" class="sorted">TNA <span class="sort-arrow">↓</span></th>
+              <th data-sort="tea">TEA <span class="sort-arrow">↓</span></th>
+              <th data-sort="real">Real anual<span class="th-help" data-tip="Lo que efectivamente ganás (o perdés) en poder de compra después de descontar la inflación esperada. Fórmula de Fisher: (1+TEA)/(1+inflación) − 1. En verde: le ganás a la inflación. En rojo: perdés poder de compra.">?</span> <span class="sort-arrow">↓</span></th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="pfBody">
+            <tr><td colspan="5"><div class="loading-state"><div class="spinner"></div>Cargando tasas de bancos…</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-callout">
+        <strong>💡 Cómo leer:</strong> TNA es la tasa anual nominal que paga el banco a 30 días. TEA es la efectiva si reinvertís todos los meses. <strong>Real anual</strong> es lo que te queda en poder de compra después de descontar la inflación esperada (Fisher: <code style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent)">(1+TEA)/(1+infl)−1</code>). Si está en <span style="color:var(--accent)">verde</span> le ganás a la inflación, en <span style="color:#ff9999">rojo</span> perdés.
+      </div>
+
+      <!-- ===== DÓLAR ===== -->
+      <div class="section-header">
+        <h2>💵 Dólar hoy</h2>
+        <span class="src">Fuente: DolarAPI</span>
+      </div>
+      <div class="dollar-grid" id="dollarGrid">
+        <div class="loading-state" style="grid-column:1/-1"><div class="spinner"></div>Cargando cotizaciones…</div>
+      </div>
+
+      <div class="info-callout" id="brechaInfo" style="display:none">
+        <strong>📉 Brecha cambiaria:</strong> <span id="brechaText">—</span>
+      </div>
+
+      <!-- Créditos de fuentes -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-top:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.6rem">Fuentes de datos</p>
+        <p>Datos en vivo provistos por:</p>
+        <ul style="padding-left:1.25rem;margin-top:0.5rem;line-height:1.85">
+          <li><a href="https://argentinadatos.com/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(74,222,154,0.4)">ArgentinaDatos</a> — API pública gratuita con tasas de plazo fijo, FCI (CAFCI), inflación INDEC y dólar.</li>
+          <li><a href="https://comparatasas.ar/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(74,222,154,0.4)">ComparaTasas</a> — usa la misma fuente CAFCI y suma billeteras con endpoints propios. Si querés más detalle por instrumento o comparar criptopesos / criptomonedas, es muy buena referencia.</li>
+          <li><a href="https://www.bcra.gob.ar/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(74,222,154,0.4)">BCRA</a> — variables monetarias y BADLAR.</li>
+          <li><a href="https://dolarapi.com/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(74,222,154,0.4)">DolarAPI</a> — cotizaciones del dólar (oficial, MEP, CCL, blue, cripto).</li>
+        </ul>
+      </div>
+
+      <!-- CTAs a páginas educativas -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2.5rem">
+        <h3 style="font-family:var(--font-display);font-size:1.15rem;letter-spacing:-0.01em;margin-bottom:0.85rem">📚 ¿Querés saber qué es cada uno?</h3>
+        <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.65;margin-bottom:1rem">Esta página es solo el comparador. Si querés entender cómo funciona cada instrumento:</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.6rem">
+          <a href="cuentas-remuneradas.html" style="display:flex;align-items:center;gap:0.5rem;padding:0.7rem 0.95rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.86rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">💳 Cuentas remuneradas</a>
+          <a href="tasas-hoy.html" style="display:flex;align-items:center;gap:0.5rem;padding:0.7rem 0.95rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.86rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🏦 Plazos fijos</a>
+          <a href="etfs-fci.html" style="display:flex;align-items:center;gap:0.5rem;padding:0.7rem 0.95rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.86rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">💼 FCI / ETF</a>
+          <a href="caucion.html" style="display:flex;align-items:center;gap:0.5rem;padding:0.7rem 0.95rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.86rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🏛 Caución</a>
+          <a href="comparador-dolares.html" style="display:flex;align-items:center;gap:0.5rem;padding:0.7rem 0.95rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.86rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">💵 Dólar MEP/CCL</a>
+          <a href="empezar-a-invertir.html" style="display:flex;align-items:center;gap:0.5rem;padding:0.7rem 0.95rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.86rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🚀 Empezar a invertir</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Datos en vivo. Verificá en cada plataforma antes de operar.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes: BCRA, ArgentinaDatos (INDEC), DolarAPI. © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=22"></script>
+  <script>
+  // ====== TASAS HOY v2 — solo datos en vivo ======
+
+  // Helpers de seguridad (escHtml ya viene de sanitize.js, alias local por brevedad)
+  const esc = (s) => (window.escHtml ? window.escHtml(s) : String(s ?? '').replace(/[&<>"'/]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;'})[c]));
+  const safeUrl = (u) => (typeof u === 'string' && /^https?:\/\//i.test(u)) ? u : '';
+
+  let plazosFijos = [];
+  let cuentasRem = [];
+  let fciMM = [];
+  let sortKey = 'tna';
+  let sortDir = 'desc';
+  let sortKeyCR = 'tna';
+  let sortDirCR = 'desc';
+  let sortKeyFCI = 'tna';
+  let sortDirFCI = 'desc';
+  let inflacion = 30;
+  const MAX_DAYS_STALE = 60; // descartar entradas más viejas que esto
+
+  function teaFromTna(tnaPct) {
+    const tem = (tnaPct/100) / 12;
+    return (Math.pow(1 + tem, 12) - 1) * 100;
+  }
+  function realAnnual(teaPct, inflPct) {
+    return ((1 + teaPct/100) / (1 + inflPct/100) - 1) * 100;
+  }
+
+  function renderPF() {
+    const tbody = document.getElementById('pfBody');
+    if (!plazosFijos.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2.5rem;color:var(--text-subtle)">No se pudieron cargar las tasas. Intentá refrescar.</td></tr>';
+      return;
+    }
+
+    plazosFijos.forEach(r => {
+      r.tea = teaFromTna(r.tna);
+      r.real = realAnnual(r.tea, inflacion);
+    });
+
+    const sorted = plazosFijos.slice().sort((a, b) => {
+      let av, bv;
+      switch (sortKey) {
+        case 'name': av = a.name.toLowerCase(); bv = b.name.toLowerCase(); break;
+        case 'tna':  av = a.tna;  bv = b.tna;  break;
+        case 'tea':  av = a.tea;  bv = b.tea;  break;
+        case 'real': av = a.real; bv = b.real; break;
+      }
+      if (av < bv) return sortDir === 'asc' ? -1 : 1;
+      if (av > bv) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    tbody.innerHTML = sorted.map(r => {
+      const realClass = r.real > 0.5 ? 'positive' : (r.real < -0.5 ? 'negative' : 'neutral');
+      const realSign  = r.real > 0 ? '+' : '';
+      const logoUrl = safeUrl(r.logo);
+      const logo = logoUrl
+        ? `<img class="bank-logo" src="${esc(logoUrl)}" alt="" onerror="this.style.display='none'">`
+        : `<div class="bank-logo" style="display:flex;align-items:center;justify-content:center;font-size:0.9rem">🏦</div>`;
+      const enlaceUrl = safeUrl(r.enlace);
+      return `
+        <tr>
+          <td data-label="Banco">
+            <div class="bank-cell">${logo}<span class="bank-name">${esc(r.name)}</span></div>
+          </td>
+          <td data-label="TNA"><span class="rate-value">${r.tna.toFixed(2)}%</span></td>
+          <td data-label="TEA"><span class="rate-value">${r.tea.toFixed(2)}%</span></td>
+          <td data-label="Real anual"><span class="rate-real ${realClass}">${realSign}${r.real.toFixed(2)}%</span></td>
+          <td data-label="Acción">${enlaceUrl ? `<a class="row-link" href="${esc(enlaceUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.3rem;color:var(--accent);text-decoration:none;font-family:var(--font-mono);font-size:0.72rem;padding:0.35rem 0.7rem;border-radius:6px;background:var(--accent-dim);border:1px solid rgba(74,222,154,0.2)">Constituir →</a>` : '<span style="color:var(--text-subtle);font-size:0.78rem">—</span>'}</td>
+        </tr>
+      `;
+    }).join('');
+
+    // Stats
+    const tnas = plazosFijos.map(r => r.tna);
+    const mejor = Math.max(...tnas);
+    const prom  = tnas.reduce((a,b) => a+b, 0) / tnas.length;
+    const mejorReal = Math.max(...plazosFijos.map(r => r.real));
+    document.getElementById('pfStats').style.display = 'grid';
+    document.getElementById('pfMejor').textContent = mejor.toFixed(2) + '%';
+    document.getElementById('pfProm').textContent  = prom.toFixed(2) + '%';
+    const realEl = document.getElementById('pfReal');
+    realEl.textContent = (mejorReal > 0 ? '+' : '') + mejorReal.toFixed(2) + '%';
+    realEl.className = 'val ' + (mejorReal > 0 ? 'green' : 'red');
+    document.getElementById('pfCount').textContent = plazosFijos.length;
+  }
+
+  // Sort PF
+  document.querySelectorAll('#pfTable th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (sortKey === key) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      else { sortKey = key; sortDir = (key === 'name') ? 'asc' : 'desc'; }
+      document.querySelectorAll('#pfTable th').forEach(t => {
+        t.classList.toggle('sorted', t.dataset.sort === sortKey);
+        const a = t.querySelector('.sort-arrow');
+        if (a) a.textContent = sortDir === 'asc' ? '↑' : '↓';
+      });
+      renderPF();
+    });
+  });
+
+  // ===== CUENTAS REMUNERADAS / BILLETERAS =====
+  function titleCaseBilletera(s) {
+    if (!s) return '';
+    const upper = s.toUpperCase();
+    // Casos especiales
+    const map = {
+      'MERCADO FONDO': 'Mercado Pago',
+      'PERSONAL PAY': 'Personal Pay',
+      'BNA': 'BNA (Banco Nación)',
+      'BBVA': 'BBVA',
+      'ICBC': 'ICBC',
+      'BIND': 'BIND',
+    };
+    if (map[upper]) return map[upper];
+    return upper.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
+  }
+
+  function renderCR() {
+    const tbody = document.getElementById('crBody');
+    if (!cuentasRem.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2.5rem;color:var(--text-subtle)">No se pudieron cargar las billeteras.</td></tr>';
+      return;
+    }
+    cuentasRem.forEach(r => {
+      r.tea = teaFromTna(r.tna);
+      r.real = realAnnual(r.tea, inflacion);
+    });
+    const sorted = cuentasRem.slice().sort((a, b) => {
+      let av, bv;
+      switch (sortKeyCR) {
+        case 'name': av = a.name.toLowerCase(); bv = b.name.toLowerCase(); break;
+        case 'tna':  av = a.tna;  bv = b.tna;  break;
+        case 'tea':  av = a.tea;  bv = b.tea;  break;
+        case 'real': av = a.real; bv = b.real; break;
+        case 'tope': av = a.tope || 0; bv = b.tope || 0; break;
+      }
+      if (av < bv) return sortDirCR === 'asc' ? -1 : 1;
+      if (av > bv) return sortDirCR === 'asc' ? 1 : -1;
+      return 0;
+    });
+    tbody.innerHTML = sorted.map(r => {
+      const realClass = r.real > 0.5 ? 'positive' : (r.real < -0.5 ? 'negative' : 'neutral');
+      const realSign  = r.real > 0 ? '+' : '';
+      const tope = r.tope
+        ? '$' + r.tope.toLocaleString('es-AR', {maximumFractionDigits:0})
+        : '<span style="color:var(--text-subtle)">sin tope</span>';
+      return `
+        <tr>
+          <td data-label="Billetera">
+            <div class="bank-cell">
+              <div class="bank-logo" style="display:flex;align-items:center;justify-content:center;font-size:0.95rem">${esc(r.emoji || '💳')}</div>
+              <span class="bank-name">${esc(r.name)}</span>
+            </div>
+          </td>
+          <td data-label="TNA"><span class="rate-value">${r.tna.toFixed(2)}%</span></td>
+          <td data-label="TEA"><span class="rate-value">${r.tea.toFixed(2)}%</span></td>
+          <td data-label="Real anual"><span class="rate-real ${realClass}">${realSign}${r.real.toFixed(2)}%</span></td>
+          <td data-label="Tope" style="font-family:var(--font-mono);font-size:0.85rem">${tope}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Sort CR
+  document.querySelectorAll('#crTable th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (sortKeyCR === key) sortDirCR = sortDirCR === 'asc' ? 'desc' : 'asc';
+      else { sortKeyCR = key; sortDirCR = (key === 'name') ? 'asc' : 'desc'; }
+      document.querySelectorAll('#crTable th').forEach(t => {
+        t.classList.toggle('sorted', t.dataset.sort === sortKeyCR);
+        const a = t.querySelector('.sort-arrow');
+        if (a) a.textContent = sortDirCR === 'asc' ? '↑' : '↓';
+      });
+      renderCR();
+    });
+  });
+
+  // Calcular TNA de FCI Mercado Dinero: anualizamos rendimiento entre 2 fechas reales
+  function tnaFromVcp(vcpHoy, vcpAyer, fechaHoy, fechaAyer) {
+    const dHoy = new Date(fechaHoy);
+    const dAyer = new Date(fechaAyer);
+    const dias = Math.max(1, Math.round((dHoy - dAyer) / 86400000));
+    const rendimientoPeriodo = (vcpHoy / vcpAyer) - 1;
+    // Tasa diaria equivalente, anualizada lineal x 365
+    const tnaDecimal = (rendimientoPeriodo / dias) * 365;
+    return tnaDecimal * 100;
+  }
+
+  function daysAgo(fecha) {
+    if (!fecha) return Infinity;
+    const d = new Date(fecha);
+    if (isNaN(d)) return Infinity;
+    return (Date.now() - d.getTime()) / 86400000;
+  }
+
+  // ===== FCI MONEY MARKET =====
+  function renderFCI() {
+    const tbody = document.getElementById('fciBody');
+    if (!fciMM.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:2.5rem;color:var(--text-subtle)">No se pudieron cargar los FCI.</td></tr>';
+      return;
+    }
+    fciMM.forEach(r => {
+      r.tea = teaFromTna(r.tna);
+      r.real = realAnnual(r.tea, inflacion);
+    });
+    const sorted = fciMM.slice().sort((a, b) => {
+      let av, bv;
+      switch (sortKeyFCI) {
+        case 'name': av = a.name.toLowerCase(); bv = b.name.toLowerCase(); break;
+        case 'tna':  av = a.tna;  bv = b.tna;  break;
+        case 'tea':  av = a.tea;  bv = b.tea;  break;
+        case 'real': av = a.real; bv = b.real; break;
+      }
+      if (av < bv) return sortDirFCI === 'asc' ? -1 : 1;
+      if (av > bv) return sortDirFCI === 'asc' ? 1 : -1;
+      return 0;
+    });
+    tbody.innerHTML = sorted.map(r => {
+      const realClass = r.real > 0.5 ? 'positive' : (r.real < -0.5 ? 'negative' : 'neutral');
+      const realSign  = r.real > 0 ? '+' : '';
+      return `
+        <tr>
+          <td data-label="Fondo">
+            <div class="bank-cell">
+              <div class="bank-logo" style="display:flex;align-items:center;justify-content:center;font-size:0.95rem">${esc(r.emoji || '📜')}</div>
+              <span class="bank-name">${esc(r.name)}</span>
+            </div>
+          </td>
+          <td data-label="TNA"><span class="rate-value">${r.tna.toFixed(2)}%</span></td>
+          <td data-label="TEA"><span class="rate-value">${r.tea.toFixed(2)}%</span></td>
+          <td data-label="Real anual"><span class="rate-real ${realClass}">${realSign}${r.real.toFixed(2)}%</span></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Sort FCI
+  document.querySelectorAll('#fciTable th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (sortKeyFCI === key) sortDirFCI = sortDirFCI === 'asc' ? 'desc' : 'asc';
+      else { sortKeyFCI = key; sortDirFCI = (key === 'name') ? 'asc' : 'desc'; }
+      document.querySelectorAll('#fciTable th').forEach(t => {
+        t.classList.toggle('sorted', t.dataset.sort === sortKeyFCI);
+        const a = t.querySelector('.sort-arrow');
+        if (a) a.textContent = sortDirFCI === 'asc' ? '↑' : '↓';
+      });
+      renderFCI();
+    });
+  });
+
+  // Slider
+  const slider = document.getElementById('inflSlider');
+  const inflVal = document.getElementById('inflValue');
+  slider.addEventListener('input', () => {
+    inflacion = parseInt(slider.value);
+    inflVal.textContent = inflacion + '%';
+    renderPF();
+    renderCR();
+    renderFCI();
+  });
+
+  // ===== DÓLAR =====
+  function renderDollar(dolares) {
+    if (!Array.isArray(dolares) || !dolares.length) {
+      document.getElementById('dollarGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar las cotizaciones</div>';
+      return;
+    }
+    const order = ['oficial', 'mep', 'ccl', 'blue', 'cripto', 'tarjeta'];
+    const sorted = dolares.slice().sort((a, b) => {
+      const ai = order.indexOf(a.casa); const bi = order.indexOf(b.casa);
+      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+    });
+
+    const oficial = dolares.find(d => d.casa === 'oficial');
+
+    document.getElementById('dollarGrid').innerHTML = sorted.map(d => {
+      const venta = d.venta || 0;
+      const brecha = (oficial && d.casa !== 'oficial' && oficial.venta)
+        ? ((venta / oficial.venta - 1) * 100)
+        : null;
+      const cls = ['mep','ccl','blue'].includes(d.casa) ? d.casa : '';
+      return `
+        <div class="dollar-card ${esc(cls)}">
+          <div class="name">${esc(d.nombre || d.casa)}</div>
+          <div class="price">$${venta.toLocaleString('es-AR', {maximumFractionDigits:0})}</div>
+          <div class="spread">${d.compra ? 'Compra $' + d.compra.toLocaleString('es-AR', {maximumFractionDigits:0}) : ''}${brecha !== null ? ` · <span style="color:${brecha > 0 ? '#ffb84d' : 'var(--accent)'}">${brecha > 0 ? '+' : ''}${brecha.toFixed(1)}% vs oficial</span>` : ''}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Brecha
+    const mep = dolares.find(d => d.casa === 'mep');
+    if (oficial && mep && oficial.venta) {
+      const br = (mep.venta / oficial.venta - 1) * 100;
+      document.getElementById('brechaInfo').style.display = 'block';
+      document.getElementById('brechaText').innerHTML =
+        `El dólar MEP cotiza <strong>${br > 0 ? '+' : ''}${br.toFixed(1)}%</strong> por encima del oficial. ` +
+        `Una brecha estable y baja (menos de 20%) indica un mercado cambiario más ordenado; brecha alta suele señalar presión sobre las reservas.`;
+    }
+  }
+
+  // ===== LOAD =====
+  async function load() {
+    const tasks = [
+      fetch('/api/argentinadatos?path=finanzas/tasas/plazoFijo').then(r => r.json()).catch(() => null),
+      fetch('/api/dolar').then(r => r.json()).catch(() => null),
+      fetch('/api/argentinadatos?path=finanzas/indices/inflacion').then(r => r.json()).catch(() => null),
+      fetch('/api/argentinadatos?path=finanzas/fci/otros/ultimo').then(r => r.json()).catch(() => null),
+      fetch('/api/argentinadatos?path=finanzas/fci/mercadoDinero/ultimo').then(r => r.json()).catch(() => null),
+      fetch('/api/argentinadatos?path=finanzas/fci/mercadoDinero/penultimo').then(r => r.json()).catch(() => null),
+    ];
+    const [pf, dolares, infl, otros, mdUlt, mdPen] = await Promise.all(tasks);
+
+    // Plazo fijo
+    if (Array.isArray(pf)) {
+      plazosFijos = pf
+        .filter(b => b.tnaClientes && b.tnaClientes > 0)
+        .map(b => ({
+          name: titleCase(b.entidad || ''),
+          tna: b.tnaClientes * 100,
+          logo: b.logo && b.logo.startsWith('http') ? b.logo.replace('http://', 'https://') : null,
+          enlace: b.enlace || null,
+        }));
+    }
+
+    // Cuentas remuneradas / billeteras
+    const EMOJI = {
+      'NARANJA X': '🟠', 'UALA': '💜', 'BRUBANK': '🏦', 'BNA': '🏛',
+      'CARREFOUR BANCO': '🛒', 'CRESIUM': '🔷', 'FIWIND': '🌬',
+      'BELO': '🔵', 'PREX': '💚', 'ASTROPAY': '🚀',
+      'MERCADO FONDO': '💙', 'PERSONAL PAY': '💛',
+      'COCOS': '🥥', 'LEMON': '🍋', 'IBANK': '🏦',
+    };
+    cuentasRem = [];
+    if (Array.isArray(otros)) {
+      otros.forEach(o => {
+        if (!o.tna || o.tna <= 0) return;
+        if (daysAgo(o.fecha) > MAX_DAYS_STALE) return;
+        const key = (o.fondo || '').toUpperCase();
+        cuentasRem.push({
+          name: titleCaseBilletera(o.fondo),
+          tna: o.tna * 100,
+          tope: o.tope || null,
+          emoji: EMOJI[key] || '💳',
+          fecha: o.fecha,
+        });
+      });
+    }
+    // Mercado Pago + Personal Pay → en sección cuentas remuneradas (porque para el usuario son cuentas)
+    // Otros FCI MM de gestoras (Cocos, Balanz, Adcap, Allaria, Consultatio) → en sección FCI MM
+    fciMM = [];
+    if (Array.isArray(mdUlt) && Array.isArray(mdPen)) {
+      const cuentaTargets = [
+        { match: 'Mercado Fondo - Clase A', name: 'Mercado Pago', emoji: '💙' },
+        { match: 'Delta Pesos - Clase X', name: 'Personal Pay', emoji: '💛' },
+      ];
+      const fciPreferidos = [
+        { match: 'Cocos Ahorro - Clase A',                            name: 'Cocos Ahorro',                  emoji: '🥥' },
+        { match: 'Balanz Capital Money Market - Clase A',             name: 'Balanz Money Market',           emoji: '⚖️' },
+        { match: 'Adcap Ahorro Pesos Fondo de Dinero - Clase A',      name: 'Adcap Ahorro Pesos',            emoji: '💠' },
+        { match: 'Adcap Ahorro Dinámico Fondo de Dinero - Clase A',   name: 'Adcap Ahorro Dinámico',         emoji: '💠' },
+        { match: 'Allaria Ahorro - Clase A',                          name: 'Allaria Ahorro',                emoji: '🔷' },
+        { match: 'Allaria Ahorro Dinámico - Clase A',                 name: 'Allaria Ahorro Dinámico',       emoji: '🔷' },
+        { match: 'Consultatio Fondo de Dinero - Clase A',             name: 'Consultatio Fondo de Dinero',   emoji: '🧮' },
+      ];
+
+      const calcTna = (target, ult, pen) => {
+        const hoy  = ult.find(x => x.fondo === target);
+        const ayer = pen.find(x => x.fondo === target);
+        if (!hoy || !ayer || !hoy.vcp || !ayer.vcp) return null;
+        if (daysAgo(hoy.fecha) > MAX_DAYS_STALE) return null;
+        const tna = tnaFromVcp(hoy.vcp, ayer.vcp, hoy.fecha, ayer.fecha);
+        if (!isFinite(tna) || tna <= 0 || tna > 200) return null;
+        return { tna, fecha: hoy.fecha };
+      };
+
+      cuentaTargets.forEach(t => {
+        const r = calcTna(t.match, mdUlt, mdPen);
+        if (r) cuentasRem.push({ name: t.name, tna: r.tna, tope: null, emoji: t.emoji, fecha: r.fecha });
+      });
+
+      fciPreferidos.forEach(t => {
+        const r = calcTna(t.match, mdUlt, mdPen);
+        if (r) fciMM.push({ name: t.name, tna: r.tna, emoji: t.emoji, fecha: r.fecha, fondo: t.match });
+      });
+
+      // Top genéricos por TNA (excluyendo USD/Dólar y los ya incluidos)
+      const yaIncluidos = new Set([...cuentaTargets, ...fciPreferidos].map(t => t.match));
+      const genericos = mdUlt
+        .filter(x => x.fondo && x.fondo.includes('Clase A') && !yaIncluidos.has(x.fondo)
+                  && !/(dólar|dolar|usd)/i.test(x.fondo)
+                  && daysAgo(x.fecha) <= MAX_DAYS_STALE
+                  && x.vcp > 0)
+        .map(x => {
+          const r = calcTna(x.fondo, mdUlt, mdPen);
+          if (!r) return null;
+          return { name: x.fondo.replace(' - Clase A', ''), tna: r.tna, emoji: '📜', fecha: r.fecha };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.tna - a.tna)
+        .slice(0, 5);
+      fciMM = [...fciMM, ...genericos];
+    }
+
+    // Inflación
+    if (Array.isArray(infl) && infl.length) {
+      const last = infl[infl.length - 1];
+      const inflMens = last.valor;
+      const inflAnual = Math.round((Math.pow(1 + inflMens/100, 12) - 1) * 100);
+      inflacion = Math.min(200, inflAnual);
+      slider.value = inflacion;
+      inflVal.textContent = inflacion + '%';
+      const fecha = last.fecha
+        ? new Date(last.fecha).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' })
+        : '';
+      document.getElementById('inflSource').textContent =
+        `Último IPC INDEC: ${inflMens.toFixed(2)}% mensual${fecha ? ' (' + fecha + ')' : ''} → anualizado ${inflacion}%`;
+    } else {
+      document.getElementById('inflSource').textContent = 'No se pudo cargar IPC INDEC — usando default 30%';
+    }
+
+    renderPF();
+    renderCR();
+    renderFCI();
+    renderDollar(dolares);
+
+    // Freshness
+    const now = new Date().toLocaleString('es-AR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    document.getElementById('freshness').textContent = `Actualizado ${now} · datos en vivo`;
+  }
+
+  function titleCase(s) {
+    return s.toLowerCase().split(' ').map(w => {
+      if (['de','del','la','el','y','s.a.','sa'].includes(w)) return w.toUpperCase() === 'S.A.' || w === 's.a.' ? 'S.A.' : w;
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(' ').replace(/\bS\.a\.\b/g, 'S.A.');
+  }
+
+  load();
+  </script>
+</body>
+</html>

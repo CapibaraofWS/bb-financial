@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
+<style>html{background:#0a0c0f;color-scheme:dark}</style>
+    <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -134,6 +135,90 @@
     .sistema-tab.active { color:var(--accent); background:var(--accent-dim); border-color:rgba(74,222,154,0.25); }
 
     @media(max-width:600px){ .rates-grid{grid-template-columns:1fr 1fr;} }
+
+    /* Sección de inflación / costo real */
+    .real-section {
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, rgba(96,165,250,0.04), rgba(74,222,154,0.04));
+      border: 1px solid rgba(96,165,250,0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .real-section h4 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      display: flex; align-items: center; gap: 0.45rem;
+    }
+    .real-section .sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .real-input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .real-input-row .preset-row { grid-column: 1 / -1; display:flex; gap:0.4rem; flex-wrap:wrap; margin-top: 0.4rem; }
+    .infl-preset {
+      background: var(--bg); color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem; border-radius: 16px;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .infl-preset:hover, .infl-preset.active {
+      background: var(--accent-dim); color: var(--accent); border-color: rgba(74,222,154,0.4);
+    }
+    .real-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .real-stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+    }
+    .real-stat .lbl {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+    .real-stat .val {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-top: 0.25rem;
+    }
+    .real-stat .delta {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      margin-top: 0.2rem;
+      color: var(--text-subtle);
+    }
+    .real-stat.positive .val { color: var(--accent); }
+    .real-stat.negative .val { color: #ff9999; }
+    .real-verdict {
+      margin-top: 1rem;
+      padding: 0.85rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+    .real-verdict.good { background: rgba(74,222,154,0.08); border-left: 3px solid var(--accent); }
+    .real-verdict.bad  { background: rgba(255,107,107,0.08); border-left: 3px solid #ff6b6b; }
+    .real-verdict strong { color: var(--text); }
   </style>
 
     <style>
@@ -307,9 +392,70 @@
             <div class="result-row"><span class="label">Total a pagar</span><span class="value positive" id="res-total-p">—</span></div>
             <div class="result-row"><span class="label">Costo del crédito</span><span class="value neutral" id="res-costo-pct">—</span></div>
 
+            <!-- ===== COSTO REAL CON INFLACIÓN ===== -->
+            <div class="real-section">
+              <h4>📉 Costo real ajustado por inflación</h4>
+              <p class="sub">En contextos inflacionarios, las cuotas futuras valen menos en pesos de hoy. Mirá cuánto te <strong style="color:var(--accent)">"ahorra" la inflación</strong> en términos reales — o cuánto te perjudica si el préstamo está atado a UVA o ajuste.</p>
+
+              <div class="real-input-row">
+                <div>
+                  <label style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.3rem">Inflación esperada anual (%)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="infl-anual" class="has-suffix" value="40" min="0" max="500" step="0.1" />
+                    <span class="input-suffix">%</span>
+                  </div>
+                </div>
+                <div>
+                  <label style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.3rem">Tipo de préstamo</label>
+                  <select id="infl-tipo" style="width:100%;padding:0.7rem 0.85rem;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:var(--font-body)">
+                    <option value="nominal">Pesos nominales (tasa fija)</option>
+                    <option value="uva">UVA / Ajustado por inflación</option>
+                  </select>
+                </div>
+                <div class="preset-row">
+                  <button type="button" class="infl-preset" data-infl="0">0%</button>
+                  <button type="button" class="infl-preset" data-infl="15">15% (USA/UE alta)</button>
+                  <button type="button" class="infl-preset" data-infl="25">25% (post-desinflación)</button>
+                  <button type="button" class="infl-preset active" data-infl="40">40% (Arg. moderada)</button>
+                  <button type="button" class="infl-preset" data-infl="80">80% (Arg. alta)</button>
+                  <button type="button" class="infl-preset" data-infl="150">150% (Arg. crisis)</button>
+                </div>
+              </div>
+
+              <div class="real-stats">
+                <div class="real-stat positive" id="rs-tasa-real-card">
+                  <div class="lbl">Tasa real anual</div>
+                  <div class="val" id="rs-tasa-real">—</div>
+                  <div class="delta">CFTEA − Inflación</div>
+                </div>
+                <div class="real-stat" id="rs-total-real-card">
+                  <div class="lbl">Total a pagar (real, hoy)</div>
+                  <div class="val" id="rs-total-real">—</div>
+                  <div class="delta" id="rs-total-real-delta">—</div>
+                </div>
+                <div class="real-stat">
+                  <div class="lbl">Cuota 1 (hoy)</div>
+                  <div class="val" id="rs-cuota-hoy">—</div>
+                  <div class="delta">Pesos actuales</div>
+                </div>
+                <div class="real-stat">
+                  <div class="lbl">Última cuota (en pesos de hoy)</div>
+                  <div class="val" id="rs-cuota-final">—</div>
+                  <div class="delta" id="rs-cuota-final-delta">—</div>
+                </div>
+              </div>
+
+              <div class="real-verdict good" id="rs-verdict">—</div>
+            </div>
+
             <div class="chart-section" style="margin-top:1.25rem">
               <p class="chart-title">Capital vs. Intereses por cuota</p>
               <canvas id="prestamoChart" class="calc-chart" height="200"></canvas>
+            </div>
+
+            <div class="chart-section" style="margin-top:1.25rem">
+              <p class="chart-title">Cuota nominal vs. real (poder de compra)</p>
+              <canvas id="realChart" class="calc-chart" height="200"></canvas>
             </div>
 
             <p class="panel-title" style="margin-top:1.5rem">Tabla de amortización</p>
@@ -360,7 +506,9 @@
   <script src="../js/main.js?v=22"></script>
   <script>
     let chart = null;
+    let realChart = null;
     let sistemaActual = 'frances';
+    let ultimasCuotas = []; // para que recálculos de inflación no rehagan toda la amortización
 
     const sistemasDesc = {
       frances:   '<strong style="color:var(--text)">Cuota fija:</strong> Cada cuota es igual. Al principio pagás más interés y menos capital; al final, más capital. Es el más común en préstamos personales e hipotecas.',
@@ -498,6 +646,10 @@
       const dCap    = cuotas.slice(0,maxShow).map(c => c.capital);
       const dInt    = cuotas.slice(0,maxShow).map(c => c.interes);
 
+      // Guardar para que calcularReal pueda usarlo sin rehacer la amortización
+      ultimasCuotas = { cuotas, cftea, capital: C, impPct, costoO };
+      calcularReal();
+
       if (chart) chart.destroy();
       chart = new Chart(document.getElementById('prestamoChart'), {
         type: 'bar',
@@ -518,6 +670,124 @@
         }
       });
     }
+
+    // ===== INFLACIÓN / COSTO REAL =====
+    function calcularReal() {
+      if (!ultimasCuotas.length) return;
+      const cuotas    = ultimasCuotas.cuotas;
+      const cftea     = ultimasCuotas.cftea;
+      const C         = ultimasCuotas.capital;
+      const impPct    = ultimasCuotas.impPct;
+      const costoO    = ultimasCuotas.costoO;
+
+      const inflAnual = (parseFloat(document.getElementById('infl-anual').value) || 0) / 100;
+      const tipo      = document.getElementById('infl-tipo').value;
+      const inflMens  = Math.pow(1 + inflAnual, 1/12) - 1;
+
+      // Fisher: tasa real = (1+nominal)/(1+inflación) - 1
+      const tasaReal = (1 + cftea) / (1 + inflAnual) - 1;
+
+      // Valor presente real de los pagos (descontando por inflación)
+      // Si UVA, las cuotas se ajustan por inflación → en términos reales valen igual que la cuota nominal de hoy
+      // Si nominal, las cuotas futuras valen menos en pesos de hoy
+      let totalNominal = 0, totalReal = 0;
+      const cuotasReales = []; // para el chart
+      cuotas.forEach((cu, k) => {
+        const pagoNominal = cu.pago + cu.interes * impPct;
+        totalNominal += pagoNominal;
+        let pagoReal;
+        if (tipo === 'uva') {
+          // Cuota se ajusta por inflación → en pesos del momento k+1 vale pagoNominal*(1+infl)^(k+1)
+          // En pesos de hoy → descontás eso por (1+infl)^(k+1) → queda pagoNominal
+          pagoReal = pagoNominal;
+        } else {
+          pagoReal = pagoNominal / Math.pow(1 + inflMens, k + 1);
+        }
+        totalReal += pagoReal;
+        cuotasReales.push({ nominal: pagoNominal, real: pagoReal });
+      });
+      totalNominal += costoO;
+      totalReal += costoO; // costo otorgamiento se paga al inicio → ya está en pesos de hoy
+
+      const cuota1Hoy   = cuotasReales[0].real;
+      const cuotaFinal  = cuotasReales[cuotasReales.length - 1].real;
+      const ahorroInfl  = totalNominal - totalReal;
+      const ahorroPct   = totalNominal > 0 ? (ahorroInfl / totalNominal) * 100 : 0;
+
+      // Render
+      document.getElementById('rs-tasa-real').textContent = (tasaReal * 100).toFixed(2) + '%';
+      const tasaRealCard = document.getElementById('rs-tasa-real-card');
+      tasaRealCard.className = 'real-stat ' + (tasaReal < 0 ? 'positive' : 'negative');
+
+      document.getElementById('rs-total-real').textContent = '$' + formatUSD(totalReal);
+      const totalRealCard = document.getElementById('rs-total-real-card');
+      totalRealCard.className = 'real-stat ' + (ahorroInfl > 0 ? 'positive' : (ahorroInfl < 0 ? 'negative' : ''));
+      document.getElementById('rs-total-real-delta').textContent =
+        tipo === 'uva'
+          ? 'UVA: cuota se ajusta — no hay ahorro real'
+          : (ahorroInfl > 0
+              ? `Te "ahorrás" $${formatUSD(ahorroInfl)} (${ahorroPct.toFixed(1)}%) por inflación`
+              : 'Sin diferencia');
+
+      document.getElementById('rs-cuota-hoy').textContent = '$' + formatUSD(cuota1Hoy);
+      document.getElementById('rs-cuota-final').textContent = '$' + formatUSD(cuotaFinal);
+
+      const cuotaFinalPct = cuota1Hoy > 0 ? (cuotaFinal / cuota1Hoy * 100) : 100;
+      document.getElementById('rs-cuota-final-delta').textContent =
+        tipo === 'uva'
+          ? 'Igual a la primera (UVA)'
+          : `${cuotaFinalPct.toFixed(0)}% del poder de compra inicial`;
+
+      // Veredicto
+      const verdict = document.getElementById('rs-verdict');
+      if (tipo === 'uva') {
+        verdict.className = 'real-verdict bad';
+        verdict.innerHTML = `⚠ <strong>Préstamo UVA:</strong> tus cuotas se ajustan por inflación, así que en términos reales pagás casi lo mismo que la cuota inicial todos los meses. Tu tasa real (${(tasaReal*100).toFixed(2)}%) es la que realmente te cobran sobre el poder de compra. <strong>No hay "ahorro por inflación"</strong>.`;
+      } else if (tasaReal < 0) {
+        verdict.className = 'real-verdict good';
+        verdict.innerHTML = `✅ <strong>Tasa real negativa (${(tasaReal*100).toFixed(2)}%):</strong> la inflación esperada (${(inflAnual*100).toFixed(1)}%) es mayor que tu costo financiero total (${(cftea*100).toFixed(1)}%). En pesos de hoy vas a pagar <strong>$${formatUSD(totalReal)}</strong> en vez de los <strong>$${formatUSD(totalNominal)}</strong> nominales. La inflación te "regala" $${formatUSD(ahorroInfl)} (${ahorroPct.toFixed(1)}%) — siempre que tu sueldo le siga el ritmo.`;
+      } else {
+        verdict.className = 'real-verdict bad';
+        verdict.innerHTML = `⚠ <strong>Tasa real positiva (+${(tasaReal*100).toFixed(2)}%):</strong> tu CFTEA (${(cftea*100).toFixed(1)}%) supera la inflación esperada (${(inflAnual*100).toFixed(1)}%). Estás pagando intereses por encima de la pérdida del peso. En pesos de hoy el préstamo te sale <strong>$${formatUSD(totalReal)}</strong>.`;
+      }
+
+      // Gráfico nominal vs real
+      const maxShow = Math.min(cuotasReales.length, 36);
+      const labels = cuotasReales.slice(0, maxShow).map((_, i) => `C${i+1}`);
+      const dNom = cuotasReales.slice(0, maxShow).map(c => c.nominal);
+      const dReal = cuotasReales.slice(0, maxShow).map(c => c.real);
+      if (realChart) realChart.destroy();
+      realChart = new Chart(document.getElementById('realChart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Cuota nominal', data: dNom, borderColor: 'rgba(96,165,250,0.9)', backgroundColor: 'rgba(96,165,250,0.1)', tension: 0.15, borderWidth: 2, pointRadius: 0, fill: true },
+            { label: 'Cuota en pesos de hoy', data: dReal, borderColor: 'rgba(74,222,154,0.9)', backgroundColor: 'rgba(74,222,154,0.1)', tension: 0.15, borderWidth: 2, pointRadius: 0, fill: true },
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color:'#7a8599', font:{family:'DM Mono',size:10} } } },
+          scales: {
+            x: { ticks:{color:'#7a8599',font:{family:'DM Mono',size:8},maxTicksLimit:12}, grid:{color:'rgba(255,255,255,0.03)'} },
+            y: { ticks:{color:'#7a8599',font:{family:'DM Mono',size:9},callback:v=>'$'+(v>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0))}, grid:{color:'rgba(255,255,255,0.04)'} }
+          }
+        }
+      });
+    }
+
+    document.querySelectorAll('.infl-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.infl-preset').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('infl-anual').value = btn.dataset.infl;
+        calcularReal();
+      });
+    });
+    ['infl-anual','infl-tipo'].forEach(id =>
+      document.getElementById(id).addEventListener('input', calcularReal)
+    );
 
     calcularPrestamo();
     ['capital-prest','tna','plazo-prest','costo-otorg','impuestos'].forEach(id =>
