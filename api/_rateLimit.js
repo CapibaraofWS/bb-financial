@@ -50,7 +50,10 @@ export async function denyRateLimited(req, res, opts = {}) {
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(2000),
     });
-    if (!r.ok) return false; // si Upstash falla, permitir (fail-open)
+    if (!r.ok) {
+      console.warn('[rateLimit] Upstash respondió', r.status, '— fail-open');
+      return false;
+    }
     const data = await r.json();
     const count = data?.[0]?.result;
     if (typeof count === 'number' && count > limit) {
@@ -65,7 +68,8 @@ export async function denyRateLimited(req, res, opts = {}) {
       res.setHeader('X-RateLimit-Remaining', String(Math.max(0, limit - count)));
     }
     return false;
-  } catch {
-    return false; // fail-open: si Upstash está caído, no bloquear al usuario
+  } catch (err) {
+    console.warn('[rateLimit] Upstash error — fail-open:', err?.message || err);
+    return false;
   }
 }
