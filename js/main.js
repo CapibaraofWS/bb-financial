@@ -385,16 +385,78 @@ document.addEventListener('toggle', (e) => {
   footer.parentNode.insertBefore(div, footer);
 })();
 
-// Mobile menu toggle
-const toggle = document.querySelector('.menu-toggle');
-const navEl = document.querySelector('.main-nav');
-if (toggle && navEl) {
-  toggle.addEventListener('click', (e) => {
-    e.stopPropagation();   // prevent document handlers from interfering
-    const open = navEl.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', String(open));
+// ============================================================
+// MENÚ MOBILE
+// Antes sólo alternaba una clase: no se cerraba tocando afuera, no respondía
+// a Escape, el fondo seguía scrolleando y no había forma de saber que el botón
+// también cerraba. Acá agregamos backdrop, bloqueo de scroll y cierre por
+// link / afuera / Escape.
+// ============================================================
+(function menuMobile() {
+  const toggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.main-nav');
+  if (!toggle || !nav) return;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'nav-backdrop';
+  backdrop.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(backdrop);
+
+  let scrollY = 0;
+
+  function abrir() {
+    scrollY = window.scrollY;
+    nav.classList.add('open');
+    backdrop.classList.add('show');
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', 'Cerrar menú');
+    // Bloquea el scroll del fondo sin perder la posición al cerrar
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+  }
+
+  function cerrar() {
+    if (!nav.classList.contains('open')) return;
+    nav.classList.remove('open');
+    backdrop.classList.remove('show');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Abrir menú');
+    nav.querySelectorAll('.nav-dropdown.open').forEach(dd => {
+      dd.classList.remove('open');
+      const b = dd.querySelector('.nav-dropdown-btn');
+      if (b) b.setAttribute('aria-expanded', 'false');
+    });
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollY);
+  }
+
+  toggle.addEventListener('click', e => {
+    e.stopPropagation();
+    nav.classList.contains('open') ? cerrar() : abrir();
   });
-}
+
+  backdrop.addEventListener('click', cerrar);
+
+  // Elegir un destino cierra el menú (importante cuando el link es un ancla
+  // de la misma página y no hay navegación que lo cierre sola)
+  nav.addEventListener('click', e => {
+    if (e.target.closest('a')) cerrar();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrar();
+  });
+
+  // Si se pasa a desktop con el menú abierto, hay que soltar el scroll
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1100) cerrar();
+  });
+
+  window.__cerrarMenuMobile = cerrar;
+})();
 
 // Card spotlight effect
 document.querySelectorAll('.tool-card').forEach(card => {

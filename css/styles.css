@@ -99,6 +99,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .logo-img { height: 36px; }
   .site-footer .logo-img { height: 48px; }
 }
+/* El backdrop del menú mobile no debe existir en escritorio */
+.nav-backdrop { display: none; }
 .main-nav { display: flex; gap: 0.25rem; align-items: center; }
 .nav-link {
   padding: 0.4rem 0.85rem;
@@ -138,20 +140,37 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-color: transparent;
 }
 
+/* Botón hamburguesa: 44x44 reales (antes 34x28, por debajo del mínimo táctil)
+   y se transforma en X al abrir, para que se vea que cierra. */
 .menu-toggle {
   display: none;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
   gap: 5px;
-  padding: 6px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin-right: -6px;
+  border-radius: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition);
 }
+.menu-toggle:active { background: rgba(255,255,255,0.06); }
 .menu-toggle span {
   display: block;
   width: 22px;
   height: 2px;
   background: var(--text);
   border-radius: 2px;
-  transition: var(--transition);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.16s ease;
 }
+.menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0.3); }
+.menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ============================================
    HERO
@@ -757,36 +776,96 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
   .nav-sep { margin: 0 0.05rem; }
 }
 @media (max-width: 1100px) {
-  .main-nav { display: none; }
-  .main-nav.open {
+  /* El menú vive siempre en el DOM y se muestra con opacidad/transform,
+     no con display, para que la apertura pueda animarse. */
+  .main-nav {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     position: fixed;
     top: 64px; left: 0; right: 0;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
-    padding: 1.5rem;
-    gap: 0.25rem;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    padding: 0.5rem 0.9rem 1.25rem;
+    gap: 0;
     z-index: 99;
     overflow-y: auto;
-    max-height: calc(100vh - 64px);
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100dvh - 64px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.4,0,0.2,1), visibility 0.26s;
   }
+  .main-nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  /* Fondo oscuro: da contexto y cierra el menú al tocar fuera */
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 64px 0 0;
+    background: rgba(6,8,11,0.55);
+    backdrop-filter: blur(2px);
+    z-index: 98;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.22s ease, visibility 0.22s;
+  }
+  .nav-backdrop.show { opacity: 1; visibility: visible; }
+
+  /* Cada ítem ocupa el ancho completo: no queda "aire" entre cajas donde
+     el dedo puede caer sin activar nada. */
+  .main-nav.open .nav-link,
+  .main-nav.open .nav-dropdown-btn {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.85rem 0.75rem;
+    font-size: 1rem;
+    text-align: left;
+    justify-content: space-between;
+    border-radius: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .main-nav .nav-dropdown { width: 100%; }
+  .main-nav.open .nav-link:active,
+  .main-nav.open .nav-dropdown-btn:active { background: rgba(255,255,255,0.06); }
+
+  /* Submenús: se despliegan con animación en vez de aparecer de golpe */
   .main-nav.open .nav-dropdown-menu {
-    display: none;
+    display: block;
     position: static;
     box-shadow: none;
     border: none;
     background: var(--bg-card);
     border-radius: 8px;
-    margin-top: 0.25rem;
-    padding: 0.25rem;
+    padding: 0 0.25rem;
+    margin-top: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease, margin 0.3s ease, padding 0.3s ease;
   }
-  /* Solo mostrar el menú si el dropdown está abierto explícitamente */
   .main-nav.open .nav-dropdown.open .nav-dropdown-menu {
-    display: block;
+    max-height: 720px;
+    opacity: 1;
+    margin: 0.35rem 0 0.6rem;
+    padding: 0.3rem 0.25rem;
   }
-  .main-nav.open .nav-dropdown.open .nav-dropdown-btn,
-  .main-nav.open .nav-dropdown-btn { width: 100%; justify-content: space-between; }
+  .main-nav.open .nav-dropdown .dd-arrow {
+    transition: transform 0.26s cubic-bezier(0.4,0,0.2,1);
+    font-size: 0.6rem;
+  }
+  .main-nav.open .nav-dropdown.open .dd-arrow { transform: rotate(180deg); }
+  .main-nav.open .nav-dropdown.open .nav-dropdown-btn { border-bottom-color: transparent; }
+
   .menu-toggle { display: flex; }
   .why-inner { grid-template-columns: 1fr; }
   .why-visual { display: none; }
@@ -818,17 +897,9 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
     display: inline-flex;
     align-items: center;
   }
-  /* Dropdown items inside hamburger menu */
-  .main-nav.open .nav-dropdown-menu a {
-    min-height: 44px;
-    padding: 0.7rem 0.85rem;
-  }
-  /* Main nav-link in hamburger */
-  .main-nav.open .nav-link,
-  .main-nav.open .nav-dropdown-btn {
-    min-height: 44px;
-    padding: 0.7rem 0.85rem;
-  }
+  /* El alto de los items del menú mobile lo define el bloque de @media 1100px,
+     que los pone en 52px. Acá sólo aseguramos los del submenú. */
+  .main-nav.open .nav-dropdown-menu a { min-height: 46px; padding: 0.75rem 0.85rem; }
   /* "Ver todas" links and inline navigation */
   .section-cta, .view-all {
     min-height: 36px;
@@ -1240,4 +1311,58 @@ img { max-width: 100%; height: auto; }
   font-size: 0.85rem;
   line-height: 1.55;
   color: var(--text-muted);
+}
+
+/* ============================================================
+   MOBILE UX
+   Ajustes que sólo aplican en pantallas chicas. No tocan el diseño
+   de escritorio: cada regla vive dentro de su media query.
+   ============================================================ */
+
+/* iOS hace zoom automático al enfocar un campo con menos de 16px.
+   Subirlos a 16px en mobile evita ese salto de escala tan molesto. */
+@media (max-width: 900px) {
+  input, select, textarea,
+  .form-group input[type="number"],
+  .form-group select,
+  .mini-widget input,
+  .mini-widget select {
+    font-size: 16px !important;
+  }
+  .form-group input[type="number"],
+  .form-group select { padding: 0.8rem 1rem; min-height: 48px; }
+  .mini-widget input, .mini-widget select { padding: 0.7rem 0.8rem; min-height: 46px; }
+}
+
+@media (max-width: 720px) {
+  /* Los "Ver todas ›" median 20px de alto: imposibles de apuntar con el dedo */
+  .section-cta, .view-all,
+  .footer-contact a,
+  .article-back {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .logo { min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* El ticker se leía a 9-11px */
+  .mkt-label, .mkt-price, .mkt-chg { font-size: 0.78rem; }
+  .mc-zone, .mc-time { font-size: 0.72rem; }
+
+  /* Respiro entre bloques: el texto corrido en columna angosta cansa */
+  .article-body p { line-height: 1.75; margin-bottom: 1.15rem; }
+  .article-body h2 { margin-top: 2.25rem; }
+  .related-reads { margin-top: 2.5rem; padding: 1.25rem 1.1rem 1.4rem; }
+  .related-reads a { font-size: 1rem; }
+}
+
+/* Respeta a quien pidió menos movimiento en su sistema operativo */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

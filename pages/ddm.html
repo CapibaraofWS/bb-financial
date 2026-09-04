@@ -29,7 +29,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
@@ -148,22 +148,22 @@
               <p class="panel-title">Datos de la empresa</p>
               <div class="form-group">
                 <label for="d0">Dividendo actual por acción (D₀)</label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="d0" class="has-prefix" value="3.00" min="0" step="0.01" oninput="calcGordon()"/></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="d0" class="has-prefix" value="3.00" min="0" step="0.01" oninput="calcGordon()"/ inputmode="decimal"></div>
                 <p class="field-note">El dividendo que acaba de pagar la empresa. En Yahoo Finance: "Forward Dividend" o "TTM Dividend".</p>
               </div>
               <div class="form-group">
                 <label for="g-gordon">Tasa de crecimiento del dividendo <span>(g, %)</span></label>
-                <div class="input-wrap"><input type="number" id="g-gordon" class="has-suffix" value="4" min="0" max="20" step="0.1" oninput="calcGordon()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="g-gordon" class="has-suffix" value="4" min="0" max="20" step="0.1" oninput="calcGordon()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">Crecimiento anual esperado del dividendo en perpetuidad. Debe ser menor que Ke. Referencia: promedio histórico de crecimiento de la empresa (5y CAGR del dividendo).</p>
               </div>
               <div class="form-group">
                 <label for="ke-gordon">Costo del equity requerido <span>(Ke, %)</span></label>
-                <div class="input-wrap"><input type="number" id="ke-gordon" class="has-suffix" value="10" min="0" max="30" step="0.1" oninput="calcGordon()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="ke-gordon" class="has-suffix" value="10" min="0" max="30" step="0.1" oninput="calcGordon()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">El retorno que exigen los inversores. Calculalo con la herramienta <a href="wacc.html" style="color:var(--accent)">WACC/CAPM</a>. Si β=1.2 y rm=9.5%, Ke ≈ 11.4%.</p>
               </div>
               <div class="form-group">
                 <label for="precio-mercado">Precio de mercado actual</label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-mercado" class="has-prefix" value="50" min="0" step="0.01" oninput="calcGordon()"/></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-mercado" class="has-prefix" value="50" min="0" step="0.01" oninput="calcGordon()"/ inputmode="decimal"></div>
                 <p class="field-note">Precio actual de la acción en el mercado. Para comparar con el intrínseco y calcular margen de seguridad.</p>
               </div>
               <button class="btn btn-primary" onclick="calcGordon()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
@@ -196,29 +196,29 @@
               <p class="panel-title">DDM de dos etapas</p>
               <div class="form-group">
                 <label for="d0-2">Dividendo actual (D₀)</label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="d0-2" class="has-prefix" value="2.00" min="0" step="0.01" oninput="calcDDM2()"/></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="d0-2" class="has-prefix" value="2.00" min="0" step="0.01" oninput="calcDDM2()"/ inputmode="decimal"></div>
               </div>
               <div class="form-group">
                 <label for="g1-2">Crecimiento alto — Etapa 1 <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="g1-2" class="has-suffix" value="12" min="0" max="50" step="0.1" oninput="calcDDM2()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="g1-2" class="has-suffix" value="12" min="0" max="50" step="0.1" oninput="calcDDM2()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">Tasa de crecimiento del dividendo durante la fase de alto crecimiento (empresa en expansión).</p>
               </div>
               <div class="form-group">
                 <label for="n1-2">Años de alto crecimiento</label>
-                <div class="input-wrap"><input type="number" id="n1-2" class="has-suffix" value="5" min="1" max="20" oninput="calcDDM2()"/><span class="input-suffix">años</span></div>
+                <div class="input-wrap"><input type="number" id="n1-2" class="has-suffix" value="5" min="1" max="20" oninput="calcDDM2()"/ inputmode="decimal"><span class="input-suffix">años</span></div>
               </div>
               <div class="form-group">
                 <label for="g2-2">Crecimiento estable — Etapa 2 <span>(% perpetuo)</span></label>
-                <div class="input-wrap"><input type="number" id="g2-2" class="has-suffix" value="3.5" min="0" max="15" step="0.1" oninput="calcDDM2()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="g2-2" class="has-suffix" value="3.5" min="0" max="15" step="0.1" oninput="calcDDM2()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">Tasa de crecimiento perpetuo después de la fase de alto crecimiento. Suele estar entre 2% y 4%.</p>
               </div>
               <div class="form-group">
                 <label for="ke-2">Costo del equity (Ke) <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="ke-2" class="has-suffix" value="10" min="0" max="30" step="0.1" oninput="calcDDM2()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="ke-2" class="has-suffix" value="10" min="0" max="30" step="0.1" oninput="calcDDM2()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
               <div class="form-group">
                 <label for="pm-2">Precio de mercado actual</label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pm-2" class="has-prefix" value="45" min="0" step="0.01" oninput="calcDDM2()"/></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pm-2" class="has-prefix" value="45" min="0" step="0.01" oninput="calcDDM2()"/ inputmode="decimal"></div>
               </div>
               <button class="btn btn-primary" onclick="calcDDM2()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
             </div>
@@ -282,7 +282,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let ddmChart = null;
 

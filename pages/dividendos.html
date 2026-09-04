@@ -30,7 +30,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
@@ -100,17 +100,17 @@
             <p class="panel-title">Detalles de la inversión</p>
             <div class="form-group">
               <label for="capital-div">Capital inicial <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="capital-div" class="has-prefix" value="10000" min="0" oninput="calcDiv()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="capital-div" class="has-prefix" value="10000" min="0" oninput="calcDiv()"/ inputmode="decimal"></div>
               <p class="field-note">Cuánto invertís en total en esta acción/<span data-term="ETF">ETF</span>.</p>
             </div>
             <div class="form-group">
               <label for="precio-accion">Precio de la acción <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-accion" class="has-prefix" value="50" min="0.01" step="0.01" oninput="calcDiv()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-accion" class="has-prefix" value="50" min="0.01" step="0.01" oninput="calcDiv()"/ inputmode="decimal"></div>
               <p class="field-note">Precio actual de mercado. Sirve para calcular la cantidad de acciones que comprás.</p>
             </div>
             <div class="form-group">
               <label for="div-anual">Dividendo anual por acción <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="div-anual" class="has-prefix" value="2" min="0" step="0.01" oninput="calcDiv()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="div-anual" class="has-prefix" value="2" min="0" step="0.01" oninput="calcDiv()"/ inputmode="decimal"></div>
               <p class="field-note">Dividendo total que paga la empresa en un año. Lo encontrás en Yahoo Finance o el sitio de la empresa.</p>
             </div>
             <div class="form-group">
@@ -125,11 +125,11 @@
             </div>
             <div class="form-group">
               <label for="plazo-div">Horizonte <span>(años)</span></label>
-              <div class="input-wrap"><input type="number" id="plazo-div" class="has-suffix" value="10" min="1" max="50" oninput="calcDiv()"/><span class="input-suffix">años</span></div>
+              <div class="input-wrap"><input type="number" id="plazo-div" class="has-suffix" value="10" min="1" max="50" oninput="calcDiv()"/ inputmode="decimal"><span class="input-suffix">años</span></div>
             </div>
             <div class="form-group">
               <label for="aporte-div">Aporte mensual adicional <span>(USD, opcional)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="aporte-div" class="has-prefix" value="0" min="0" oninput="calcDiv()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="aporte-div" class="has-prefix" value="0" min="0" oninput="calcDiv()"/ inputmode="decimal"></div>
               <p class="field-note">Si comprás más acciones cada mes, el dividendo total crece.</p>
             </div>
 
@@ -147,17 +147,17 @@
               </div>
               <div class="form-group">
                 <label for="crec-precio">Crecimiento anual del precio <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="crec-precio" class="has-suffix" value="5" min="-20" max="50" step="0.5" oninput="calcDiv()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="crec-precio" class="has-suffix" value="5" min="-20" max="50" step="0.5" oninput="calcDiv()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">Apreciación esperada del precio de la acción por año. El S&P 500 histórico: ~7% real.</p>
               </div>
               <div class="form-group">
                 <label for="crec-div">Crecimiento anual del dividendo <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="crec-div" class="has-suffix" value="3" min="-10" max="30" step="0.5" oninput="calcDiv()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="crec-div" class="has-suffix" value="3" min="-10" max="30" step="0.5" oninput="calcDiv()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">Muchas empresas "Dividend Aristocrats" aumentan su dividendo cada año. Ej: Coca-Cola, Johnson & Johnson.</p>
               </div>
               <div class="form-group">
                 <label for="impuesto-div">Impuesto sobre dividendos <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="impuesto-div" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcDiv()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="impuesto-div" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcDiv()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p class="field-note">EEUU retiene ~15% para no residentes. Argentina: variable. Dejá en 0 si operás en cuenta exenta.</p>
               </div>
             </div>
@@ -236,7 +236,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let divChart = null;
     function toggleAdv(el) {

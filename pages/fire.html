@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css?v=2" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <style>
@@ -197,14 +197,14 @@
             <div class="form-group">
               <label for="gastos-mes">Gastos mensuales <span>(USD)</span></label>
               <div class="input-wrap"><span class="input-prefix">$</span>
-                <input type="number" id="gastos-mes" class="has-prefix" value="3000" min="1" oninput="calcularFIRE()" />
+                <input type="number" id="gastos-mes" class="has-prefix" value="3000" min="1" oninput="calcularFIRE()" / inputmode="decimal">
               </div>
             </div>
 
             <div class="form-group">
               <label for="otros-ingresos">Otros ingresos mensuales <span>(pensión, renta, etc.)</span></label>
               <div class="input-wrap"><span class="input-prefix">$</span>
-                <input type="number" id="otros-ingresos" class="has-prefix" value="0" min="0" oninput="calcularFIRE()" />
+                <input type="number" id="otros-ingresos" class="has-prefix" value="0" min="0" oninput="calcularFIRE()" / inputmode="decimal">
               </div>
             </div>
 
@@ -243,7 +243,7 @@
               <div class="form-group">
                 <label for="horizonte">Horizonte temporal <span>(años)</span></label>
                 <div class="input-wrap">
-                  <input type="number" id="horizonte" class="has-suffix" value="30" min="5" max="60" oninput="calcularFIRE()" />
+                  <input type="number" id="horizonte" class="has-suffix" value="30" min="5" max="60" oninput="calcularFIRE()" / inputmode="decimal">
                   <span class="input-suffix">años</span>
                 </div>
               </div>
@@ -258,7 +258,7 @@
               <div class="form-group">
                 <label for="impuesto-ret">Impuesto sobre rendimientos <span>(%)</span></label>
                 <div class="input-wrap">
-                  <input type="number" id="impuesto-ret" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcularFIRE()" />
+                  <input type="number" id="impuesto-ret" class="has-suffix" value="0" min="0" max="50" step="1" oninput="calcularFIRE()" / inputmode="decimal">
                   <span class="input-suffix">%</span>
                 </div>
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">¿Qué poner? 🇦🇷 Argentina: ~15% · 🇺🇸 EE.UU.: 15–20% · Sin certeza: usá 15%. Cuentas exentas (IRA, FCI): 0%.</p>
@@ -266,7 +266,7 @@
               <div class="form-group">
                 <label for="edad-objetivo">Edad objetivo de retiro <span>(opcional, para Coast FIRE)</span></label>
                 <div class="input-wrap">
-                  <input type="number" id="edad-objetivo" class="has-suffix" value="65" min="30" max="80" oninput="calcularFIRE()" />
+                  <input type="number" id="edad-objetivo" class="has-suffix" value="65" min="30" max="80" oninput="calcularFIRE()" / inputmode="decimal">
                   <span class="input-suffix">años</span>
                 </div>
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">A esta edad querés llegar al número FIRE. Solo se usa para calcular Coast FIRE.</p>
@@ -274,20 +274,20 @@
               <div class="form-group">
                 <label for="capital-actual">Capital actual ahorrado <span>(USD)</span></label>
                 <div class="input-wrap"><span class="input-prefix">$</span>
-                  <input type="number" id="capital-actual" class="has-prefix" value="0" min="0" oninput="calcularFIRE()" />
+                  <input type="number" id="capital-actual" class="has-prefix" value="0" min="0" oninput="calcularFIRE()" / inputmode="decimal">
                 </div>
               </div>
               <div class="form-group">
                 <label for="aporte-fire">Aporte mensual hacia FIRE <span>(USD)</span></label>
                 <div class="input-wrap"><span class="input-prefix">$</span>
-                  <input type="number" id="aporte-fire" class="has-prefix" value="1000" min="0" oninput="calcularFIRE()" />
+                  <input type="number" id="aporte-fire" class="has-prefix" value="1000" min="0" oninput="calcularFIRE()" / inputmode="decimal">
                 </div>
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.4rem;line-height:1.5;font-family:var(--font-mono)">Cuánto invertís por mes para acumular tu capital FIRE. Solo ahorro/inversión activo, sin incluir gastos de vida.</p>
               </div>
               <div class="form-group">
                 <label for="edad-actual">Edad actual</label>
                 <div class="input-wrap">
-                  <input type="number" id="edad-actual" class="has-suffix" value="30" min="18" max="70" oninput="calcularFIRE()" />
+                  <input type="number" id="edad-actual" class="has-suffix" value="30" min="18" max="70" oninput="calcularFIRE()" / inputmode="decimal">
                   <span class="input-suffix">años</span>
                 </div>
               </div>
@@ -479,7 +479,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let fireChart = null;
 

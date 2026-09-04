@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css?v=2" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .alert-box {
@@ -184,7 +184,7 @@
           <div class="form-group">
             <label for="monto">Monto actual <span>(USD)</span></label>
             <div class="input-wrap"><span class="input-prefix">$</span>
-              <input type="number" id="monto" class="has-prefix" value="10000" min="1" />
+              <input type="number" id="monto" class="has-prefix" value="10000" min="1" / inputmode="decimal">
             </div>
           </div>
 
@@ -200,7 +200,7 @@
           <div class="form-group">
             <label for="plazo-inf">Plazo <span>(años)</span></label>
             <div class="input-wrap">
-              <input type="number" id="plazo-inf" class="has-suffix" value="5" min="1" max="50" />
+              <input type="number" id="plazo-inf" class="has-suffix" value="5" min="1" max="50" / inputmode="decimal">
               <span class="input-suffix">años</span>
             </div>
           </div>
@@ -313,7 +313,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let chart = null;
 

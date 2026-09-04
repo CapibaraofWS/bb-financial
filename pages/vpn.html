@@ -30,7 +30,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
@@ -149,13 +149,13 @@
 
             <div class="form-group">
               <label for="inv-vpn">Inversión inicial <span>(flujo en período 0)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-vpn" class="has-prefix" value="50000" min="0" oninput="calcVPN()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-vpn" class="has-prefix" value="50000" min="0" oninput="calcVPN()"/ inputmode="decimal"></div>
               <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Lo que invertís hoy. Se trata como flujo negativo en período 0.</p>
             </div>
 
             <div class="form-group">
               <label for="tasa-desc">Tasa de descuento <span>(%)</span></label>
-              <div class="input-wrap"><input type="number" id="tasa-desc" class="has-suffix" value="10" min="0" max="200" step="0.5" oninput="calcVPN()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="tasa-desc" class="has-suffix" value="10" min="0" max="200" step="0.5" oninput="calcVPN()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Tu costo de oportunidad o WACC. Si podrías invertir en otra cosa al 10%, usá 10%. Refleja el valor del tiempo y el riesgo.</p>
             </div>
 
@@ -185,17 +185,17 @@
             <div class="adv-section" id="adv-vpn">
               <div class="form-group">
                 <label for="valor-terminal">Valor terminal <span>(al final del último período)</span></label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="valor-terminal" class="has-prefix" value="0" min="0" oninput="calcVPN()"/></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="valor-terminal" class="has-prefix" value="0" min="0" oninput="calcVPN()"/ inputmode="decimal"></div>
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Valor de venta del activo al final (ej: empresa, inmueble, equipo). Se suma al último flujo.</p>
               </div>
               <div class="form-group">
                 <label for="crec-terminal">Tasa de crecimiento perpetua <span>(% para Gordon Model)</span></label>
-                <div class="input-wrap"><input type="number" id="crec-terminal" class="has-suffix" value="0" min="0" max="20" step="0.5" oninput="calcVPN()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="crec-terminal" class="has-suffix" value="0" min="0" max="20" step="0.5" oninput="calcVPN()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Si los flujos crecen perpetuamente al g%, el valor terminal = FCF_n × (1+g) / (WACC − g). Dejá en 0 para ignorar.</p>
               </div>
               <div class="form-group">
                 <label for="inflacion-vpn">Inflación <span>(% para VPN real)</span></label>
-                <div class="input-wrap"><input type="number" id="inflacion-vpn" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcVPN()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="inflacion-vpn" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcVPN()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
             </div>
 
@@ -275,7 +275,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let vpnChart = null;
     let flujos = [15000, 18000, 20000, 22000, 25000];
@@ -293,7 +293,7 @@
       document.getElementById('flujos-body').innerHTML = flujos.map((f, i) => `
         <tr>
           <td class="periodo">${unidad.slice(0,-1)} ${i+1}</td>
-          <td><input type="number" value="${f}" step="100" oninput="flujos[${i}]=parseFloat(this.value)||0; calcVPN()" /></td>
+          <td><input type="number" value="${f}" step="100" oninput="flujos[${i}]=parseFloat(this.value)||0; calcVPN()" / inputmode="decimal"></td>
           <td><button class="del-btn" onclick="removeFlujo(${i})">✕</button></td>
         </tr>`).join('');
     }

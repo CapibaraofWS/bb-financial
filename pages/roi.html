@@ -30,7 +30,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
@@ -131,12 +131,12 @@
             <p class="panel-title">Datos de la inversión</p>
             <div class="form-group">
               <label for="inv-inicial">Capital total invertido <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-inicial" class="has-prefix" value="10000" min="0" oninput="calcROI()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-inicial" class="has-prefix" value="10000" min="0" oninput="calcROI()"/ inputmode="decimal"></div>
               <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Suma de todo lo que pusiste: precio de compra, comisiones, costos de entrada.</p>
             </div>
             <div class="form-group">
               <label for="inv-final">Capital total final <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-final" class="has-prefix" value="14500" min="0" oninput="calcROI()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="inv-final" class="has-prefix" value="14500" min="0" oninput="calcROI()"/ inputmode="decimal"></div>
               <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Lo que recibís al final: precio de venta + dividendos + cualquier ingreso generado.</p>
             </div>
             <div class="form-group">
@@ -149,14 +149,14 @@
                 <button class="period-btn" onclick="setPeriod(5,0,0,this)">5 años</button>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem">
-                <div class="input-wrap"><input type="number" id="p-anios" class="has-suffix" value="1" min="0" oninput="calcROI()"/><span class="input-suffix">años</span></div>
-                <div class="input-wrap"><input type="number" id="p-meses" class="has-suffix" value="0" min="0" max="11" oninput="calcROI()"/><span class="input-suffix">meses</span></div>
-                <div class="input-wrap"><input type="number" id="p-dias"  class="has-suffix" value="0" min="0" max="30" oninput="calcROI()"/><span class="input-suffix">días</span></div>
+                <div class="input-wrap"><input type="number" id="p-anios" class="has-suffix" value="1" min="0" oninput="calcROI()"/ inputmode="decimal"><span class="input-suffix">años</span></div>
+                <div class="input-wrap"><input type="number" id="p-meses" class="has-suffix" value="0" min="0" max="11" oninput="calcROI()"/ inputmode="decimal"><span class="input-suffix">meses</span></div>
+                <div class="input-wrap"><input type="number" id="p-dias"  class="has-suffix" value="0" min="0" max="30" oninput="calcROI()"/ inputmode="decimal"><span class="input-suffix">días</span></div>
               </div>
             </div>
             <div class="form-group">
               <label for="inflacion-roi">Inflación anual <span>(% — para ROI real)</span></label>
-              <div class="input-wrap"><input type="number" id="inflacion-roi" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcROI()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="inflacion-roi" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcROI()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Para calcular el retorno real (descontando inflación). Usá 120% para Argentina.</p>
             </div>
             <button class="btn btn-primary" onclick="calcROI()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
@@ -230,7 +230,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let roiChart = null;
 

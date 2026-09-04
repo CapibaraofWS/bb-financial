@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css?v=2" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .tab-bar { display:flex; gap:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0.35rem; margin-bottom:2rem; }
@@ -107,11 +107,11 @@
               <p class="panel-title">Datos del instrumento</p>
               <div class="form-group">
                 <label for="s-capital">Capital <span>(monto inicial)</span></label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="s-capital" class="has-prefix" value="10000" min="0" /></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="s-capital" class="has-prefix" value="10000" min="0" / inputmode="decimal"></div>
               </div>
               <div class="form-group">
                 <label for="s-tasa">Tasa de interés <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="s-tasa" class="has-suffix" value="8" min="0" max="2000" step="0.1" /><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="s-tasa" class="has-suffix" value="8" min="0" max="2000" step="0.1" / inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
               <div class="form-group">
                 <label for="s-tipo-tasa">Tipo de tasa</label>
@@ -123,7 +123,7 @@
               </div>
               <div class="form-group">
                 <label for="s-plazo">Plazo <span>(en días)</span></label>
-                <div class="input-wrap"><input type="number" id="s-plazo" class="has-suffix" value="365" min="1" /><span class="input-suffix">días</span></div>
+                <div class="input-wrap"><input type="number" id="s-plazo" class="has-suffix" value="365" min="1" / inputmode="decimal"><span class="input-suffix">días</span></div>
               </div>
               <button class="btn btn-primary" onclick="calcularSimple()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
             </div>
@@ -172,19 +172,19 @@
               <p class="panel-title">Tus datos financieros</p>
               <div class="form-group">
                 <label for="a-ingresos">Ingresos mensuales <span>(opcional)</span></label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-ingresos" class="has-prefix" value="5000" min="0" /></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-ingresos" class="has-prefix" value="5000" min="0" / inputmode="decimal"></div>
               </div>
               <div class="form-group">
                 <label for="a-mensual">Ahorro mensual</label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-mensual" class="has-prefix" value="1000" min="0" /></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-mensual" class="has-prefix" value="1000" min="0" / inputmode="decimal"></div>
               </div>
               <div class="form-group">
                 <label for="a-inicial">Ahorro inicial acumulado</label>
-                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-inicial" class="has-prefix" value="0" min="0" /></div>
+                <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="a-inicial" class="has-prefix" value="0" min="0" / inputmode="decimal"></div>
               </div>
               <div class="form-group">
                 <label for="a-rendimiento">Rendimiento anual <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="a-rendimiento" class="has-suffix" value="0" min="0" max="500" step="0.5" /><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="a-rendimiento" class="has-suffix" value="0" min="0" max="500" step="0.5" / inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
               <div class="form-group">
                 <label for="a-plazo">Proyección</label>
@@ -250,7 +250,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let chartSimple = null, chartAhorro = null;
 

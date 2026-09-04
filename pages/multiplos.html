@@ -29,7 +29,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
@@ -151,32 +151,32 @@
 
             <div class="form-group">
               <label for="precio-accion-m">Precio de la acción <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-accion-m" class="has-prefix" value="45" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="precio-accion-m" class="has-prefix" value="45" min="0" step="0.01" oninput="calcMultiplos()"/ inputmode="decimal"></div>
               <p class="field-note">Precio actual de mercado de la acción.</p>
             </div>
             <div class="form-group">
               <label for="eps">EPS — Ganancia por acción (EPS) <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="eps" class="has-prefix" value="3.00" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="eps" class="has-prefix" value="3.00" min="0" step="0.01" oninput="calcMultiplos()"/ inputmode="decimal"></div>
               <p class="field-note">Earnings Per Share. En Yahoo Finance: "EPS (TTM)" o "Diluted EPS". Estado de resultados: Net Income / Shares outstanding.</p>
             </div>
             <div class="form-group">
               <label for="ebitda-ps">EBITDA por acción <span>(USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="ebitda-ps" class="has-prefix" value="6.50" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="ebitda-ps" class="has-prefix" value="6.50" min="0" step="0.01" oninput="calcMultiplos()"/ inputmode="decimal"></div>
               <p class="field-note">EBITDA total / acciones en circulación. O usá: EV / (precio × acciones) para el múltiplo EV/EBITDA directo.</p>
             </div>
             <div class="form-group">
               <label for="book-ps">Valor libro por acción <span>(Book Value, USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="book-ps" class="has-prefix" value="20" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="book-ps" class="has-prefix" value="20" min="0" step="0.01" oninput="calcMultiplos()"/ inputmode="decimal"></div>
               <p class="field-note">Equity total / acciones en circulación. En el balance sheet: "Total Stockholders' Equity" / shares.</p>
             </div>
             <div class="form-group">
               <label for="sales-ps">Ventas por acción <span>(Revenue, USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="sales-ps" class="has-prefix" value="15" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="sales-ps" class="has-prefix" value="15" min="0" step="0.01" oninput="calcMultiplos()"/ inputmode="decimal"></div>
               <p class="field-note">Revenue total / acciones. Para P/S ratio. Útil en empresas sin ganancias aún.</p>
             </div>
             <div class="form-group">
               <label for="deuda-ps">Deuda neta por acción <span>(para EV, USD)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="deuda-ps" class="has-prefix" value="5" min="0" step="0.01" oninput="calcMultiplos()"/></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="deuda-ps" class="has-prefix" value="5" min="0" step="0.01" oninput="calcMultiplos()"/ inputmode="decimal"></div>
               <p class="field-note">Deuda total − caja. EV = Market Cap + Deuda Neta. Necesario para EV/EBITDA.</p>
             </div>
 
@@ -186,15 +186,15 @@
             <div class="sector-refs" id="sector-refs"></div>
             <div class="form-group" style="margin-top:1rem">
               <label for="pe-sector">P/E del sector</label>
-              <div class="input-wrap"><input type="number" id="pe-sector" class="has-suffix" value="18" min="0" step="0.1" oninput="calcMultiplos()"/><span class="input-suffix">x</span></div>
+              <div class="input-wrap"><input type="number" id="pe-sector" class="has-suffix" value="18" min="0" step="0.1" oninput="calcMultiplos()"/ inputmode="decimal"><span class="input-suffix">x</span></div>
             </div>
             <div class="form-group">
               <label for="ebitda-sector">EV/EBITDA del sector</label>
-              <div class="input-wrap"><input type="number" id="ebitda-sector" class="has-suffix" value="12" min="0" step="0.1" oninput="calcMultiplos()"/><span class="input-suffix">x</span></div>
+              <div class="input-wrap"><input type="number" id="ebitda-sector" class="has-suffix" value="12" min="0" step="0.1" oninput="calcMultiplos()"/ inputmode="decimal"><span class="input-suffix">x</span></div>
             </div>
             <div class="form-group">
               <label for="pb-sector">P/B del sector</label>
-              <div class="input-wrap"><input type="number" id="pb-sector" class="has-suffix" value="3" min="0" step="0.1" oninput="calcMultiplos()"/><span class="input-suffix">x</span></div>
+              <div class="input-wrap"><input type="number" id="pb-sector" class="has-suffix" value="3" min="0" step="0.1" oninput="calcMultiplos()"/ inputmode="decimal"><span class="input-suffix">x</span></div>
             </div>
             <button class="btn btn-primary" onclick="calcMultiplos()" style="width:100%;justify-content:center;margin-top:0.5rem">Calcular →</button>
           </div>
@@ -262,7 +262,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     let multChart = null;
 

@@ -30,7 +30,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/styles.css"/>
+  <link rel="stylesheet" href="../css/styles.css?v=2"/>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
     .wacc-result{background:linear-gradient(135deg,rgba(74,222,154,0.07),rgba(74,222,154,0.03));border:1px solid rgba(74,222,154,0.25);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:1.5rem;}
@@ -146,12 +146,12 @@
 
             <div class="form-group">
               <label for="equity-val">Valor del Equity <span>(market cap, USD M)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="equity-val" class="has-prefix" value="800" min="0" oninput="calcWACC()"/><span class="input-suffix">M</span></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="equity-val" class="has-prefix" value="800" min="0" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">M</span></div>
               <p class="field-note">Capitalización bursátil actual (precio × acciones en circulación).</p>
             </div>
             <div class="form-group">
               <label for="debt-val">Deuda total <span>(USD M)</span></label>
-              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="debt-val" class="has-prefix" value="200" min="0" oninput="calcWACC()"/><span class="input-suffix">M</span></div>
+              <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="debt-val" class="has-prefix" value="200" min="0" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">M</span></div>
               <p class="field-note">Deuda financiera total: bonos + préstamos bancarios (del balance sheet).</p>
             </div>
 
@@ -160,22 +160,22 @@
 
             <div class="form-group">
               <label for="rf">Tasa libre de riesgo <span>(Rf, %)</span></label>
-              <div class="input-wrap"><input type="number" id="rf" class="has-suffix" value="4.5" min="0" max="20" step="0.1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="rf" class="has-suffix" value="4.5" min="0" max="20" step="0.1" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p class="field-note">Rendimiento del bono soberano de EEUU a 10 años (~4.5%). Búscalo en Bloomberg o US Treasury.</p>
             </div>
             <div class="form-group">
               <label for="beta">Beta de la empresa</label>
-              <div class="input-wrap"><input type="number" id="beta" class="has-suffix" value="1.2" min="0" max="5" step="0.01" oninput="calcWACC()"/><span class="input-suffix">β</span></div>
+              <div class="input-wrap"><input type="number" id="beta" class="has-suffix" value="1.2" min="0" max="5" step="0.01" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">β</span></div>
               <p class="field-note">Mide la sensibilidad de la acción al mercado. β>1 = más volátil que el mercado. Encontralo en Yahoo Finance o Finviz bajo "Beta".</p>
             </div>
             <div class="form-group">
               <label for="rm">Prima de riesgo de mercado <span>(ERP, %)</span></label>
-              <div class="input-wrap"><input type="number" id="rm" class="has-suffix" value="5.5" min="0" max="15" step="0.1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="rm" class="has-suffix" value="5.5" min="0" max="15" step="0.1" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p class="field-note">Retorno histórico del S&P 500 − Rf. Damodaran estima ~5.5% para EEUU. Para Argentina, sumar prima de riesgo país (~15–25%).</p>
             </div>
             <div class="form-group">
               <label for="erp-pais">Prima de riesgo país <span>(opcional, %)</span></label>
-              <div class="input-wrap"><input type="number" id="erp-pais" class="has-suffix" value="0" min="0" max="50" step="0.5" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="erp-pais" class="has-suffix" value="0" min="0" max="50" step="0.5" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p class="field-note">Para empresas en mercados emergentes. Argentina 2024: ~20%. Brasil: ~3%. Dato: Damodaran website.</p>
             </div>
 
@@ -184,12 +184,12 @@
 
             <div class="form-group">
               <label for="kd">Costo de la deuda bruto <span>(Kd, %)</span></label>
-              <div class="input-wrap"><input type="number" id="kd" class="has-suffix" value="6" min="0" max="50" step="0.1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="kd" class="has-suffix" value="6" min="0" max="50" step="0.1" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p class="field-note">Tasa promedio que paga la empresa por su deuda. Mirá el estado de resultados: "gastos financieros / deuda total".</p>
             </div>
             <div class="form-group">
               <label for="tax-rate">Tasa impositiva efectiva <span>(%)</span></label>
-              <div class="input-wrap"><input type="number" id="tax-rate" class="has-suffix" value="30" min="0" max="60" step="1" oninput="calcWACC()"/><span class="input-suffix">%</span></div>
+              <div class="input-wrap"><input type="number" id="tax-rate" class="has-suffix" value="30" min="0" max="60" step="1" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               <p class="field-note">Los intereses de deuda son deducibles de impuestos (escudo fiscal). Argentina: ~35%. EEUU: ~21%.</p>
             </div>
 
@@ -278,7 +278,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     function calcWACC() {
       const E   = parseFloat(document.getElementById('equity-val').value) || 0;

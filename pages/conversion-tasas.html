@@ -30,7 +30,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css?v=2" />
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
     .conv-arrow{text-align:center;font-size:2rem;color:var(--accent);margin:0.5rem 0;line-height:1;}
@@ -147,7 +147,7 @@
               <p class="panel-title">De TNA a TEA</p>
               <div class="form-group">
                 <label for="tna1">TNA <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="tna1" class="has-suffix" value="70" min="0" step="0.01" oninput="calcTnaTea()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="tna1" class="has-suffix" value="70" min="0" step="0.01" oninput="calcTnaTea()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
               <div class="form-group">
                 <label for="freq1">Frecuencia de capitalización</label>
@@ -193,7 +193,7 @@
               <p class="panel-title">De TEA a TNA</p>
               <div class="form-group">
                 <label for="tea2">TEA <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="tea2" class="has-suffix" value="100" min="0" step="0.01" oninput="calcTeaTna()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="tea2" class="has-suffix" value="100" min="0" step="0.01" oninput="calcTeaTna()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
               <div class="form-group">
                 <label for="freq2">Frecuencia de capitalización deseada</label>
@@ -237,7 +237,7 @@
               <p class="panel-title">Convertir tasa periódica</p>
               <div class="form-group">
                 <label for="tp-valor">Tasa <span>(%)</span></label>
-                <div class="input-wrap"><input type="number" id="tp-valor" class="has-suffix" value="5" min="0" step="0.01" oninput="calcPeriodica()"/><span class="input-suffix">%</span></div>
+                <div class="input-wrap"><input type="number" id="tp-valor" class="has-suffix" value="5" min="0" step="0.01" oninput="calcPeriodica()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
               <div class="form-group">
                 <label for="tp-from">Esta tasa es...</label>
@@ -309,7 +309,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=24"></script>
+  <script src="../js/main.js?v=25"></script>
   <script>
     function switchTab(name, btn) {
       ['tna-tea','tea-tna','periodica'].forEach(t => document.getElementById('tab-'+t).style.display='none');
