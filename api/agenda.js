@@ -311,7 +311,13 @@ async function getBonosAR() {
 // BONOS AR SOBERANOS (data912) — precios USD MEP (serie 'D')
 // Devuelve precios live para que el cliente calcule TIR/duration con bond-math.js
 // ============================================================
-const AR_BOND_SYMBOLS = ['AL29','GD29','AL30','GD30','AL35','GD35','AE38','GD38','AL41','GD41','AO27','AO28','AN29'];
+// [símbolo que usa la página, símbolo de la serie en USD MEP en la fuente].
+// Soberanos/BONTE siguen la regla sym+'D'; los BOPREAL no (BPOA7 → BPA7D).
+const AR_BOND_SYMBOLS = [
+  ...['AL29','GD29','AL30','GD30','AL35','GD35','AE38','GD38','AL41','GD41','AO27','AO28','AN29'].map(s => [s, s + 'D']),
+  ['BPOA7','BPA7D'], ['BPOB7','BPB7D'], ['BPOC7','BPC7D'], ['BPOD7','BPD7D'],
+  ['BPOA8','BPA8D'], ['BPOB8','BPB8D'],
+];
 
 async function getArBonds() {
   const r = await fetch('https://data912.com/live/arg_bonds', {
@@ -321,8 +327,8 @@ async function getArBonds() {
   if (!r.ok) throw new Error('Fuente de bonos respondió ' + r.status);
   const all = await r.json();
   const map = Object.fromEntries((Array.isArray(all) ? all : []).map(b => [b.symbol, b]));
-  const bonds = AR_BOND_SYMBOLS.map(sym => {
-    const d = map[sym + 'D'] || null; // serie D = USD MEP
+  const bonds = AR_BOND_SYMBOLS.map(([sym, usdSym]) => {
+    const d = map[usdSym] || null; // serie D = USD MEP
     if (!d) return { sym, price: null };
     const price = Number.isFinite(d.c) && d.c > 0 ? d.c : (Number.isFinite(d.px_bid) ? d.px_bid : null);
     return { sym, price, bid: d.px_bid ?? null, ask: d.px_ask ?? null, pct_change: d.pct_change ?? null, volume: d.v ?? null };
@@ -331,125 +337,83 @@ async function getArBonds() {
 }
 
 // ============================================================
-// DOCTA CAPITAL — yields de bonos en pesos (LECAP tasa fija + CER tasa real)
-// API con tope DURÍSIMO (10 req/día). Estrategia: Redis cachea el payload 20h
-// y un contador diario corta a 9 llamadas/día. Los visitantes leen SIEMPRE de
-// Redis (0 llamadas a Docta por visita). Token cacheado en Redis ~50min.
-// Credenciales SOLO en env vars (DOCTA_CLIENT_ID / DOCTA_CLIENT_SECRET).
+// CURVA EN PESOS — LECAP / BONCAP (tasa fija, cero cupón)
+// Precio de mercado (data912) × valor de pago al vencimiento (argentinadatos,
+// condiciones de emisión) ⇒ TEM / TNA / TEA exactas.
+// Sin credenciales, sin topes diarios y sin cache externo: antes esto dependía
+// de Docta (10 req/día) + Redis, y cuando Redis dejó de responder el endpoint
+// devolvía "Actualizando…" para siempre sin llegar a consultar nada.
+// El contexto macro (CER, REM, inflación, TAMAR) sale de BCRA Estadísticas v4.
 // ============================================================
-const DOCTA_BASE = 'https://api.doctacapital.com.ar/api/v1';
-// Set curado y chico (cada símbolo = 1 request). Token + 6 = 7/día < 10.
-const DOCTA_PESO_SYMBOLS = [
-  { sym: 'S30N6', tipo: 'nominal' }, // LECAP nov-2026
-  { sym: 'T30J7', tipo: 'nominal' }, // BONCAP jun-2027
-  { sym: 'T31Y7', tipo: 'nominal' }, // BONCAP may-2027
-  { sym: 'TZX26', tipo: 'cer' },     // CER 2026
-  { sym: 'TZX27', tipo: 'cer' },     // CER 2027
-  { sym: 'TZX28', tipo: 'cer' },     // CER 2028
-];
-const DOCTA_DAILY_CAP = 9; // tope duro: 1 refresh/día (~7 llamadas) < 10/día de Docta
-const DOCTA_FRESH_MS = 20 * 3600 * 1000; // 20h
+const MS_DAY = 86400000;
 
-// --- Redis REST helpers (Upstash) ---
-function redisCfg() {
-  // Las env vars se guardaron con comillas literales — las limpiamos.
-  const clean = (v) => (v || '').trim().replace(/^['"]|['"]$/g, '');
-  return { url: clean(process.env.UPSTASH_REDIS_REST_URL), token: clean(process.env.UPSTASH_REDIS_REST_TOKEN) };
-}
-async function redisCmd(args) {
-  const { url, token } = redisCfg();
-  if (!url || !token) return null;
-  try {
-    // Usa el endpoint /pipeline (mismo patrón probado que _rateLimit.js)
-    const r = await fetch(`${url}/pipeline`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify([args]),
-      signal: AbortSignal.timeout(3000),
-    });
-    if (!r.ok) return null;
-    const j = await r.json();
-    return Array.isArray(j) ? (j[0]?.result ?? null) : (j?.result ?? null);
-  } catch { return null; }
-}
-const rGet = (k) => redisCmd(['GET', k]);
-const rSet = (k, v, exSec) => exSec ? redisCmd(['SET', k, v, 'EX', String(exSec)]) : redisCmd(['SET', k, v]);
-const rSetNX = (k, v, exSec) => redisCmd(['SET', k, v, 'NX', 'EX', String(exSec)]);
-const rIncrBy = (k, n) => redisCmd(['INCRBY', k, String(n)]);
-const rExpire = (k, s) => redisCmd(['EXPIRE', k, String(s)]);
-const rDel = (k) => redisCmd(['DEL', k]);
-
-async function getDoctaToken() {
-  const cached = await rGet('docta:token');
-  if (cached) return cached;
-  const id = process.env.DOCTA_CLIENT_ID, secret = process.env.DOCTA_CLIENT_SECRET;
-  if (!id || !secret) throw new Error('Credenciales Docta no configuradas');
-  const r = await fetch(`${DOCTA_BASE}/auth/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ grant_type: 'client_credentials', client_id: id, client_secret: secret, scope: 'bonds:read' }),
+async function fetchJson(url) {
+  const r = await fetch(url, {
     signal: AbortSignal.timeout(TIMEOUT),
+    headers: { 'User-Agent': UA, 'Accept': 'application/json' },
   });
-  if (!r.ok) throw new Error('Docta auth ' + r.status);
-  const j = await r.json();
-  if (!j.access_token) throw new Error('Docta sin access_token');
-  const ttl = Math.max(300, Math.min((j.expires_in || 3600) - 120, 3300));
-  await rSet('docta:token', j.access_token, ttl);
-  return j.access_token;
+  if (!r.ok) throw new Error(url + ' respondió ' + r.status);
+  return r.json();
 }
+
+// Principales Variables de BCRA v4 (35 series, ~12 KB) indexadas por idVariable.
+// OJO: v4 devuelve ultValorInformado / ultFechaInformada, no "valor" / "fecha".
+async function getBcraPrincipales() {
+  const j = await fetchJson('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias?Categoria=Principales%20Variables');
+  const map = {};
+  for (const v of j?.results || []) {
+    map[v.idVariable] = { valor: v.ultValorInformado, fecha: v.ultFechaInformada, descripcion: v.descripcion };
+  }
+  return map;
+}
+const pickVar = (map, id) => (map[id] && Number.isFinite(map[id].valor) ? { valor: map[id].valor, fecha: map[id].fecha } : null);
 
 async function getArPesos() {
-  const KEY = 'docta:pesos:v1', TS = 'docta:pesos:ts';
-  const cachedRaw = await rGet(KEY);
-  const tsRaw = await rGet(TS);
-  const fresh = tsRaw && (Date.now() - Number(tsRaw) < DOCTA_FRESH_MS);
-  if (cachedRaw && fresh) { const p = JSON.parse(cachedRaw); p.cache = 'hit'; return p; }
+  const [letras, priceSets, bcra] = await Promise.all([
+    fetchJson('https://api.argentinadatos.com/v1/finanzas/letras'),
+    Promise.all(['arg_notes', 'arg_bonds'].map(e => fetchJson(`https://data912.com/live/${e}`).catch(() => []))),
+    getBcraPrincipales().catch(() => ({})),
+  ]);
 
-  // Necesita refresh: lock para evitar refresh concurrente
-  const gotLock = await rSetNX('docta:lock', '1', 120);
-  if (!gotLock) { // otro refresh en curso → servir lo que haya
-    if (cachedRaw) { const p = JSON.parse(cachedRaw); p.cache = 'stale-lock'; return p; }
-    return { source: 'docta', bonds: [], note: 'Actualizando…' };
-  }
-  try {
-    const day = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const CNT = 'docta:count:' + day;
-    const count = Number(await rGet(CNT) || 0);
-    const needed = DOCTA_PESO_SYMBOLS.length + 1; // +1 token
-    if (count + needed > DOCTA_DAILY_CAP) {
-      if (cachedRaw) { const p = JSON.parse(cachedRaw); p.cache = 'cap-reached'; return p; }
-      return { source: 'docta', bonds: [], note: 'Límite diario alcanzado; reintentá más tarde.' };
+  const px = {};
+  for (const set of priceSets) {
+    for (const x of Array.isArray(set) ? set : []) {
+      const p = Number.isFinite(x.c) && x.c > 0 ? x.c
+              : (Number.isFinite(x.px_bid) && x.px_bid > 0 ? x.px_bid : null);
+      if (p) px[x.symbol] = { price: p, pct: x.pct_change ?? null, volume: x.v ?? null };
     }
-    // Token PRIMERO: si auth falla, no gastamos el contador de bonos.
-    const token = await getDoctaToken();
-    // Reservar la quota recién acá (cubre los yields aunque alguno haga timeout).
-    await rIncrBy(CNT, needed); await rExpire(CNT, 90000);
-    // Pedidos EN PARALELO (sino 6 llamadas secuenciales superan el timeout de 10s)
-    const bonds = await Promise.all(DOCTA_PESO_SYMBOLS.map(async (it) => {
-      try {
-        const r = await fetch(`${DOCTA_BASE}/bonds/yields/${it.sym}/intraday`, {
-          headers: { Authorization: `Bearer ${token}` },
-          signal: AbortSignal.timeout(TIMEOUT),
-        });
-        if (!r.ok) return { sym: it.sym, tipo: it.tipo, error: r.status };
-        const j = await r.json();
-        const d = Array.isArray(j.data) ? j.data[j.data.length - 1] : null;
-        return {
-          sym: it.sym, tipo: it.tipo,
-          tir: d?.tir ?? null, tna: d?.tna ?? null, tem: d?.tem ?? null,
-          duration: d?.duration ?? null, dtm: d?.dtm ?? null,
-          subClass: j?.metadata?.sub_asset_class ?? null,
-        };
-      } catch { return { sym: it.sym, tipo: it.tipo, error: 'timeout' }; }
-    }));
-    const payload = { source: 'docta (snapshot diario, delay ~20min)', asOf: new Date().toISOString(), bonds, cache: 'miss' };
-    // Solo cacheamos si al menos un bono trajo dato real (sino reintenta cuando resetee la quota diaria)
-    const hasData = bonds.some(b => Number.isFinite(b.tir));
-    if (hasData) { await rSet(KEY, JSON.stringify(payload)); await rSet(TS, String(Date.now())); }
-    return payload;
-  } finally {
-    await rDel('docta:lock');
   }
+
+  const now = Date.now();
+  const bonds = (Array.isArray(letras) ? letras : []).map(l => {
+    const q = px[l.ticker];
+    const vto = Date.parse(l.fechaVencimiento + 'T00:00:00Z');
+    const dtm = Math.round((vto - now) / MS_DAY);
+    // A menos de 4 días del vencimiento la TEA se dispara por ruido de precio: no aporta curva
+    if (!q || !Number.isFinite(l.vpv) || l.vpv <= 0 || !Number.isFinite(dtm) || dtm < 4) return null;
+    const ratio = l.vpv / q.price;
+    if (!(ratio > 0)) return null;
+    const years = dtm / 365;
+    const tem = Math.pow(ratio, 30.4 / dtm) - 1;
+    return {
+      sym: l.ticker, tipo: 'nominal', vencimiento: l.fechaVencimiento, dtm,
+      price: q.price, pct: q.pct, vpv: l.vpv,
+      tem, tna: tem * 12, tir: Math.pow(ratio, 1 / years) - 1,
+      duration: years, // cero cupón: duration = plazo
+    };
+  }).filter(Boolean).sort((a, b) => a.dtm - b.dtm);
+
+  return {
+    source: 'precios de mercado + condiciones de emisión (LECAP/BONCAP)',
+    asOf: new Date().toISOString(),
+    bonds,
+    cer:                 pickVar(bcra, 30),
+    rem:                 pickVar(bcra, 29),
+    inflacionMensual:    pickVar(bcra, 27),
+    inflacionInteranual: pickVar(bcra, 28),
+    tamar:               pickVar(bcra, 44),
+    badlar:              pickVar(bcra, 7),
+  };
 }
 
 // ============================================================
@@ -524,7 +488,7 @@ const HANDLERS = {
   'bcra-calendario':     { fn: getBcraCalendario,     cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'bonos-ar':            { fn: getBonosAR,            cache: 's-maxage=300, stale-while-revalidate=900' },
   'ar-bonds':            { fn: getArBonds,            cache: 's-maxage=600, stale-while-revalidate=1800' },
-  'ar-pesos':            { fn: getArPesos,            cache: 's-maxage=3600, stale-while-revalidate=72000' },
+  'ar-pesos':            { fn: getArPesos,            cache: 's-maxage=600, stale-while-revalidate=1800' },
   'riesgo-pais':         { fn: getRiesgoPais,         cache: 's-maxage=300, stale-while-revalidate=900' },
   'youtube':             { fn: getYouTubeFeed,        cache: 's-maxage=1800, stale-while-revalidate=3600' },
 };

@@ -12,8 +12,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Visor de Bonos AR — Curva, TIR y Duration — BB Financial</title>
-  <meta name="description" content="Curva de bonos soberanos argentinos en dólares (Bonares y Globales): TIR, duration, paridad y scatter YTM×Duration. Calculado en vivo con precios de mercado." />
-  <meta name="keywords" content="bonos argentinos, AL30, GD30, curva de bonos, TIR, duration, bonares, globales, hard dollar" />
+  <meta name="description" content="Curva de bonos argentinos en dólares (Bonares, Globales, BONTE y BOPREAL): TIR, duration, paridad y scatter YTM×Duration. Calculado en vivo con precios de mercado." />
+  <meta name="keywords" content="bonos argentinos, AL30, GD30, BOPREAL, BPOC7, BPOB8, curva de bonos, TIR, duration, bonares, globales, hard dollar" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://bb-financial.vercel.app/pages/visor-bonos-ar.html" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -45,6 +45,7 @@
     .badge-law{display:inline-block;font-family:var(--font-mono);font-size:0.58rem;padding:0.1rem 0.4rem;border-radius:10px;letter-spacing:0.05em;}
     .badge-arg{background:rgba(96,165,250,0.12);color:#60a5fa;}
     .badge-ny{background:rgba(74,222,154,0.12);color:#4ade9a;}
+    .badge-bcra{background:rgba(187,167,232,0.12);color:#bba7e8;}
     .vb-disclaimer{background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.2);border-radius:10px;padding:1rem 1.25rem;font-size:0.8rem;color:var(--text-muted);line-height:1.6;margin-top:1.5rem;}
     .loading-cell{padding:3rem;text-align:center;color:var(--text-subtle);font-family:var(--font-mono);font-size:0.85rem;}
     .acc-item{border:1px solid var(--border);border-radius:10px;margin-bottom:0.75rem;overflow:hidden;background:var(--bg-card);}
@@ -85,7 +86,7 @@
       <div class="container">
         <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Bonos AR</p>
         <h1 class="page-title">Visor de Bonos AR 🇦🇷</h1>
-        <p class="page-subtitle">Curva de soberanos argentinos en dólares: Bonares y Globales del canje 2020 (step-up) + BONTES de tasa fija. TIR, duration y paridad calculadas en vivo desde precios de mercado con los esquemas reales de cada bono.</p>
+        <p class="page-subtitle">Curva de bonos argentinos en dólares: Bonares y Globales del canje 2020 (step-up), BONTES de tasa fija y BOPREAL del BCRA. TIR, duration y paridad calculadas en vivo desde precios de mercado con los esquemas reales de cada bono.</p>
       </div>
     </section>
 
@@ -94,13 +95,15 @@
       <details class="tool-info">
         <summary><strong>ℹ️ Sobre esta herramienta</strong> — qué calcula, supuestos y limitaciones</summary>
         <div class="ti-content">
-          <p><strong>Qué hace:</strong> toma el precio en dólares (MEP) de cada bono soberano y calcula su <strong>TIR (yield al vencimiento)</strong>, <strong>duration de Macaulay/Modified</strong> descontando el flujo de fondos real — cupones step-up + amortizaciones del canje 2020 (Decreto 701/2020). El AL30 está verificado contra el prospecto; el resto fue validado y la TIR computada cae dentro de ±0.4% de la referencia de mercado.</p>
-          <p><strong>Fórmulas:</strong> TIR resuelve <code>Precio = Σ Flujo_t / (1+TIR)^t</code> por bisección. <code>Macaulay = Σ t·VP(Flujo_t) / Precio</code>. <code>Modified = Macaulay / (1+TIR)</code>. La curva del scatter es una regresión cuadrática sobre los puntos (duration, TIR).</p>
+          <p><strong>Qué hace:</strong> toma el precio en dólares (MEP) de cada bono y calcula su <strong>TIR (yield al vencimiento)</strong>, <strong>duration de Macaulay/Modified</strong> descontando el flujo de fondos real. Cubre tres familias: los <strong>Bonares y Globales del canje 2020</strong> (cupón step-up + amortizaciones, Decreto 701/2020), los <strong>BONTE en dólares</strong> (cupón fijo, bullet) y los <strong>BOPREAL del BCRA</strong> (Serie 1, que amortiza 50% en abr-2027 y 50% en oct-2027 con cupón 5%; y Serie 4, bullet a oct-2028 con cupón 3%).</p>
+          <p><strong>Fórmulas:</strong> TIR resuelve <code>Precio = Σ Flujo_t / (1+TIR)^t</code> por bisección. <code>Macaulay = Σ t·VP(Flujo_t) / Precio</code>. <code>Modified = Macaulay / (1+TIR)</code>. La curva del scatter es una regresión cuadrática sobre los puntos (duration, TIR) de los bonos del canje.</p>
+          <p><strong>Sobre el precio:</strong> BYMA cotiza los bonos a <strong>precio sucio</strong>, es decir con los intereses corridos ya incluidos — es la plata que efectivamente ponés al comprar. Por eso descontamos los flujos futuros contra ese mismo precio, que es la convención correcta para la TIR.</p>
           <p><strong>Supuestos y limitaciones:</strong></p>
           <ul>
-            <li>Usamos <strong>precio limpio</strong> (sin intereses corridos) y base de días simple — por eso la TIR puede diferir ~0.2-0.4% de la "TIR sucia" de un terminal profesional.</li>
+            <li>Usamos base de días simple (años calendario de 365,25 días), no la base 30/360 exacta de cada prospecto: puede mover la TIR unas centésimas.</li>
             <li>Los precios son <strong>diferidos, NO tiempo real</strong> (pueden tener retraso respecto al mercado en vivo).</li>
             <li>No modela escenarios de reestructuración/default — la TIR asume cumplimiento del flujo prometido.</li>
+            <li>En los BOPREAL no valuamos la <strong>opción de rescate anticipado</strong> ni el uso para cancelar impuestos: las clases de una misma serie tienen flujos idénticos y por eso comparten TIR.</li>
           </ul>
           <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Herramienta educativa. <span style="font-style:italic;color:var(--text-subtle)">Metodología: Dumrauf, Análisis Cuantitativo de Bonos; Fabozzi, Bond Markets 8e.</span></p>
         </div>
@@ -108,7 +111,7 @@
 
       <div class="vb-tabs">
         <button class="vb-tab active" data-tab="curva">📈 Curva USD &amp; Ladder</button>
-        <button class="vb-tab" data-tab="pesos">💵 Pesos: CER + LECAP</button>
+        <button class="vb-tab" data-tab="pesos">💵 Pesos: LECAP &amp; BONCAP</button>
         <button class="vb-tab" data-tab="aprender">📚 Centro de Aprendizaje</button>
       </div>
 
@@ -147,35 +150,41 @@
         </div>
       </div>
 
-      <!-- ===== TAB PESOS (CER + LECAP) ===== -->
+      <!-- ===== TAB PESOS (LECAP / BONCAP) ===== -->
       <div class="vb-panel" id="panel-pesos">
         <div class="chart-wrap">
-          <h3>Curva en pesos — tasa nominal (LECAP) vs tasa real (CER)</h3>
+          <h3>Curva en pesos — LECAP y BONCAP (tasa fija)</h3>
           <p class="ch-sub" id="pesos-sub">Cargando…</p>
           <div class="chart-canvas-wrap"><canvas id="pesos-chart"></canvas></div>
           <div style="background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.18);border-radius:8px;padding:0.85rem 1.1rem;margin-top:1rem;font-size:0.8rem;color:var(--text-muted);line-height:1.6">
-            <strong style="color:#60a5fa">¿Por qué un CER puede tener tasa negativa (ej. TZX26)?</strong> Las LECAP/BONCAP son <strong>tasa nominal</strong> (TNA ~24-27%: pesos fijos). Los CER son <strong>tasa REAL</strong>, es decir <em>por encima de la inflación</em>. Una tasa real de −8% en el TZX26 NO es un error: significa "inflación menos 8%". El mercado acepta perder algo contra la inflación a cambio de <strong>cobertura</strong>, porque espera inflación alta en el corto plazo. Es lo mismo que pasa con los TIPS de EE.UU. cuando la tasa real es negativa. La columna "TNA/TIR" de los CER ya está expresada en términos reales.
+            <strong style="color:#60a5fa">Cómo se calcula.</strong> Las LECAP y BONCAP son <strong>cero cupón capitalizables</strong>: no pagan renta, pagan un único monto al vencimiento. Comparamos el <strong>precio de mercado</strong> contra ese <strong>pago final</strong> (fijado en las condiciones de emisión) y de ahí sale la tasa: <code>TEM = (pago/precio)^(30,4/días) − 1</code>, <code>TEA = (pago/precio)^(365/días) − 1</code> y <code>TNA = TEM × 12</code>. Son tasas <strong>nominales</strong>: en pesos fijos, sin ajuste por inflación.
           </div>
         </div>
 
         <div class="chart-wrap">
-          <h3>Inflación implícita (breakeven) vs REM</h3>
-          <p class="ch-sub">Lo que el mercado "paga" de inflación (breakeven LECAP vs CER) comparado con lo que esperan los economistas (REM del BCRA).</p>
-          <div id="be-block"><p class="loading-cell">Calculando breakeven…</p></div>
+          <h3>Tasa real implícita vs inflación esperada (REM)</h3>
+          <p class="ch-sub">Cuánto rinde cada plazo <em>por encima</em> de la inflación que esperan los economistas relevados por el BCRA.</p>
+          <div id="be-block"><p class="loading-cell">Calculando…</p></div>
+        </div>
+
+        <div class="chart-wrap">
+          <h3>Contexto macro — BCRA</h3>
+          <p class="ch-sub">Últimos valores publicados por el Banco Central (Estadísticas v4).</p>
+          <div id="macro-block"><p class="loading-cell">Cargando indicadores…</p></div>
         </div>
 
         <div class="chart-wrap">
           <h3>Detalle</h3>
           <div style="overflow-x:auto">
             <table class="ladder-table" id="pesos-table">
-              <thead><tr><th>Bono</th><th>Tipo</th><th>Días al vto</th><th>TNA</th><th>TIR</th><th>TEM</th><th>Duration</th></tr></thead>
-              <tbody><tr><td colspan="7" class="loading-cell">Cargando…</td></tr></tbody>
+              <thead><tr><th>Letra/Bono</th><th>Vencim.</th><th>Días</th><th>Precio</th><th>Pago al vto</th><th>TEM</th><th>TNA</th><th>TEA</th></tr></thead>
+              <tbody><tr><td colspan="8" class="loading-cell">Cargando…</td></tr></tbody>
             </table>
           </div>
         </div>
 
         <div class="vb-disclaimer">
-          <strong style="color:#ffb84d">⚠ Snapshot diario · no es recomendación.</strong> Las tasas de la curva en pesos vienen de una fuente con tope de consultas, por eso se actualizan <strong>una vez por día</strong> (delay ~20 min sobre el último dato). El breakeven es la inflación que iguala una LECAP nominal con un bono CER del mismo plazo; el REM es el relevamiento de expectativas del BCRA. Consultá un asesor matriculado en CNV.
+          <strong style="color:#ffb84d">⚠ Precios diferidos · no es recomendación.</strong> Los precios son de mercado con retraso; el pago al vencimiento sale de las condiciones de emisión de cada letra. La tasa real usa el REM (Relevamiento de Expectativas de Mercado del BCRA), que es una <strong>expectativa</strong>, no un dato cerrado: si la inflación termina siendo distinta, la tasa real efectiva también. Consultá un asesor matriculado en CNV.
         </div>
       </div>
 
@@ -227,11 +236,22 @@
           </div>
         </details>
         <details class="acc-item">
-          <summary>Breakeven de inflación: la apuesta CER vs tasa fija</summary>
+          <summary>Tasa real: ¿la tasa fija le gana a la inflación?</summary>
           <div class="acc-body">
-            <p>El <strong>breakeven</strong> es la inflación que iguala el rendimiento de una LECAP nominal con el de un bono CER del mismo plazo: <code>BE = (1 + TNA_nominal) / (1 + tasa_real_CER) − 1</code>. Es la inflación que el <em>mercado está descontando</em>.</p>
-            <p>La jugada: si vos pensás que la inflación va a ser <strong>mayor</strong> al breakeven → conviene CER. Si pensás que va a ser <strong>menor</strong> → conviene tasa fija. Comparamos ese breakeven contra el <strong>REM</strong> (Relevamiento de Expectativas de Mercado del BCRA, lo que esperan los economistas) para ver si el mercado está "caro" o "barato" en inflación. Es el mismo concepto que el <em>breakeven inflation</em> de los TIPS en el visor de bonos USA.</p>
+            <p>Una LECAP que rinde 27% anual no te dice nada por sí sola: lo que importa es cuánto rinde <em>por encima de la inflación</em>. Esa es la <strong>tasa real</strong>: <code>real = (1 + TEA) / (1 + inflación esperada) − 1</code>.</p>
+            <p>En la solapa de pesos comparamos la TEA de cada letra contra el <strong>REM</strong> (Relevamiento de Expectativas de Mercado del BCRA: lo que esperan los economistas para los próximos 12 meses). Si la tasa real da <strong>positiva</strong>, la tasa fija le gana a la inflación proyectada. Si da <strong>negativa</strong>, el mercado está pagando menos que la inflación esperada y tiene más sentido mirar instrumentos ajustados por CER.</p>
+            <p>Ojo con la trampa: el REM es una <em>expectativa</em>, no un dato. Si la inflación real termina siendo más alta, tu tasa real efectiva va a ser peor que la que muestra el cuadro. La apuesta de comprar tasa fija es justamente que la inflación baje más de lo que el mercado descuenta.</p>
             <span class="cite">Fabozzi, Bond Markets 8e — inflation-linked bonds; BCRA, REM.</span>
+          </div>
+        </details>
+        <details class="acc-item">
+          <summary>BOPREAL: por qué no es lo mismo que un bono del Tesoro</summary>
+          <div class="acc-body">
+            <p>Los <strong>BOPREAL</strong> (Bonos para la Reconstrucción de una Argentina Libre) los emite el <strong>BCRA</strong>, no el Tesoro. Nacieron para ordenar la deuda que las empresas tenían con el exterior (importaciones y dividendos frenados), pero se negocian en el mercado secundario como cualquier otro bono.</p>
+            <p>Dos series siguen vivas. La <strong>Serie 1</strong> vence el 31-oct-2027, paga cupón 5% anual semestral y devuelve el capital en dos cuotas de 50% (30-abr-2027 y 31-oct-2027). La <strong>Serie 4</strong> vence el 31-oct-2028, paga 3% anual semestral y es <em>bullet</em>: todo el capital al final.</p>
+            <p>Cada serie está partida en clases (1A, 1B, 1C, 1D / 4A, 4B). <strong>El flujo de fondos de todas las clases de una misma serie es idéntico</strong>: sólo cambia la opción de rescate anticipado a favor del tenedor. Por eso en el gráfico dibujamos un solo punto por serie —el de la clase más líquida— y las demás quedan en la tabla.</p>
+            <p>Dos cosas que la TIR de acá <em>no</em> captura: que el emisor es el Banco Central (otro riesgo de crédito, distinto al soberano) y que ciertos tramos se pueden usar para cancelar obligaciones impositivas y aduaneras — un beneficio que hace que coticen más caros de lo que sugiere el flujo puro.</p>
+            <span class="cite">BCRA, Comunicaciones "B" del régimen BOPREAL.</span>
           </div>
         </details>
       </div>
@@ -314,24 +334,73 @@
       return B; // [a,b,c]
     }
 
+    // Suma meses a (y,m,d) sin desbordar a fin de mes: 31-oct menos 6 meses = 30-abr,
+    // no 1-may (que es lo que devuelve Date.setMonth y descolocaba los flujos del AO28).
+    function shiftMonths(y, m, d, delta) {
+      let mm = m - 1 + delta;
+      const yy = y + Math.floor(mm / 12);
+      mm = ((mm % 12) + 12) % 12;
+      const last = new Date(yy, mm + 1, 0).getDate();
+      return new Date(yy, mm, Math.min(d, last));
+    }
     // Bullet (cupón fijo, capital al vencimiento): genera pagos hacia atrás desde el vto
     function buildBulletSchedule(b) {
-      const m = new Date(b.maturity); const step = 12 / b.freq;
-      const dates = []; let d = new Date(m);
-      while (d > today) { dates.unshift(new Date(d)); d = new Date(d); d.setMonth(d.getMonth() - step); }
+      const [y, m, d] = b.maturity.split('-').map(Number);
+      const step = 12 / b.freq, dates = [];
+      for (let k = 0; k < 600; k++) {
+        const dt = shiftMonths(y, m, d, -k * step);
+        if (dt <= today) break;
+        dates.unshift(dt);
+      }
       return dates.map((dt, i) => ({ t: (dt - today)/(365.25*86400000), cf: 100*b.coupon/b.freq + (i === dates.length-1 ? 100 : 0) }));
     }
 
-    let bonds = [], bullets = [], TPLS = {};
+    // BOPREAL (BCRA): cupón fijo sobre residual en fechas ancladas (30-abr / 31-oct)
+    // + amortizaciones en fechas fijas. Serie 1 amortiza 50%+50%, Serie 4 es bullet.
+    function bopRows(b) {
+      const amap = {}; (b.amortList || []).forEach(([d, p]) => { amap[d] = p; });
+      const [fy] = b.firstCoupon.split('-').map(Number);
+      const [my] = b.maturity.split('-').map(Number);
+      const fechas = [];
+      for (let y = fy; y <= my; y++) {
+        for (const [mm, dd] of b.anchors) {
+          const last = new Date(y, mm, 0).getDate();
+          const iso = `${y}-${String(mm).padStart(2,'0')}-${String(Math.min(dd,last)).padStart(2,'0')}`;
+          if (iso >= b.firstCoupon && iso <= b.maturity) fechas.push(iso);
+        }
+      }
+      fechas.sort();
+      let residual = 100; const rows = [];
+      for (const d of fechas) {
+        const cupon = residual * b.coupon / b.anchors.length;
+        const amort = amap[d] || 0;
+        rows.push({ date: d, cupon, amort, total: cupon + amort, t: yrs(d) });
+        residual -= amort;
+      }
+      return rows;
+    }
+    function buildBopSchedule(b) {
+      return bopRows(b).filter(r => r.t > 0).map(r => ({ t: r.t, cf: r.total }));
+    }
+
+    // Badge de emisor/jurisdicción
+    function lawClass(law) { return law === 'BCRA' ? 'badge-bcra' : (law.includes('Arg') ? 'badge-arg' : 'badge-ny'); }
+    // Espacio a la derecha del área de ploteo para que entren las etiquetas de los puntos
+    function padRight() { return window.innerWidth < 600 ? 30 : 64; }
+
+    let bonds = [], bullets = [], boprales = [], TPLS = {};
     let scatterChart = null;
     let sortKey = 'mac', sortDir = 1;
 
     // Flujo de fondos futuro por 100 de VN (fecha, cupón, amortización, total)
     function cashflowRows(bond) {
       const rows = [];
+      if (bond.kind === 'bopreal') {
+        return bopRows(bond).filter(r => r.t > 0).map(({ date, cupon, amort, total }) => ({ date, cupon, amort, total }));
+      }
       if (bond.kind === 'bullet') {
-        const m = new Date(bond.maturity), step = 12 / bond.freq; let d = new Date(m); const dates = [];
-        while (d > today) { dates.unshift(new Date(d)); d = new Date(d); d.setMonth(d.getMonth() - step); }
+        const [my, mm, md] = bond.maturity.split('-').map(Number), step = 12 / bond.freq; const dates = [];
+        for (let k = 0; k < 600; k++) { const dt = shiftMonths(my, mm, md, -k * step); if (dt <= today) break; dates.unshift(dt); }
         dates.forEach((dt, i) => { const cupon = 100 * bond.coupon / bond.freq, amort = (i === dates.length - 1 ? 100 : 0); rows.push({ date: dt.toISOString().slice(0,10), cupon, amort, total: cupon + amort }); });
       } else {
         const t = TPLS[bond.tpl]; if (!t) return rows;
@@ -352,7 +421,7 @@
           fetch('../data/bonds-ar.json').then(r=>r.json()),
           fetch('/api/agenda?source=ar-bonds').then(r=>r.ok?r.json():null),
         ]);
-        tpls = jr.templates; TPLS = jr.templates; defs = jr.bonds; bullets = jr.bullets || [];
+        tpls = jr.templates; TPLS = jr.templates; defs = jr.bonds; bullets = jr.bullets || []; boprales = jr.boprales || [];
         prices = {}; (pr?.bonds||[]).forEach(b => prices[b.sym] = b);
       } catch (e) {
         document.querySelector('#ladder tbody').innerHTML = '<tr><td colspan="8" class="loading-cell">No se pudieron cargar los datos. Probá refrescar.</td></tr>';
@@ -378,7 +447,12 @@
         const m = metrics(pinfo.price, buildBulletSchedule(b));
         return { ...b, kind:'bullet', price: pinfo.price, pct: pinfo.pct_change, bid: pinfo.bid, ask: pinfo.ask, ...m };
       });
-      bonds = [...canje, ...bull];
+      const bops = boprales.map(b => {
+        const pinfo = prices[b.sym] || {};
+        const m = metrics(pinfo.price, buildBopSchedule(b));
+        return { ...b, kind:'bopreal', law:'BCRA', price: pinfo.price, pct: pinfo.pct_change, bid: pinfo.bid, ask: pinfo.ask, ...m };
+      });
+      bonds = [...canje, ...bull, ...bops];
 
       renderScatter();
       renderLadder();
@@ -388,12 +462,15 @@
       const valid = bonds.filter(b => isFinite(b.ytm) && isFinite(b.mac));
       const sub = document.getElementById('scatter-sub');
       if (!valid.length) { sub.textContent = 'Sin datos de precio disponibles.'; return; }
-      sub.textContent = `${valid.length} bonos · TIR anual (USD) vs duration de Macaulay · regresión cuadrática`;
+      sub.textContent = `${valid.length} bonos · TIR anual (USD) vs duration de Macaulay · regresión cuadrática sobre el canje`;
 
-      const pts = valid.map(b => ({ x: b.mac, y: b.ytm*100, sym: b.sym, law: b.law, kind: b.kind }));
+      const pts = valid.map(b => ({ x: b.mac, y: b.ytm*100, sym: b.chartLabel || b.sym, law: b.law, kind: b.kind, chart: b.chart }));
       const ny   = pts.filter(p=>p.kind==='canje' && p.law.includes('NY'));
       const arg  = pts.filter(p=>p.kind==='canje' && p.law.includes('Arg'));
       const bull = pts.filter(p=>p.kind==='bullet');
+      // Las 4 clases de cada serie BOPREAL tienen el mismo flujo: en el scatter
+      // dibujamos sólo la más líquida (chart:true) para no apilar puntos idénticos.
+      const bop  = pts.filter(p=>p.kind==='bopreal' && p.chart);
 
       // línea de regresión (solo sobre los del canje, que forman la curva principal)
       const curvePts = pts.filter(p=>p.kind==='canje');
@@ -411,9 +488,13 @@
           { label:'Ley NY (Globales)', data:ny, backgroundColor:'#4ade9a', pointRadius:7, pointHoverRadius:9 },
           { label:'Ley Arg. (Bonares)', data:arg, backgroundColor:'#60a5fa', pointRadius:7, pointHoverRadius:9 },
           { label:'BONTE USD (tasa fija)', data:bull, backgroundColor:'#ffa857', pointStyle:'triangle', pointRadius:8, pointHoverRadius:10 },
+          { label:'BOPREAL (BCRA)', data:bop, backgroundColor:'#bba7e8', pointStyle:'rectRot', pointRadius:8, pointHoverRadius:10 },
         ]},
         options:{
           maintainAspectRatio:false,
+          // padding derecho: las etiquetas se dibujan a +8px del punto y el bono más
+          // largo cae sobre el borde, así que sin esto el último nombre queda cortado
+          layout:{padding:{right:padRight(), top:10}},
           plugins:{
             legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:11},filter:i=>i.text!=='Curva (regresión)'}},
             tooltip:{callbacks:{label:c=>c.raw.sym?`${c.raw.sym}: TIR ${c.raw.y.toFixed(2)}% · dur ${c.raw.x.toFixed(2)}`:''}}
@@ -424,7 +505,13 @@
           }
         },
         plugins:[{ id:'labels', afterDatasetsDraw(chart){ const {ctx}=chart; ctx.save(); ctx.font='10px DM Mono'; ctx.fillStyle='#e8edf5';
-          [1,2,3].forEach(di=>{ const meta=chart.getDatasetMeta(di); if(!meta)return; meta.data.forEach((pt,i)=>{ const d=chart.data.datasets[di].data[i]; if(d&&d.sym){ ctx.fillText(d.sym, pt.x+8, pt.y+3);} }); }); ctx.restore(); } }]
+          [1,2,3,4].forEach(di=>{ const meta=chart.getDatasetMeta(di); if(!meta)return; meta.data.forEach((pt,i)=>{
+            const d=chart.data.datasets[di].data[i]; if(!d||!d.sym) return;
+            const w=ctx.measureText(d.sym).width;
+            // si no entra a la derecha, la etiqueta se dibuja a la izquierda del punto
+            const x = (pt.x+8+w > chart.width-4) ? pt.x-8-w : pt.x+8;
+            ctx.fillText(d.sym, x, pt.y+3);
+          }); }); ctx.restore(); } }]
       });
     }
 
@@ -439,7 +526,7 @@
       tbody.innerHTML = sorted.map(b => `
         <tr onclick="window.__showBond('${b.sym}')">
           <td class="lt-sym">${b.sym}</td>
-          <td><span class="badge-law ${b.law.includes('Arg')?'badge-arg':'badge-ny'}">${b.law}</span></td>
+          <td><span class="badge-law ${lawClass(b.law)}">${b.law}</span></td>
           <td>${b.maturity}</td>
           <td>${b.price!=null?'$'+fmt(b.price):'—'}</td>
           <td class="${b.pct>0?'lt-ytm':''}" style="${b.pct<0?'color:#ff6b6b':''}">${b.pct!=null?(b.pct>0?'+':'')+fmt(b.pct)+'%':'—'}</td>
@@ -453,7 +540,7 @@
       const b = bonds.find(x=>x.sym===sym); if(!b) return;
       const el = document.getElementById('bond-detail');
       el.innerHTML = `<div class="chart-wrap" style="border-color:rgba(74,222,154,0.3)">
-        <h3>${b.sym} · ${b.name} <span class="badge-law ${b.law.includes('Arg')?'badge-arg':'badge-ny'}">${b.law}</span></h3>
+        <h3>${b.sym} · ${b.name} <span class="badge-law ${lawClass(b.law)}">${b.law}</span></h3>
         <p class="ch-sub">Vencimiento ${b.maturity} · precio USD ${b.price!=null?'$'+fmt(b.price):'—'}${b.bid?` (bid ${fmt(b.bid)} / ask ${fmt(b.ask)})`:''}</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
           ${stat('TIR (USD)', b.ytm!=null?fmt(b.ytm*100)+'%':'—','#4ade9a')}
@@ -461,7 +548,7 @@
           ${stat('Modified Dur', fmt(b.mod))}
           ${stat('Var. del día', b.pct!=null?(b.pct>0?'+':'')+fmt(b.pct)+'%':'—', b.pct>0?'#4ade9a':b.pct<0?'#ff6b6b':null)}
         </div>
-        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:1rem;line-height:1.5">Si la TIR de ${b.sym} sube 1 punto, su precio caería aprox. <strong style="color:#ff6b6b">${fmt(b.mod)}%</strong> (modified duration). ${b.kind==='bullet'?`<strong style="color:#ffa857">BONTE</strong> — cupón fijo ${(b.coupon*100).toFixed(2).replace('.00','')}% en dólares, capital íntegro al vencimiento (no amortiza).`:`Bono del canje 2020 (step-up amortizable) ${b.law.includes('Arg')?'bajo ley argentina (más riesgo legal, más TIR)':'bajo ley Nueva York (más protección, menos TIR)'}.`}</p>
+        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:1rem;line-height:1.5">Si la TIR de ${b.sym} sube 1 punto, su precio caería aprox. <strong style="color:#ff6b6b">${fmt(b.mod)}%</strong> (modified duration). ${b.kind==='bullet'?`<strong style="color:#ffa857">BONTE</strong> — cupón fijo ${(b.coupon*100).toFixed(2).replace('.00','')}% en dólares, capital íntegro al vencimiento (no amortiza).`:b.kind==='bopreal'?`<strong style="color:#bba7e8">BOPREAL</strong> — lo emite el <strong>BCRA</strong>, no el Tesoro: es otro riesgo de crédito. Cupón ${(b.coupon*100).toFixed(2).replace('.00','')}% anual semestral en dólares${b.amortList&&b.amortList.length>1?`, amortiza en ${b.amortList.length} cuotas`:', bullet (capital íntegro al vencimiento)'}. Las clases de una misma serie tienen flujos idénticos y sólo se diferencian por la opción de rescate anticipado.`:`Bono del canje 2020 (step-up amortizable) ${b.law.includes('Arg')?'bajo ley argentina (más riesgo legal, más TIR)':'bajo ley Nueva York (más protección, menos TIR)'}.`}</p>
 
         <div style="margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid var(--border)">
           <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin:0 0 0.75rem">💵 Simulador de flujo de fondos</p>
@@ -508,76 +595,106 @@
       <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem">${label}</p>
       <p style="font-family:var(--font-display);font-size:1.3rem;color:${color||'var(--text)'}">${val}</p></div>`; }
 
-    // ===== PESOS: CER + LECAP + breakeven vs REM =====
+    // ===== PESOS: curva LECAP/BONCAP + tasa real vs REM =====
     let pesosChart = null, pesosLoaded = false;
+    const pct = (x, d=1) => (x==null || !isFinite(x)) ? '—' : (x*100).toFixed(d)+'%';
+
     async function loadPesos() {
       if (pesosLoaded) return; pesosLoaded = true;
       const sub = document.getElementById('pesos-sub');
-      let data, rem = null;
-      try {
-        const [pr, br] = await Promise.all([
-          fetch('/api/agenda?source=ar-pesos').then(r=>r.ok?r.json():null),
-          fetch('/api/bcra?endpoint=Monetarias').then(r=>r.ok?r.json():null).catch(()=>null),
-        ]);
-        data = pr;
-        // REM inflación 12m (BCRA v4 idVariable 29)
-        const arr = br?.results || br || [];
-        const remVar = Array.isArray(arr) ? arr.find(x=>x.idVariable===29) : null;
-        if (remVar && Number.isFinite(remVar.valor)) rem = remVar.valor;
-      } catch (e) {}
-      const bonds = (data?.bonds||[]).filter(b=>Number.isFinite(b.tir));
-      if (!bonds.length) { sub.textContent = 'Datos en pesos no disponibles en este momento (se actualizan 1 vez por día).'; document.querySelector('#pesos-table tbody').innerHTML='<tr><td colspan="7" class="loading-cell">Sin datos hoy. Volvé a probar más tarde.</td></tr>'; document.getElementById('be-block').innerHTML='<p class="loading-cell">Sin datos para calcular breakeven.</p>'; return; }
-      sub.textContent = `${bonds.length} instrumentos · tasas anuales · ${data.source}`;
+      let data = null;
+      try { data = await fetch('/api/agenda?source=ar-pesos').then(r=>r.ok?r.json():null); } catch (e) {}
+      const list = (data?.bonds||[]).filter(b => isFinite(b.tir) && isFinite(b.dtm));
 
-      const nom = bonds.filter(b=>b.tipo==='nominal').sort((a,b)=>a.dtm-b.dtm);
-      const cer = bonds.filter(b=>b.tipo==='cer').sort((a,b)=>a.dtm-b.dtm);
+      if (!list.length) {
+        pesosLoaded = false; // permite reintentar al volver a entrar en la solapa
+        sub.textContent = 'No se pudieron cargar las tasas en pesos. Probá de nuevo en unos minutos.';
+        document.querySelector('#pesos-table tbody').innerHTML = '<tr><td colspan="8" class="loading-cell">Sin datos por ahora.</td></tr>';
+        document.getElementById('be-block').innerHTML = '<p class="loading-cell">Sin datos para calcular la tasa real.</p>';
+        document.getElementById('macro-block').innerHTML = '<p class="loading-cell">Sin datos del BCRA en este momento.</p>';
+        return;
+      }
 
-      // Chart: TNA nominal (azul) y TIR real CER (verde) por meses al vto
+      const asOf = data.asOf ? new Date(data.asOf).toLocaleString('es-AR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      sub.textContent = `${list.length} instrumentos · ${data.source}${asOf ? ' · actualizado ' + asOf : ''}`;
+
+      // --- Gráfico: TEA y TNA por meses al vencimiento ---
       const ctx = document.getElementById('pesos-chart').getContext('2d');
       if (pesosChart) pesosChart.destroy();
       pesosChart = new Chart(ctx, {
         type:'scatter',
         data:{ datasets:[
-          { label:'LECAP/BONCAP (TNA nominal)', data:nom.map(b=>({x:b.dtm/30.4, y:b.tna*100, sym:b.sym})), backgroundColor:'#60a5fa', borderColor:'#60a5fa', showLine:true, pointRadius:6, tension:0.2 },
-          { label:'CER (tasa real)', data:cer.map(b=>({x:b.dtm/30.4, y:b.tir*100, sym:b.sym})), backgroundColor:'#4ade9a', borderColor:'#4ade9a', showLine:true, pointRadius:6, tension:0.2 },
+          { label:'TEA (efectiva anual)', data:list.map(b=>({x:b.dtm/30.4, y:b.tir*100, sym:b.sym})), backgroundColor:'#4ade9a', borderColor:'#4ade9a', showLine:true, pointRadius:6, pointHoverRadius:8, tension:0.2 },
+          { label:'TNA (nominal anual)',  data:list.map(b=>({x:b.dtm/30.4, y:b.tna*100, sym:b.sym})), backgroundColor:'#60a5fa', borderColor:'#60a5fa', showLine:true, pointRadius:5, pointHoverRadius:7, tension:0.2, borderDash:[5,4] },
         ]},
-        options:{ maintainAspectRatio:false,
-          plugins:{ legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:11}}},
-            tooltip:{callbacks:{label:c=>`${c.raw.sym}: ${c.raw.y.toFixed(1)}% · ${c.raw.x.toFixed(0)}m`}} },
-          scales:{ x:{title:{display:true,text:'Meses al vencimiento',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
-            y:{title:{display:true,text:'Tasa anual (%)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}} }
+        options:{
+          maintainAspectRatio:false,
+          layout:{padding:{right:padRight(), top:10}},
+          plugins:{
+            legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:11}}},
+            tooltip:{callbacks:{label:c=>`${c.raw.sym}: ${c.raw.y.toFixed(1)}% · ${c.raw.x.toFixed(1)} meses`}}
+          },
+          scales:{
+            x:{title:{display:true,text:'Meses al vencimiento',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{title:{display:true,text:'Tasa anual (%)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}
+          }
         },
-        plugins:[{ id:'lbl', afterDatasetsDraw(ch){const{ctx}=ch;ctx.save();ctx.font='9px DM Mono';ctx.fillStyle='#e8edf5';[0,1].forEach(di=>{const m=ch.getDatasetMeta(di);m.data.forEach((pt,i)=>{const d=ch.data.datasets[di].data[i];if(d)ctx.fillText(d.sym,pt.x+6,pt.y+3);});});ctx.restore();}}]
+        // Etiquetamos sólo la serie TEA para no duplicar el símbolo en cada punto
+        plugins:[{ id:'lbl', afterDatasetsDraw(ch){ const {ctx}=ch; ctx.save(); ctx.font='9px DM Mono'; ctx.fillStyle='#e8edf5';
+          const meta=ch.getDatasetMeta(0); if(meta) meta.data.forEach((pt,i)=>{
+            const d=ch.data.datasets[0].data[i]; if(!d) return;
+            const w=ctx.measureText(d.sym).width;
+            const x=(pt.x+6+w > ch.width-4) ? pt.x-6-w : pt.x+6;
+            ctx.fillText(d.sym, x, pt.y-7);
+          }); ctx.restore(); } }]
       });
 
-      // Breakeven: emparejar CER con nominal de dtm cercano (±90 días)
-      const pairs = [];
-      for (const c of cer) {
-        const n = nom.reduce((best,x)=> Math.abs(x.dtm-c.dtm) < Math.abs((best?.dtm??1e9)-c.dtm) ? x : best, null);
-        if (n && Math.abs(n.dtm-c.dtm) <= 90) {
-          const be = (1 + n.tna) / (1 + c.tir) - 1;
-          pairs.push({ meses: Math.round(c.dtm/30.4), be, nom:n.sym, cer:c.sym });
-        }
-      }
-      const beBlock = document.getElementById('be-block');
-      if (!pairs.length) { beBlock.innerHTML = '<p class="loading-cell">No hay pares LECAP/CER de plazo similar para calcular breakeven hoy.</p>'; }
-      else {
-        beBlock.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem">
-          ${pairs.map(p=>stat(`Breakeven ~${p.meses}m`, (p.be*100).toFixed(1)+'%', '#ffa857')+`<!-- ${p.nom}/${p.cer} -->`).join('')}
-          ${rem!=null?stat('REM BCRA (infl. esperada)', rem.toFixed(1)+'%', '#bba7e8'):''}
+      // --- Tasa real implícita: (1+TEA)/(1+REM) − 1 ---
+      const rem = data.rem && isFinite(data.rem.valor) ? data.rem.valor/100 : null;
+      const be = document.getElementById('be-block');
+      if (rem == null) {
+        be.innerHTML = '<p class="loading-cell">El BCRA no devolvió el REM en este momento.</p>';
+      } else {
+        const n = list.length;
+        const idx = [...new Set([0, Math.round((n-1)*0.34), Math.round((n-1)*0.67), n-1])];
+        const cards = idx.map(i => {
+          const b = list[i];
+          const real = (1 + b.tir) / (1 + rem) - 1;
+          const plazo = b.dtm < 45 ? `${b.dtm}d` : `${Math.round(b.dtm/30.4)}m`;
+          return stat(`${b.sym} · ${plazo}`, pct(real), real >= 0 ? '#4ade9a' : '#ff6b6b');
+        }).join('');
+        be.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem">
+          ${cards}${stat('REM · inflación 12m', pct(rem), '#bba7e8')}
         </div>
-        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.5">Si el breakeven está <strong>por encima</strong> del REM, el mercado paga más inflación que la esperada por los economistas (conviene CER); si está <strong>por debajo</strong>, conviene tasa fija. Pares usados: ${pairs.map(p=>p.nom+'/'+p.cer).join(', ')}.</p>`;
+        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.5">Tasa real = <code>(1 + TEA) / (1 + REM) − 1</code>. Si da <strong>positiva</strong>, la tasa fija le gana a la inflación esperada por los economistas; si da <strong>negativa</strong>, el mercado está pagando menos que la inflación proyectada y conviene mirar instrumentos ajustados por CER. REM del ${data.rem.fecha}.</p>`;
       }
 
-      // Tabla
-      document.querySelector('#pesos-table tbody').innerHTML = [...nom,...cer].map(b=>`
+      // --- Contexto macro BCRA ---
+      const mb = document.getElementById('macro-block');
+      const macro = [
+        ['CER', data.cer, v => v.toLocaleString('es-AR',{maximumFractionDigits:2}), '#e8c97a'],
+        ['Inflación mensual', data.inflacionMensual, v => v.toFixed(1)+'%', '#ffa857'],
+        ['Inflación interanual', data.inflacionInteranual, v => v.toFixed(1)+'%', '#ff6b6b'],
+        ['REM inflación 12m', data.rem, v => v.toFixed(1)+'%', '#bba7e8'],
+        ['TAMAR (plazo fijo mayorista)', data.tamar, v => v.toFixed(2)+'%', '#4ade9a'],
+        ['BADLAR privados', data.badlar, v => v.toFixed(2)+'%', '#60a5fa'],
+      ].filter(([, d]) => d && isFinite(d.valor));
+      mb.innerHTML = macro.length
+        ? `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem">
+             ${macro.map(([label, d, fmtv, color]) => stat(`${label} · ${d.fecha}`, fmtv(d.valor), color)).join('')}
+           </div>`
+        : '<p class="loading-cell">Sin datos del BCRA en este momento.</p>';
+
+      // --- Tabla de detalle ---
+      document.querySelector('#pesos-table tbody').innerHTML = list.map(b => `
         <tr><td class="lt-sym">${b.sym}</td>
-        <td><span class="badge-law ${b.tipo==='cer'?'badge-ny':'badge-arg'}">${b.tipo==='cer'?'CER (real)':'Tasa fija'}</span></td>
+        <td>${b.vencimiento}</td>
         <td>${b.dtm}</td>
-        <td>${b.tna!=null?(b.tna*100).toFixed(1)+'%':'—'}</td>
-        <td class="lt-ytm">${(b.tir*100).toFixed(1)}%</td>
-        <td>${b.tem!=null?(b.tem*100).toFixed(2)+'%':'—'}</td>
-        <td>${b.duration!=null?b.duration.toFixed(2):'—'}</td></tr>`).join('');
+        <td>$${fmt(b.price, 2)}</td>
+        <td>$${fmt(b.vpv, 2)}</td>
+        <td>${pct(b.tem, 2)}</td>
+        <td>${pct(b.tna)}</td>
+        <td class="lt-ytm">${pct(b.tir)}</td></tr>`).join('');
     }
 
     // Tabs
