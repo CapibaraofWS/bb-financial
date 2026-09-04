@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visor de Bonos USA — Curva de Rendimientos, Treasuries, TIPS — BB Financial</title>
+  <meta name="description" content="Curva del Tesoro de EE.UU. en vivo: Treasuries de 1M a 30Y, TIPS, breakeven de inflación y spread 10Y-2Y, con centro de aprendizaje." />
+  <meta name="keywords" content="treasuries, yield curve, curva de rendimientos, TIPS, breakeven inflation, spread 10Y 2Y, bonos USA, renta fija" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/visor-bonos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Visor de Bonos USA — Curva de Rendimientos, Treasuries, TIPS — BB Financial" />
+  <meta property="og:description" content="Curva del Tesoro de EE.UU. en vivo: Treasuries de 1M a 30Y, TIPS, breakeven de inflación y spread 10Y-2Y, con centro de aprendizaje." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/visor-bonos.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Visor de Bonos USA — Curva de Rendimientos, Treasuries, TIPS — BB Financial" />
+  <meta name="twitter:description" content="Curva del Tesoro de EE.UU. en vivo: Treasuries de 1M a 30Y, TIPS, breakeven de inflación y spread 10Y-2Y, con centro de aprendizaje." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Visor de Bonos","item":"https://bb-financial.vercel.app/pages/visor-bonos.html"}]}
+  </script>
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+    .info-box.warn{border-left-color:#ff9999;}
+    .info-box.warn strong{color:#ff9999;}
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.5rem; overflow:hidden; }
+    .tool-info summary { padding:0.85rem 1.15rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; } .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.95rem 1.15rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.75; }
+    .tool-info .ti-content p { margin:0 0 0.7rem; }
+    .tool-info .ti-content code { background:var(--bg); padding:0.05rem 0.4rem; border-radius:4px; font-family:var(--font-mono); font-size:0.78rem; color:var(--accent); }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.3rem; }
+    .tab-bar{display:flex;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.35rem;margin-bottom:1.75rem;flex-wrap:wrap;}
+    .tab-btn{flex:1 1 140px;padding:0.7rem 0.5rem;border-radius:7px;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--transition);background:transparent;border:none;text-align:center;}
+    .tab-btn.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+
+    .yield-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.85rem;margin-bottom:1.5rem;}
+    .yc-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1rem;transition:all var(--transition);}
+    .yc-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover);}
+    .yc-label{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);}
+    .yc-name{font-size:0.85rem;color:var(--text);margin:0.3rem 0 0.4rem;font-weight:500;}
+    .yc-value{font-family:var(--font-display);font-size:1.45rem;letter-spacing:-0.02em;color:var(--accent);line-height:1.1;}
+    .yc-value.muted{color:var(--text-muted);}
+    .yc-sub{font-size:0.7rem;color:var(--text-muted);font-family:var(--font-mono);margin-top:0.3rem;}
+    .yc-sub.up{color:#4ade9a;}
+    .yc-sub.down{color:#ff9999;}
+
+    .alert-banner{background:linear-gradient(90deg,rgba(255,153,153,0.08),rgba(255,153,153,0.02));border:1px solid rgba(255,153,153,0.25);border-left:3px solid #ff9999;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:0.88rem;color:var(--text);}
+    .alert-banner.ok{background:linear-gradient(90deg,var(--accent-dim),rgba(74,222,154,0.02));border-color:rgba(74,222,154,0.25);border-left-color:var(--accent);}
+    .alert-icon{font-family:var(--font-mono);font-weight:600;margin-right:0.5rem;}
+
+    .chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem;}
+    .chart-wrap h3{font-family:var(--font-display);font-size:1.1rem;margin:0 0 0.4rem;color:var(--text);}
+    .chart-wrap .ch-desc{font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;}
+    .chart-canvas-wrap{position:relative;height:340px;}
+
+    .section-title{font-family:var(--font-display);font-size:1.2rem;color:var(--text);margin:1.75rem 0 0.5rem;}
+    .section-desc{font-size:0.85rem;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.65;}
+
+    .selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:0.5rem;margin-bottom:1.25rem;}
+    .sel-chip{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:0.55rem 0.65rem;font-size:0.78rem;font-family:var(--font-mono);color:var(--text-muted);cursor:pointer;transition:all var(--transition);text-align:center;user-select:none;}
+    .sel-chip:hover{border-color:var(--border-hover);color:var(--text);}
+    .sel-chip.selected{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+
+    .comp-table{width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:1.5rem;}
+    .comp-table th,.comp-table td{padding:0.7rem 0.9rem;border-bottom:1px solid var(--border);text-align:left;}
+    .comp-table th{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);}
+    .comp-table td{font-family:var(--font-mono);color:var(--text);}
+    .comp-table td.metric{color:var(--text-muted);font-size:0.78rem;}
+    .comp-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+    .calc-input-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0;}
+    .calc-input-row .form-group{margin-bottom:0;}
+
+    /* Accordion (centro de aprendizaje) */
+    .acc-item{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;margin-bottom:0.75rem;overflow:hidden;}
+    .acc-head{padding:1rem 1.25rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:var(--font-display);font-size:1.05rem;color:var(--text);user-select:none;}
+    .acc-head:hover{background:var(--bg-card-hover);}
+    .acc-head .acc-arrow{font-family:var(--font-mono);color:var(--text-subtle);transition:transform var(--transition);}
+    .acc-item.open .acc-head .acc-arrow{transform:rotate(90deg);}
+    .acc-body{display:none;padding:0 1.25rem 1.25rem;font-size:0.88rem;color:var(--text-muted);line-height:1.75;}
+    .acc-item.open .acc-body{display:block;}
+    .acc-body h4{color:var(--text);font-family:var(--font-display);margin:1rem 0 0.4rem;font-size:1rem;}
+    .acc-body code{background:var(--bg);border:1px solid var(--border);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.82rem;color:var(--accent);}
+    .acc-body ul{padding-left:1.25rem;}
+    .acc-body li{margin-bottom:0.4rem;}
+    .formula-mini{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.85rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin:0.5rem 0;}
+    .concept-box{background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.20);border-left:3px solid #60a5fa;border-radius:8px;padding:0.85rem 1rem;margin:1rem 0;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .concept-box strong{color:#60a5fa;}
+    .concept-box .cb-title{display:block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.35rem;font-weight:600;}
+    .concept-box.warn{background:rgba(255,153,153,0.05);border-color:rgba(255,153,153,0.20);border-left-color:#ff9999;}
+    .concept-box.warn strong, .concept-box.warn .cb-title{color:#ff9999;}
+    .source-cite{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-subtle);margin-top:0.5rem;display:block;}
+
+    .loading-skel{display:inline-block;width:60px;height:1.4rem;background:linear-gradient(90deg,var(--bg-card),var(--bg-card-hover),var(--bg-card));background-size:200% 100%;animation:skel 1.5s infinite;border-radius:4px;}
+    @keyframes skel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+    @media(max-width:640px){
+      .yield-grid{grid-template-columns:repeat(2,1fr);}
+      .chart-canvas-wrap{height:280px;}
+      .comp-table{font-size:0.75rem;}
+      .comp-table th,.comp-table td{padding:0.5rem 0.4rem;}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
+        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos.html" class="nav-link">Conceptos</a>
+        <a href="ticker.html" class="nav-link">Acciones</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="mis-portafolios.html" class="nav-link" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Visor de Bonos</p>
+        <h1 class="page-title">Visor de Bonos USA <span class="beta-badge">Live</span></h1>
+        <p class="page-subtitle">Curva de rendimientos del Tesoro de EE.UU. en vivo. <strong>Treasuries</strong> (nominales), <strong>TIPS</strong> (yield real), <strong>breakeven inflation</strong> y spread <strong>10Y − 2Y</strong>. Datos de FRED — St. Louis Fed.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem">
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — datos, supuestos, limitaciones</summary>
+        <div class="ti-content">
+          <p><strong>Qué datos usa:</strong> todo viene en vivo desde nuestro backend, con datos oficiales de la curva del Tesoro de EE.UU. (Reserva Federal). Series consultadas:</p>
+          <ul>
+            <li><strong>Treasuries</strong> nominales: DGS1MO, DGS3MO, DGS6MO, DGS1, DGS2, DGS5, DGS10, DGS30 (yield "constant maturity" — tasa hipotética a la par)</li>
+            <li><strong>TIPS</strong> (yields reales): DFII5, DFII10, DFII30 — yield ya descontada la inflación</li>
+            <li><strong>Breakeven inflation</strong>: T5YIE, T10YIE (inflación esperada implícita)</li>
+            <li><strong>Spreads</strong>: T10Y2Y, T10Y3M (indicadores recesión)</li>
+            <li><strong>Credit spreads</strong>: BAMLC0A0CM (IG OAS), BAMLH0A0HYM2 (HY OAS)</li>
+          </ul>
+          <p><strong>Supuestos en el comparador y scatter:</strong></p>
+          <ul>
+            <li>Para T-Bills (&lt;1 año) modelamos como <strong>zero-coupon</strong>: un único flujo al vencimiento.</li>
+            <li>Para T-Notes y T-Bonds (≥1Y) modelamos como <strong>bullet par</strong>: cupón = yield actual, precio = 100. Esto es razonable para on-the-run Treasuries (cupón se fija cerca del yield al emitir).</li>
+            <li><strong>TIR</strong> se resuelve por bisección. <strong>Macaulay duration</strong> = Σ t·CF/(1+y)^t / P. <strong>Modified duration</strong> = Macaulay / (1+y). <strong>Convexidad</strong> = Σ t(t+1)·CF/(1+y)^(t+2) / P.</li>
+          </ul>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>El yield curve chart muestra solo Treasuries (nominales) — para ver TIPS y comparar real vs nominal, usá la tab "TIPS &amp; Inflación".</li>
+            <li>La sensibilidad precio-yield asume <strong>movimiento paralelo</strong> de la curva. Cambios de forma (steepening, flattening) no se capturan.</li>
+            <li>Datos diarios — FRED actualiza tras cierre de mercado USA (no es intraday).</li>
+            <li>Para bonos argentinos, ver la próxima fase (no implementado todavía).</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Modelos teóricos. Los precios reales del mercado pueden diferir por liquidez, off-the-run, repo, etc. Para operar bonos consultá un asesor matriculado.</p>
+        </div>
+      </details>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="curva">Curva de Rendimientos</button>
+        <button class="tab-btn" data-tab="tips">TIPS &amp; Inflación</button>
+        <button class="tab-btn" data-tab="comparador">Comparador</button>
+        <button class="tab-btn" data-tab="aprender">Centro de Aprendizaje</button>
+      </div>
+
+      <!-- ====== TAB: CURVA ====== -->
+      <div class="tab-panel active" id="tab-curva">
+        <div class="info-box">
+          <strong>¿Qué muestra la curva?</strong> Cada punto es el yield (rendimiento anualizado) que paga el Tesoro de EE.UU. para ese plazo. La forma de la curva es un termómetro del mercado: <strong>normal</strong> (creciente) → expectativa de crecimiento; <strong>invertida</strong> (decreciente) → expectativa de recesión; <strong>plana</strong> → incertidumbre.
+        </div>
+
+        <div id="curve-alert" class="alert-banner" style="display:none">
+          <span class="alert-icon" id="curve-alert-icon">●</span><span id="curve-alert-text">—</span>
+        </div>
+
+        <div class="chart-wrap">
+          <h3>Yield Curve — Tesoro EE.UU.</h3>
+          <p class="ch-desc">Eje X: plazo (escala log con etiquetas fijas en cada Treasury). Eje Y: yield anual %. Última actualización: <span id="curve-updated">—</span></p>
+          <p style="font-size:0.75rem;color:var(--text-subtle);margin:0 0 0.5rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;">Filtrar instrumentos:</p>
+          <div class="selector-grid" id="curve-filter" style="margin-bottom:1rem;"></div>
+          <div class="chart-canvas-wrap"><canvas id="curve-chart"></canvas></div>
+        </div>
+
+        <div class="chart-wrap">
+          <h3>YTM vs Duration — Treasuries &amp; TIPS</h3>
+          <p class="ch-desc">Cada punto es un bono. Eje X: <strong>Modified Duration</strong> (sensibilidad a tasa). Eje Y: <strong>YTM</strong> (rendimiento). Cuanto más a la derecha y arriba, más rendimiento pero más riesgo de tasa. Treasuries (verde), TIPS (azul — yield real).</p>
+          <div class="chart-canvas-wrap"><canvas id="scatter-chart"></canvas></div>
+        </div>
+
+        <h2 class="section-title">Credit Spreads — Crédito corporativo</h2>
+        <p class="section-desc">Spread sobre Treasuries que paga el mercado por bonos corporativos USA. Cuando suben, el mercado descuenta más riesgo de default. Históricamente: HY &gt; 800 bps = stress severo; IG &gt; 200 bps = recesión inminente.</p>
+        <div class="yield-grid" id="grid-credit"></div>
+
+        <h2 class="section-title">Treasuries — Yields nominales</h2>
+        <p class="section-desc">Bonos del Tesoro de EE.UU. denominados en USD. Tasa libre de riesgo de referencia global.</p>
+        <div class="yield-grid" id="grid-treasuries"></div>
+
+        <h2 class="section-title">Spread 10Y − 2Y</h2>
+        <p class="section-desc">Diferencia entre el yield del Treasury a 10 años y a 2 años. Cuando se vuelve <strong>negativo</strong>, la curva está invertida — históricamente ha precedido recesiones en EE.UU.</p>
+        <div class="yield-grid" id="grid-spreads"></div>
+      </div>
+
+      <!-- ====== TAB: TIPS ====== -->
+      <div class="tab-panel" id="tab-tips">
+        <div class="info-box">
+          <strong>TIPS (Treasury Inflation-Protected Securities):</strong> bonos del Tesoro cuyo capital se ajusta por el CPI (índice de precios al consumidor). El yield publicado es <strong>real</strong> — ya descontada la inflación. Comparándolo con el yield nominal se obtiene la <strong>inflación esperada por el mercado</strong> (breakeven).
+        </div>
+
+        <h2 class="section-title">TIPS — Yields reales</h2>
+        <div class="yield-grid" id="grid-tips"></div>
+
+        <h2 class="section-title">Breakeven Inflation</h2>
+        <p class="section-desc">Inflación promedio que el mercado espera para el plazo indicado: <code style="background:var(--bg);padding:0.1rem 0.4rem;border-radius:4px;color:var(--accent);font-family:var(--font-mono)">Breakeven = Yield Treasury − Yield TIPS</code>. Es la inflación a la cual ambos bonos rinden lo mismo.</p>
+        <div class="yield-grid" id="grid-breakeven"></div>
+      </div>
+
+      <!-- ====== TAB: COMPARADOR ====== -->
+      <div class="tab-panel" id="tab-comparador">
+        <div class="info-box">
+          <strong>Comparador:</strong> seleccioná 2 a 4 Treasuries. Calculamos métricas asumiendo bono <strong>bullet</strong> (cupón = yield actual, precio a la par = 100) — esto es razonable para Treasuries on-the-run, donde el cupón se fija cerca del yield de mercado al emitir. Para precisión absoluta, usar la <a href="renta-fija.html" style="color:var(--accent);">calculadora individual</a>.
+        </div>
+
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.7rem;">Seleccioná hasta 4 instrumentos:</p>
+        <div class="selector-grid" id="comp-selector"></div>
+
+        <div id="comp-results" style="display:none">
+          <div style="overflow-x:auto;margin-bottom:1rem;">
+            <table class="comp-table" id="comp-table"></table>
+          </div>
+
+          <div class="chart-wrap">
+            <h3>Sensibilidad Precio — Yield</h3>
+            <p class="ch-desc">Cómo cambia el precio teórico de cada bono cuando se mueve la yield (eje X: yield %, eje Y: precio). Bonos largos = línea más curva = más sensibles.</p>
+            <div class="chart-canvas-wrap"><canvas id="comp-chart"></canvas></div>
+          </div>
+        </div>
+
+        <div id="comp-empty" style="text-align:center;color:var(--text-subtle);padding:2.5rem 1rem;font-size:0.9rem;">Seleccioná 2 o más bonos arriba para comparar.</div>
+      </div>
+
+      <!-- ====== TAB: APRENDIZAJE ====== -->
+      <div class="tab-panel" id="tab-aprender">
+        <div class="info-box">
+          <strong>6 módulos:</strong> conceptos fundamentales de renta fija, medidas de rendimiento, medidas de riesgo de tasa, instrumentos USA, cómo leer un prospecto y cómo comparar bonos. Pensado para estudiantes de finanzas y analistas junior.
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">1 — Conceptos fundamentales de bonos<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>Un <strong>bono</strong> es un instrumento de deuda. El emisor (gobierno o empresa) recibe efectivo hoy y se compromete a devolverlo (capital) más intereses (cupones) en el futuro.</p>
+            <h4>Partes</h4>
+            <ul>
+              <li><strong>Emisor:</strong> el que pide prestado (Tesoro de EE.UU., YPF, Apple, etc.)</li>
+              <li><strong>Tenedor:</strong> el que presta — el inversor</li>
+              <li><strong>Valor nominal (VN):</strong> capital que se paga al vencimiento (típicamente 100 o 1.000)</li>
+              <li><strong>Cupón:</strong> interés periódico (% del VN, anual, semestral o trimestral)</li>
+              <li><strong>Vencimiento:</strong> fecha en que se paga el último cupón + el VN</li>
+            </ul>
+            <h4>Bullet vs amortizante</h4>
+            <p><strong>Bullet:</strong> paga solo cupones durante la vida del bono y el VN completo al final. Todos los Treasuries USA son bullet. <strong>Amortizante:</strong> devuelve el capital en cuotas a lo largo de la vida (ej. AL30, GD30 argentinos).</p>
+            <h4>Precio limpio vs precio sucio</h4>
+            <p><strong>Precio sucio</strong> = lo que se paga efectivamente. <strong>Precio limpio</strong> = sucio − intereses corridos. Los precios cotizados públicamente suelen ser <em>limpios</em>, pero al liquidar se paga el sucio.</p>
+            <div class="formula-mini">Intereses corridos = Cupón × (días desde último pago / días entre pagos)</div>
+            <h4>Relación inversa precio-tasa</h4>
+            <p>Si la tasa de mercado <strong>sube</strong>, los bonos viejos (con cupón fijo más bajo) <strong>bajan de precio</strong> — porque los nuevos pagan más. Y viceversa. Esta es la mecánica central de la renta fija.</p>
+            <div class="concept-box">
+              <span class="cb-title">Concepto clave: función precio-TIR</span>
+              La relación precio-yield no es lineal sino <strong>convexa</strong>. Esta convexidad es propiedad fundamental de los flujos descontados: el precio cae menos cuando la tasa sube de lo que sube cuando la tasa baja la misma magnitud. Por eso un bono con alta convexidad es deseable en escenarios de volatilidad de tasas.
+            </div>
+            <h4>Paridad</h4>
+            <p><code>Paridad = Precio sucio / Valor técnico × 100</code>. Sobre 100 → sobre la par. Bajo 100 → bajo la par. A 100 → a la par.</p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">2 — Medidas de rendimiento<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <h4>TIR / YTM (Yield to Maturity)</h4>
+            <p>La tasa que iguala el precio actual con el valor presente de todos los flujos futuros. Es la rentabilidad anualizada que obtenés si: (1) mantenés el bono al vencimiento, y (2) reinvertís los cupones a esa misma tasa.</p>
+            <div class="formula-mini">P = Σ [ CF_t / (1 + r)^t ]   →  resolver para r</div>
+            <p>No tiene forma cerrada para bonos con varios flujos; se resuelve numéricamente (bisección o Newton-Raphson).</p>
+            <h4>Current Yield</h4>
+            <div class="formula-mini">Current Yield = Cupón anual / Precio</div>
+            <p>Mide el rendimiento corriente — ignora capital al vencimiento y reinversión. Útil para comparación rápida; engaña en bonos lejos de la par.</p>
+            <h4>Diferencia entre TIR y cupón</h4>
+            <p>El <strong>cupón</strong> es fijo (definido en el prospecto). La <strong>TIR</strong> varía con el precio. Si el precio cae, la TIR sube — el bono se vuelve más atractivo porque "compensa" el riesgo.</p>
+            <h4>Spread</h4>
+            <p>Diferencia entre la TIR de un bono y la del Treasury del mismo plazo. Se expresa en <strong>basis points (bps)</strong>: 100 bps = 1%. Spread alto = más riesgo de crédito percibido por el mercado.</p>
+            <div class="concept-box warn">
+              <span class="cb-title">⚠ Atención: la TIR no siempre es el rendimiento real</span>
+              La TIR asume que <strong>todos los cupones se reinvierten a la misma TIR</strong>. Si las tasas bajan, vas a reinvertir a tasas menores y tu rendimiento total será inferior a la TIR. Si suben, será superior. Para bonos cortos sin cupón, TIR = rendimiento realizado. Para bonos largos con cupones, no.
+              <span class="source-cite">Fuente: Dumrauf, Análisis Cuantitativo de BONOS, Cap. 14</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">3 — Medidas de riesgo de tasa<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <h4>Duration Macaulay</h4>
+            <p>Tiempo promedio ponderado para recuperar la inversión, donde los pesos son el valor presente de cada flujo. Se mide en años.</p>
+            <div class="formula-mini">D_Mac = Σ [ t × CF_t / (1+r)^t ] / P</div>
+            <p>Intuición: un bono cero-cupón a 5 años tiene duration = 5. Un bono con cupones tiene duration &lt; vencimiento, porque parte del capital se recibe antes.</p>
+            <h4>Modified Duration</h4>
+            <div class="formula-mini">D_Mod = D_Mac / (1 + r/m)</div>
+            <p>Aproxima el cambio % en precio ante un cambio en yield:</p>
+            <div class="formula-mini">ΔP / P ≈ −D_Mod × Δr</div>
+            <p>Ejemplo: un bono con D_Mod = 8 cae ~8% si la yield sube 100 bps (1%).</p>
+            <h4>Convexidad</h4>
+            <p>Corrección de segundo orden. La relación precio-yield no es lineal — es curva. La convexidad la captura:</p>
+            <div class="formula-mini">ΔP ≈ (−D_Mod × Δr + 0.5 × C × Δr²) × P</div>
+            <p><strong>Mayor convexidad es mejor:</strong> ante movimientos grandes de tasa, el precio sube <em>más</em> de lo que baja. Los bonos largos sin cupón son los más convexos.</p>
+            <h4>DV01 / Dollar Duration</h4>
+            <p>Cambio en precio (en dólares) ante 1 bp de movimiento en yield. Útil en gestión de carteras: si tu cartera tiene DV01 total = $50.000, una suba de 10 bps te cuesta $500.000.</p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">4 — Instrumentos USA<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <h4>T-Bills (Treasury Bills)</h4>
+            <p>Plazos hasta 1 año. <strong>Cero cupón</strong> — se emiten con descuento. Rendimiento = (VN − Precio) anualizado. Plazos típicos: 4, 8, 13, 17, 26, 52 semanas.</p>
+            <h4>T-Notes</h4>
+            <p>Plazos de 2 a 10 años. Pagan cupón semestral. Cupón fijo definido al emitir, cerca del yield de mercado.</p>
+            <h4>T-Bonds</h4>
+            <p>Plazos de 20 y 30 años. Pagan cupón semestral. Mismo formato que T-Notes pero más largos = más sensibles a tasa.</p>
+            <h4>TIPS</h4>
+            <p>Treasury Inflation-Protected Securities. El <strong>valor nominal se ajusta diariamente</strong> por el CPI. El cupón es fijo en % pero se aplica sobre el VN ajustado, así que en pesos crece con la inflación. Plazos: 5, 10, 30 años.</p>
+            <p>El yield publicado por FRED para TIPS es el <strong>yield real</strong> — el retorno por encima de la inflación.</p>
+            <h4>STRIPS</h4>
+            <p>Bonos cero-cupón sintéticos creados separando ("stripping") cada flujo de un Treasury con cupón. Cada cupón y el principal se venden por separado. Permiten ajustar duration con precisión.</p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">5 — Cómo leer un prospecto (ejemplo: T-Note 10Y)<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>El prospecto de un Treasury se publica en <strong>treasurydirect.gov</strong> bajo "Announcement". Secciones clave:</p>
+            <h4>1. Term and Type</h4>
+            <p>Plazo (ej. "10-Year Note"), tipo (Note / Bond / Bill / TIPS), fecha de emisión y vencimiento.</p>
+            <h4>2. Interest Rate</h4>
+            <p>Cupón (en %). Para Treasuries con cupón se fija en la subasta, redondeado al 1/8% más cercano.</p>
+            <h4>3. Interest Payment Dates</h4>
+            <p>Para Notes/Bonds: dos pagos por año, generalmente los días 15 del mes. Ejemplo: 15 de febrero y 15 de agosto.</p>
+            <h4>4. Maturity Date</h4>
+            <p>Fecha en que se paga el último cupón + el principal.</p>
+            <h4>5. CUSIP</h4>
+            <p>Identificador único de 9 caracteres del instrumento. Necesario para liquidar la operación.</p>
+            <h4>6. Auction Method</h4>
+            <p><strong>Single-price auction:</strong> todos los participantes que ganaron pagan el mismo precio — el más alto aceptado. Garantiza precio justo.</p>
+            <h4>7. Bid-to-cover ratio</h4>
+            <p>Demanda total / oferta. &gt; 2.5 → demanda fuerte. &lt; 2 → débil. Lo reporta el Tesoro tras cada subasta.</p>
+            <p style="margin-top:0.8rem;"><strong>Para bonos argentinos</strong> el prospecto se publica en <a href="https://www.cnv.gov.ar" target="_blank" rel="noopener" style="color:var(--accent);">cnv.gov.ar</a>. Ver tabla de amortización, factores de riesgo, ley aplicable (NY o ARG) y covenants.</p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">6 — Cómo comparar bonos<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <h4>¿TIR o Duration?</h4>
+            <p><strong>TIR</strong> mide rendimiento esperado. <strong>Duration</strong> mide riesgo de tasa. Comparar dos bonos requiere mirar las dos:</p>
+            <ul>
+              <li>Bono A: TIR 5%, Duration 2 años</li>
+              <li>Bono B: TIR 5.5%, Duration 8 años</li>
+            </ul>
+            <p>B paga 50 bps más, pero si las tasas suben 100 bps, pierde ~8% vs ~2% del A. Habría que cobrar mucho más para compensar el riesgo extra.</p>
+            <h4>Curva precio-yield</h4>
+            <p>Graficar precio teórico vs yield: si una curva está siempre por encima de la otra, ese bono domina (más precio para mismo yield). Si se cruzan, depende del rango de tasas que esperás.</p>
+            <h4>Diversificación: laddering</h4>
+            <p><strong>Bond ladder:</strong> dividir la inversión en bonos con vencimientos escalonados (1, 3, 5, 7 años). Cuando vence el corto, reinvertís en el plazo más largo. Suaviza el riesgo de reinversión.</p>
+            <h4>Riesgo de crédito vs riesgo de tasa</h4>
+            <ul>
+              <li><strong>Treasuries:</strong> casi sin riesgo de crédito, todo el riesgo es de tasa</li>
+              <li><strong>Corporativos investment-grade:</strong> riesgo de tasa + algo de crédito</li>
+              <li><strong>High-yield / emergentes:</strong> riesgo de crédito domina; el spread sobre Treasuries es la compensación</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">7 — Total Return: lo que realmente ganás<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>La TIR es una promesa. El <strong>total return</strong> (rendimiento total) es lo que efectivamente recibís. Tiene tres componentes:</p>
+            <ul>
+              <li><strong>Cupones cobrados</strong> durante el horizonte de inversión</li>
+              <li><strong>Reinversión de esos cupones</strong> a la tasa que haya cuando los cobrás</li>
+              <li><strong>Precio de venta o valor de reembolso</strong> al final del horizonte</li>
+            </ul>
+            <div class="formula-mini">Total Return = (Valor final / Precio compra)^(1/n) − 1</div>
+            <p>Donde <em>Valor final</em> = cupones acumulados con reinversión + precio de venta.</p>
+            <div class="concept-box">
+              <span class="cb-title">Ejemplo numérico</span>
+              Comprás un Treasury 10Y a yield 4.50% pero pensás venderlo en 3 años. Si las tasas suben a 5.50% en ese plazo, vas a recuperar &lt; precio de compra (pérdida de capital) + 3 años de cupones reinvertidos a tasas variables. El total return puede ser bien diferente a la TIR original.
+              <span class="source-cite">Fuente: Dumrauf, Cap. 3; Fabozzi, Bond Markets 8e, Cap. 3</span>
+            </div>
+            <p><strong>Implicancia práctica:</strong> elegir el bono no solo por su TIR sino por el escenario de tasas y tu horizonte de inversión. Un bono corto con TIR menor puede dar mejor total return si esperás suba de tasas.</p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">8 — Curva de rendimientos: tres teorías que la explican<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>¿Por qué la curva tiene la forma que tiene? Tres teorías clásicas (no excluyentes — el mercado real es una combinación):</p>
+            <h4>1. Teoría de las expectativas puras</h4>
+            <p>Las tasas largas son el <strong>promedio geométrico esperado</strong> de las tasas cortas futuras. Si el mercado espera que la Fed suba tasas, la curva se empina. Si espera bajadas, se aplana o invierte.</p>
+            <div class="formula-mini">(1 + r_largo)^n = (1+r_1)(1+E[r_2])...(1+E[r_n])</div>
+            <p><strong>Predicción:</strong> tasas forward implícitas son insesgadas. <strong>Crítica:</strong> empíricamente no lo son — el mercado paga premio por liquidez.</p>
+            <h4>2. Teoría de la preferencia por liquidez</h4>
+            <p>Los inversores <strong>prefieren plazos cortos</strong> (menor riesgo de tasa). Para que acepten plazos largos, exigen un premio adicional ("term premium"). Por eso la curva normal es ascendente incluso si no se esperan subas de tasa.</p>
+            <h4>3. Teoría de la segmentación de mercado</h4>
+            <p>Cada plazo tiene su propia oferta/demanda. Los bancos compran corto, las aseguradoras compran largo. Si la demanda institucional cambia, la curva se mueve sin que cambien expectativas.</p>
+            <div class="concept-box">
+              <span class="cb-title">¿Por qué importa para vos?</span>
+              Si creés en (1), te interesa lo que <em>vos</em> esperás de tasas futuras. Si creés en (2), un bono largo te paga premio que cobrás aunque las tasas no se muevan ("rolldown"). Si creés en (3), miras flujos institucionales (Treasury issuance, pension funds rebalancing).
+              <span class="source-cite">Fuente: Dumrauf, Cap. 15; Fabozzi, Cap. 5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">9 — Inmunización de portafolio<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>Tenés un pasivo futuro (ej. pagar USD 1M en 7 años) y querés que la cartera te dé exactamente eso, sin importar cómo se muevan las tasas. Eso es <strong>inmunización</strong>.</p>
+            <h4>Regla básica (Redington, 1952)</h4>
+            <ul>
+              <li><strong>Duration de la cartera = Duration del pasivo</strong> (matching)</li>
+              <li><strong>Convexidad de la cartera ≥ Convexidad del pasivo</strong></li>
+              <li><strong>Valor presente coincide</strong></li>
+            </ul>
+            <p>Si se cumplen estas 3 condiciones, ante cualquier <em>movimiento paralelo pequeño</em> de la curva, el valor de la cartera al horizonte coincide con el del pasivo. La pérdida de capital por suba de tasas se compensa exactamente con la mayor reinversión de cupones.</p>
+            <div class="concept-box">
+              <span class="cb-title">Ejemplo: liability de 7 años</span>
+              Si comprás un solo bono con duration 7, lo inmunizás. Alternativa: combinar un bono de duration 3 y otro de duration 12. Por ejemplo 50%/50% si la duration promedio ponderada da 7. La segunda opción tiene <em>mayor convexidad</em> — mejor protección si los movimientos de tasa son grandes.
+            </div>
+            <h4>Limitaciones</h4>
+            <ul>
+              <li>Solo protege contra <strong>movimientos paralelos</strong>. Si la curva cambia de forma (steepening, flattening), la inmunización falla.</li>
+              <li>Requiere <strong>rebalanceo periódico</strong> — la duration de los bonos cambia con el tiempo, hay que ajustar.</li>
+              <li>No protege contra default — solo riesgo de tasa.</li>
+            </ul>
+            <span class="source-cite">Fuente: Dumrauf, Cap. 17; Fabozzi, Cap. 24</span>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head">10 — Estrategias de cartera: bullet, barbell, ladder<span class="acc-arrow">›</span></div>
+          <div class="acc-body">
+            <p>Tres formas clásicas de distribuir una cartera de bonos para una misma duration objetivo:</p>
+            <h4>Bullet</h4>
+            <p>Todos los bonos concentrados en un plazo similar al objetivo. Ej: duration objetivo 7 → toda la plata en T-Notes 7Y.</p>
+            <ul>
+              <li>✅ Predecible, fácil de gestionar</li>
+              <li>❌ Baja convexidad → vulnerable a movimientos grandes de tasa</li>
+            </ul>
+            <h4>Barbell ("pesa")</h4>
+            <p>Mitad en bonos muy cortos, mitad en bonos muy largos. Para duration objetivo 7: 50% T-Bills 1Y + 50% T-Bonds 13Y. La duration promedio ponderada da 7.</p>
+            <ul>
+              <li>✅ Alta convexidad → gana en escenarios volátiles</li>
+              <li>✅ Liquidez (parte corta se renueva pronto)</li>
+              <li>❌ Worse total return si las tasas se mantienen estables (das resigna roll-down de la parte media)</li>
+            </ul>
+            <h4>Ladder (escalera)</h4>
+            <p>Cantidades iguales en plazos escalonados: 1Y, 3Y, 5Y, 7Y, 9Y. Cuando vence el corto, lo reinvertís en el plazo más largo.</p>
+            <ul>
+              <li>✅ Suaviza el riesgo de reinversión</li>
+              <li>✅ Flujo de caja periódico (un vencimiento por año)</li>
+              <li>❌ Convexidad intermedia entre bullet y barbell</li>
+            </ul>
+            <div class="concept-box">
+              <span class="cb-title">¿Cuál elegir?</span>
+              <strong>Bullet</strong> si tenés vista direccional clara (creés que las tasas se mantienen). <strong>Barbell</strong> si esperás volatilidad o no tenés vista. <strong>Ladder</strong> para inversores buy-and-hold que quieren ingresos periódicos sin pensar mucho.
+              <span class="source-cite">Fuente: Dumrauf, Cap. 18; Fabozzi, Cap. 22</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>Renta Fija</h3>
+        <ul>
+          <li><a href="visor-bonos.html">Visor de Bonos USA</a></li>
+          <li><a href="renta-fija.html">Calculadora Bonos / ON / Letras</a></li>
+          <li><a href="caucion.html">Caución Bursátil</a></li>
+          <li><a href="interes-simple.html">Plazo Fijo</a></li>
+          <li><a href="brokers.html">Comparador de Brokers</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuente de datos: FRED — Federal Reserve Bank of St. Louis. Los yields se actualizan diariamente (días hábiles USA). © 2026 BB Financial.</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=24"></script>
+  <script src="../js/bond-math.js?v=1"></script>
+  <script>
+    // ===== TABS =====
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== ACCORDION =====
+    document.querySelectorAll('.acc-head').forEach(h => {
+      h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+    });
+
+    // ===== METADATA (carga local, sin fetch) =====
+    const BONDS = {
+      treasuries: [
+        { id: 'DGS1MO', label: 'T-Bill 1M',  plazoAnios: 0.0833 },
+        { id: 'DGS3MO', label: 'T-Bill 3M',  plazoAnios: 0.25 },
+        { id: 'DGS6MO', label: 'T-Bill 6M',  plazoAnios: 0.5 },
+        { id: 'DGS1',   label: 'T-Note 1Y',  plazoAnios: 1 },
+        { id: 'DGS2',   label: 'T-Note 2Y',  plazoAnios: 2 },
+        { id: 'DGS5',   label: 'T-Note 5Y',  plazoAnios: 5 },
+        { id: 'DGS10',  label: 'T-Note 10Y', plazoAnios: 10 },
+        { id: 'DGS30',  label: 'T-Bond 30Y', plazoAnios: 30 },
+      ],
+      tips: [
+        { id: 'DFII5',  label: 'TIPS 5Y',  plazoAnios: 5 },
+        { id: 'DFII10', label: 'TIPS 10Y', plazoAnios: 10 },
+        { id: 'DFII30', label: 'TIPS 30Y', plazoAnios: 30 },
+      ],
+      breakeven: [
+        { id: 'T5YIE',  label: 'Breakeven 5Y',  plazoAnios: 5 },
+        { id: 'T10YIE', label: 'Breakeven 10Y', plazoAnios: 10 },
+      ],
+      spreads: [
+        { id: 'T10Y2Y', label: '10Y − 2Y' },
+        { id: 'T10Y3M', label: '10Y − 3M' },
+      ],
+      credit: [
+        { id: 'BAMLC0A0CM',   label: 'IG OAS', subtitle: 'Investment Grade (BBB+)' },
+        { id: 'BAMLH0A0HYM2', label: 'HY OAS', subtitle: 'High Yield (BB y debajo)' },
+      ]
+    };
+
+    const ALL_IDS = [
+      ...BONDS.treasuries.map(b => b.id),
+      ...BONDS.tips.map(b => b.id),
+      ...BONDS.breakeven.map(b => b.id),
+      ...BONDS.spreads.map(b => b.id),
+      ...BONDS.credit.map(b => b.id),
+    ];
+
+    // ===== FETCH FRED =====
+    const state = { yields: {}, prev: {}, fetched: false };
+
+    function parseObs(data) {
+      if (!data || !Array.isArray(data.observations) || data.observations.length === 0) return null;
+      const obs = data.observations.filter(o => o.value !== '.');
+      if (obs.length === 0) return null;
+      const latest = parseFloat(obs[0].value);
+      const prev = obs.length > 1 ? parseFloat(obs[1].value) : null;
+      return {
+        value: Number.isFinite(latest) ? latest : null,
+        prev: Number.isFinite(prev) ? prev : null,
+        date: obs[0].date,
+      };
+    }
+
+    async function fetchAllYields() {
+      const ids = ALL_IDS.join(',');
+      try {
+        const r = await fetch('/api/fred?series_ids=' + encodeURIComponent(ids) + '&limit=5');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        const out = {};
+        for (const id of ALL_IDS) {
+          const parsed = parseObs(data[id]);
+          if (parsed) out[id] = parsed;
+        }
+        return out;
+      } catch (e) {
+        console.error('Error fetching FRED:', e);
+        return null;
+      }
+    }
+
+    // ===== RENDER CARDS =====
+    // opts.format: 'pct' (default — N.NN%) | 'bps' (N bps, FRED publica el OAS en %)
+    function renderCardGrid(containerId, items, source, opts) {
+      const el = document.getElementById(containerId);
+      el.textContent = '';
+      const fmt = opts?.format || 'pct';
+      const formatValue = (v) => fmt === 'bps' ? Math.round(v * 100) + ' bps' : v.toFixed(2) + '%';
+      const formatDelta = (d) => {
+        const sign = d > 0 ? '+' : '';
+        return fmt === 'bps' ? sign + Math.round(d * 100) + ' bps' : sign + d.toFixed(2) + ' pp';
+      };
+      for (const b of items) {
+        const d = source[b.id];
+        const card = document.createElement('div');
+        card.className = 'yc-card';
+
+        const lbl = document.createElement('p'); lbl.className = 'yc-label'; lbl.textContent = b.id;
+        const nm = document.createElement('p');  nm.className = 'yc-name';   nm.textContent = b.label;
+        const val = document.createElement('p'); val.className = 'yc-value';
+
+        if (d && Number.isFinite(d.value)) {
+          val.textContent = formatValue(d.value);
+        } else {
+          val.classList.add('muted');
+          val.textContent = '—';
+        }
+
+        if (b.subtitle) {
+          const st = document.createElement('p'); st.className = 'yc-sub'; st.style.marginTop = '0.15rem';
+          st.textContent = b.subtitle; card.appendChild(lbl); card.appendChild(nm); card.appendChild(val); card.appendChild(st);
+        } else {
+          card.appendChild(lbl); card.appendChild(nm); card.appendChild(val);
+        }
+
+        const sub = document.createElement('p'); sub.className = 'yc-sub';
+        if (d && Number.isFinite(d.value) && Number.isFinite(d.prev)) {
+          const delta = d.value - d.prev;
+          sub.textContent = formatDelta(delta) + ' vs día prev. (' + d.date + ')';
+          if (delta > 0) sub.classList.add('up');
+          else if (delta < 0) sub.classList.add('down');
+        } else if (d && d.date) {
+          sub.textContent = 'Última obs: ' + d.date;
+        } else {
+          sub.textContent = 'Sin dato';
+        }
+        card.appendChild(sub);
+        el.appendChild(card);
+      }
+    }
+
+    // ===== CURVE CHART =====
+    // Filtros del usuario sobre qué Treasuries mostrar (default: todos)
+    const curveFilter = new Set(BONDS.treasuries.map(b => b.id));
+
+    // Mapeo plazo→label canónico para ticks fijos del eje X
+    const CURVE_TICK_LABELS = {
+      0.0833: '1M', 0.25: '3M', 0.5: '6M',
+      1: '1Y', 2: '2Y', 5: '5Y', 10: '10Y', 30: '30Y'
+    };
+
+    function renderCurveFilter() {
+      const el = document.getElementById('curve-filter');
+      if (!el) return;
+      el.textContent = '';
+      for (const b of BONDS.treasuries) {
+        const chip = document.createElement('div');
+        chip.className = 'sel-chip';
+        if (curveFilter.has(b.id)) chip.classList.add('selected');
+        chip.textContent = b.label;
+        chip.addEventListener('click', () => {
+          if (curveFilter.has(b.id)) curveFilter.delete(b.id);
+          else curveFilter.add(b.id);
+          renderCurveFilter();
+          renderCurveChart(state.yields);
+        });
+        el.appendChild(chip);
+      }
+    }
+
+    let curveChart = null;
+    function renderCurveChart(yields) {
+      const points = BONDS.treasuries
+        .filter(b => curveFilter.has(b.id))
+        .map(b => ({ x: b.plazoAnios, y: yields[b.id] && Number.isFinite(yields[b.id].value) ? yields[b.id].value : null, label: b.label }))
+        .filter(p => p.y !== null);
+      if (points.length < 2) {
+        // Si quedan menos de 2 puntos, no se puede dibujar curva
+        if (curveChart) { curveChart.destroy(); curveChart = null; }
+        return;
+      }
+
+      // Ticks fijos: solo los plazos seleccionados
+      const tickPositions = points.map(p => p.x).sort((a, b) => a - b);
+
+      const ctx = document.getElementById('curve-chart').getContext('2d');
+      if (curveChart) curveChart.destroy();
+      curveChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: 'Treasury Yield %',
+            data: points,
+            borderColor: '#4ade9a',
+            backgroundColor: 'rgba(74,222,154,0.12)',
+            tension: 0.25,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#4ade9a',
+            fill: true,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => items[0].raw.label,
+                label: (item) => 'Yield: ' + item.raw.y.toFixed(2) + '%'
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'logarithmic',
+              min: tickPositions[0] * 0.9,
+              max: tickPositions[tickPositions.length - 1] * 1.1,
+              title: { display: true, text: 'Plazo', color: '#7a8599' },
+              afterBuildTicks: (axis) => { axis.ticks = tickPositions.map(v => ({ value: v })); },
+              ticks: {
+                color: '#7a8599',
+                autoSkip: false,
+                callback: (v) => {
+                  // Buscar el label canónico más cercano (las posiciones provienen del array tickPositions)
+                  for (const [k, lbl] of Object.entries(CURVE_TICK_LABELS)) {
+                    if (Math.abs(parseFloat(k) - v) < 1e-3) return lbl;
+                  }
+                  return v < 1 ? Math.round(v * 12) + 'M' : v + 'Y';
+                }
+              },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              title: { display: true, text: 'Yield %', color: '#7a8599' },
+              ticks: { color: '#7a8599', callback: v => v.toFixed(1) + '%' },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            }
+          }
+        }
+      });
+    }
+
+    // ===== SCATTER: YTM vs DURATION =====
+    // Para Treasuries (cupón = yield, par = 100): Modified Duration. Para TIPS lo mismo en yield real.
+    let scatterChart = null;
+    function computeBondMetrics(yieldsObj, list, isTIPS) {
+      const out = [];
+      for (const b of list) {
+        const y = yieldsObj[b.id]?.value;
+        if (!Number.isFinite(y)) continue;
+        const yDec = y / 100;
+        let sched, dMod;
+        if (b.plazoAnios < 1) {
+          // Zero-coupon
+          sched = [{ t: b.plazoAnios, cf: 100 * Math.pow(1 + Math.max(yDec, 0.0001), b.plazoAnios) }];
+          const tir = BondMath.ytmFromSchedule(100, sched);
+          const dMac = BondMath.macaulayDuration(100, sched, tir);
+          dMod = BondMath.modifiedDuration(dMac, tir, 1);
+        } else {
+          sched = BondMath.bulletSchedule(100, Math.max(yDec, 0.0001), 2, b.plazoAnios);
+          const tir = BondMath.ytmFromSchedule(100, sched);
+          if (!Number.isFinite(tir)) continue;
+          const dMac = BondMath.macaulayDuration(100, sched, tir);
+          dMod = BondMath.modifiedDuration(dMac, tir, 1);
+        }
+        if (!Number.isFinite(dMod)) continue;
+        out.push({ x: dMod, y, label: b.label, isTIPS: !!isTIPS });
+      }
+      return out;
+    }
+
+    function renderScatterChart(yields) {
+      const treas = computeBondMetrics(yields, BONDS.treasuries, false);
+      const tips  = computeBondMetrics(yields, BONDS.tips, true);
+      if (treas.length + tips.length < 2) return;
+
+      const ctx = document.getElementById('scatter-chart').getContext('2d');
+      if (scatterChart) scatterChart.destroy();
+      scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            { label: 'Treasuries (nominal)', data: treas, backgroundColor: '#4ade9a', borderColor: '#4ade9a', pointRadius: 7, pointHoverRadius: 9 },
+            { label: 'TIPS (real)',          data: tips,  backgroundColor: '#60a5fa', borderColor: '#60a5fa', pointRadius: 7, pointHoverRadius: 9 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          parsing: false,
+          plugins: {
+            legend: { labels: { color: '#e8edf5' } },
+            tooltip: { callbacks: { label: (it) => it.raw.label + ' — Duration ' + it.raw.x.toFixed(2) + ' / YTM ' + it.raw.y.toFixed(2) + '%' } }
+          },
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Modified Duration (años)', color: '#7a8599' }, ticks: { color: '#7a8599' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+            y: { type: 'linear', title: { display: true, text: 'YTM (%)', color: '#7a8599' }, ticks: { color: '#7a8599', callback: v => v.toFixed(1) + '%' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+          }
+        }
+      });
+    }
+
+    // ===== CURVE ALERT =====
+    function renderCurveAlert(yields) {
+      const t10 = yields['DGS10']?.value;
+      const t2  = yields['DGS2']?.value;
+      const spread = yields['T10Y2Y']?.value;
+      const el = document.getElementById('curve-alert');
+      const icon = document.getElementById('curve-alert-icon');
+      const txt = document.getElementById('curve-alert-text');
+      if (!Number.isFinite(t10) || !Number.isFinite(t2)) { el.style.display = 'none'; return; }
+
+      el.style.display = 'block';
+      const sp = Number.isFinite(spread) ? spread : (t10 - t2);
+      // textContent + strong nodes — sin innerHTML por política de seguridad.
+      txt.textContent = '';
+      const mk = (s, bold) => { const n = document.createElement(bold ? 'strong' : 'span'); n.textContent = s; return n; };
+      if (sp < 0) {
+        el.classList.remove('ok'); icon.textContent = '⚠';
+        txt.append(mk('Curva invertida', true), document.createTextNode(' — el spread 10Y − 2Y es '),
+          mk(sp.toFixed(2) + ' pp', true),
+          document.createTextNode('. Históricamente, una inversión sostenida ha precedido recesiones en EE.UU. con ~12-18 meses de antelación.'));
+      } else if (sp < 0.5) {
+        el.classList.remove('ok'); icon.textContent = '●';
+        txt.append(mk('Curva plana', true), document.createTextNode(' — spread 10Y − 2Y = ' + sp.toFixed(2) + ' pp. El mercado está en zona de incertidumbre sobre crecimiento futuro.'));
+      } else {
+        el.classList.add('ok'); icon.textContent = '✓';
+        txt.append(mk('Curva normal', true), document.createTextNode(' — spread 10Y − 2Y = ' + sp.toFixed(2) + ' pp (positivo). Forma esperada: plazos largos pagan más que cortos.'));
+      }
+    }
+
+    // ===== COMPARADOR =====
+    const compState = { selected: new Set(['DGS2', 'DGS10']) };
+
+    function renderCompSelector() {
+      const el = document.getElementById('comp-selector');
+      el.textContent = '';
+      for (const b of BONDS.treasuries) {
+        const chip = document.createElement('div');
+        chip.className = 'sel-chip';
+        if (compState.selected.has(b.id)) chip.classList.add('selected');
+        chip.textContent = b.label;
+        chip.addEventListener('click', () => {
+          if (compState.selected.has(b.id)) {
+            compState.selected.delete(b.id);
+          } else {
+            if (compState.selected.size >= 4) return;
+            compState.selected.add(b.id);
+          }
+          renderCompSelector();
+          renderComp();
+        });
+        el.appendChild(chip);
+      }
+    }
+
+    let compChart = null;
+    function renderComp() {
+      const ids = Array.from(compState.selected);
+      const empty = document.getElementById('comp-empty');
+      const res = document.getElementById('comp-results');
+      if (ids.length < 2) { empty.style.display = 'block'; res.style.display = 'none'; return; }
+      empty.style.display = 'none'; res.style.display = 'block';
+
+      const bonds = ids.map(id => BONDS.treasuries.find(b => b.id === id)).filter(Boolean);
+
+      // Calcular métricas. T-Bills (plazo < 1Y) son zero-coupon (un solo flujo).
+      // T-Notes / T-Bonds (>= 1Y) son bullet semestrales con cupón = yield (par).
+      const metrics = bonds.map(b => {
+        const y = state.yields[b.id]?.value;
+        if (!Number.isFinite(y) || y <= 0) return { b, ok: false };
+        const yDec = y / 100;
+        let sched;
+        if (b.plazoAnios < 1) {
+          // Zero-coupon: un único flujo al vencimiento. Precio=100, flujo = 100*(1+y)^t para que TIR = y.
+          sched = [{ t: b.plazoAnios, cf: 100 * Math.pow(1 + yDec, b.plazoAnios) }];
+        } else {
+          sched = BondMath.bulletSchedule(100, yDec, 2, b.plazoAnios);
+        }
+        const tir = BondMath.ytmFromSchedule(100, sched);
+        if (!Number.isFinite(tir)) return { b, ok: false };
+        const dMac = BondMath.macaulayDuration(100, sched, tir);
+        const dMod = BondMath.modifiedDuration(dMac, tir, 1);
+        const conv = BondMath.convexity(100, sched, tir);
+        return { b, ok: true, y, tir, dMac, dMod, conv, isZC: b.plazoAnios < 1 };
+      });
+
+      // Tabla
+      const tbl = document.getElementById('comp-table');
+      tbl.textContent = '';
+      const thead = document.createElement('thead');
+      const trH = document.createElement('tr');
+      const thFirst = document.createElement('th'); thFirst.textContent = 'Métrica'; trH.appendChild(thFirst);
+      for (const m of metrics) {
+        const th = document.createElement('th'); th.textContent = m.b.label; trH.appendChild(th);
+      }
+      thead.appendChild(trH); tbl.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      const rows = [
+        { label: 'Yield actual (FRED)', fn: m => m.ok ? m.y.toFixed(2) + '%' : '—' },
+        { label: 'Plazo (años)',        fn: m => m.b.plazoAnios.toFixed(2) },
+        { label: 'TIR calculada',       fn: m => m.ok ? (m.tir * 100).toFixed(2) + '%' : '—' },
+        { label: 'Duration Macaulay',   fn: m => m.ok ? m.dMac.toFixed(2) + ' años' : '—' },
+        { label: 'Modified Duration',   fn: m => m.ok ? m.dMod.toFixed(2) : '—' },
+        { label: 'Convexidad',          fn: m => m.ok ? m.conv.toFixed(2) : '—' },
+        { label: 'ΔP si yield +100 bps', fn: m => m.ok ? (-m.dMod * 0.01 * 100 + 0.5 * m.conv * 0.0001 * 100).toFixed(2) + '%' : '—' },
+      ];
+      for (const r of rows) {
+        const tr = document.createElement('tr');
+        const tdL = document.createElement('td'); tdL.className = 'metric'; tdL.textContent = r.label; tr.appendChild(tdL);
+        for (const m of metrics) {
+          const td = document.createElement('td'); td.textContent = r.fn(m); tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+      tbl.appendChild(tbody);
+
+      // Gráfico precio-yield. Para T-Bills usamos zero-coupon; para bonos con cupón, bullet par.
+      const COLORS = ['#4ade9a', '#60a5fa', '#e8c97a', '#ff9999'];
+      const datasets = [];
+      metrics.forEach((m, i) => {
+        if (!m.ok) return;
+        const pts = [];
+        const yMin = 0, yMax = 12, step = 0.25;
+        for (let yPct = yMin; yPct <= yMax + 1e-9; yPct += step) {
+          const yDec = yPct / 100;
+          let p;
+          if (m.isZC) {
+            // Precio zero-coupon: CF al vencimiento descontado a yPct
+            const cf = 100 * Math.pow(1 + m.y / 100, m.b.plazoAnios);
+            p = cf / Math.pow(1 + yDec, m.b.plazoAnios);
+          } else {
+            p = BondMath.priceBullet(100, m.y / 100, 2, m.b.plazoAnios, yDec);
+          }
+          if (Number.isFinite(p)) pts.push({ x: yPct, y: p });
+        }
+        datasets.push({
+          label: m.b.label,
+          data: pts,
+          borderColor: COLORS[i % COLORS.length],
+          backgroundColor: COLORS[i % COLORS.length] + '22',
+          tension: 0.1,
+          pointRadius: 0,
+          borderWidth: 2,
+        });
+      });
+
+      const ctx = document.getElementById('comp-chart').getContext('2d');
+      if (compChart) compChart.destroy();
+      compChart = new Chart(ctx, {
+        type: 'line',
+        data: { datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          parsing: false,
+          plugins: {
+            legend: { labels: { color: '#e8edf5' } },
+            tooltip: { callbacks: { label: (it) => it.dataset.label + ': $' + it.raw.y.toFixed(2) + ' @ yield ' + it.raw.x.toFixed(2) + '%' } }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              min: 0, max: 12,
+              title: { display: true, text: 'Yield %', color: '#7a8599' },
+              ticks: { color: '#7a8599', callback: v => v + '%' },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              type: 'linear',
+              title: { display: true, text: 'Precio (VN=100)', color: '#7a8599' },
+              ticks: { color: '#7a8599', callback: v => '$' + v.toFixed(0) },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            }
+          }
+        }
+      });
+    }
+
+    // ===== INIT =====
+    async function init() {
+      // Skeletons mientras cargan datos
+      for (const cid of ['grid-treasuries', 'grid-tips', 'grid-breakeven', 'grid-spreads', 'grid-credit']) {
+        const el = document.getElementById(cid);
+        el.textContent = '';
+        for (let i = 0; i < 4; i++) {
+          const d = document.createElement('div'); d.className = 'yc-card';
+          const sk = document.createElement('div'); sk.className = 'loading-skel'; sk.style.width = '80%'; sk.style.height = '2rem';
+          d.appendChild(sk); el.appendChild(d);
+        }
+      }
+      renderCompSelector();
+      renderCurveFilter();
+
+      const y = await fetchAllYields();
+      if (!y) {
+        document.getElementById('grid-treasuries').textContent = '';
+        const errEl = document.createElement('div');
+        errEl.className = 'info-box warn';
+        const eb = document.createElement('strong'); eb.textContent = 'Error:';
+        errEl.append(eb, document.createTextNode(' no se pudieron cargar los datos de FRED. Verificá que la FRED_API_KEY esté configurada en Vercel.'));
+        document.getElementById('grid-treasuries').appendChild(errEl);
+        return;
+      }
+      state.yields = y;
+
+      renderCardGrid('grid-treasuries', BONDS.treasuries, y);
+      renderCardGrid('grid-tips', BONDS.tips, y);
+      renderCardGrid('grid-breakeven', BONDS.breakeven, y);
+      renderCardGrid('grid-spreads', BONDS.spreads, y);
+      renderCardGrid('grid-credit', BONDS.credit, y, { format: 'bps' });
+      renderCurveChart(y);
+      renderScatterChart(y);
+      renderCurveAlert(y);
+      renderComp();
+
+      // Última actualización: tomamos la fecha del DGS10
+      const dt = y['DGS10']?.date;
+      if (dt) document.getElementById('curve-updated').textContent = dt;
+    }
+
+    init();
+  </script>
+</body>
+</html>

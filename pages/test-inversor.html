@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1SF925SGNN');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test del Inversor — ¿Qué tipo de inversor sos? — BB Financial</title>
+  <meta name="description" content="Test rápido de 10 preguntas para descubrir tu perfil de inversor: conservador, moderado o agresivo. Te recomendamos instrumentos y una cartera modelo." />
+  <meta name="keywords" content="test inversor argentina, perfil inversor, perfil conservador moderado agresivo, recomendacion cartera, asesor financiero" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/test-inversor.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Test del Inversor — ¿Qué tipo de inversor sos? — BB Financial" />
+  <meta property="og:description" content="Test rápido de 10 preguntas para descubrir tu perfil de inversor: conservador, moderado o agresivo. Te recomendamos instrumentos y una cartera modelo." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/test-inversor.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Test del Inversor — ¿Qué tipo de inversor sos? — BB Financial" />
+  <meta name="twitter:description" content="Test rápido de 10 preguntas para descubrir tu perfil de inversor: conservador, moderado o agresivo. Te recomendamos instrumentos y una cartera modelo." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Test del Inversor","item":"https://bb-financial.vercel.app/pages/test-inversor.html"}]}
+  </script>
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .info-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);line-height:1.65;}
+    .info-box strong{color:var(--text);}
+    .info-box.warn{border-left-color:#ffb84d;background:rgba(255,184,77,0.05);}
+    .info-box.warn strong{color:#ffb84d;}
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.5rem; overflow:hidden; }
+    .tool-info summary { padding:0.85rem 1.15rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; } .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.95rem 1.15rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.75; }
+    .tool-info .ti-content p { margin:0 0 0.7rem; }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.3rem; }
+
+    .progress-bar{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;height:8px;overflow:hidden;margin-bottom:2rem;}
+    .progress-fill{background:linear-gradient(90deg,#4ade9a,#60a5fa);height:100%;transition:width 0.4s cubic-bezier(0.4,0,0.2,1);}
+
+    .question-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.75rem 1.85rem;margin-bottom:1.5rem;}
+    .q-num{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.5rem;}
+    .q-title{font-family:var(--font-display);font-size:1.3rem;color:var(--text);margin-bottom:1.25rem;line-height:1.4;}
+    .q-options{display:grid;gap:0.5rem;}
+    .q-opt{display:flex;align-items:flex-start;gap:0.85rem;padding:1rem 1.25rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all var(--transition);text-align:left;}
+    .q-opt:hover{border-color:var(--border-hover);background:var(--bg-card-hover);}
+    .q-opt.selected{background:var(--accent-dim);border-color:var(--accent);}
+    .q-opt-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-subtle);flex-shrink:0;margin-top:0.15rem;display:flex;align-items:center;justify-content:center;transition:all var(--transition);}
+    .q-opt.selected .q-opt-radio{border-color:var(--accent);background:var(--accent);}
+    .q-opt.selected .q-opt-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--bg);}
+    .q-opt-text{flex:1;font-size:0.92rem;color:var(--text);line-height:1.55;}
+    .q-opt-text small{display:block;font-size:0.78rem;color:var(--text-muted);margin-top:0.25rem;}
+
+    .nav-buttons{display:flex;justify-content:space-between;gap:1rem;margin-top:1rem;flex-wrap:wrap;}
+    .btn-nav{padding:0.75rem 1.5rem;border-radius:10px;font-family:var(--font-body);font-size:0.9rem;font-weight:500;cursor:pointer;transition:all var(--transition);border:1px solid var(--border);background:var(--bg-card);color:var(--text);}
+    .btn-nav:hover:not(:disabled){background:var(--bg-card-hover);border-color:var(--border-hover);}
+    .btn-nav.primary{background:var(--accent);color:#0a0c0f;border-color:var(--accent);}
+    .btn-nav.primary:hover{filter:brightness(1.1);}
+    .btn-nav:disabled{opacity:0.4;cursor:not-allowed;}
+
+    .result{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:2rem 2.25rem;margin-bottom:1.5rem;}
+    .result-header{display:flex;align-items:center;gap:1.25rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+    .result-icon{font-size:3rem;flex-shrink:0;}
+    .result-title{font-family:var(--font-display);font-size:2rem;color:var(--text);letter-spacing:-0.02em;margin:0;}
+    .result-score{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);margin-top:0.3rem;}
+    .result-desc{font-size:0.95rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;}
+
+    .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .pf-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
+    .pf-card .pct{font-family:var(--font-display);font-size:1.5rem;color:var(--accent);}
+    .pf-card .label{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-top:0.3rem;}
+    .pf-card .ex{font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;line-height:1.5;}
+
+    .examples-section h3{font-family:var(--font-display);font-size:1.1rem;color:var(--text);margin:1.25rem 0 0.7rem;}
+    .examples-section ul{padding-left:1.25rem;color:var(--text-muted);font-size:0.88rem;line-height:1.75;}
+    .examples-section ul li{margin-bottom:0.3rem;}
+    .examples-section ul li strong{color:var(--text);}
+
+    @media(max-width:640px){
+      .question-card{padding:1.25rem;}
+      .q-title{font-size:1.1rem;}
+      .result{padding:1.5rem;}
+      .result-title{font-size:1.5rem;}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Test del Inversor</p>
+        <h1 class="page-title">¿Qué tipo de inversor sos?</h1>
+        <p class="page-subtitle">10 preguntas de 1 minuto. Te clasificamos en <strong>conservador</strong>, <strong>moderado</strong> o <strong>agresivo</strong> y te sugerimos una cartera modelo con instrumentos reales del mercado argentino y USA.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:2rem;padding-bottom:6rem;max-width:780px">
+
+      <div class="info-box warn">
+        <strong>⚠ Disclaimer obligatorio:</strong> Este test es educativo. NO constituye asesoramiento financiero, recomendación de inversión, ni oferta de compra/venta de instrumentos. Los instrumentos mencionados son <em>ejemplos ilustrativos</em>. Cada perfil cambia según tu situación particular — consultá un asesor matriculado en <span data-term="CNV">CNV</span> antes de operar.
+      </div>
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — metodología, limitaciones, qué hace y qué no hace</summary>
+        <div class="ti-content">
+          <p><strong>Qué hace este test:</strong> 10 preguntas que miden 3 dimensiones — <em>tolerancia al riesgo</em>, <em>horizonte temporal</em> y <em>conocimientos previos</em>. Cada respuesta suma 1 (conservador), 2 (moderado) o 3 (agresivo) puntos. El total (entre 10 y 30) se mapea a uno de los 3 perfiles.</p>
+          <p><strong>De dónde vienen las preguntas:</strong> el cuestionario está inspirado en los <em>perfiles de inversor</em> que usan las ALyCs reguladas por CNV (similar a lo que te haría firmar un broker al abrir cuenta), pero adaptado a la realidad del mercado argentino. No es un test psicológico formal — es una herramienta educativa para que te conozcas como inversor.</p>
+          <p><strong>Cómo se construyen las carteras modelo:</strong> son <em>asignaciones tipo</em> ampliamente recomendadas en la literatura (Bogle, Ferri, Markowitz). Los porcentajes no son únicos — un asesor experto puede ajustar según tu impuesto, tus ingresos, tu edad. Los instrumentos mencionados (CEDEARs, ONs, FCI específicos) son ejemplos reales del mercado argentino y USA, NO recomendaciones individuales.</p>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>El test no considera tu <strong>situación impositiva</strong> (residente fiscal, monotributo, etc.) — afecta qué instrumentos te convienen.</li>
+            <li>No considera tu <strong>capital total</strong> — la cartera ideal para alguien con USD 5k difiere de alguien con USD 500k.</li>
+            <li>No mide tu <strong>estabilidad de ingresos</strong> (sueldo fijo vs freelance) — clave para decidir cuánto efectivo guardar.</li>
+            <li>Las respuestas son <strong>autoreportadas</strong> — la gente suele sobreestimar su tolerancia al riesgo (hasta que ven una caída del 30% en pantalla).</li>
+            <li>Los <strong>instrumentos mencionados</strong> cambian: un FCI puede cerrar, un CEDEAR puede dejar de listar, una ON puede defaultear. Verificá disponibilidad antes de operar.</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero personalizado.</strong> Si vas a comprometer una porción significativa de tu patrimonio, consultá un asesor matriculado en CNV.</p>
+        </div>
+      </details>
+
+      <!-- Intro screen -->
+      <div id="intro">
+        <div class="question-card" style="text-align:center;padding:2.5rem 2rem">
+          <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:1rem">Listo para empezar</h2>
+          <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:1.75rem;line-height:1.7">
+            El test mide 3 dimensiones: <strong>tolerancia al riesgo</strong>, <strong>horizonte temporal</strong> y <strong>conocimientos previos</strong>.
+            Se basa en cuestionarios de perfilamiento usados por ALyCs reguladas por <span data-term="CNV">CNV</span>, ajustados a la realidad del mercado argentino.
+          </p>
+          <button class="btn-nav primary" id="start-btn">Comenzar test →</button>
+        </div>
+      </div>
+
+      <!-- Quiz container -->
+      <div id="quiz" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+        <div id="question-container"></div>
+        <div class="nav-buttons">
+          <button class="btn-nav" id="prev-btn">← Anterior</button>
+          <button class="btn-nav primary" id="next-btn">Siguiente →</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="results" style="display:none"></div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Test <strong>educativo</strong>. NO es asesoramiento financiero. Consultá un asesor matriculado en CNV antes de invertir.</p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=24"></script>
+  <script>
+    // ===== Preguntas (cada opción suma puntos al perfil: 1=conservador, 2=moderado, 3=agresivo) =====
+    const QUESTIONS = [
+      {
+        q: '¿Cuál es tu principal objetivo al invertir?',
+        opts: [
+          { txt: 'Preservar mi capital. No quiero perder plata.', sub: 'Aceptás rendimiento bajo a cambio de seguridad.', score: 1 },
+          { txt: 'Crecer moderadamente, asumiendo algo de riesgo.', sub: 'Buscás batirle a la inflación con riesgo controlado.', score: 2 },
+          { txt: 'Maximizar el rendimiento a largo plazo.', sub: 'Aceptás volatilidad grande para ganancias mayores.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Por cuánto tiempo podés dejar la plata invertida sin necesitarla?',
+        opts: [
+          { txt: 'Menos de 1 año.', sub: 'Necesitás liquidez pronto.', score: 1 },
+          { txt: 'Entre 1 y 5 años.', sub: 'Tenés un objetivo de mediano plazo.', score: 2 },
+          { txt: 'Más de 5 años (jubilación, casa, etc.).', sub: 'Horizonte largo — el tiempo juega a favor.', score: 3 },
+        ]
+      },
+      {
+        q: 'Imaginate que tu inversión cae 25% en un mes por una crisis. ¿Qué hacés?',
+        opts: [
+          { txt: 'Vendo todo para no perder más.', sub: 'Prioridad: proteger capital restante.', score: 1 },
+          { txt: 'Aguanto sin vender, espero recuperación.', sub: 'Confianza en el mediano plazo.', score: 2 },
+          { txt: 'Compro más, aprovecho los precios bajos.', sub: 'Veo la caída como oportunidad.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Qué tan familiarizado estás con instrumentos financieros?',
+        opts: [
+          { txt: 'Casi nada. Conozco plazo fijo y poco más.', sub: 'Recién empezando.', score: 1 },
+          { txt: 'Conozco bonos, FCI y acciones, pero soy cauto.', sub: 'Inversor intermedio.', score: 2 },
+          { txt: 'Manejo opciones, futuros, cripto y derivados.', sub: 'Inversor avanzado.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Qué porcentaje de tus ingresos mensuales podés invertir sin afectar tu vida diaria?',
+        opts: [
+          { txt: 'Menos del 5%.', sub: 'Margen estrecho.', score: 1 },
+          { txt: 'Entre 5% y 20%.', sub: 'Capacidad moderada.', score: 2 },
+          { txt: 'Más del 20%.', sub: 'Buena capacidad de ahorro.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Tenés un fondo de emergencia (3-6 meses de gastos) aparte de lo que invertís?',
+        opts: [
+          { txt: 'No, todavía lo estoy armando.', sub: 'Prioridad: fondo de emergencia antes de inversión riesgosa.', score: 1 },
+          { txt: 'Sí, tengo entre 1 y 3 meses.', sub: 'Vas bien, podés asumir algo de riesgo.', score: 2 },
+          { txt: 'Sí, más de 6 meses cubiertos.', sub: 'Excelente base — podés tomar más riesgo.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Cuál de estos rendimientos preferís?',
+        opts: [
+          { txt: 'Ganar 5% seguro vs. ganar entre -10% y +20%.', sub: 'Aversión al riesgo.', score: 1 },
+          { txt: 'Ganar 8% seguro vs. ganar entre -15% y +30%.', sub: 'Tolerancia media.', score: 2 },
+          { txt: 'Ganar 10% seguro vs. ganar entre -30% y +60%.', sub: 'Apetito alto por riesgo.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Cómo te sentirías si tu inversión bajara 10% en una semana?',
+        opts: [
+          { txt: 'No podría dormir, sería un desastre.', sub: 'Muy sensible a pérdidas a corto plazo.', score: 1 },
+          { txt: 'Me preocuparía, pero seguiría mi plan.', sub: 'Disciplinado.', score: 2 },
+          { txt: 'Normal. Sé que es parte de invertir.', sub: 'Mentalidad de largo plazo.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Cuál es tu edad? (afecta el horizonte natural)',
+        opts: [
+          { txt: 'Más de 55.', sub: 'Foco en preservación, plazo más corto.', score: 1 },
+          { txt: 'Entre 35 y 55.', sub: 'Etapa de crecimiento con balance.', score: 2 },
+          { txt: 'Menos de 35.', sub: 'Tiempo a favor — podés tomar riesgo.', score: 3 },
+        ]
+      },
+      {
+        q: '¿Estás dispuesto a estudiar/leer sobre inversiones regularmente?',
+        opts: [
+          { txt: 'No mucho. Prefiero que sea simple.', sub: 'Mejor instrumentos pasivos y delegados.', score: 1 },
+          { txt: 'Algo. Una hora por semana.', sub: 'Podés manejar selección moderada.', score: 2 },
+          { txt: 'Sí, varias horas. Me gusta el tema.', sub: 'Podés operar activamente.', score: 3 },
+        ]
+      },
+    ];
+
+    const RESULTS = {
+      conservador: {
+        icon: '🛡️',
+        title: 'Perfil Conservador',
+        desc: 'Tu prioridad es <strong>preservar el capital</strong> y obtener rendimientos predecibles. Tolerás poca volatilidad y preferís instrumentos líquidos y de bajo riesgo. Es el perfil correcto para personas cerca de la jubilación, con horizonte corto o sin fondo de emergencia.',
+        portfolio: [
+          { pct: '40%', label: 'Renta fija corta', ex: 'Plazo fijo bancos top + LECAPs cortas + FCI Money Market' },
+          { pct: '30%', label: 'Cuentas remuneradas', ex: 'Billeteras virtuales (Mercado Pago, Naranja X) — alta liquidez' },
+          { pct: '20%', label: 'Dólar / Hard Dollar', ex: 'Cuenta dólar MEP + 1-2 bonos hard dollar cortos (AL30, GD30)' },
+          { pct: '10%', label: 'Liquidez / Reserva', ex: 'Caja para imprevistos. NO se invierte.' },
+        ],
+        examples: {
+          ar: ['<strong>Plazo fijo</strong> en bancos top (Nación, BBVA, Galicia)', '<strong>LECAPs cortas</strong> (S29Y6, S31G6) — vencimiento &lt; 6 meses', '<strong>FCI Money Market</strong> via Mercado Pago / Cocos Daruma', '<strong>Bono AL30</strong> (hard dollar, plazo medio)'],
+          us: ['<strong>T-Bills</strong> 3M-6M (libre de riesgo USD)', '<strong>SHY ETF</strong> (Treasury 1-3Y) si querés diversificar'],
+        }
+      },
+      moderado: {
+        icon: '⚖️',
+        title: 'Perfil Moderado',
+        desc: 'Buscás <strong>crecimiento estable</strong> aceptando volatilidad media. Tu horizonte es 3-7 años. Podés combinar renta fija con algo de variable. Es el perfil más común — la mayoría de inversores caen acá.',
+        portfolio: [
+          { pct: '40%', label: 'Renta variable', ex: 'CEDEARs blue-chip (AAPL, MSFT, KO, JNJ) + 2-3 acciones locales' },
+          { pct: '30%', label: 'Renta fija HD', ex: 'Bonos hard dollar (GD30, GD35) + ONs YPF/Pampa' },
+          { pct: '15%', label: 'Renta fija pesos', ex: 'BONCAPs / LECAPs largas + bonos CER (TX26, DICP)' },
+          { pct: '10%', label: 'Cash / Money Market', ex: 'FCI MM para liquidez y rebalanceo' },
+          { pct: '5%', label: 'Alternativos', ex: 'Cripto (BTC), oro, commodities — opcional' },
+        ],
+        examples: {
+          ar: ['<strong>CEDEARs</strong>: SPY (S&P 500), QQQ (Nasdaq), AAPL, MSFT, KO, JNJ', '<strong>Acciones AR</strong>: YPFD, GGAL, PAMP, TGSU2 (líquidas)', '<strong>Bonos HD</strong>: GD30, GD35, ON YPF YCA6O', '<strong>CER</strong>: TX26 o DICP para cubrir inflación'],
+          us: ['<strong>ETF SPY</strong> (S&P 500) — núcleo de la cartera', '<strong>TLT</strong> (Treasury 20+Y) — protección anti-recesión', '<strong>Treasuries 5-10Y</strong> directos para renta fija'],
+        }
+      },
+      agresivo: {
+        icon: '🚀',
+        title: 'Perfil Agresivo',
+        desc: 'Aceptás <strong>volatilidad alta</strong> a cambio de potencial de retorno superior. Horizonte largo (10+ años). Tenés conocimiento y tiempo para investigar. Cuidado: este perfil requiere disciplina psicológica para no vender en pánico.',
+        portfolio: [
+          { pct: '60%', label: 'Renta variable', ex: 'CEDEARs growth (NVDA, TSLA, META) + acciones AR + ETFs sectoriales' },
+          { pct: '15%', label: 'Renta fija HD largo', ex: 'GD41, GD46 (alta TIR + alta convexidad)' },
+          { pct: '10%', label: 'Cripto', ex: 'BTC + ETH como satélites (NO más del 10%)' },
+          { pct: '10%', label: 'Alternativos / oportunidades', ex: 'Opciones, futuros, IPOs, small caps' },
+          { pct: '5%', label: 'Cash táctico', ex: 'Para entrar en correcciones' },
+        ],
+        examples: {
+          ar: ['<strong>CEDEARs growth</strong>: NVDA, TSLA, META, AMZN, GOOGL', '<strong>Acciones AR small/mid cap</strong>: MIRG, CRES, BYMA, AGRO', '<strong>Bonos largos</strong>: GD41, GD46 (alta convexidad)', '<strong>Cripto</strong>: BTC y ETH directos o via cripto-billetera regulada'],
+          us: ['<strong>ETF QQQ</strong> (Nasdaq 100) — tech growth', '<strong>ARKK, SOXX</strong> (innovación, semis)', '<strong>Opciones LEAP</strong> sobre índices (si entendés el riesgo)'],
+        }
+      }
+    };
+
+    // ===== State =====
+    const state = { current: 0, answers: new Array(QUESTIONS.length).fill(null) };
+
+    function showQuestion(idx) {
+      const q = QUESTIONS[idx];
+      const container = document.getElementById('question-container');
+      container.textContent = '';
+
+      const card = document.createElement('div'); card.className = 'question-card';
+      const num = document.createElement('p'); num.className = 'q-num';
+      num.textContent = 'Pregunta ' + (idx + 1) + ' / ' + QUESTIONS.length;
+      card.appendChild(num);
+      const title = document.createElement('h2'); title.className = 'q-title'; title.textContent = q.q;
+      card.appendChild(title);
+      const opts = document.createElement('div'); opts.className = 'q-options';
+
+      q.opts.forEach((opt, i) => {
+        const div = document.createElement('button'); div.className = 'q-opt'; div.type = 'button';
+        if (state.answers[idx] === i) div.classList.add('selected');
+        const radio = document.createElement('span'); radio.className = 'q-opt-radio';
+        const txt = document.createElement('span'); txt.className = 'q-opt-text';
+        txt.textContent = opt.txt;
+        if (opt.sub) {
+          const small = document.createElement('small'); small.textContent = opt.sub; txt.appendChild(small);
+        }
+        div.appendChild(radio); div.appendChild(txt);
+        div.addEventListener('click', () => {
+          state.answers[idx] = i;
+          showQuestion(idx);
+          updateNav();
+        });
+        opts.appendChild(div);
+      });
+
+      card.appendChild(opts);
+      container.appendChild(card);
+
+      document.getElementById('progress').style.width = ((idx) / QUESTIONS.length * 100) + '%';
+    }
+
+    function updateNav() {
+      const prev = document.getElementById('prev-btn');
+      const next = document.getElementById('next-btn');
+      prev.disabled = state.current === 0;
+      const answered = state.answers[state.current] !== null;
+      next.disabled = !answered;
+      next.textContent = state.current === QUESTIONS.length - 1 ? 'Ver resultado →' : 'Siguiente →';
+    }
+
+    document.getElementById('start-btn').addEventListener('click', () => {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      showQuestion(0);
+      updateNav();
+    });
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+      if (state.answers[state.current] === null) return;
+      if (state.current === QUESTIONS.length - 1) {
+        document.getElementById('progress').style.width = '100%';
+        renderResult();
+      } else {
+        state.current++;
+        showQuestion(state.current);
+        updateNav();
+      }
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+      if (state.current > 0) {
+        state.current--;
+        showQuestion(state.current);
+        updateNav();
+      }
+    });
+
+    function renderResult() {
+      const totalScore = state.answers.reduce((sum, i, qi) => sum + (i !== null ? QUESTIONS[qi].opts[i].score : 0), 0);
+      // 10 preguntas × 1-3 puntos = 10-30. Cortes: 10-16 conservador, 17-23 moderado, 24-30 agresivo
+      let perfil;
+      if (totalScore <= 16) perfil = 'conservador';
+      else if (totalScore <= 23) perfil = 'moderado';
+      else perfil = 'agresivo';
+
+      const r = RESULTS[perfil];
+
+      document.getElementById('quiz').style.display = 'none';
+      const out = document.getElementById('results');
+      out.style.display = 'block';
+      out.textContent = '';
+
+      const card = document.createElement('div'); card.className = 'result';
+      const hdr = document.createElement('div'); hdr.className = 'result-header';
+      const icon = document.createElement('div'); icon.className = 'result-icon'; icon.textContent = r.icon;
+      const tWrap = document.createElement('div');
+      const title = document.createElement('h2'); title.className = 'result-title'; title.textContent = r.title;
+      const score = document.createElement('p'); score.className = 'result-score';
+      score.textContent = 'Puntaje: ' + totalScore + ' / 30';
+      tWrap.appendChild(title); tWrap.appendChild(score);
+      hdr.appendChild(icon); hdr.appendChild(tWrap);
+      card.appendChild(hdr);
+
+      const desc = document.createElement('p'); desc.className = 'result-desc';
+      // r.desc contains <strong> tags — render safely with createElement instead of innerHTML
+      const tmp = document.createElement('div');
+      tmp.innerHTML = ''; // empty initially
+      const parts = r.desc.split(/(<strong>.*?<\/strong>)/g);
+      parts.forEach(p => {
+        if (p.startsWith('<strong>')) {
+          const s = document.createElement('strong');
+          s.textContent = p.replace(/<\/?strong>/g, '');
+          desc.appendChild(s);
+        } else {
+          desc.appendChild(document.createTextNode(p));
+        }
+      });
+      card.appendChild(desc);
+
+      const h = document.createElement('h3');
+      h.style.fontFamily = 'var(--font-display)'; h.style.fontSize = '1.15rem'; h.style.marginBottom = '0.9rem';
+      h.textContent = 'Cartera modelo sugerida';
+      card.appendChild(h);
+
+      const grid = document.createElement('div'); grid.className = 'portfolio-grid';
+      r.portfolio.forEach(p => {
+        const c = document.createElement('div'); c.className = 'pf-card';
+        const pct = document.createElement('p'); pct.className = 'pct'; pct.textContent = p.pct;
+        const lbl = document.createElement('p'); lbl.className = 'label'; lbl.textContent = p.label;
+        const ex = document.createElement('p'); ex.className = 'ex'; ex.textContent = p.ex;
+        c.appendChild(pct); c.appendChild(lbl); c.appendChild(ex);
+        grid.appendChild(c);
+      });
+      card.appendChild(grid);
+
+      const exSec = document.createElement('div'); exSec.className = 'examples-section';
+
+      const exH1 = document.createElement('h3'); exH1.textContent = '🇦🇷 Ejemplos en mercado argentino';
+      exSec.appendChild(exH1);
+      const ul1 = document.createElement('ul');
+      r.examples.ar.forEach(item => {
+        const li = document.createElement('li');
+        // parse <strong> safely
+        const parts = item.split(/(<strong>.*?<\/strong>)/g);
+        parts.forEach(p => {
+          if (p.startsWith('<strong>')) {
+            const s = document.createElement('strong'); s.textContent = p.replace(/<\/?strong>/g, '');
+            li.appendChild(s);
+          } else {
+            li.appendChild(document.createTextNode(p));
+          }
+        });
+        ul1.appendChild(li);
+      });
+      exSec.appendChild(ul1);
+
+      const exH2 = document.createElement('h3'); exH2.textContent = '🇺🇸 Ejemplos en mercado USA';
+      exSec.appendChild(exH2);
+      const ul2 = document.createElement('ul');
+      r.examples.us.forEach(item => {
+        const li = document.createElement('li');
+        const parts = item.split(/(<strong>.*?<\/strong>)/g);
+        parts.forEach(p => {
+          if (p.startsWith('<strong>')) {
+            const s = document.createElement('strong'); s.textContent = p.replace(/<\/?strong>/g, '');
+            li.appendChild(s);
+          } else {
+            li.appendChild(document.createTextNode(p));
+          }
+        });
+        ul2.appendChild(li);
+      });
+      exSec.appendChild(ul2);
+
+      card.appendChild(exSec);
+      out.appendChild(card);
+
+      // Disclaimer + retake button
+      const warn = document.createElement('div'); warn.className = 'info-box warn';
+      const wb = document.createElement('strong'); wb.textContent = '⚠ Importante:';
+      warn.append(wb, document.createTextNode(' este resultado es orientativo. Los instrumentos sugeridos son ejemplos — no son recomendaciones de inversión. Tu situación particular (impuestos, residencia, capital total) puede cambiar la cartera óptima. Consultá un asesor matriculado en CNV antes de operar.'));
+      out.appendChild(warn);
+
+      const actions = document.createElement('div'); actions.className = 'nav-buttons';
+      const btnRetake = document.createElement('button'); btnRetake.className = 'btn-nav'; btnRetake.textContent = '↻ Rehacer test';
+      btnRetake.addEventListener('click', () => location.reload());
+      const btnVisor = document.createElement('a'); btnVisor.className = 'btn-nav primary'; btnVisor.textContent = 'Ver Visor de Bonos →';
+      btnVisor.href = 'visor-bonos.html';
+      btnVisor.style.textDecoration = 'none'; btnVisor.style.display = 'inline-block'; btnVisor.style.textAlign = 'center';
+      actions.appendChild(btnRetake); actions.appendChild(btnVisor);
+      out.appendChild(actions);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

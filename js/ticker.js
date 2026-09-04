@@ -59,6 +59,19 @@
       color:#3d4558;
       letter-spacing:0.08em;
     }
+    .mkt-clock{
+      position:absolute; right:0; top:0; bottom:0;
+      display:flex; align-items:center; gap:0.5rem;
+      padding:0 1rem 0 1.6rem;
+      font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:0.06em;
+      color:#7a8599; pointer-events:none; white-space:nowrap;
+      background:linear-gradient(90deg,transparent,#080a0d 28%);
+      z-index:2;
+    }
+    .mkt-clock .mc-zone{ color:#3d4558; text-transform:uppercase; letter-spacing:0.09em; font-size:0.6rem; }
+    .mkt-clock .mc-time{ color:#4ade9a; font-weight:600; font-variant-numeric:tabular-nums; }
+    .mkt-clock .mc-act{ color:#3d4558; font-size:0.6rem; }
+    @media(max-width:600px){ .mkt-clock .mc-act{ display:none; } }
   `;
   document.head.appendChild(style);
 
@@ -98,11 +111,12 @@
 
   async function getRiesgoPais() {
     try {
-      const res = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais/ultimo', { signal: AbortSignal.timeout(8000) });
+      const res = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(8000) });
       if (!res.ok) return null;
-      const obj = await res.json();
-      if (obj?.valor == null) return null;
-      return { price: obj.valor, chg: null };
+      const d = await res.json();
+      if (d?.valor == null) return null;
+      const chg = Number.isFinite(d.prevValor) ? d.valor - d.prevValor : null;
+      return { price: d.valor, chg };
     } catch {
       return null;
     }
@@ -193,21 +207,31 @@
 
     bar.innerHTML = buildTrack(items);
 
-    // Timestamp "Actualizado HH:MM:SS" — solo si al menos 1 dato cargó
+    // Marca de última actualización (hora ARG)
     const hasData = items.some(it => it.priceStr && it.priceStr !== '—');
     if (hasData) {
-      const now = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      const stamp = document.getElementById('ticker-timestamp') || (() => {
-        const el = document.createElement('span');
-        el.id = 'ticker-timestamp';
-        el.style.cssText = 'position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:0.62rem;color:var(--text-subtle);letter-spacing:0.06em;pointer-events:none;background:linear-gradient(90deg,transparent,var(--bg-card) 30%);padding:0.35rem 0 0.35rem 1.2rem';
-        bar.style.position = 'relative';
-        bar.appendChild(el);
-        return el;
-      })();
-      stamp.textContent = `Act. ${now}`;
+      lastUpdate = new Date().toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: '2-digit', minute: '2-digit' });
     }
+    ensureClock();
   }
+
+  /* ---------- Reloj UTC-3 (hora Argentina) en vivo ---------- */
+  let clockEl = null;
+  let lastUpdate = null;
+  function ensureClock() {
+    if (!clockEl) {
+      clockEl = document.createElement('div');
+      clockEl.className = 'mkt-clock';
+    }
+    if (clockEl.parentNode !== bar) bar.appendChild(clockEl);
+    updateClock();
+  }
+  function updateClock() {
+    if (!clockEl) return;
+    const t = new Date().toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    clockEl.innerHTML = `<span class="mc-zone">🇦🇷 UTC-3</span><span class="mc-time">${t}</span>${lastUpdate ? `<span class="mc-act">· act. ${lastUpdate}</span>` : ''}`;
+  }
+  setInterval(updateClock, 1000);
 
   // Throttling: solo refrescar si la pestaña está visible (ahorra cuotas de APIs y batería del usuario)
   let timer = null;

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -16,7 +15,21 @@
   <meta name="description" content="Calculá cuánto capital necesitás para vivir de rentas con la Regla del 4%. Independencia financiera (FIRE) basada en el Trinity Study." />
   <meta name="keywords" content="regla del 4%, FIRE, independencia financiera, vivir de rentas, trinity study, retiro anticipado" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://bb.app/pages/fire.html" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/fire.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Regla del 4% — Calculadora FIRE — BB Financial" />
+  <meta property="og:description" content="Calculá cuánto capital necesitás para vivir de rentas con la Regla del 4%. Independencia financiera (FIRE) basada en el Trinity Study." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/fire.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Regla del 4% — Calculadora FIRE — BB Financial" />
+  <meta name="twitter:description" content="Calculá cuánto capital necesitás para vivir de rentas con la Regla del 4%. Independencia financiera (FIRE) basada en el Trinity Study." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Regla del 4%","item":"https://bb-financial.vercel.app/pages/fire.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -140,6 +153,40 @@
         <p>La conclusión: retirar aproximadamente el <strong style="color:var(--accent)">4% anual</strong> ajustado por inflación tiene alta probabilidad de sostener el capital durante <strong style="color:var(--text)">30 años o más</strong>. A ese capital se lo llama tu <strong style="color:var(--accent)">Número FIRE</strong>.</p>
         <p style="color:var(--text-subtle);font-size:0.8rem;margin-top:0.5rem;font-family:var(--font-mono)">⚠️ Importante: basado en mercados históricos de EE.UU. No garantiza resultados futuros. En países con alta inflación como Argentina, el análisis debe adaptarse.</p>
       </div>
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta calculadora</strong> — Trinity Study, supuestos, críticas modernas</summary>
+        <div class="ti-content">
+          <p>FIRE (Financial Independence, Retire Early) es un movimiento popularizado por Vicki Robin (Your Money or Your Life, 1992) y la comunidad reddit r/financialindependence. La idea matemática es simple: si ahorrás muy agresivamente (50-70% del ingreso) e invertís en index funds, podés "retirarte" en 10-15 años en lugar de 40.</p>
+          <p><strong>De dónde sale el 4%:</strong></p>
+          <ul>
+            <li><strong>Trinity Study</strong> (Cooley, Hubbard, Walz, 1998 — Trinity University, Texas): analizaron portfolios USA 1926-1995. Conclusión: retirar 4% anual ajustado por inflación → 95-100% de probabilidad de NO quedarte sin plata en 30 años.</li>
+            <li>Asume cartera 50/50 o 60/40 (stocks/bonds), datos USA, inflación promedio 3%.</li>
+            <li>De ahí: <strong>Número FIRE = Gastos anuales × 25</strong> (porque 1/0.04 = 25).</li>
+          </ul>
+          <p><strong>Tipos de FIRE que calculamos:</strong></p>
+          <ul>
+            <li><strong>Lean FIRE</strong>: vivir minimalista (~USD 25k/año en USA).</li>
+            <li><strong>Regular FIRE</strong>: cubrir gastos típicos de clase media.</li>
+            <li><strong>Fat FIRE</strong>: estilo de vida cómodo (~USD 100k+/año).</li>
+            <li><strong>Coast FIRE</strong>: ya tenés suficiente para llegar al objetivo solo con compounding (sin aportar más). Punto psicológicamente clave.</li>
+            <li><strong>Barista FIRE</strong>: cubris gastos básicos con renta + algo de trabajo part-time.</li>
+          </ul>
+          <p><strong>Críticas modernas al 4%:</strong></p>
+          <ul>
+            <li><strong>Wade Pfau (2015)</strong>: el 4% asume retornos USA históricos extraordinarios. En escenarios futuros con tasas bajas y crecimiento menor, la tasa segura podría ser 2.8-3.3%.</li>
+            <li><strong>Sequence of Returns Risk</strong>: si los primeros 5-10 años de retiro son malos, te quemás el capital y el portfolio no se recupera. Aún con retorno promedio del 8%.</li>
+            <li><strong>Salud y longevidad</strong>: el estudio asume retiro de 30 años. Si te retirás a 35 podés vivir 60+ años — necesitás 3% o menos.</li>
+          </ul>
+          <p><strong>Supuestos críticos:</strong></p>
+          <ul>
+            <li>Los inputs (retorno esperado, inflación, gastos) están en <strong>la moneda de tus inversiones</strong> — para Argentina, tipicamente USD.</li>
+            <li>Asumimos cartera diversificada (stocks + bonds). Una cartera 100% stocks tiene más volatilidad y mayor riesgo de sequence.</li>
+            <li>NO consideramos impuestos ni comisiones — restalo al retorno esperado.</li>
+          </ul>
+          <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> FIRE es marco conceptual. Tu situación (salud, familia, país) afecta cuánto necesitás. <span class="cite">Fuentes: Cooley/Hubbard/Walz (1998) Trinity Study; Bengen (1994) Safe Withdrawal Rate; Pfau (2015) Reduced 4% rule.</span></p>
+        </div>
+      </details>
 
       <div class="calc-layout">
         <!-- INPUTS -->
@@ -414,11 +461,11 @@
         </ul>
       </nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let fireChart = null;
 

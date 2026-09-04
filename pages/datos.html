@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -12,26 +11,21 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- ===== OPEN GRAPH / TWITTER CARDS ===== -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Datos Macro Argentina — Riesgo país, BCRA, INDEC en vivo" />
-  <meta property="og:description" content="Indicadores económicos en tiempo real: dólar (oficial, MEP, CCL, blue), riesgo país, reservas, base monetaria, TAMAR, BADLAR, UVA, CER, inflación." />
-  <meta property="og:url" content="https://bb-financial.vercel.app/pages/datos.html" />
-  <meta property="og:site_name" content="BB Financial" />
-  <meta property="og:locale" content="es_AR" />
-  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
-  <meta property="og:image:width" content="2752" />
-  <meta property="og:image:height" content="1536" />
-  <meta property="og:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Datos Macro Argentina — Riesgo país, BCRA, INDEC en vivo" />
-  <meta name="twitter:description" content="Indicadores económicos en tiempo real: dólar (oficial, MEP, CCL, blue), riesgo país, reservas, base monetaria, TAMAR, BADLAR, UVA, CER, inflación." />
-  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
-  <meta name="twitter:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
-  <!-- ===== / OPEN GRAPH ===== -->
   <title>Datos Macro — BB Financial</title>
   <meta name="description" content="Datos macroeconómicos en tiempo real: dólar, inflación, reservas BCRA, INDEC, sector fiscal, criptomonedas, forex y más." />
   <meta name="keywords" content="dolar blue, inflacion argentina, reservas bcra, canasta basica, emae, desocupacion, cripto, forex" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/datos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Datos Macro — BB Financial" />
+  <meta property="og:description" content="Datos macroeconómicos en tiempo real: dólar, inflación, reservas BCRA, INDEC, sector fiscal, criptomonedas, forex y más." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/datos.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Datos Macro — BB Financial" />
+  <meta name="twitter:description" content="Datos macroeconómicos en tiempo real: dólar, inflación, reservas BCRA, INDEC, sector fiscal, criptomonedas, forex y más." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <meta name="robots" content="index, follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -395,6 +389,39 @@
       </div>
     </section>
 
+    <!-- Reddit-feedback panel -->
+    <div class="container" style="padding-top:1rem">
+      <details style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0;margin:0 0 1.25rem;overflow:hidden">
+        <summary style="padding:0.85rem 1.15rem;cursor:pointer;font-size:0.85rem;color:var(--text-muted);list-style:none"><strong style="color:var(--text)">ℹ️ Sobre esta página</strong> — fuentes, frecuencia, limitaciones</summary>
+        <div style="padding:0.95rem 1.15rem 1.1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.75;border-top:1px solid var(--border)">
+          <p><strong style="color:var(--text)">Qué datos mostramos:</strong> snapshot de los principales indicadores macro/financieros, todo via proxies propios (sin exponer API keys). Las fuentes oficiales son:</p>
+          <ul style="padding-left:1.4rem;margin:0.3rem 0">
+            <li><strong style="color:var(--text)">Argentina:</strong> DolarAPI (cotizaciones), ArgentinaDatos (riesgo país, reservas BCRA, UVA, IPC, canasta), datos.gob.ar (deuda, INDEC para tablas más profundas)</li>
+            <li><strong style="color:var(--text)">EE.UU.:</strong> FRED — St. Louis Fed (Fed Funds, CPI/PCE, desempleo, mortgage, OAS credit spreads, M2, VIX, INDPRO) + World Bank (PBI nominal, cuenta corriente)</li>
+            <li><strong style="color:var(--text)">Cripto:</strong> CoinGecko (precios, market cap, variación 24h)</li>
+            <li><strong style="color:var(--text)">Forex:</strong> ExchangeRate-API (paridades mayores)</li>
+            <li><strong style="color:var(--text)">Acciones:</strong> Yahoo Finance vía <code style="background:var(--bg);padding:0.05rem 0.4rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent)">/api/quotes</code></li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:var(--text)">Frecuencia de actualización:</strong></p>
+          <ul style="padding-left:1.4rem;margin:0.3rem 0">
+            <li><strong style="color:var(--text)">Diaria</strong>: dólar oficial/blue/MEP, FRED Treasuries, UVA, riesgo país</li>
+            <li><strong style="color:var(--text)">Mensual</strong>: inflación, desempleo, IPC argentino, Core CPI/PCE USA</li>
+            <li><strong style="color:var(--text)">Anual</strong>: PBI, cuenta corriente (World Bank)</li>
+            <li><strong style="color:var(--text)">Cripto</strong>: precios en vivo (cache 1 min), 24h delta</li>
+          </ul>
+          <p><strong style="color:var(--text)">Cómo se calcula YoY:</strong> tomamos la última observación de FRED y la dividimos por la de 12 meses atrás. Para indicadores trimestrales o mensuales que requieren YoY (Core CPI, PCE, INDPRO) usamos esta fórmula y publicamos como <code style="background:var(--bg);padding:0.05rem 0.4rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent)">(X_hoy/X_hace_12m − 1) × 100</code>.</p>
+          <p><strong style="color:var(--text)">Limitaciones:</strong></p>
+          <ul style="padding-left:1.4rem;margin:0.3rem 0">
+            <li>Algunos datos tienen retraso de 1-30 días según frecuencia de publicación de la fuente.</li>
+            <li>Las APIs públicas pueden estar caídas — si ves "—" o "Sin dato", reintentá en unos minutos.</li>
+            <li>Los <strong style="color:var(--text)">tipos de dólar</strong> (compra/venta) son de DolarAPI — la mayoría de bancos cotizan distinto a estos valores referenciales.</li>
+            <li>El INDEC publica varios datos solo en PDF/Excel — para esos, linkeamos a la página oficial.</li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> Datos en vivo para informarte, no para decidir por vos.</p>
+        </div>
+      </details>
+    </div>
+
     <!-- TABS -->
     <div class="datos-tabs-wrap" role="navigation" aria-label="Categorías de datos">
       <div class="container">
@@ -425,21 +452,6 @@
         <div class="datos-grid wide" id="grid-dolar" aria-live="polite" aria-label="Cotizaciones del dólar"></div>
       </div>
 
-      <!-- BCRA -->
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">🏛</span>
-          <h2 class="dsec-title">Indicadores BCRA</h2>
-          <span class="dsec-live">En vivo</span>
-          <span class="dsec-src">BCRA API v4</span>
-          <span class="dsec-upd" id="bcra-upd"></span>
-        </div>
-        <div class="datos-grid" id="grid-bcra" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Reservas, base monetaria, tasas TAMAR/BADLAR, tipo de cambio, bandas cambiarias, UVA, CER, TIM, REM e inflación interanual — todo en vivo desde la API oficial del BCRA.
-        </div>
-      </div>
-
       <!-- INDEC -->
       <div class="container datos-section">
         <div class="datos-sec-hdr">
@@ -452,6 +464,19 @@
           ℹ️ Datos oficiales del INDEC vía ArgentinaDatos y datos.gob.ar.
           Fuentes: <a href="https://www.indec.gob.ar" target="_blank" rel="noopener">INDEC</a> ·
           <a href="https://argentinadatos.com" target="_blank" rel="noopener">ArgentinaDatos</a>
+        </div>
+      </div>
+
+      <!-- BCRA Principales Variables -->
+      <div class="container datos-section">
+        <div class="datos-sec-hdr">
+          <span class="dsec-icon">🏦</span>
+          <h2 class="dsec-title">Principales Variables BCRA</h2>
+          <span class="dsec-src" id="bcra-upd">BCRA — API v4.0 en vivo</span>
+        </div>
+        <div class="datos-grid" id="grid-bcra" aria-live="polite"></div>
+        <div class="info-box">
+          ℹ️ Datos en tiempo real de la API oficial del Banco Central (<code>api.bcra.gob.ar/estadisticas/v4.0/Monetarias</code>). Incluye base monetaria, inflación, tasas TAMAR y BADLAR, UVA, CER y reservas. Verificá los datos en <a href="https://www.bcra.gob.ar" target="_blank" rel="noopener">bcra.gob.ar</a>.
         </div>
       </div>
 
@@ -563,13 +588,13 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
-  <script src="../js/ticker.js"></script>
+  <script src="../js/main.js?v=24"></script>
+  <script src="../js/ticker.js?v=4"></script>
   <script>
   /* ==============================================
      DATOS MACRO — Data Layer
@@ -723,131 +748,61 @@
   }
 
   /* ══════════════════════════════════════════
-     FETCH: BCRA (deshabilitado — APIs inestables)
+     FETCH: BCRA — Principales variables v4.0
+     IDs específicos identificados del endpoint /Monetarias
   ══════════════════════════════════════════ */
   async function loadBCRA() {
-    document.getElementById('grid-bcra').innerHTML = skeleton(4);
+    const grid = document.getElementById('grid-bcra');
+    if (!grid) return;
+    grid.innerHTML = skeleton(12);
     const cards = [];
 
-    // Helper: tomar último válido (con .valor != null) y el anterior válido
-    const lastValid = (arr, n=2) => {
-      if (!Array.isArray(arr)) return [];
-      return arr.filter(x => x?.valor != null && Number.isFinite(x.valor)).slice(-n);
-    };
+    // Variables BCRA — IDs verificados contra v4.0/Monetarias
+    const VARS = [
+      { id: 15,  name: 'Base Monetaria',                    fmt: v => '$ ' + fmtBig(v * 1e6),       cls: 'blue-card' },
+      { id: 1,   name: 'Reservas Internacionales BCRA',     fmt: v => 'USD ' + fmtBig(v * 1e6),     cls: 'green-card' },
+      { id: 27,  name: 'Inflación mensual',                 fmt: v => fmtNum(v, 2) + '%' },
+      { id: 28,  name: 'Inflación interanual',              fmt: v => fmtNum(v, 1) + '%' },
+      { id: 29,  name: 'Inflación esperada (REM) — 12m',    fmt: v => fmtNum(v, 1) + '%' },
+      { id: 4,   name: 'TC Minorista (promedio vendedor)',  fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 5,   name: 'TC Mayorista (referencia)',         fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 44,  name: 'TAMAR bancos privados (TNA)',       fmt: v => fmtNum(v, 2) + '%' },
+      { id: 45,  name: 'TAMAR bancos privados (TEA)',       fmt: v => fmtNum(v, 2) + '%' },
+      { id: 139, name: 'BADLAR bancos privados (TNA)',      fmt: v => fmtNum(v, 2) + '%' },
+      { id: 140, name: 'BADLAR bancos privados (TEA)',      fmt: v => fmtNum(v, 2) + '%' },
+      { id: 31,  name: 'UVA (Unidad de Valor Adquisitivo)', fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 30,  name: 'CER (Coef. Estabilización)',        fmt: v => fmtNum(v, 4) },
+      { id: 1187,name: 'Banda Cambiaria — Límite Inferior', fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 1188,name: 'Banda Cambiaria — Límite Superior', fmt: v => '$ ' + fmtNum(v, 2) },
+      { id: 1197,name: 'Tasa de Intereses Moratorios (TIM)',fmt: v => fmtNum(v, 2) },
+    ];
 
-    /* Variables oficiales BCRA v4 — batch */
-    // IDs claves:
-    //   1: Reservas internacionales (USD millones)
-    //   4: TC minorista | 5: TC mayorista
-    //   7: BADLAR bancos privados (n.a.)
-    //  15: Base monetaria
-    //  27: Inflación mensual | 28: Inflación interanual
-    //  29: REM mediana próximos 12 meses
-    //  30: CER (base 2.2.02=1) | 31: UVA (base 31.3.16=14.05)
-    //  44: TAMAR bancos privados (n.a.)
-    // 1187: Banda cambiaria inferior | 1188: Banda cambiaria superior
-    // 1197: TIM (Tasa Intereses Moratorios)
     try {
-      const r = await fetch('/api/bcra?ids=1,4,5,7,15,27,28,29,30,31,44,1187,1188,1197', { signal: AbortSignal.timeout(12000) });
-      if (r.ok) {
-        const b = await r.json();
-        const push = (id, opts) => {
-          const x = b[id];
-          if (!x || x.valor == null) return;
-          cards.push(datoCard({ ...opts, period: opts.period || fmtDate(x.fecha), source: opts.source || 'BCRA' }));
-        };
-        // Reservas
-        if (b[1]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Reservas Internacionales',
-          value:'USD ' + fmtBig(b[1].valor * 1e6),
-          period: fmtDate(b[1].fecha), source:'BCRA', cls:'green-card'
-        }));
-        // Base monetaria
-        if (b[15]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Base Monetaria',
-          value:'$' + fmtBig(b[15].valor * 1e6),
-          period: fmtDate(b[15].fecha), source:'BCRA'
-        }));
-        // TC mayorista
-        if (b[5]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Tipo de Cambio Mayorista',
-          value:'$' + fmtNum(b[5].valor, 2), unit:'/ USD',
-          period: fmtDate(b[5].fecha), source:'BCRA Com. A 3500'
-        }));
-        // TC minorista
-        if (b[4]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Tipo de Cambio Minorista',
-          value:'$' + fmtNum(b[4].valor, 2), unit:'/ USD',
-          period: fmtDate(b[4].fecha), source:'BCRA Com. B 9791'
-        }));
-        // Bandas cambiarias
-        if (b[1187]?.valor && b[1188]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Régimen de Bandas Cambiarias',
-          value:'$' + fmtNum(b[1187].valor, 0) + ' – $' + fmtNum(b[1188].valor, 0),
-          sub:'Banda inferior – superior · ARS/USD',
-          period: fmtDate(b[1188].fecha), source:'BCRA', cls:'blue-card'
-        }));
-        // TAMAR
-        if (b[44]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Tasa TAMAR (bancos privados)',
-          value: fmtNum(b[44].valor, 2) + '%', unit:'n.a.',
-          sub:'TEA: ' + fmtNum((Math.pow(1 + b[44].valor/100/12, 12) - 1) * 100, 2) + '%',
-          period: fmtDate(b[44].fecha), source:'BCRA'
-        }));
-        // BADLAR
-        if (b[7]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Tasa BADLAR (bancos privados)',
-          value: fmtNum(b[7].valor, 2) + '%', unit:'n.a.',
-          sub:'TEA: ' + fmtNum((Math.pow(1 + b[7].valor/100/12, 12) - 1) * 100, 2) + '%',
-          period: fmtDate(b[7].fecha), source:'BCRA'
-        }));
-        // TIM
-        if (b[1197]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Tasa de Intereses Moratorios (TIM)',
-          value: fmtNum(b[1197].valor, 0), unit:'CCC art. 768(c)',
-          sub:'Base 03/06/1993',
-          period: fmtDate(b[1197].fecha), source:'BCRA'
-        }));
-        // UVA
-        if (b[31]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Valor UVA',
-          value:'$' + fmtNum(b[31].valor, 2),
-          sub:'Unidad de Valor Adquisitivo · base 31/03/2016',
-          period: fmtDate(b[31].fecha), source:'BCRA', cls:'blue-card'
-        }));
-        // CER
-        if (b[30]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Coeficiente CER',
-          value: fmtNum(b[30].valor, 4),
-          sub:'Estabilización de referencia · base 02/02/2002',
-          period: fmtDate(b[30].fecha), source:'BCRA'
-        }));
-        // Inflación interanual (BCRA)
-        if (b[28]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Inflación Interanual (IPC)',
-          value: fmtNum(b[28].valor, 1) + '%',
-          sub:'Variación i.a.',
-          period: fmtDate(b[28].fecha), source:'BCRA', cls:'gold-card'
-        }));
-        // REM
-        if (b[29]?.valor) cards.push(datoCard({
-          cat:'BCRA', name:'Inflación Esperada (REM)',
-          value: fmtNum(b[29].valor, 1) + '%',
-          sub:'Mediana próximos 12 meses',
-          period: fmtDate(b[29].fecha), source:'BCRA · REM'
+      const r = await fetch('/api/bcra?endpoint=Monetarias', { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      const results = data.results || [];
+      const byId = {};
+      for (const v of results) byId[v.idVariable] = v;
+
+      for (const vdef of VARS) {
+        const v = byId[vdef.id];
+        if (!v || !Number.isFinite(v.ultValorInformado)) continue;
+        cards.push(datoCard({
+          cat: 'BCRA',
+          name: vdef.name,
+          value: vdef.fmt(v.ultValorInformado),
+          period: v.ultFechaInformada,
+          source: 'BCRA v4',
+          cls: vdef.cls || ''
         }));
       }
-    } catch (e) { console.warn('BCRA error', e); }
+    } catch {}
 
-    if (!cards.length) cards.push(errorCard('BCRA', 'No se pudo conectar con la API del BCRA'));
-    document.getElementById('grid-bcra').innerHTML = cards.join('');
-    document.getElementById('bcra-upd').textContent = 'Act. ' + nowTime();
-  }
-
-  // Helper compartido para INDEC también
-  function lastValidArr(arr, n=2) {
-    if (!Array.isArray(arr)) return [];
-    return arr.filter(x => x?.valor != null && Number.isFinite(x.valor)).slice(-n);
+    if (!cards.length) cards.push(errorCard('BCRA', 'No se pudo conectar con la API del BCRA. Intentá en unos minutos.'));
+    grid.innerHTML = cards.join('');
+    const upd = document.getElementById('bcra-upd');
+    if (upd) upd.textContent = '✓ ' + cards.length + ' indicadores · BCRA v4 en vivo';
   }
 
   /* ══════════════════════════════════════════
@@ -921,33 +876,94 @@
       }
     } catch {}
 
-    // EMAE / IPI / Desocupación: datos.gob.ar publica con ~2-4 meses de delay vs
-    // el portal oficial del INDEC. Para evitar mostrar datos viejos o inconsistentes
-    // con la publicación oficial, redirigimos al usuario al portal oficial.
-    cards.push(`
-      <a class="dato-card link-card" href="https://www.indec.gob.ar/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit">
-        <div class="dato-cat" style="color:#7a8599">INDEC</div>
-        <div class="dato-name">EMAE · IPI · Desocupación · Pobreza</div>
-        <div class="dato-value" style="font-size:1.35rem;color:var(--accent);margin:0.5rem 0">Ver INDEC →</div>
-        <div class="dato-sub" style="color:var(--text-muted);line-height:1.55">Indicadores de actividad, empleo y pobreza actualizados oficialmente por INDEC. Datos vía API con delay; el portal oficial publica primero.</div>
-        <div class="dato-foot"><span style="color:var(--text-subtle);font-size:0.7rem;font-family:var(--font-mono)">indec.gob.ar</span><span class="dato-source">INDEC</span></div>
-      </a>
-    `);
-    /* Riesgo País Argentina — ArgentinaDatos (EMBI+ JP Morgan) */
+    /* EMAE — variación mensual — datos.gob.ar
+       Serie: 11.3_VMATOTAL_2004_M_28 (EMAE Total, base 2004, mensual) */
+    try {
+      const rows = await serieGobAr('11.3_VMATOTAL_2004_M_28', 3);
+      if (rows?.length >= 2) {
+        const last = rows.at(-1), prev = rows.at(-2);
+        cards.push(datoCard({
+          cat:'INDEC', name:'EMAE — Estimador Mensual Actividad Económica',
+          value: fmtNum(last[1],1), unit:'base 2004',
+          changeAbs: last[1]-prev[1],
+          period: fmtDate(last[0]), source:'INDEC'
+        }));
+      }
+    } catch {}
+
+    /* Tasa de Desocupación — datos.gob.ar
+       Serie: 170.2_TASA_DESOCUP_0_T_34 (trimestral) */
+    try {
+      const rows = await serieGobAr('170.2_TASA_DESOCUP_0_T_34', 4);
+      if (rows?.length >= 1) {
+        const last = rows.at(-1), prev = rows.at(-2);
+        cards.push(datoCard({
+          cat:'INDEC', name:'Tasa de Desocupación',
+          value: fmtNum(last[1],1)+'%',
+          changeAbs: prev ? last[1]-prev[1] : null,
+          period: fmtDate(last[0]) + ' (trim.)', source:'INDEC'
+        }));
+      }
+    } catch {}
+
+    /* Tasa de Empleo — datos.gob.ar
+       Serie: 170.2_TASA_EMPLEO_0_T_34 */
+    try {
+      const rows = await serieGobAr('170.2_TASA_EMPLEO_0_T_34', 4);
+      if (rows?.length >= 1) {
+        const last = rows.at(-1), prev = rows.at(-2);
+        cards.push(datoCard({
+          cat:'INDEC', name:'Tasa de Empleo',
+          value: fmtNum(last[1],1)+'%',
+          changeAbs: prev ? last[1]-prev[1] : null,
+          period: fmtDate(last[0]) + ' (trim.)', source:'INDEC'
+        }));
+      }
+    } catch {}
+
+    /* PBI — datos.gob.ar
+       Serie: 204.1_PIBCONST_DICI_A_28 (anual, precios constantes) */
+    try {
+      const rows = await serieGobAr('204.1_PIBCONST_DICI_A_28', 3);
+      if (rows?.length >= 1) {
+        const last = rows.at(-1), prev = rows.at(-2);
+        const chgPct = prev ? (last[1]-prev[1])/Math.abs(prev[1])*100 : null;
+        cards.push(datoCard({
+          cat:'INDEC', name:'PBI (precios constantes 2004)',
+          value: '$'+fmtBig(last[1]*1e6),
+          changePct: chgPct,
+          period: fmtDate(last[0]) + ' (anual)', source:'INDEC'
+        }));
+      }
+    } catch {}
+
+    /* IPI — Índice de Producción Industrial — datos.gob.ar
+       Serie: 11.2_IM_2016_M_20 */
+    try {
+      const rows = await serieGobAr('11.2_IM_2016_M_20', 3);
+      if (rows?.length >= 2) {
+        const last = rows.at(-1), prev = rows.at(-2);
+        cards.push(datoCard({
+          cat:'INDEC', name:'IPI — Índice Producción Industrial',
+          value: fmtNum(last[1],1), unit:'base 2016',
+          changeAbs: last[1]-prev[1],
+          period: fmtDate(last[0]), source:'INDEC'
+        }));
+      }
+    } catch {}
+    /* Riesgo País — Ámbito intraday (fallback argentinadatos EOD) */
     let riesgoOk = false;
     try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(9000) });
+      const r = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(9000) });
       if (r.ok) {
-        const arr = await r.json();
-        const valids = lastValidArr(arr, 2);
-        if (valids.length >= 1) {
-          const last = valids.at(-1), prev = valids.at(-2);
+        const d = await r.json();
+        if (d?.valor != null) {
           cards.push(datoCard({
             cat:'Mercado · 🇦🇷 Argentina', name:'Riesgo País (EMBI+)',
-            value: fmtNum(last.valor, 0), unit:'pts',
-            changeAbs: prev ? last.valor - prev.valor : null,
+            value: fmtNum(d.valor, 0), unit:'pts',
+            changeAbs: Number.isFinite(d.prevValor) ? d.valor - d.prevValor : null,
             sub:'Spread sobre bonos del Tesoro EE.UU.',
-            period: fmtDate(last.fecha), source:'JP Morgan', cls:'red-card'
+            period: fmtDate(d.fecha), source: d.source === 'ambito.com' ? 'Ámbito · intraday' : 'JP Morgan · EOD', cls:'red-card'
           }));
           riesgoOk = true;
         }
@@ -957,26 +973,30 @@
       cards.push(errorCard('🇦🇷 Riesgo País', 'API temporalmente no disponible'));
     }
 
-    /* Valor UVA y CER ya vienen de la sección BCRA arriba */
-    if (false) {
-      try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/indices/uva', { signal: AbortSignal.timeout(9000) });
-        if (r.ok) {
-          const arr = await r.json();
-          const valids = lastValidArr(arr, 2);
-          if (valids.length >= 1) {
-          const last = valids.at(-1), prev = valids.at(-2);
+    /* Valor UVA — ArgentinaDatos */
+    try {
+      const r = await fetch('/api/argentinadatos?path=finanzas/indices/uva', { signal: AbortSignal.timeout(9000) });
+      if (r.ok) {
+        const arr = await r.json();
+        if (arr?.length >= 2) {
+          const last = arr.at(-1), prev = arr.at(-2);
           cards.push(datoCard({
             cat:'BCRA', name:'Valor UVA',
             value: '$' + fmtNum(last.valor, 2),
-            changePct: prev ? ((last.valor - prev.valor) / prev.valor) * 100 : null,
+            changePct: ((last.valor - prev.valor) / prev.valor) * 100,
             period: fmtDate(last.fecha), source:'BCRA', cls:'blue-card'
           }));
-          }
         }
-      } catch {}
-    }
-    // Pobreza e Indigencia ya está cubierta por el card "EMAE·IPI·Desocupación·Pobreza → Ver INDEC"
+      }
+    } catch {}
+    /* Pobreza e Indigencia — sin API limpia, dato semestral. Link directo a indec.gob.ar */
+    cards.push(datoCard({
+      cat:'INDEC', name:'Pobreza e Indigencia',
+      value:'<a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-46-152" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-family:var(--font-display);font-size:1.6rem">Ver INDEC →</a>',
+      sub:'Publicación semestral (EPH). Sin API de acceso programático. Clickeá para ver datos oficiales.',
+      period:'Datos semestrales', source:'INDEC'
+    }));
+
     if (!cards.length) cards.push(errorCard('INDEC', 'No se pudieron cargar los datos'));
     document.getElementById('grid-indec').innerHTML = cards.join('');
   }
@@ -1048,23 +1068,53 @@
     document.getElementById('grid-eeuu').innerHTML = skeleton(7);
     const cards = [];
 
-    /* Fed Funds Rate — FRED (proxied via /api/fred para no exponer key) */
+    /* FRED — múltiples series (Fed Funds + indicadores macro) */
+    const fredInds = [
+      { id: 'FEDFUNDS',     cat: 'Fed Reserve',   name: 'Fed Funds Rate',         fv: v => fmtNum(v,2)+'%', cls: 'blue-card' },
+      { id: 'CPILFESL',     cat: 'BLS · FRED',    name: 'Core CPI (YoY)',         fv: v => fmtNum(v,2)+'%', yoy: true },
+      { id: 'PCEPILFE',     cat: 'BEA · FRED',    name: 'Core PCE (YoY) — Fed pref.', fv: v => fmtNum(v,2)+'%', yoy: true },
+      { id: 'UNRATE',       cat: 'BLS · FRED',    name: 'Tasa de Desempleo',      fv: v => fmtNum(v,1)+'%' },
+      { id: 'ICSA',         cat: 'DOL · FRED',    name: 'Initial Jobless Claims', fv: v => fmtBig(v) },
+      { id: 'MORTGAGE30US', cat: 'Freddie · FRED',name: 'Mortgage 30Y',           fv: v => fmtNum(v,2)+'%' },
+      { id: 'BAMLC0A0CM',   cat: 'ICE · FRED',    name: 'Credit Spread IG (OAS)', fv: v => Math.round(v*100)+' bps' },
+      { id: 'BAMLH0A0HYM2', cat: 'ICE · FRED',    name: 'Credit Spread HY (OAS)', fv: v => Math.round(v*100)+' bps' },
+      { id: 'VIXCLS',       cat: 'CBOE · FRED',   name: 'VIX (volatilidad)',      fv: v => fmtNum(v,2) },
+      { id: 'DCOILWTICO',   cat: 'EIA · FRED',    name: 'Petróleo WTI',           fv: v => 'USD '+fmtNum(v,2) },
+      { id: 'M2SL',         cat: 'Fed · FRED',    name: 'M2 Money Supply',        fv: v => 'USD '+fmtBig(v*1e9) },
+      { id: 'INDPRO',       cat: 'Fed · FRED',    name: 'Producción Industrial (YoY)',  fv: v => fmtNum(v,2)+'%', yoy: true },
+    ];
+
+    /* Batch fetch FRED — limit 13 para series con YoY y 2 para deltas día/día */
     try {
-      const r = await fetch(
-        '/api/fred',
-        { signal: AbortSignal.timeout(8000) }
-      );
+      const ids = fredInds.map(i => i.id).join(',');
+      const r = await fetch('/api/fred?series_ids=' + encodeURIComponent(ids) + '&limit=16', { signal: AbortSignal.timeout(10000) });
       if (r.ok) {
-        const j = await r.json();
-        const obs = j.observations?.filter(o => o.value !== '.');
-        if (obs?.length) {
-          const last = obs[0], prev = obs[1];
-          const chg = prev ? parseFloat(last.value) - parseFloat(prev.value) : null;
+        const data = await r.json();
+        for (const ind of fredInds) {
+          const obs = data[ind.id]?.observations?.filter(o => o.value !== '.');
+          if (!obs?.length) continue;
+          const last = obs[0];
+          let value = parseFloat(last.value);
+          let chg = null;
+          let chgPct = null;
+          if (ind.yoy && obs.length >= 13) {
+            // YoY: comparar con observación de hace 12 meses
+            const yoyBase = parseFloat(obs[12].value);
+            value = (value / yoyBase - 1) * 100;
+            // Para YoY, mostrar el último valor; el delta vs período previo es la diff de YoY recientes
+            const prevYoY = obs.length >= 14 ? (parseFloat(obs[1].value) / parseFloat(obs[13].value) - 1) * 100 : null;
+            if (Number.isFinite(prevYoY)) chg = value - prevYoY;
+          } else if (obs.length >= 2) {
+            const prev = parseFloat(obs[1].value);
+            chg = value - prev;
+            chgPct = prev !== 0 ? (value - prev) / Math.abs(prev) * 100 : null;
+          }
           cards.push(datoCard({
-            cat:'Fed Reserve', name:'Fed Funds Rate',
-            value: fmtNum(parseFloat(last.value),2)+'%',
-            changeAbs: chg,
-            period: fmtDate(last.date), source:'FRED', cls:'blue-card'
+            cat: ind.cat, name: ind.name,
+            value: ind.fv(value),
+            changeAbs: ind.yoy ? chg : null,
+            changePct: ind.yoy ? null : chgPct,
+            period: fmtDate(last.date), source: 'FRED', cls: ind.cls || ''
           }));
         }
       }
@@ -1072,9 +1122,8 @@
 
     /* World Bank indicators */
     const WB = 'https://api.worldbank.org/v2/country/US/indicator/';
+    /* World Bank: solo lo que NO viene de FRED (CPI y desempleo ya están en FRED, más recientes) */
     const wbInds = [
-      { id:'FP.CPI.TOTL.ZG',    name:'Inflación Anual (CPI)',       fv: v => fmtNum(v,1)+'%' },
-      { id:'SL.UEM.TOTL.ZS',    name:'Tasa de Desempleo',           fv: v => fmtNum(v,1)+'%' },
       { id:'NY.GDP.MKTP.CD',    name:'PBI Nominal',                  fv: v => 'USD '+fmtBig(v) },
       { id:'NY.GDP.MKTP.KD.ZG', name:'Crecimiento PBI Real',        fv: v => fmtNum(v,1)+'%' },
       { id:'GC.BAL.CASH.GD.ZS', name:'Balance Fiscal (% PBI)',      fv: v => fmtNum(v,2)+'%' },
@@ -1120,34 +1169,16 @@
     { id:'chainlink',    name:'Chainlink',      sym:'LINK' },
   ];
 
-  async function fetchCripto(retries = 2) {
-    const ids = CRYPTOS.map(c => c.id).join(',');
-    let lastErr = null;
-    for (let i = 0; i <= retries; i++) {
-      try {
-        const r = await fetch(`/api/crypto?ids=${ids}&vs_currencies=usd`, { signal: AbortSignal.timeout(12000) });
-        if (r.status === 429) {
-          // Rate limit: esperar y reintentar con backoff exponencial
-          if (i < retries) {
-            await new Promise(res => setTimeout(res, 1500 * Math.pow(2, i)));
-            continue;
-          }
-          throw new Error('Rate limit');
-        }
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return await r.json();
-      } catch (e) {
-        lastErr = e;
-        if (i < retries) await new Promise(res => setTimeout(res, 1000 * (i + 1)));
-      }
-    }
-    throw lastErr;
-  }
-
   async function loadCripto() {
     document.getElementById('grid-cripto').innerHTML = skeleton(10);
     try {
-      const data = await fetchCripto();
+      const ids = CRYPTOS.map(c => c.id).join(',');
+      const r = await fetch(
+        `/api/crypto?ids=${ids}&vs_currencies=usd`,
+        { signal: AbortSignal.timeout(12000) }
+      );
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
 
       const html = CRYPTOS.map(c => {
         const d = data[c.id];
@@ -1298,7 +1329,7 @@
   });
 
   /* Carga inicial: Argentina */
-  Promise.all([loadDolares(), loadBCRA(), loadINDEC()]);
+  Promise.all([loadDolares(), loadINDEC(), loadBCRA()]);
 
   </script>
 </body>

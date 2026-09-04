@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,6 +13,21 @@
   <title>Valor Presente Neto (VPN/DCF) — BB Financial</title>
   <meta name="description" content="Calculá el Valor Presente Neto (VPN/DCF). Ingresá flujos de caja futuros, tasa de descuento y obtené VPN, TIR y período de repago." />
   <meta name="keywords" content="VPN, valor presente neto, DCF, flujo de fondos descontado, TIR, payback, tasa de descuento, WACC" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/vpn.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Valor Presente Neto (VPN/DCF) — BB Financial" />
+  <meta property="og:description" content="Calculá el Valor Presente Neto (VPN/DCF). Ingresá flujos de caja futuros, tasa de descuento y obtené VPN, TIR y período de repago." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/vpn.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Valor Presente Neto (VPN/DCF) — BB Financial" />
+  <meta name="twitter:description" content="Calculá el Valor Presente Neto (VPN/DCF). Ingresá flujos de caja futuros, tasa de descuento y obtené VPN, TIR y período de repago." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Valor Presente (VPN)","item":"https://bb-financial.vercel.app/pages/vpn.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/styles.css"/>
@@ -92,6 +106,32 @@
       </ol>
       <div class="tip">💡 <strong>Regla simple:</strong> <strong>VPN positivo</strong> = la inversión te da más de lo que rendiría tu mejor alternativa = aceptala. <strong>VPN negativo</strong> = rechazala. <strong>VPN ≈ 0</strong> = es indiferente, decide por otros factores.</div>
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>La TIR es engañosa</strong> sin contexto: una TIR del 80% suena espectacular hasta que recordás que la inflación es 100%. Siempre comparála contra tu tasa real de costo de oportunidad.</div>
+    </div>
+  </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta calculadora</strong> — fórmulas, supuestos, trampas comunes</summary>
+    <div class="ti-content">
+      <p>El VPN es la herramienta más importante de finanzas corporativas. Responde: ¿esta inversión crea o destruye valor? Si VPN &gt; 0, sí. Suena simple, traiciona en los detalles.</p>
+      <p><strong>Fórmulas:</strong></p>
+      <ul>
+        <li><strong>VPN</strong> = <code>−CF₀ + Σ CFₜ / (1+r)^t</code> donde r = tasa de descuento.</li>
+        <li><strong>TIR (IRR)</strong> = la tasa r* que hace VPN = 0. Si TIR &gt; r del proyecto, conviene.</li>
+        <li><strong>Período de repago</strong> = en qué año los flujos acumulados igualan la inversión inicial (ignora el costo del tiempo).</li>
+      </ul>
+      <p><strong>Supuestos críticos:</strong></p>
+      <ul>
+        <li>La <strong>tasa de descuento</strong> es la pieza más sensible. 1% de diferencia puede cambiar la decisión. Para empresas usar WACC; para proyectos personales, costo de oportunidad realista.</li>
+        <li>Asumimos <strong>flujos de fin de período</strong> (anualidades ordinarias). Si los flujos son al inicio, sumá un período al exponente.</li>
+        <li>NO contemplamos <strong>impuestos, depreciación, ni efectos de inflación</strong> — para proyectos serios hacé sensibilidad sobre estos.</li>
+      </ul>
+      <p><strong>Trampas comunes:</strong></p>
+      <ul>
+        <li><strong>TIR puede dar múltiples soluciones</strong> si hay flujos negativos intermedios (no es monótona). Mejor usar VPN como criterio.</li>
+        <li><strong>TIR asume reinversión a la misma TIR</strong> — irreal para TIRs altas. Para corregir, usar MIRR (modified IRR).</li>
+        <li><strong>Comparar VPN entre proyectos de distinta escala</strong> es engañoso. Un VPN $1M sobre $10M invertidos &lt; un VPN $500k sobre $1M.</li>
+      </ul>
+      <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> El VPN da UN número con muchos supuestos. Para decisiones reales hacé sensibilidad sobre la tasa y los flujos. <span class="cite">Fuente: Brealey, Myers, Allen — Principles of Corporate Finance.</span></p>
     </div>
   </details>
     </div>
@@ -231,11 +271,11 @@
         <li><a href="proyectos.html">Proyectos / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let vpnChart = null;
     let flujos = [15000, 18000, 20000, 22000, 25000];

@@ -19,16 +19,16 @@ const ALLOWED_HOSTS = new Set([...PROD_HOSTS, ...DEV_HOSTS]);
  *  - Referer o Origin matchean nuestros hosts
  *  - O la request es interna de Vercel (header X-Vercel-Internal-*)
  */
-function hostOf(value) {
-  if (!value || typeof value !== 'string') return null;
-  try { return new URL(value).host.toLowerCase(); } catch { return null; }
-}
-
 export function isAllowedOrigin(req) {
-  const refererHost = hostOf(req.headers.referer || req.headers.referrer);
-  const originHost = hostOf(req.headers.origin);
-  if (refererHost && ALLOWED_HOSTS.has(refererHost)) return true;
-  if (originHost && ALLOWED_HOSTS.has(originHost)) return true;
+  const referer = req.headers.referer || req.headers.referrer || '';
+  const origin = req.headers.origin || '';
+
+  for (const h of ALLOWED_HOSTS) {
+    if (referer.includes('://' + h + '/') || referer.includes('://' + h + '?')
+        || referer === 'https://' + h
+        || origin === 'https://' + h
+        || origin === 'http://' + h) return true;
+  }
   return false;
 }
 

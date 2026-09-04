@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -12,7 +11,22 @@
   </script>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DDM — Valuación por Dividendos — BB Financial</title>
-  <meta name="description" content="Dividend Discount Model (DDM): calculá el precio intrínseco de una acción a partir de sus dividendos futuros descontados. Gordon Growth Model y DDM multietapa." />
+  <meta name="description" content="Calculá el precio intrínseco de una acción descontando sus dividendos futuros. Incluye Gordon Growth Model y DDM multietapa." />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/ddm.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="DDM — Valuación por Dividendos — BB Financial" />
+  <meta property="og:description" content="Calculá el precio intrínseco de una acción descontando sus dividendos futuros. Incluye Gordon Growth Model y DDM multietapa." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/ddm.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DDM — Valuación por Dividendos — BB Financial" />
+  <meta name="twitter:description" content="Calculá el precio intrínseco de una acción descontando sus dividendos futuros. Incluye Gordon Growth Model y DDM multietapa." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"DDM","item":"https://bb-financial.vercel.app/pages/ddm.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/styles.css"/>
@@ -79,6 +93,38 @@
       </ol>
       <div class="tip">💡 <strong>Modelo de Gordon:</strong> V = D₁ / (Ke − g). Solo funciona si <strong>Ke &gt; g</strong>. Si Ke ≤ g, el modelo explota y NO sirve — eso significa que la empresa crece más rápido de lo que la podés descontar, lo cual no es sostenible.</div>
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Limitación crítica:</strong> el DDM solo sirve para empresas que <strong>pagan dividendos estables</strong>. NO sirve para tech (Google, Amazon no pagan), startups, ni empresas en crecimiento que reinvierten todo. Para esas, usá DCF.</div>
+    </div>
+  </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta herramienta</strong> — origen, fórmulas, supuestos, cuándo NO usarla</summary>
+    <div class="ti-content">
+      <p>El DDM es uno de los modelos más viejos de valuación (Williams, 1938 — anterior incluso al CAPM). La intuición: si una acción es una promesa de pagos futuros (dividendos), entonces vale lo que valgan esos pagos descontados al presente. Simple en concepto, traicionero en la práctica.</p>
+
+      <p><strong>Las dos variantes que ofrecemos:</strong></p>
+      <ul>
+        <li><strong>Gordon Growth (1 etapa):</strong> <code>P = D₁ / (Ke − g)</code>. Asume que los dividendos crecen a tasa constante g <em>para siempre</em>. Es exacta solo si g es realmente constante — para una empresa en madurez estable. Si Ke ≤ g el modelo explota (no tiene sentido económico: ninguna empresa puede crecer eternamente más rápido que la economía).</li>
+        <li><strong>DDM 2 etapas:</strong> períodos de alto crecimiento (g_high por N años) + crecimiento estable (g_stable) en perpetuidad. <code>P = Σ D_t/(1+Ke)^t + TerminalValue/(1+Ke)^N</code>. Más realista para empresas en transición. Damodaran (Cap. 14) lo recomienda sobre Gordon para 90% de los casos.</li>
+      </ul>
+
+      <p><strong>Qué supuestos hacemos:</strong></p>
+      <ul>
+        <li>El <strong>dividendo crece a tasa constante</strong> dentro de cada etapa. Real-life los dividendos son lumpy (algunos años nada, otros mucho); usamos el average esperado.</li>
+        <li>La <strong>tasa de descuento (Ke)</strong> es estática. Si la cambiás (cambia Rf, β, ERP), el resultado se mueve. Probá sensibilidad: bajar Ke 1% típicamente sube el precio justo 10-15%.</li>
+        <li>Asumimos que el <strong>payout ratio</strong> es estable. Si la empresa decide bajar/subir dividendos (vía buybacks o nuevas inversiones), el modelo se rompe. Damodaran sugiere usar <strong>FCFE (Free Cash Flow to Equity)</strong> en su lugar para esos casos.</li>
+      </ul>
+
+      <p><strong>Cuándo NO usarlo:</strong></p>
+      <ul>
+        <li>Empresas que no pagan dividendos (Tesla, Amazon, Berkshire). El modelo da P = 0 o NaN. Usar DCF/FCFE.</li>
+        <li>Empresas en pérdida o muy cíclicas — dividendos volátiles o futuros sin claridad.</li>
+        <li>Cuando g se acerca a Ke — el resultado se vuelve hipersensible y poco confiable.</li>
+        <li>Para empresas en mercados emergentes con flujos de caja erráticos — ajustar Ke con CRP y bajar la confianza del output.</li>
+      </ul>
+
+      <p><strong>Hint útil de Damodaran:</strong> la "g sostenible" de cualquier empresa madura no puede superar el crecimiento nominal del PBI del país (~5-7%). Si tu estimación de g_stable es 8% o más, estás siendo agresivo: revisar.</p>
+
+      <p><strong style="color:#ffb84d">⚠ NO es recomendación.</strong> El DDM da UN número con muchos supuestos. Para decisiones reales hacé DCF completo, comparé contra múltiplos del sector, y aplicá margen de seguridad (Graham: comprá a 70% del precio justo). <span class="cite">Fuentes: Damodaran, Investment Valuation 4e (Cap. 14); Williams (1938) The Theory of Investment Value.</span></p>
     </div>
   </details>
     </div>
@@ -232,11 +278,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let ddmChart = null;
 
@@ -302,7 +348,13 @@
       const ke = (parseFloat(document.getElementById('ke-2').value) || 0) / 100;
       const pm = parseFloat(document.getElementById('pm-2').value) || 0;
 
-      if (g2 >= ke) return;
+      const badge2 = document.getElementById('d2-safety-badge');
+      if (g2 >= ke) {
+        badge2.className = 'safety-badge safety-sell';
+        badge2.textContent = '⚠️ El crecimiento perpetuo (Etapa 2) debe ser menor que Ke. Con g₂ ≥ Ke el valor terminal explota. Reducí g₂ o subí Ke.';
+        ['d2-intrinsic','d2-price','d2-vp1','d2-vp2','d2-margin'].forEach(id=>document.getElementById(id).textContent='—');
+        return;
+      }
 
       // Stage 1: discount dividends growing at g1
       let vp1 = 0, d = d0;

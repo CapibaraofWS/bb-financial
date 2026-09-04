@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,6 +13,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calendario de Earnings — BB Financial</title>
   <meta name="description" content="Calendario de presentación de resultados (earnings) de empresas listadas. Vista mensual con EPS estimado vs reportado." />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/calendario.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Calendario de Earnings — BB Financial" />
+  <meta property="og:description" content="Calendario de presentación de resultados (earnings) de empresas listadas. Vista mensual con EPS estimado vs reportado." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/calendario.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Calendario de Earnings — BB Financial" />
+  <meta name="twitter:description" content="Calendario de presentación de resultados (earnings) de empresas listadas. Vista mensual con EPS estimado vs reportado." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Calendario","item":"https://bb-financial.vercel.app/pages/calendario.html"}]}
+  </script>
   <meta name="robots" content="index, follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -57,22 +71,41 @@
     .cal-day:hover { border-color:var(--border-hover); }
     .cd-num { font-family:var(--font-mono); font-size:0.78rem; color:var(--text-muted); font-weight:600; margin-bottom:0.3rem; display:flex; align-items:center; justify-content:space-between; }
     .cd-count { font-family:var(--font-mono); font-size:0.6rem; color:var(--accent); background:var(--accent-dim); padding:0.05rem 0.4rem; border-radius:8px; }
-    .cd-tickers { display:flex; flex-wrap:wrap; gap:3px; }
-    .cd-ticker {
-      font-family:var(--font-mono); font-size:0.62rem; color:var(--text); background:var(--bg-card);
-      border:1px solid var(--border); border-radius:4px; padding:0.1rem 0.35rem;
-      cursor:pointer; text-decoration:none;
+    .cd-tickers { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+    .cd-logo {
+      width:26px; height:26px; border-radius:6px; overflow:hidden; background:#fff;
+      display:flex; align-items:center; justify-content:center; border:2px solid transparent;
+      cursor:pointer; text-decoration:none; flex-shrink:0; transition:transform 0.15s;
     }
-    .cd-ticker:hover { color:var(--accent); border-color:rgba(74,222,154,0.3); }
-    .cd-ticker.beat { color:#4ade9a; border-color:rgba(74,222,154,0.25); }
-    .cd-ticker.miss { color:#ff6b6b; border-color:rgba(255,107,107,0.25); }
-    .cd-more { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-subtle); padding:0.1rem 0.35rem; }
+    .cd-logo:hover { transform:scale(1.12); z-index:3; }
+    .cd-logo img { width:100%; height:100%; object-fit:contain; display:block; }
+    .cd-logo.beat { border-color:#4ade9a; }
+    .cd-logo.miss { border-color:#ff6b6b; }
+    .cd-logo .cd-logo-txt { display:none; font-family:var(--font-mono); font-size:0.5rem; font-weight:700; color:#0a0c0f; padding:0 2px; text-align:center; line-height:1; }
+    .cd-logo.noimg { background:var(--bg-card); border-color:var(--border); }
+    .cd-logo.noimg img { display:none; }
+    .cd-logo.noimg .cd-logo-txt { display:block; color:var(--text); }
+    .cd-logo.noimg.beat .cd-logo-txt { color:#4ade9a; }
+    .cd-logo.noimg.miss .cd-logo-txt { color:#ff6b6b; }
+    .cd-more { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-subtle); padding:0.1rem 0.35rem; align-self:center; }
 
     .loading-cell { padding:5rem; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:0.8rem; }
     .spinner-mini { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 0.5rem; }
     @keyframes spin { to { transform:rotate(360deg); } }
 
     .info-box { background:rgba(96,165,250,0.06); border:1px solid rgba(96,165,250,0.18); border-radius:8px; padding:0.8rem 1rem; font-size:0.78rem; color:var(--text-muted); margin-top:1.5rem; line-height:1.55; }
+    .tool-info { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0; margin:0 0 1.25rem; overflow:hidden; }
+    .tool-info summary { padding:0.75rem 1.1rem; cursor:pointer; font-size:0.85rem; color:var(--text-muted); list-style:none; }
+    .tool-info summary::marker { display:none; }
+    .tool-info summary::-webkit-details-marker { display:none; }
+    .tool-info summary strong { color:var(--text); }
+    .tool-info summary:hover { background:var(--bg-card-hover); }
+    .tool-info[open] summary { border-bottom:1px solid var(--border); }
+    .tool-info .ti-content { padding:0.85rem 1.1rem 1.1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.7; }
+    .tool-info .ti-content p { margin:0 0 0.65rem; }
+    .tool-info .ti-content code { background:var(--bg); padding:0.05rem 0.35rem; border-radius:4px; font-family:var(--font-mono); font-size:0.78rem; color:var(--accent); }
+    .tool-info .ti-content ul { margin:0.3rem 0 0.6rem; padding-left:1.4rem; }
+    .tool-info .ti-content li { margin-bottom:0.25rem; }
 
     /* Detail panel */
     .day-detail { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.25rem 1.5rem; margin-top:1.5rem; display:none; }
@@ -136,15 +169,28 @@
           <button id="today-btn" style="margin-left:0.5rem">Hoy</button>
         </div>
         <div class="cal-filter" id="cal-filter">
-          <button class="active" data-filter="all">Todas</button>
-          <button data-filter="top20">Top 20</button>
-          <button data-filter="top50">Top 50</button>
-          <button data-filter="top100">Top 100</button>
-          <button data-filter="large">Large Cap</button>
-          <button data-filter="mega">Mega (&gt;$200B)</button>
+          <button class="active" data-filter="conocidas">⭐ Conocidas</button>
           <button data-filter="reported">Ya reportaron</button>
+          <button data-filter="all">Todas</button>
         </div>
       </div>
+
+      <!-- Reddit-feedback compliance: qué datos, supuestos, limitaciones, no-asesoramiento -->
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta herramienta</strong> — datos, supuestos y limitaciones</summary>
+        <div class="ti-content">
+          <p><strong>Qué datos usa:</strong> calendario de <em>earnings</em> (presentación de resultados trimestrales) + market cap y precio actual de las acciones, servidos en vivo desde nuestro backend. Datos en vivo, no hardcoded.</p>
+          <p><strong>Cómo se calcula "beat / miss":</strong> compara <code>EPS reportado</code> vs <code>EPS estimado de consenso</code> (analistas Wall Street). El <strong>borde verde</strong> del logo = beat (real ≥ estimado), <strong>borde rojo</strong> = miss, sin borde = todavía no reportó. La columna <em>Surprise %</em> es <code>(EPS real − EPS est) / |EPS est|</code>.</p>
+          <p><strong>Filtros:</strong> <strong>⭐ Conocidas</strong> muestra solo las ~100 empresas más reconocidas del S&amp;P 500 (whitelist fija, para no llenar el calendario de tickers obscuros). <strong>Ya reportaron</strong> filtra las que ya publicaron resultados. <strong>Todas</strong> muestra el universo completo de empresas que reportan. Si un logo no carga, se muestra el ticker.</p>
+          <p><strong>Limitaciones:</strong></p>
+          <ul>
+            <li>Solo empresas listadas en <strong>EE.UU.</strong> (NYSE/NASDAQ). No incluye CEDEARs argentinos como tales — buscá los originales (e.g. NVDA, MSFT) que es lo mismo.</li>
+            <li>La "variación del día" muestra el % <strong>actual de hoy</strong> de cada acción — solo es informativo para earnings de hoy. Para earnings pasados, la variación del día específico no está disponible.</li>
+            <li>Algunos earnings pueden anunciarse fuera del horario regular ("BMO" = before market open, "AMC" = after market close). El precio post-earnings recién aparece al día siguiente.</li>
+          </ul>
+          <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Un beat de EPS no implica que la acción suba (a veces baja por guidance débil, o ya estaba "priced in"). Esto es una herramienta informativa.</p>
+        </div>
+      </details>
 
       <div id="cal-banner" style="display:none; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.25); border-radius:8px; padding:0.85rem 1.1rem; margin-bottom:1rem; font-size:0.85rem; color:#fda4af; line-height:1.55"></div>
 
@@ -155,9 +201,9 @@
       <div id="day-detail" class="day-detail"></div>
 
       <div class="info-box">
-        ℹ️ <strong>Earnings calendar</strong>: muestra cuándo cada empresa presenta sus resultados trimestrales (10-Q en EE.UU.).
-        <code class="pos">Verde</code> = EPS reportado superó estimado (beat). <code class="neg">Rojo</code> = miss.
-        Sin color = aún no reportó. Solo empresas listadas en EE.UU.
+        ℹ️ <strong>Earnings calendar</strong>: muestra el logo de cada empresa el día que presenta resultados trimestrales (10-Q en EE.UU.).
+        <code class="pos">Borde verde</code> = EPS superó estimado (beat). <code class="neg">Borde rojo</code> = miss.
+        Sin borde = aún no reportó. Tocá un día para ver la tabla con EPS estimado vs real, surprise % y revenue.
       </div>
 
     </div>
@@ -172,12 +218,12 @@
         <li><a href="calendario.html">Calendario earnings</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
-  <script src="../js/ticker.js"></script>
+  <script src="../js/main.js?v=24"></script>
+  <script src="../js/ticker.js?v=4"></script>
   <script>
   (function() {
     const DOW_LBL = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -188,8 +234,12 @@
 
     let currentMonth = new Date(); // first day will be set when rendering
     let monthEarnings = []; // raw earnings list for visible month
-    let activeFilter = 'all';
+    let activeFilter = 'conocidas';
+
+    // Logo CDN (Financial Modeling Prep — gratis, sin key). BRK.B → BRK-B.
+    function logoUrl(sym) { return 'https://financialmodelingprep.com/image-stock/' + String(sym).replace(/\./g,'-') + '.png'; }
     let mcapCache = {}; // sym -> mcap (approx via Yahoo on demand)
+    let quoteCache = {}; // sym -> { changePct, price } via Yahoo Quotes
 
     // Top 100 empresas por market cap (US listed) — orden referencial 2025-2026.
     // Se usa como fallback cuando Yahoo no devuelve marketCap (chart endpoint no
@@ -244,41 +294,23 @@
           if (!r.ok) { chunk.forEach(s => mcapCache[s] = null); continue; }
           const j = await r.json();
           const result = j?.quoteResponse?.result || [];
-          const map = Object.fromEntries(result.map(q => [q.symbol, q.marketCap]));
-          chunk.forEach(s => { mcapCache[s] = map[s] ?? null; });
-        } catch { chunk.forEach(s => mcapCache[s] = null); }
+          const map = Object.fromEntries(result.map(q => [q.symbol, q]));
+          chunk.forEach(s => {
+            const q = map[s];
+            mcapCache[s] = q?.marketCap ?? null;
+            quoteCache[s] = q ? { changePct: q.regularMarketChangePercent, price: q.regularMarketPrice } : null;
+          });
+        } catch { chunk.forEach(s => { mcapCache[s] = null; quoteCache[s] = null; }); }
       }
     }
 
+    const KNOWN_SET = new Set(TOP_100_BY_MCAP);
     function applyFilter(items) {
       if (activeFilter === 'all') return items;
       if (activeFilter === 'reported') return items.filter(e => e.epsActual != null);
-      if (activeFilter === 'mega')  return items.filter(e => (mcapCache[e.symbol] || 0) > 200e9);
-      if (activeFilter === 'large') return items.filter(e => (mcapCache[e.symbol] || 0) > 10e9);
-      // Top N: hybrid approach — lista hardcoded de top empresas por market cap
-      // (orden ya jerarquizado) + complemento dinámico con quien tenga marketCap conocido.
-      // Esto soluciona el problema de que Yahoo's chart endpoint no siempre devuelve marketCap.
-      const topMatch = activeFilter.match(/^top(\d+)$/);
-      if (topMatch) {
-        const N = parseInt(topMatch[1], 10);
-        const monthSymbols = new Set(items.map(e => e.symbol));
-        // Paso 1: tomar los símbolos del top hardcoded en orden, que estén en el mes
-        const fromHardcoded = TOP_100_BY_MCAP.filter(s => monthSymbols.has(s)).slice(0, N);
-        const picked = new Set(fromHardcoded);
-        // Paso 2: si faltan (típicamente Top 50/100 con mes flojo), completar con los
-        // que sí tengan marketCap conocido de Yahoo, ordenados desc
-        if (picked.size < N) {
-          const rest = [...monthSymbols]
-            .filter(s => !picked.has(s) && typeof mcapCache[s] === 'number' && mcapCache[s] > 0)
-            .sort((a, b) => mcapCache[b] - mcapCache[a]);
-          for (const s of rest) {
-            if (picked.size >= N) break;
-            picked.add(s);
-          }
-        }
-        return items.filter(e => picked.has(e.symbol));
-      }
-      return items;
+      // "Conocidas": empresas reconocidas (whitelist de las ~100 más grandes del S&P).
+      // Membership check simple — sin depender de marketCap de Yahoo (que era inestable).
+      return items.filter(e => KNOWN_SET.has(e.symbol));
     }
 
     function renderCalendar() {
@@ -326,14 +358,18 @@
         const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
         const isToday = date.getTime() === today.getTime();
         const events = byDay[d] || [];
-        const tickersHtml = events.slice(0, 4).map(e => {
+        const tickersHtml = events.slice(0, 5).map(e => {
           let cls = '';
           if (e.epsActual != null && e.epsEstimate != null) {
             cls = e.epsActual >= e.epsEstimate ? 'beat' : 'miss';
           }
-          return `<a class="cd-ticker ${cls}" href="ticker.html?symbol=${encodeURIComponent(e.symbol)}" title="${esc(e.symbol)} · est: ${e.epsEstimate ?? '—'} · actual: ${e.epsActual ?? '—'}">${esc(e.symbol)}</a>`;
+          const title = `${esc(e.symbol)} · est: ${e.epsEstimate ?? '—'} · real: ${e.epsActual ?? '—'}`;
+          return `<a class="cd-logo ${cls}" href="ticker.html?symbol=${encodeURIComponent(e.symbol)}" title="${title}" onclick="event.stopPropagation()">
+            <img src="${logoUrl(e.symbol)}" alt="${esc(e.symbol)}" loading="lazy" onerror="this.closest('.cd-logo').classList.add('noimg')">
+            <span class="cd-logo-txt">${esc(e.symbol)}</span>
+          </a>`;
         }).join('');
-        const more = events.length > 4 ? `<span class="cd-more">+${events.length-4}</span>` : '';
+        const more = events.length > 5 ? `<span class="cd-more">+${events.length-5}</span>` : '';
         html += `<div class="cal-day ${isToday?'today':''} ${events.length?'has-earnings':''}" onclick="window.showDay(${d})">
           <div class="cd-num">${d}${events.length ? `<span class="cd-count">${events.length}</span>` : ''}</div>
           <div class="cd-tickers">${tickersHtml}${more}</div>
@@ -357,12 +393,20 @@
         return;
       }
       const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const todayLocal = new Date(); todayLocal.setHours(0,0,0,0);
+      const isClickedDayToday = date.getTime() === todayLocal.getTime();
       const rows = filtered.map(e => {
         const beat = e.epsActual != null && e.epsEstimate != null ? (e.epsActual >= e.epsEstimate) : null;
         const surprise = (e.epsActual != null && e.epsEstimate != null && e.epsEstimate !== 0)
           ? ((e.epsActual - e.epsEstimate) / Math.abs(e.epsEstimate)) * 100 : null;
         const cap = mcapCache[e.symbol];
         const capStr = cap ? (cap>=1e12 ? '$'+(cap/1e12).toFixed(1)+'T' : cap>=1e9 ? '$'+(cap/1e9).toFixed(1)+'B' : '$'+(cap/1e6).toFixed(0)+'M') : '—';
+        // Variación del día: solo significativa para earnings de hoy
+        const q = quoteCache[e.symbol];
+        const dayPct = (isClickedDayToday && q && Number.isFinite(q.changePct)) ? q.changePct : null;
+        const dayCell = dayPct != null
+          ? `<td class="${dayPct>0?'pos':dayPct<0?'neg':''}">${(dayPct>=0?'+':'')+dayPct.toFixed(2)}%</td>`
+          : `<td style="color:var(--text-subtle)">—</td>`;
         return `<tr onclick="location.href='ticker.html?symbol=${encodeURIComponent(e.symbol)}'">
           <td class="dd-sym">${esc(e.symbol)}</td>
           <td>${capStr}</td>
@@ -370,16 +414,20 @@
           <td>${fmtN(e.epsEstimate, 2)}</td>
           <td class="${beat===true?'pos':beat===false?'neg':''}">${fmtN(e.epsActual, 2)}</td>
           <td class="${surprise>0?'pos':surprise<0?'neg':''}">${surprise!=null?(surprise>=0?'+':'')+surprise.toFixed(1)+'%':'—'}</td>
+          ${dayCell}
           <td>${e.revenueEstimate ? '$'+(e.revenueEstimate/1e9).toFixed(2)+'B' : '—'}</td>
           <td>${e.revenueActual ? '$'+(e.revenueActual/1e9).toFixed(2)+'B' : '—'}</td>
         </tr>`;
       }).join('');
+      const dayCol = isClickedDayToday
+        ? '<th title="Variación de la acción hoy (cierre vs apertura)">Día %</th>'
+        : '<th title="Solo disponible para earnings de hoy">Día %</th>';
       panel.innerHTML = `
         <h3>${date.toLocaleDateString('es-AR',{weekday:'long', day:'numeric', month:'long', year:'numeric'})} — ${filtered.length} empresa${filtered.length!==1?'s':''}</h3>
         <div style="overflow-x:auto">
         <table class="dd-table">
           <thead><tr>
-            <th>Ticker</th><th>Mkt Cap</th><th>Horario</th><th>EPS Est.</th><th>EPS Real</th><th>Surprise</th><th>Rev Est.</th><th>Rev Real</th>
+            <th>Ticker</th><th>Mkt Cap</th><th>Horario</th><th>EPS Est.</th><th>EPS Real</th><th>Surprise</th>${dayCol}<th>Rev Est.</th><th>Rev Real</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>

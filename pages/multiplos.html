@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,6 +12,21 @@
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Múltiplos de Valuación — BB Financial</title>
   <meta name="description" content="Calculá P/E, EV/EBITDA, P/B y P/S. Comparación con el sector, precio objetivo implícito y análisis de múltiplos para equity research." />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/multiplos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Múltiplos de Valuación — BB Financial" />
+  <meta property="og:description" content="Calculá P/E, EV/EBITDA, P/B y P/S. Comparación con el sector, precio objetivo implícito y análisis de múltiplos para equity research." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/multiplos.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Múltiplos de Valuación — BB Financial" />
+  <meta name="twitter:description" content="Calculá P/E, EV/EBITDA, P/B y P/S. Comparación con el sector, precio objetivo implícito y análisis de múltiplos para equity research." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Múltiplos","item":"https://bb-financial.vercel.app/pages/multiplos.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/styles.css"/>
@@ -81,6 +95,46 @@
         <li><strong>EV/EBITDA:</strong> valor de la empresa / EBITDA. Más comparable entre países (excluye estructura de capital e impuestos).</li>
       </ol>
       <div class="tip">💡 <strong>Cómo usar bien los múltiplos:</strong> <strong>SIEMPRE comparalos contra (a) la propia historia de la empresa y (b) sus pares del sector</strong>. Un P/E de 20 puede ser carísimo para un banco (peers en 8) o baratísimo para tech (peers en 35). Para mejor comparación de pares, mirá la <a href="guia-multiplos.html" style="color:var(--accent)">guía completa</a>.</div>
+    </div>
+  </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta herramienta</strong> — qué miden, fórmulas, supuestos, sesgos comunes</summary>
+    <div class="ti-content">
+      <p>Los múltiplos son atajos. Te dicen, en un solo número, "cuánto está pagando el mercado por cada peso de X". Son útiles para comparar, peligrosos para conclusiones aisladas. Esta calculadora calcula 4 múltiplos clásicos y los compara contra una mediana del sector que vos ingresás.</p>
+
+      <p><strong>Las fórmulas que usamos:</strong></p>
+      <ul>
+        <li><strong>P/E = Precio / EPS</strong>. Es lo más simple. Mide cuánto pagás por cada $1 de ganancia <em>anual</em>. P/E 20 = "tardo 20 años en recuperar lo que pago, si las ganancias no crecen". Crítica: ignora estructura de capital y crecimiento futuro.</li>
+        <li><strong>EV/EBITDA = Enterprise Value / EBITDA</strong>. EV = Market Cap + Deuda − Cash. EBITDA = ganancia antes de intereses, impuestos, depreciación y amortización. Es el múltiplo preferido para comparar entre países o sectores porque <em>neutraliza la estructura de capital</em> (deuda vs equity) y <em>las decisiones contables</em> sobre depreciación.</li>
+        <li><strong>P/B = Precio / Valor Libros por acción</strong>. Útil para bancos (donde el balance ES el negocio) o liquidaciones. Para tech o servicios es casi inútil — el "valor" no está en el balance.</li>
+        <li><strong>P/S = Precio / Ventas por acción</strong>. Útil para empresas sin ganancias (early-stage, SaaS pre-profit). No castiga el "todavía no genera plata" como hace P/E.</li>
+      </ul>
+
+      <p><strong>Cómo derivamos el "precio justo" implícito:</strong> tomamos la <em>mediana del sector</em> que ingresás y multiplicamos por la métrica fundamental de la empresa. Ejemplo: si EPS = $5 y P/E mediano = 18, precio justo = $90. Si la empresa cotiza a $70 → "podría estar 22% subvaluada según P/E". Damodaran (Cap. 17): es una <em>aproximación</em>, no una verdad — el descuento puede estar justificado por menor crecimiento, más riesgo o menos calidad.</p>
+
+      <p><strong>Supuestos importantes:</strong></p>
+      <ul>
+        <li>La <strong>mediana del sector</strong> es la referencia "justa". En la práctica el sector entero puede estar caro o barato (mean reversion). Mirá también el promedio histórico de 10 años.</li>
+        <li>Asumimos que la empresa es <strong>comparable a sus pares</strong>. Empresas muy diferentes (en márgenes, crecimiento, riesgo) NO deberían compararse con el mismo múltiplo.</li>
+        <li><strong>EPS y EBITDA</strong> se asumen "normalizados" — empresas en ciclo bajo o con cargos one-off pueden mostrar múltiplos engañosos.</li>
+      </ul>
+
+      <p><strong>Trampas comunes ("value traps"):</strong></p>
+      <ul>
+        <li>Una empresa con P/E muy bajo (5x cuando peers están en 15x) PUEDE estar barata, o PUEDE tener un problema estructural (declive, riesgo regulatorio, fraude). El mercado no es estúpido — investigá <em>por qué</em> antes de comprar.</li>
+        <li>Múltiplos altos no son siempre malos. Buffett: "es mejor comprar una empresa maravillosa a precio razonable que una empresa razonable a precio maravilloso." Compañías de calidad sostienen P/E altos.</li>
+        <li>Cuando una industria entera está en burbuja (dot-com 2000, crypto 2021), comparar contra el sector engaña — todos están sobrevaluados.</li>
+      </ul>
+
+      <p><strong>Cuándo NO usar múltiplos:</strong></p>
+      <ul>
+        <li>Empresas únicas sin peers claros (nuevos modelos de negocio).</li>
+        <li>Empresas en pérdida o en transición (EPS negativo rompe P/E).</li>
+        <li>Para decisiones de inversión sustanciales — usá múltiplos como sanity check, no como única herramienta. Combiná con DCF y análisis cualitativo.</li>
+      </ul>
+
+      <p><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Los múltiplos son comparativos y dependen del peer group. Para análisis profesional considerá calidad del negocio, ventaja competitiva, gestión, y haga sensibilidad sobre supuestos. <span class="cite">Fuentes: Damodaran, Investment Valuation 4e (Cap. 17-19); Graham, Security Analysis (1934).</span></p>
     </div>
   </details>
     </div>
@@ -204,11 +258,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let multChart = null;
 

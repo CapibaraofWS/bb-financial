@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -12,32 +11,25 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- ===== OPEN GRAPH / TWITTER CARDS ===== -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="BB Financial — Tu hub de inversión en Argentina" />
-  <meta property="og:description" content="Calculadoras, tasas en vivo (plazos fijos, billeteras, FCI, dólar), datos macro del BCRA e INDEC y guías para invertir bien en Argentina." />
-  <meta property="og:url" content="https://bb-financial.vercel.app/" />
-  <meta property="og:site_name" content="BB Financial" />
-  <meta property="og:locale" content="es_AR" />
-  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
-  <meta property="og:image:width" content="2752" />
-  <meta property="og:image:height" content="1536" />
-  <meta property="og:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="BB Financial — Tu hub de inversión en Argentina" />
-  <meta name="twitter:description" content="Calculadoras, tasas en vivo (plazos fijos, billeteras, FCI, dólar), datos macro del BCRA e INDEC y guías para invertir bien en Argentina." />
-  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
-  <meta name="twitter:image:alt" content="BB Financial — Hub de herramientas e inversión en Argentina" />
-  <!-- ===== / OPEN GRAPH ===== -->
   <title>BB Financial | Calculadora de Plazo Fijo, Dólar y Finanzas Argentina</title>
 
-  <meta name="description" content="Calculadoras financieras gratuitas: interés compuesto, interés simple, ahorro y planificador de metas. Compará ahorrar vs. invertir y tomá mejores decisiones." />
+  <meta name="description" content="Calculadoras financieras gratis: interés compuesto, ahorro y metas. Compará ahorrar vs. invertir y tomá mejores decisiones con tu plata." />
   <meta name="keywords" content="calculadora interés compuesto, calculadora ahorro, calculadora financiera, interés simple, inversión, metas financieras, modelado financiero" />
   <meta name="author" content="BB Financial" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://bb-financial.vercel.app/" />
 
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="BB — Calculadoras Financieras" />
+  <meta property="og:description" content="Herramientas financieras gratuitas para calcular interés, ahorro e inversión. Tomá mejores decisiones con tu dinero." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/" />
+  <meta property="og:locale" content="es_AR" />
 
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BB Financial | Calculadora de Plazo Fijo, Dólar y Finanzas Argentina" />
+  <meta name="twitter:description" content="Calculadoras financieras gratis: interés compuesto, ahorro y metas. Compará ahorrar vs. invertir y tomá mejores decisiones con tu plata." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -114,6 +106,8 @@
                               <nav class="main-nav" role="navigation" aria-label="Navegación principal">
         <a href="index.html" class="nav-link active">Inicio</a>
         <a href="pages/calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="pages/agenda-ar.html" class="nav-link" style="color:var(--accent)">Agenda AR</a>
+        <a href="pages/visor-bonos-ar.html" class="nav-link" style="color:var(--accent)">Bonos AR</a>
         <a href="pages/guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
         <a href="pages/conceptos.html" class="nav-link">Conceptos</a>
         <a href="pages/ticker.html" class="nav-link">Acciones</a>
@@ -162,99 +156,187 @@
       </div>
     </section>
 
-    <!-- ===== TASAS HOY (banner ancho) ===== -->
+    <!-- ===== MARKET BRIEF — live snapshot del mercado ===== -->
     <section style="padding:2rem 0 0">
       <div class="container">
-        <a href="pages/tasas-hoy.html" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(90deg,rgba(74,222,154,0.08),rgba(96,165,250,0.05));border:1px solid rgba(74,222,154,0.3);border-radius:14px;padding:1.25rem 1.75rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(74,222,154,0.55)';this.style.boxShadow='0 8px 24px rgba(74,222,154,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.3)';this.style.boxShadow=''">
-          <div style="font-size:2rem;flex-shrink:0">📊</div>
-          <div style="flex:1;min-width:240px">
-            <p style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem">Nuevo · En vivo</p>
-            <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.25rem;color:var(--text)">Tasas hoy — ¿dónde rinde más mi plata?</h3>
-            <p style="color:var(--text-muted);font-size:0.86rem;line-height:1.5">Plazos fijos por banco, billeteras virtuales (Naranja X, Ualá, Mercado Pago…), FCI Money Market (Cocos, Balanz, Adcap…) y cotizaciones del dólar — todo en vivo y ordenado por rendimiento real.</p>
+        <style>
+          .brief-card{background:linear-gradient(135deg,#0e1318,#11141a);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.65rem;}
+          .brief-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;}
+          .brief-title{font-family:var(--font-display);font-size:1.2rem;color:var(--text);margin:0;}
+          .brief-sub{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-subtle);letter-spacing:0.06em;}
+          .brief-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.85rem;}
+          .b-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;}
+          .b-stat .lbl{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem;}
+          .b-stat .val{font-family:var(--font-display);font-size:1.25rem;color:var(--text);line-height:1.1;letter-spacing:-0.01em;}
+          .b-stat .delta{font-family:var(--font-mono);font-size:0.72rem;margin-top:0.3rem;}
+          .b-stat .delta.up{color:#4ade9a;}
+          .b-stat .delta.down{color:#ff9999;}
+          .b-stat .delta.flat{color:var(--text-subtle);}
+          .b-stat.loading .val{color:var(--text-subtle);}
+          .brief-disclaimer{font-size:0.72rem;color:var(--text-subtle);margin-top:0.85rem;line-height:1.55;}
+          .brief-disclaimer a{color:var(--text-muted);}
+          .brief-loading-skel{display:inline-block;width:60px;height:1.2rem;background:linear-gradient(90deg,var(--bg-card),var(--bg-card-hover),var(--bg-card));background-size:200% 100%;animation:briefSkel 1.5s infinite;border-radius:4px;}
+          @keyframes briefSkel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+        </style>
+        <div class="brief-card">
+          <div class="brief-head">
+            <div>
+              <h2 class="brief-title" id="brief-title">Snapshot del mercado</h2>
+              <p class="brief-sub" id="brief-sub">Cargando datos…</p>
+            </div>
+            <a href="pages/datos.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);text-decoration:none">Ver datos completos &rsaquo;</a>
           </div>
-          <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--accent);white-space:nowrap">Ver tasas →</span>
-        </a>
+          <div class="brief-grid" id="brief-grid">
+            <div class="b-stat loading"><p class="lbl">Dólar Oficial</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Dólar Blue</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Dólar MEP</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Riesgo País</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">S&amp;P 500</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Nasdaq 100</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Bitcoin</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Treasury 10Y</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+          </div>
+          <p class="brief-disclaimer">
+            <strong style="color:var(--text-muted)">Datos en vivo</strong> servidos desde nuestro backend (fuentes públicas de mercado). Pueden tener retrasos de 10-15 min según mercado. <strong>No es recomendación de inversión.</strong>
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- ===== NEW INVESTOR CTA + QUIZ ===== -->
-    <section style="padding:2.5rem 0">
+    <!-- ===== AGENDA AR + PIX CTAs ===== -->
+    <section style="padding:1.25rem 0 0">
       <div class="container">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem" class="onboard-grid">
-          <a href="pages/empezar-a-invertir.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:1rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(96,165,250,0.25);border-radius:16px;padding:1.75rem 2rem;text-decoration:none;color:inherit;transition:all 0.25s" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(96,165,250,0.5)';this.style.boxShadow='0 10px 30px rgba(96,165,250,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(96,165,250,0.25)';this.style.boxShadow=''">
-            <div>
-              <div style="font-size:2.2rem;margin-bottom:0.5rem">🚀</div>
-              <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.4rem">Si sos nuevo en inversiones</p>
-              <h2 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin-bottom:0.45rem;color:var(--text)">Empezá por acá</h2>
-              <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6">Guía paso a paso: broker confiable, banderas rojas de estafas, renta fija vs. variable, BYMA, custodia e impuestos.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem">
+
+          <a href="pages/agenda-ar.html" style="display:flex;align-items:center;gap:1.25rem;background:linear-gradient(135deg,rgba(74,222,154,0.08),rgba(96,165,250,0.06));border:1px solid rgba(74,222,154,0.28);border-radius:14px;padding:1.1rem 1.4rem;text-decoration:none;color:inherit;transition:all 0.25s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(74,222,154,0.55)';this.style.boxShadow='0 10px 30px rgba(74,222,154,0.1)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.28)';this.style.boxShadow=''">
+            <div style="font-size:2.2rem;flex-shrink:0;line-height:1">📅</div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem">Nuevo · En vivo</p>
+              <h3 style="font-family:var(--font-display);font-size:1.15rem;letter-spacing:-0.01em;margin-bottom:0.3rem;color:var(--text)">Agenda del mercado AR</h3>
+              <p style="color:var(--text-muted);font-size:0.83rem;line-height:1.5">Próximas licitaciones del Tesoro, calendario BCRA (REM, IPOM) y noticias oficiales de Finanzas. <strong style="color:var(--text)">Todo en una pantalla.</strong></p>
             </div>
-            <span style="font-family:var(--font-mono);font-size:0.82rem;color:#60a5fa">Ver guía →</span>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--accent);white-space:nowrap;font-weight:500;align-self:center">Ver agenda →</span>
           </a>
 
-          <a href="pages/perfil-inversor.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:1rem;background:linear-gradient(135deg,#11201a,#0f1820);border:1px solid rgba(74,222,154,0.3);border-radius:16px;padding:1.75rem 2rem;text-decoration:none;color:inherit;transition:all 0.25s" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(74,222,154,0.55)';this.style.boxShadow='0 10px 30px rgba(74,222,154,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.3)';this.style.boxShadow=''">
-            <div>
-              <div style="font-size:2.2rem;margin-bottom:0.5rem">🧠</div>
-              <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">Nuevo · Test 2 min</p>
-              <h2 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:-0.01em;margin-bottom:0.45rem;color:var(--text)">¿Qué tipo de inversor sos?</h2>
-              <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6">Descubrí tu perfil — <strong style="color:var(--accent)">conservador</strong>, <strong style="color:#60a5fa">moderado</strong> o <strong style="color:#ffb84d">agresivo</strong> — y qué instrumentos se ajustan a vos.</p>
+          <a href="pages/comparador-pix.html" style="display:flex;align-items:center;gap:1.25rem;background:linear-gradient(135deg,rgba(0,178,170,0.08),rgba(255,200,80,0.06));border:1px solid rgba(0,178,170,0.25);border-radius:14px;padding:1.1rem 1.4rem;text-decoration:none;color:inherit;transition:all 0.25s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(0,178,170,0.5)';this.style.boxShadow='0 10px 30px rgba(0,178,170,0.1)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(0,178,170,0.25)';this.style.boxShadow=''">
+            <div style="font-size:2.2rem;flex-shrink:0;line-height:1">🇧🇷</div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:#00b2aa;margin-bottom:0.3rem">¿Te vas a Brasil?</p>
+              <h3 style="font-family:var(--font-display);font-size:1.15rem;letter-spacing:-0.01em;margin-bottom:0.3rem;color:var(--text)">Compará tasas PIX antes de viajar</h3>
+              <p style="color:var(--text-muted);font-size:0.83rem;line-height:1.5">25 proveedores en vivo. Hasta <strong style="color:#e8c97a">33%</strong> de diferencia entre el mejor y el peor.</p>
             </div>
-            <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--accent)">Hacer el test →</span>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:#00b2aa;white-space:nowrap;font-weight:500;align-self:center">Ver tasas →</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA GRID (4 cajas) ===== -->
+    <section style="padding:2.5rem 0">
+      <div class="container">
+        <style>
+          .home-cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;}
+          .home-cta{display:flex;flex-direction:column;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:1.5rem 1.65rem;text-decoration:none;color:inherit;transition:all 0.25s;min-height:200px;}
+          .home-cta:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 30px rgba(74,222,154,0.08);}
+          .home-cta.blue{border-color:rgba(96,165,250,0.25);}
+          .home-cta.blue:hover{border-color:rgba(96,165,250,0.6);box-shadow:0 10px 30px rgba(96,165,250,0.08);}
+          .home-cta.gold{border-color:rgba(232,201,122,0.25);}
+          .home-cta.gold:hover{border-color:rgba(232,201,122,0.6);box-shadow:0 10px 30px rgba(232,201,122,0.08);}
+          .home-cta.green{border-color:rgba(74,222,154,0.25);}
+          .home-cta-icon{font-size:2.2rem;margin-bottom:0.75rem;}
+          .home-cta-eyebrow{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;}
+          .home-cta.blue .home-cta-eyebrow{color:#60a5fa;}
+          .home-cta.gold .home-cta-eyebrow{color:#e8c97a;}
+          .home-cta.green .home-cta-eyebrow{color:#4ade9a;}
+          .home-cta-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.5rem;color:var(--text);}
+          .home-cta-desc{color:var(--text-muted);font-size:0.85rem;line-height:1.55;flex:1;}
+          .home-cta-link{font-family:var(--font-mono);font-size:0.78rem;margin-top:0.85rem;display:inline-flex;align-items:center;gap:0.3rem;}
+          .home-cta.blue .home-cta-link{color:#60a5fa;}
+          .home-cta.gold .home-cta-link{color:#e8c97a;}
+          .home-cta.green .home-cta-link{color:#4ade9a;}
+        </style>
+        <div class="home-cta-grid">
+          <a href="pages/empezar-a-invertir.html" class="home-cta blue">
+            <span class="home-cta-icon">🚀</span>
+            <p class="home-cta-eyebrow">Si sos nuevo</p>
+            <h3 class="home-cta-title">Empezá por acá</h3>
+            <p class="home-cta-desc">Guía paso a paso: cómo elegir broker, banderas rojas, renta fija vs variable, BYMA, custodia e impuestos.</p>
+            <span class="home-cta-link">Ver guía →</span>
+          </a>
+          <a href="pages/visor-bonos.html" class="home-cta green">
+            <span class="home-cta-icon">💵</span>
+            <p class="home-cta-eyebrow">Renta Fija USA</p>
+            <h3 class="home-cta-title">Visor de Bonos</h3>
+            <p class="home-cta-desc">Curva de rendimientos del Tesoro EE.UU., TIPS, breakeven inflation, credit spreads y comparador.</p>
+            <span class="home-cta-link">Ver bonos →</span>
+          </a>
+          <a href="pages/comparador-tasas.html" class="home-cta gold">
+            <span class="home-cta-icon">📊</span>
+            <p class="home-cta-eyebrow">Datos en vivo</p>
+            <h3 class="home-cta-title">Comparador de Tasas</h3>
+            <p class="home-cta-desc">Plazo fijo por banco, FCI Money Market, cuentas remuneradas (Mercado Pago, Ualá) y simulador UVA.</p>
+            <span class="home-cta-link">Comparar →</span>
+          </a>
+          <a href="pages/test-inversor.html" class="home-cta blue">
+            <span class="home-cta-icon">🧪</span>
+            <p class="home-cta-eyebrow">1 minuto</p>
+            <h3 class="home-cta-title">Test del Inversor</h3>
+            <p class="home-cta-desc">¿Conservador, moderado o agresivo? 10 preguntas + cartera modelo con instrumentos reales AR y USA.</p>
+            <span class="home-cta-link">Hacer test →</span>
           </a>
         </div>
       </div>
     </section>
-    <style>@media (max-width:760px){.onboard-grid{grid-template-columns:1fr !important}}</style>
 
-    <!-- ===== MACRO INDICADORES CTA ===== -->
-    <section style="padding:2rem 0">
+    <!-- ===== VOCES DEL MERCADO CTA ===== -->
+    <section style="padding:1.5rem 0 0.5rem">
       <div class="container">
-        <a href="pages/datos.html" style="display:flex;align-items:center;gap:2rem;background:linear-gradient(135deg,#0f1820,#11141a);border:1px solid rgba(255,184,77,0.25);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(255,184,77,0.5)';this.style.boxShadow='0 10px 30px rgba(255,184,77,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,184,77,0.25)';this.style.boxShadow=''">
-          <div style="font-size:2.8rem;flex-shrink:0">📊</div>
+        <a href="pages/agenda-ar.html#voces" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(135deg,rgba(255,80,80,0.06),rgba(255,168,87,0.05));border:1px solid rgba(255,80,80,0.22);border-radius:14px;padding:1.2rem 1.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,80,80,0.5)';this.style.boxShadow='0 10px 30px rgba(255,80,80,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,80,80,0.22)';this.style.boxShadow=''">
+          <div style="font-size:2.4rem;flex-shrink:0;line-height:1">▶️</div>
           <div style="flex:1;min-width:240px">
-            <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#ffb84d;margin-bottom:0.45rem">Datos macro · En vivo</p>
-            <h2 style="font-family:var(--font-display);font-size:1.5rem;letter-spacing:-0.01em;margin-bottom:0.5rem;color:var(--text)">Indicadores de Argentina en tiempo real</h2>
-            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6">Riesgo país, reservas BCRA, inflación (IPC), bandas cambiarias, TAMAR, BADLAR, UVA, CER, TIM y más — todos los indicadores claves de Argentina actualizados automáticamente desde BCRA + INDEC.</p>
+            <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#ff5050;margin-bottom:0.3rem">Voces del mercado · YouTube en vivo</p>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.35rem;color:var(--text)">Lo último de los canales financieros AR</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.5">Bull Market, Rava, Mercado Salvaje, Bloomberg, Cocos, Lara López Calvo, Zicca y más. Se actualiza solo cuando suben videos. <strong style="color:var(--text)">Una pantalla, todos los canales.</strong></p>
           </div>
-          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#ffb84d;white-space:nowrap">Ver datos →</span>
+          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#ff5050;white-space:nowrap;font-weight:500">Ver videos →</span>
         </a>
       </div>
     </section>
 
-    <!-- ===== NEWS GRID + CTAs ===== -->
-    <section class="tools-section" style="padding-top:0;padding-bottom:4rem" aria-labelledby="noticias-title">
+    <!-- ===== NEWS CAROUSEL ===== -->
+    <section class="tools-section" style="padding-top:1rem;padding-bottom:4rem" aria-labelledby="noticias-title">
       <div class="container">
         <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
           <div style="display:flex;align-items:center;gap:0.75rem">
-            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias del día</h2>
-            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">En vivo</span>
+            <h2 id="noticias-title" class="section-title" style="margin:0">Noticias del mercado</h2>
+            <span style="display:inline-flex;align-items:center;background:rgba(74,222,154,0.12);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:20px;padding:0.15rem 0.6rem;font-family:var(--font-mono);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase">EN VIVO</span>
           </div>
           <a href="pages/noticias.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);display:flex;align-items:center;gap:0.3rem">Ver todas &rsaquo;</a>
         </div>
 
-        <!-- Grid de 3-6 noticias, responsive -->
-        <div id="newsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem">
-          <div id="newsGridLoader" style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
-        </div>
+        <!-- Grid fijo (6 noticias) — no carousel para evitar que se corten cards -->
+        <div id="newsCarousel" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;"></div>
 
-        <!-- CTAs por categoría -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.85rem">
-          <a href="pages/noticias.html#argentina" style="display:flex;align-items:center;gap:0.85rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)';this.style.borderColor='var(--accent)'" onmouseout="this.style.transform='';this.style.borderLeftColor='var(--accent)';this.style.borderColor='var(--border)';this.style.borderLeftWidth='3px';this.style.borderLeftStyle='solid';this.style.borderLeftColor='var(--accent)'">
-            <span style="font-size:1.6rem">🇦🇷</span>
-            <div style="flex:1">
-              <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.15rem">Argentina</div>
-              <div style="font-size:0.92rem;color:var(--text);font-weight:500">Más noticias económicas locales</div>
-              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem">Ámbito, Infobae, La Nación, iProfesional…</div>
+        <div id="newsCarouselLoader" style="text-align:center;padding:2.5rem;color:var(--text-subtle);font-size:0.85rem;font-family:var(--font-mono)">Cargando noticias…</div>
+
+        <!-- News quick-links -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem">
+          <a href="pages/noticias.html?cat=argentina" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(74,222,154,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+            <span style="font-size:1.8rem">🇦🇷</span>
+            <div>
+              <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Mercado Local</p>
+              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Argentina</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Merval, BCRA, dólar, FMI</p>
             </div>
-            <span style="color:var(--accent);font-family:var(--font-mono);font-size:0.85rem">→</span>
           </a>
-          <a href="pages/noticias.html#internacional" style="display:flex;align-items:center;gap:0.85rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-left:3px solid #60a5fa;border-radius:10px;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)';this.style.borderColor='#60a5fa'" onmouseout="this.style.transform='';this.style.borderColor='var(--border)'">
-            <span style="font-size:1.6rem">🌎</span>
-            <div style="flex:1">
-              <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.15rem">EE.UU. e Internacional</div>
-              <div style="font-size:0.92rem;color:var(--text);font-weight:500">Wall Street, Fed, mercados globales</div>
-              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem">Bloomberg, Reuters, CNBC, MarketWatch…</div>
+          <a href="pages/noticias.html?cat=internacional" style="display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.35rem;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+            <span style="font-size:1.8rem">🌐</span>
+            <div>
+              <p style="font-family:var(--font-mono);font-size:0.65rem;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem">Global</p>
+              <p style="font-family:var(--font-display);font-size:1.05rem;color:var(--text);line-height:1.2">Noticias Internacionales</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Fed, S&amp;P 500, tasas USA, cripto</p>
             </div>
-            <span style="color:#60a5fa;font-family:var(--font-mono);font-size:0.85rem">→</span>
           </a>
         </div>
       </div>
@@ -264,57 +346,134 @@
     <section id="calculadoras" class="tools-section" aria-labelledby="tools-title">
       <div class="container">
         <div class="section-header">
-          <h2 id="tools-title" class="section-title">Las más usadas</h2>
-          <p class="section-sub">Las 3 herramientas que más usa la gente para tomar decisiones reales con su plata</p>
+          <h2 id="tools-title" class="section-title">Calculadoras</h2>
+          <p class="section-sub">Herramientas simples para decisiones inteligentes</p>
         </div>
-        <div class="tools-grid">
 
-          <article class="tool-card tool-card--featured" aria-labelledby="card-cuanto-perdi">
-            <div class="card-badge">🔥 Más usada</div>
-            <div class="card-icon" aria-hidden="true">📉</div>
-            <h3 id="card-cuanto-perdi" class="card-title">¿Cuánto perdiste con la inflación?</h3>
-            <p class="card-desc">Descubrí en segundos cuánto poder de compra te robó la inflación si guardaste pesos en el cajón o caja de ahorro. <strong>Aviso: duele.</strong></p>
-            <ul class="card-features">
+        <style>
+          .calc-hl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;}
+          .calc-hl{position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#0e1318 0%,#11141a 100%);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:1.65rem 1.75rem 1.6rem;text-decoration:none;color:inherit;transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;min-height:360px;}
+          .calc-hl:hover{transform:translateY(-4px);}
+          .calc-hl-tag{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.7rem;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;margin-bottom:1rem;align-self:flex-start;}
+          .calc-hl-tag .dot{font-size:0.85rem;line-height:1;}
+          .calc-hl.green{border-color:rgba(74,222,154,0.22);}
+          .calc-hl.green:hover{border-color:rgba(74,222,154,0.55);box-shadow:0 14px 36px rgba(74,222,154,0.10);}
+          .calc-hl.green .calc-hl-tag{background:rgba(74,222,154,0.12);color:#4ade9a;border:1px solid rgba(74,222,154,0.28);}
+          .calc-hl.green .calc-hl-link{color:#4ade9a;}
+          .calc-hl.blue{border-color:rgba(96,165,250,0.22);}
+          .calc-hl.blue:hover{border-color:rgba(96,165,250,0.55);box-shadow:0 14px 36px rgba(96,165,250,0.10);}
+          .calc-hl.blue .calc-hl-tag{background:rgba(96,165,250,0.12);color:#60a5fa;border:1px solid rgba(96,165,250,0.28);}
+          .calc-hl.blue .calc-hl-link{color:#60a5fa;}
+          .calc-hl.orange{border-color:rgba(255,168,87,0.22);}
+          .calc-hl.orange:hover{border-color:rgba(255,168,87,0.55);box-shadow:0 14px 36px rgba(255,168,87,0.10);}
+          .calc-hl.orange .calc-hl-tag{background:rgba(255,168,87,0.12);color:#ffa857;border:1px solid rgba(255,168,87,0.28);}
+          .calc-hl.orange .calc-hl-link{color:#ffa857;}
+          .calc-hl-icon{font-size:2.6rem;line-height:1;margin-bottom:0.9rem;}
+          .calc-hl-title{font-family:var(--font-display);font-size:1.45rem;letter-spacing:-0.015em;color:var(--text);line-height:1.2;margin-bottom:0.85rem;}
+          .calc-hl-desc{color:var(--text-muted);font-size:0.9rem;line-height:1.65;margin-bottom:1.1rem;}
+          .calc-hl-bullets{list-style:none;padding:0;margin:0 0 1.25rem;display:flex;flex-direction:column;gap:0.45rem;}
+          .calc-hl-bullets li{position:relative;padding-left:1.1rem;color:var(--text-muted);font-size:0.83rem;line-height:1.5;}
+          .calc-hl-bullets li::before{content:'';position:absolute;left:0;top:0.55rem;width:5px;height:5px;border-radius:50%;background:var(--text-subtle);}
+          .calc-hl.green .calc-hl-bullets li::before{background:#4ade9a;}
+          .calc-hl.blue .calc-hl-bullets li::before{background:#60a5fa;}
+          .calc-hl.orange .calc-hl-bullets li::before{background:#ffa857;}
+          .calc-hl-link{font-family:var(--font-mono);font-size:0.85rem;font-weight:600;margin-top:auto;display:inline-flex;align-items:center;gap:0.4rem;}
+        </style>
+
+        <div class="calc-hl-grid">
+
+          <a href="pages/inflacion.html" class="calc-hl green">
+            <span class="calc-hl-tag"><span class="dot">🔥</span> Más usada</span>
+            <div class="calc-hl-icon">📉</div>
+            <h3 class="calc-hl-title">¿Cuánto perdiste con la inflación?</h3>
+            <p class="calc-hl-desc">Descubrí en segundos cuánto poder de compra te robó la inflación si guardaste pesos en el cajón o caja de ahorro. <strong style="color:var(--text)">Aviso: duele.</strong></p>
+            <ul class="calc-hl-bullets">
               <li>Ingresá monto y fecha de inicio</li>
               <li>Te muestra el "agujero" en pesos y en USD</li>
-              <li>Comparativo vs. dólar, plazo fijo y S&P 500</li>
+              <li>Comparativo vs. dólar, plazo fijo y S&amp;P 500</li>
             </ul>
-            <a href="pages/cuanto-perdi.html" class="card-link">Ver cuánto perdí →</a>
-          </article>
+            <span class="calc-hl-link">Ver cuánto perdí →</span>
+          </a>
 
-          <article class="tool-card" aria-labelledby="card-cuotas">
-            <div class="card-badge" style="background:rgba(96,165,250,0.12);color:#60a5fa;border-color:rgba(96,165,250,0.25)">💳 Top consultas</div>
-            <div class="card-icon" aria-hidden="true">🛒</div>
-            <h3 id="card-cuotas" class="card-title">¿Contado o cuotas sin interés?</h3>
-            <p class="card-desc">La decisión que TODOS los argentinos dudamos al comprar. Calcula el costo real de las cuotas según dónde tengas la plata invertida.</p>
-            <ul class="card-features">
-              <li>Detecta cuotas "sin interés" con sobreprecio</li>
-              <li>Tasa implícita escondida (TNA / TEA)</li>
-              <li>Compara contra plazo fijo, FCI, cuenta remunerada</li>
+          <a href="pages/interes-compuesto.html" class="calc-hl blue">
+            <span class="calc-hl-tag"><span class="dot">📊</span> Top consultas</span>
+            <div class="calc-hl-icon">⬡</div>
+            <h3 class="calc-hl-title">Interés compuesto — la octava maravilla</h3>
+            <p class="calc-hl-desc">Calculá cómo tu plata crece <strong style="color:var(--text)">exponencialmente</strong> cuando los intereses generan más intereses. La fórmula que cambia tu futuro financiero.</p>
+            <ul class="calc-hl-bullets">
+              <li>Capital inicial + aportes periódicos</li>
+              <li>Frecuencia de capitalización ajustable</li>
+              <li>Gráfico de crecimiento visual</li>
             </ul>
-            <a href="pages/contado-vs-cuotas.html" class="card-link">Calcular →</a>
-          </article>
+            <span class="calc-hl-link">Calcular →</span>
+          </a>
 
-          <article class="tool-card tool-card--highlight" aria-labelledby="card-fire">
-            <div class="card-badge" style="background:rgba(255,184,77,0.12);color:#ffb84d;border-color:rgba(255,184,77,0.25)">🔥 Tendencia</div>
-            <div class="card-icon" aria-hidden="true">🏝</div>
-            <h3 id="card-fire" class="card-title">FIRE — ¿Cuánto necesito para retirarme?</h3>
-            <p class="card-desc">La regla del 4%: cuánto capital necesitás invertido para vivir de tus inversiones <strong>el resto de tu vida</strong> sin volver a trabajar.</p>
-            <ul class="card-features">
+          <a href="pages/fire.html" class="calc-hl orange">
+            <span class="calc-hl-tag"><span class="dot">🔥</span> Tendencia</span>
+            <div class="calc-hl-icon">🏝️</div>
+            <h3 class="calc-hl-title">FIRE — ¿Cuánto necesito para retirarme?</h3>
+            <p class="calc-hl-desc">La regla del 4%: cuánto capital necesitás invertido para vivir de tus inversiones <strong style="color:var(--text)">el resto de tu vida</strong> sin volver a trabajar.</p>
+            <ul class="calc-hl-bullets">
               <li>Gasto mensual deseado → capital objetivo</li>
               <li>Años hasta tu independencia financiera</li>
               <li>Comparativa de tasas de retiro seguras</li>
             </ul>
-            <a href="pages/fire.html" class="card-link">Calcular FIRE →</a>
-          </article>
+            <span class="calc-hl-link">Calcular FIRE →</span>
+          </a>
 
         </div>
-        <div style="text-align:center;margin-top:1.5rem">
-          <a href="pages/calculadoras.html" style="display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);text-decoration:none;border:1px solid rgba(74,222,154,0.3);background:var(--accent-dim);padding:0.65rem 1.4rem;border-radius:8px;transition:all 0.2s" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'" onmouseout="this.style.background='var(--accent-dim)';this.style.color='var(--accent)'">Ver las 20+ calculadoras →</a>
+
+        <div style="text-align:center;margin-top:2rem">
+          <a href="pages/calculadoras.html" style="font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;border:1px solid var(--border);padding:0.7rem 1.4rem;border-radius:10px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Ver todas las calculadoras (20+) →</a>
         </div>
       </div>
     </section>
 
+    <!-- ===== BLOG CTA — 3 destacados + link a todos ===== -->
+    <section class="tools-section" style="padding-top:3rem;padding-bottom:3rem" aria-labelledby="blog-title">
+      <div class="container">
+        <style>
+          .home-blog-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;}
+          .home-blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+          .home-blog-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;cursor:pointer;transition:all 0.22s;text-decoration:none;color:inherit;display:flex;flex-direction:column;}
+          .home-blog-card:hover{border-color:rgba(74,222,154,0.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.18);}
+          .home-blog-card .hb-cat{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;}
+          .home-blog-card .hb-title{font-family:var(--font-display);font-size:1.05rem;letter-spacing:-0.01em;color:var(--text);margin-bottom:0.5rem;line-height:1.3;}
+          .home-blog-card .hb-desc{color:var(--text-muted);font-size:0.82rem;line-height:1.6;flex:1;}
+          .home-blog-card .hb-link{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);margin-top:0.85rem;}
+        </style>
+        <div class="home-blog-header">
+          <div>
+            <h2 id="blog-title" class="section-title" style="margin:0">Del Blog</h2>
+            <p class="section-sub" style="margin:0.25rem 0 0">Artículos pensados para gente que arranca o quiere ordenar lo que ya sabe.</p>
+          </div>
+          <a href="pages/blog/index.html" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem">Ver todos los artículos &rsaquo;</a>
+        </div>
+
+        <div class="home-blog-grid">
+          <a href="pages/blog/caja-ahorro-perdes-plata.html" class="home-blog-card">
+            <p class="hb-cat">Hábitos · Conducta financiera</p>
+            <p class="hb-title">Tu caja de ahorro está perdiendo plata. Y no es culpa tuya.</p>
+            <p class="hb-desc">Hablamos de hábitos (no productos): del ahorro a la inversión, los 5 errores comunes, y por qué la paciencia gana más que cualquier ticker recomendado.</p>
+            <span class="hb-link">Leer · 9 min →</span>
+          </a>
+
+          <a href="pages/blog/mito-comprar-dolares-inversion.html" class="home-blog-card">
+            <p class="hb-cat">Dólar · Mitos</p>
+            <p class="hb-title">El mito del dólar como "inversión" (y qué hacer en su lugar)</p>
+            <p class="hb-desc">Por qué comprar dólares NO es invertir. Cuánto se deprecia el dólar año a año vs lo que hubiera dado el S&P 500.</p>
+            <span class="hb-link">Leer · 11 min →</span>
+          </a>
+
+          <a href="pages/blog/que-es-la-inflacion.html" class="home-blog-card">
+            <p class="hb-cat">Macro · Educación</p>
+            <p class="hb-title">¿Qué es la inflación y por qué te roba sin que te des cuenta?</p>
+            <p class="hb-desc">Inflación explicada con ejemplos: qué es, cómo el INDEC la calcula, metodología, y cómo proteger tu plata.</p>
+            <span class="hb-link">Leer · 10 min →</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
     <!-- ===== WHY SECTION ===== -->
     <section class="why-section" aria-labelledby="why-title">
@@ -361,7 +520,6 @@
       </div>
     </section>
 
-
     <!-- CONTACT SECTION: temporalmente deshabilitado -->
 
   </main>
@@ -390,41 +548,65 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
   <script src="js/sanitize.js?v=1"></script>
-  <script src="js/main.js?v=22"></script>
-  <script src="js/ticker.js"></script>
+  <script src="js/main.js?v=24"></script>
+  <script src="js/ticker.js?v=4"></script>
   <script>
-  /* ---- Homepage news grid (responsive, sin carrusel) ---- */
+  /* ---- Homepage news carousel ---- */
   (function () {
+    // Proxy server-side propio (/api/rss?source=X) — más confiable que allorigins
     const RSS_SOURCES = [
-      { id: 'ambito',       name: 'Ámbito'       },
-      { id: 'infobae',      name: 'Infobae'      },
-      { id: 'iprofesional', name: 'iProfesional' },
-      { id: 'google_ar',    name: 'Google News'  },
+      { id: 'ambito',    name: 'Ámbito' },
+      { id: 'infobae',   name: 'Infobae' },
+      { id: 'cronista',  name: 'Cronista' },
+      { id: 'bae',       name: 'BAE Negocios' },
+      { id: 'google_ar', name: 'Google News AR' },
     ];
-
-    const grid   = document.getElementById('newsGrid');
-    const loader = document.getElementById('newsGridLoader');
 
     function fmtDate(str) {
       if (!str) return '';
       try { return new Date(str).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }); }
       catch { return ''; }
     }
-    function safeUrl(url) { return url && /^https?:\/\//i.test(url) ? url : null; }
+
+    // Adapter para items que vienen de /api/rss
+    function adaptItem(item, sourceName) {
+      return {
+        title: item.title || '',
+        link: item.link || '#',
+        date: item.pubDate || '',
+        img: item.img || '',
+        source: sourceName,
+      };
+    }
+
+    const carousel  = document.getElementById('newsCarousel');
+    const loader    = document.getElementById('newsCarouselLoader');
+    // Stubs para evitar null refs en código que aún hace prevBtn?.style etc.
+    const prevBtn = { style: {} };
+    const nextBtn = { style: {} };
+    let items     = [];
+
+    function safeUrl(url) {
+      return url && /^https?:\/\//i.test(url) ? url : null;
+    }
 
     function buildCard(item) {
-      const a = document.createElement('a');
-      a.href = safeUrl(item.link) || '#';
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.style.cssText = 'background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:all 0.25s';
-      a.addEventListener('mouseenter', () => { a.style.borderColor = 'rgba(74,222,154,0.4)'; a.style.transform = 'translateY(-2px)'; });
-      a.addEventListener('mouseleave', () => { a.style.borderColor = ''; a.style.transform = ''; });
+      const div = document.createElement('a');
+      div.href = safeUrl(item.link) || '#';
+      div.target = '_blank';
+      div.rel = 'noopener noreferrer';
+      div.style.cssText = `
+        background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+        overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+        transition:border-color 0.25s,transform 0.25s;
+      `;
+      div.addEventListener('mouseenter', () => { div.style.borderColor = 'rgba(255,255,255,0.12)'; div.style.transform = 'translateY(-2px)'; });
+      div.addEventListener('mouseleave', () => { div.style.borderColor = ''; div.style.transform = ''; });
 
       const PLACEHOLDER = 'img/imagen-para-noticias.png';
       const img = document.createElement('img');
@@ -432,14 +614,14 @@
       img.alt = '';
       img.style.cssText = 'width:100%;aspect-ratio:16/9;object-fit:cover;background:#1a1f2a';
       img.loading = 'lazy';
-      img.onerror = () => { if (!img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER; };
-      a.appendChild(img);
+      img.onerror = () => { if (img.src !== PLACEHOLDER && !img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER; };
+      div.appendChild(img);
 
       const body = document.createElement('div');
       body.style.cssText = 'padding:1rem 1.1rem 1.2rem;flex:1;display:flex;flex-direction:column';
 
       const badge = document.createElement('span');
-      badge.style.cssText = 'display:inline-block;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border-radius:20px;padding:0.12rem 0.55rem;margin-bottom:0.6rem;align-self:flex-start';
+      badge.style.cssText = 'display:inline-block;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border-radius:20px;padding:0.12rem 0.55rem;margin-bottom:0.6rem';
       badge.textContent = 'Economía';
 
       const meta = document.createElement('div');
@@ -447,7 +629,7 @@
       meta.textContent = fmtDate(item.date);
 
       const title = document.createElement('div');
-      title.style.cssText = 'font-size:0.92rem;font-weight:600;color:var(--text);line-height:1.5;flex:1';
+      title.style.cssText = 'font-size:0.875rem;font-weight:600;color:var(--text);line-height:1.5;flex:1';
       title.textContent = item.title;
 
       const source = document.createElement('div');
@@ -455,47 +637,184 @@
       source.textContent = `— ${item.source}`;
 
       body.append(badge, meta, title, source);
-      a.appendChild(body);
-      return a;
+      div.appendChild(body);
+      return div;
     }
 
-    async function loadGrid() {
+    // Grid fijo: no necesita arrows ni slide ni autoplay
+    function updateArrows() {}
+    function slide() {}
+
+    async function loadCarousel() {
       const results = await Promise.all(
         RSS_SOURCES.map(async s => {
           try {
-            const res = await fetch(`/api/rss?source=${encodeURIComponent(s.id)}`, { signal: AbortSignal.timeout(10000) });
+            const res = await fetch('/api/rss?source=' + s.id, { signal: AbortSignal.timeout(9000) });
             if (!res.ok) return [];
-            const w = await res.json();
-            if (!Array.isArray(w.items)) return [];
-            return w.items.map(it => ({
-              title: it.title || '',
-              link:  it.link  || '#',
-              date:  it.pubDate || '',
-              img:   it.img || '',
-              source: s.name,
-            })).filter(i => i.title);
+            const data = await res.json();
+            return (data.items || []).slice(0, 6).map(it => adaptItem(it, s.name));
           } catch { return []; }
         })
       );
       const seen = new Set();
-      const items = results.flat().filter(i => {
+      items = results.flat().filter(i => {
         const k = i.title.toLowerCase().slice(0, 35);
         if (seen.has(k)) return false;
         seen.add(k); return true;
       }).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6);
 
-      loader?.remove();
+      loader.remove();
       if (!items.length) {
-        const empty = document.createElement('div');
-        empty.style.cssText = 'grid-column:1/-1;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);text-align:center;color:var(--text-muted);font-size:0.88rem';
-        empty.textContent = 'No pudimos cargar las noticias en vivo. Probá refrescar.';
-        grid.appendChild(empty);
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'flex:1;padding:2rem 1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.8rem';
+        const icon = document.createElement('div'); icon.style.cssText = 'font-size:2rem;opacity:0.5'; icon.textContent = '📰';
+        const msg = document.createElement('p'); msg.style.cssText = 'color:var(--text-muted);font-size:0.88rem;line-height:1.6;max-width:420px';
+        msg.textContent = 'No pudimos cargar el feed en vivo. Probá refrescar la página o entrá directamente a la sección de Noticias.';
+        const link = document.createElement('a'); link.href = 'pages/noticias.html';
+        link.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.55rem 1rem;font-size:0.85rem;text-decoration:none';
+        link.textContent = 'Ir a Noticias →';
+        wrap.append(icon, msg, link);
+        carousel.appendChild(wrap);
+        carousel.parentElement.style.overflow = 'visible';
+        prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
         return;
       }
-      items.forEach(item => grid.appendChild(buildCard(item)));
+      items.forEach(item => carousel.appendChild(buildCard(item)));
+      updateArrows();
     }
 
-    loadGrid();
+    loadCarousel();
+  })();
+
+  /* ---- Market Brief — live snapshot ---- */
+  (function() {
+    const $ = (id) => document.getElementById(id);
+    const grid = $('brief-grid');
+    if (!grid) return;
+
+    function fmtMoney(n, dec) {
+      if (!Number.isFinite(n)) return '—';
+      return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: dec ?? 0 });
+    }
+    function fmtPct(n, dec) {
+      if (!Number.isFinite(n)) return '—';
+      return (n >= 0 ? '+' : '') + n.toFixed(dec ?? 2) + '%';
+    }
+    function deltaCls(n) {
+      if (!Number.isFinite(n)) return 'flat';
+      return n > 0 ? 'up' : n < 0 ? 'down' : 'flat';
+    }
+    function setStat(idx, label, val, delta, deltaText) {
+      const node = grid.children[idx];
+      if (!node) return;
+      node.classList.remove('loading');
+      node.textContent = '';
+      const l = document.createElement('p'); l.className = 'lbl'; l.textContent = label;
+      const v = document.createElement('p'); v.className = 'val'; v.textContent = val;
+      node.appendChild(l); node.appendChild(v);
+      if (deltaText != null) {
+        const d = document.createElement('p'); d.className = 'delta ' + deltaCls(delta);
+        d.textContent = deltaText;
+        node.appendChild(d);
+      }
+    }
+
+    // Layout: 0 Oficial · 1 Blue · 2 MEP · 3 Riesgo País · 4 S&P 500 · 5 Nasdaq · 6 BTC · 7 Treasury 10Y
+    async function loadDolares() {
+      try {
+        const r = await fetch('/api/dolar', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        const byName = (n) => d.find(x => x.nombre?.toLowerCase().includes(n));
+        const ofi = byName('oficial');
+        const blue = byName('blue');
+        const mep = byName('bolsa') || byName('mep');
+        if (ofi) setStat(0, 'Dólar Oficial', fmtMoney(ofi.venta), null, 'venta · ' + (ofi.fechaActualizacion?.slice(11, 16) || ''));
+        if (blue) setStat(1, 'Dólar Blue', fmtMoney(blue.venta), null, 'venta · ' + (blue.fechaActualizacion?.slice(11, 16) || ''));
+        if (mep) setStat(2, 'Dólar MEP', fmtMoney(mep.venta), null, 'venta · ' + (mep.fechaActualizacion?.slice(11, 16) || ''));
+      } catch {}
+    }
+
+    async function loadRiesgo() {
+      try {
+        const r = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        if (d?.valor == null) return;
+        const v = parseFloat(d.valor);
+        const pv = parseFloat(d.prevValor);
+        const delta = Number.isFinite(pv) ? v - pv : null;
+        setStat(3, 'Riesgo País', Math.round(v) + ' pb', delta, delta != null ? (delta >= 0 ? '+' : '') + Math.round(delta) + ' pb vs ayer' : null);
+      } catch {}
+    }
+
+    async function loadIndices() {
+      try {
+        const r = await fetch('/api/quotes?symbols=' + encodeURIComponent('^GSPC,^NDX,^MERV'), { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const j = await r.json();
+        const res = j?.quoteResponse?.result || [];
+        const map = Object.fromEntries(res.map(q => [q.symbol, q]));
+        const gspc = map['^GSPC']; const ndx = map['^NDX']; const merv = map['^MERV'];
+        if (gspc && Number.isFinite(gspc.regularMarketPrice)) {
+          setStat(4, 'S&P 500', gspc.regularMarketPrice.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+            gspc.regularMarketChangePercent, fmtPct(gspc.regularMarketChangePercent));
+        }
+        if (ndx && Number.isFinite(ndx.regularMarketPrice)) {
+          setStat(5, 'Nasdaq 100', ndx.regularMarketPrice.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+            ndx.regularMarketChangePercent, fmtPct(ndx.regularMarketChangePercent));
+        }
+      } catch {}
+    }
+
+    async function loadCrypto() {
+      try {
+        const r = await fetch('/api/crypto?ids=bitcoin', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        const btc = d.bitcoin;
+        if (btc && Number.isFinite(btc.usd)) {
+          setStat(6, 'Bitcoin', '$' + btc.usd.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+            btc.usd_24h_change, fmtPct(btc.usd_24h_change) + ' / 24h');
+        }
+      } catch {}
+    }
+
+    async function loadTreasury() {
+      try {
+        const r = await fetch('/api/fred?series_ids=DGS10&limit=2', { signal: AbortSignal.timeout(8000) });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        const obs = d.DGS10?.observations?.filter(o => o.value !== '.') || [];
+        if (obs.length === 0) return;
+        const v = parseFloat(obs[0].value);
+        const pv = obs.length > 1 ? parseFloat(obs[1].value) : null;
+        const delta = Number.isFinite(pv) ? (v - pv) * 100 : null; // en bps
+        setStat(7, 'Treasury 10Y', v.toFixed(2) + '%', delta, delta != null ? (delta >= 0 ? '+' : '') + delta.toFixed(0) + ' bps vs ayer' : 'fecha: ' + obs[0].date);
+      } catch {}
+    }
+
+    // Título dinámico según hora ARG
+    const hour = new Date().getHours();
+    const titleEl = $('brief-title');
+    const subEl = $('brief-sub');
+    if (hour < 14) {
+      titleEl.textContent = '☕ Buen día — Snapshot del mercado';
+      subEl.textContent = 'Cierres de ayer + apertura de hoy. Datos en vivo.';
+    } else if (hour < 19) {
+      titleEl.textContent = '📊 Snapshot del mercado';
+      subEl.textContent = 'Mercados abiertos · datos en vivo.';
+    } else {
+      titleEl.textContent = '🌃 Cierre del día';
+      subEl.textContent = 'Resumen del mercado · datos en vivo.';
+    }
+
+    // Lanzar todos en paralelo — cada uno se renderiza independiente
+    loadDolares();
+    loadRiesgo();
+    loadIndices();
+    loadCrypto();
+    loadTreasury();
   })();
   </script>
 </body>

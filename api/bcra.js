@@ -1,53 +1,61 @@
-// Proxy para BCRA API v4.0 (Monetarias)
-// Uso:
-//   /api/bcra                     → lista todas las variables (1 página, 1000 vars)
-//   /api/bcra?id=15               → último valor de la variable id=15 (Base monetaria)
-//   /api/bcra?id=15&limit=30      → últimos 30 valores
-//   /api/bcra?ids=1,7,15,28,29,31 → últimos valores de IDs múltiples (batch)
+// Proxy para BCRA API v4.0
+// Soporta ?endpoint=Monetarias (default) — lista todas las variables con su ultValorInformado
+// La v3 está deprecada — migramos a v4 que es la actual del BCRA (api.bcra.gob.ar/estadisticas/v4.0).
 import { denyExternalOrigin } from './_security.js';
-import { fetchWithMemFallback } from './_cacheFallback.js';
 
-const BASE = 'https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias';
-const UA = { 'User-Agent': 'Mozilla/5.0 BBFinancial/1.0' };
+// Además de Monetarias v4 exponemos Estadísticas Cambiarias v1 (tipos de cambio
+// oficiales del BCRA para ~40 monedas, con histórico por moneda).
+//   ?endpoint=Monetarias[&categoria=Principales%20Variables]  → catálogo + último valor
+//   ?endpoint=Cotizaciones[&fecha=YYYY-MM-DD]                 → todas las divisas de un día
+//   ?endpoint=Divisas                                         → maestro de monedas
+//   ?endpoint=Cotizaciones&moneda=USD[&desde=&hasta=&limit=]  → serie histórica de una moneda
+const ALLOWED = new Set(['Monetarias', 'Cotizaciones', 'Divisas']);
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const COD_MONEDA = /^[A-Z]{3}$/;
+
+function buildUrl(q) {
+  const endpoint = q.endpoint || 'Monetarias';
+
+  if (endpoint === 'Divisas') {
+    return 'https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Maestros/Divisas';
+  }
+
+  if (endpoint === 'Cotizaciones') {
+    const base = 'https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones';
+    const p = new URLSearchParams();
+    if (COD_MONEDA.test(String(q.moneda || ''))) {
+      if (ISO_DATE.test(String(q.desde || ''))) p.set('fechaDesde', q.desde);
+      if (ISO_DATE.test(String(q.hasta || ''))) p.set('fechaHasta', q.hasta);
+      p.set('limit', String(Math.min(Math.max(parseInt(q.limit, 10) || 100, 1), 1000)));
+      return `${base}/${q.moneda}?${p}`;
+    }
+    if (ISO_DATE.test(String(q.fecha || ''))) p.set('fecha', q.fecha);
+    return p.toString() ? `${base}?${p}` : base;
+  }
+
+  // Monetarias v4. limit 2000 cubre los ~1600 indicadores (incluye TIM id 1197,
+  // bandas cambiarias 1187-1188 y la categoría "Informe Monetario Diario").
+  const p = new URLSearchParams({ limit: '2000' });
+  if (q.categoria) p.set('Categoria', String(q.categoria).slice(0, 60));
+  if (q.idVariable && /^\d{1,5}$/.test(String(q.idVariable))) p.set('IdVariable', String(q.idVariable));
+  return `https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias?${p}`;
+}
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  const endpoint = req.query.endpoint || 'Monetarias';
 
-  const { id, ids, limit } = req.query;
+  if (!ALLOWED.has(endpoint)) {
+    return res.status(400).json({ error: 'Endpoint no permitido', validos: [...ALLOWED] });
+  }
 
   try {
-    // Batch: ids múltiples — fetch en paralelo con mem fallback por id
-    if (ids) {
-      const idList = String(ids).split(',').map(x => parseInt(x.trim())).filter(n => Number.isFinite(n) && n > 0 && n < 5000).slice(0, 30);
-      const results = await Promise.all(
-        idList.map(async i => {
-          const r = await fetchWithMemFallback(`${BASE}/${i}?limit=1`, { ns: 'bcra', timeoutMs: 8000, headers: UA });
-          if (!r.ok) return [i, null];
-          const det = r.data?.results?.[0]?.detalle?.[0];
-          return [i, det ? { fecha: det.fecha, valor: det.valor } : null];
-        })
-      );
-      res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400, stale-if-error=604800');
-      return res.status(200).json(Object.fromEntries(results));
-    }
-
-    // Single variable
-    if (id) {
-      const i = parseInt(id);
-      if (!Number.isFinite(i) || i <= 0 || i > 5000) return res.status(400).json({ error: 'id inválido' });
-      const lim = Math.min(parseInt(limit) || 1, 365);
-      const r = await fetchWithMemFallback(`${BASE}/${i}?limit=${lim}`, { ns: 'bcra', timeoutMs: 9000, headers: UA });
-      if (!r.ok) return res.status(r.status || 502).json({ error: 'Error desde BCRA API' });
-      res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400, stale-if-error=604800');
-      res.setHeader('X-Cache-Status', r.source);
-      return res.status(200).json(r.data);
-    }
-
-    // Lista general (catálogo de variables)
-    const r = await fetchWithMemFallback(`${BASE}?limit=1000`, { ns: 'bcra', timeoutMs: 10000, headers: UA });
-    if (!r.ok) return res.status(r.status || 502).json({ error: 'Error desde BCRA API' });
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400, stale-if-error=604800');
-    return res.status(200).json(r.data);
+    const url = buildUrl(req.query);
+    const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) return res.status(response.status).json({ error: 'Error desde BCRA API' });
+    const data = await response.json();
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=900');
+    return res.status(200).json(data);
   } catch {
     return res.status(500).json({ error: 'No se pudo conectar con BCRA API' });
   }

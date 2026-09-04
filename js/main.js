@@ -2,89 +2,6 @@
 window.__BB_MAIN_JS_VERSION = 'v22';
 
 // ============================================================
-// RATE LIMIT UI — detecta 429 en /api/* y muestra banner con countdown
-// Sirve para que el usuario entienda por qué los datos no se actualizan
-// si se está spammeando el server (rate limit de Upstash devuelve Retry-After).
-// ============================================================
-(function setupRateLimitBanner() {
-  if (typeof window.fetch !== 'function' || window.__BB_FETCH_WRAPPED) return;
-  window.__BB_FETCH_WRAPPED = true;
-  const origFetch = window.fetch.bind(window);
-
-  let activeUntil = 0; // timestamp ms en que termina el cooldown actual
-
-  function ensureBanner() {
-    let el = document.getElementById('bb-rl-banner');
-    if (el) return el;
-    el = document.createElement('div');
-    el.id = 'bb-rl-banner';
-    el.setAttribute('role', 'status');
-    el.setAttribute('aria-live', 'polite');
-    el.style.cssText = [
-      'position:fixed','left:50%','bottom:18px','transform:translateX(-50%)',
-      'z-index:9999','background:#1a1a1a','color:#fff','border:1px solid #444',
-      'border-radius:10px','padding:0.6rem 0.9rem','font-family:system-ui,sans-serif',
-      'font-size:0.82rem','box-shadow:0 8px 24px rgba(0,0,0,0.35)',
-      'display:none','max-width:92vw','width:320px'
-    ].join(';');
-    el.innerHTML =
-      '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem">' +
-        '<span style="font-size:1rem">⏳</span>' +
-        '<span class="bb-rl-msg">Demasiadas peticiones. Esperá <b class="bb-rl-secs">0</b>s.</span>' +
-      '</div>' +
-      '<div style="height:4px;background:#333;border-radius:2px;overflow:hidden">' +
-        '<div class="bb-rl-bar" style="height:100%;width:100%;background:linear-gradient(90deg,#ff6b6b,#ffd166);transition:width 0.25s linear"></div>' +
-      '</div>';
-    document.body.appendChild(el);
-    return el;
-  }
-
-  function showCooldown(retryAfterSecs) {
-    if (!Number.isFinite(retryAfterSecs) || retryAfterSecs <= 0) return;
-    const now = Date.now();
-    const until = now + retryAfterSecs * 1000;
-    // Si ya hay un cooldown más largo, no acortar
-    if (until <= activeUntil) return;
-    activeUntil = until;
-    const total = retryAfterSecs;
-    const el = ensureBanner();
-    el.style.display = 'block';
-    const secsEl = el.querySelector('.bb-rl-secs');
-    const barEl = el.querySelector('.bb-rl-bar');
-    function tick() {
-      const remainingMs = activeUntil - Date.now();
-      if (remainingMs <= 0) {
-        el.style.display = 'none';
-        activeUntil = 0;
-        return;
-      }
-      const remainingS = Math.ceil(remainingMs / 1000);
-      secsEl.textContent = String(remainingS);
-      barEl.style.width = Math.max(0, Math.min(100, (remainingMs / (total * 1000)) * 100)) + '%';
-      setTimeout(tick, 250);
-    }
-    tick();
-  }
-
-  window.fetch = async function (input, init) {
-    const url = (typeof input === 'string') ? input : (input && input.url) || '';
-    const isApi = url.includes('/api/');
-    // Si ya estamos en cooldown y la llamada es a /api/, abortar de movida
-    if (isApi && Date.now() < activeUntil) {
-      const headers = new Headers({ 'Retry-After': String(Math.ceil((activeUntil - Date.now()) / 1000)) });
-      return new Response(JSON.stringify({ error: 'En cooldown local — esperá unos segundos.' }),
-        { status: 429, headers });
-    }
-    const resp = await origFetch(input, init);
-    if (isApi && resp.status === 429) {
-      const ra = parseInt(resp.headers.get('Retry-After') || '30', 10);
-      showCooldown(ra);
-    }
-    return resp;
-  };
-})();
-
-// ============================================================
 // GA4 EVENTS — helper centralizado
 // Uso: window.bbTrack('calculation_complete', { calc: 'cuotas' })
 // ============================================================
@@ -224,7 +141,6 @@ window.BB_GLOSARIO = {
 
 // ============================================================
 // FAVICON injection (so every page shows the BB logo in tab)
-// ============================================================
 (function injectFavicon() {
   if (document.querySelector('link[rel="icon"]')) return;
   // Path is relative to where the document lives.
@@ -303,16 +219,21 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Comparadores',
       items: [
-        { href: pagesBase + 'contado-vs-cuotas.html',     label: 'Contado vs cuotas',      icon: '🛒' },
+        { href: pagesBase + 'comparador-tasas.html',  label: 'Comparador de Tasas',  icon: '📊' },
+        { href: pagesBase + 'comparador-pix.html',    label: 'Comparador PIX 🇧🇷',  icon: '💸' },
+        { href: pagesBase + 'contado-vs-cuotas.html', label: 'Contado vs cuotas',    icon: '🛒' },
       ],
     },
     {
       kind: 'dropdown',
       title: 'Mercado',
       items: [
+        { href: pagesBase + 'agenda-ar.html',  label: 'Agenda AR 🇦🇷', icon: '📅' },
         { href: pagesBase + 'ranking-semanal.html', label: 'Ranking semanal 🔥', icon: '📊' },
         { href: pagesBase + 'ticker.html',     label: 'Acciones',     icon: '📈' },
         { href: pagesBase + 'mercado.html',    label: 'Mercado',      icon: '🌐' },
+        { href: pagesBase + 'visor-bonos.html',label: 'Visor de Bonos USA', icon: '💵' },
+        { href: pagesBase + 'visor-bonos-ar.html', label: 'Visor de Bonos AR 🇦🇷', icon: '🇦🇷' },
         { href: pagesBase + 'calendario.html', label: 'Calendario',   icon: '📅' },
         { href: pagesBase + 'noticias.html',   label: 'Noticias',     icon: '📰' },
         { href: pagesBase + 'datos.html',      label: 'Datos macro',  icon: '📊' },

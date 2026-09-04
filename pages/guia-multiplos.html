@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -16,7 +15,21 @@
   <meta name="description" content="Guía completa de múltiplos financieros: P/E, EV/EBITDA, P/B, FCF Yield, ROE, ROIC, Beta y más. Fórmulas, ejemplos reales y reglas de lectura." />
   <meta name="keywords" content="múltiplos financieros, P/E ratio, EV EBITDA, ROE, ROIC, FCF yield, beta, valuación acciones, análisis fundamental" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://bbfinancial.app/pages/guia-multiplos.html" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/guia-multiplos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Guía de Múltiplos Financieros — BB Financial" />
+  <meta property="og:description" content="Guía completa de múltiplos financieros: P/E, EV/EBITDA, P/B, FCF Yield, ROE, ROIC, Beta y más. Fórmulas, ejemplos reales y reglas de lectura." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/guia-multiplos.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Guía de Múltiplos Financieros — BB Financial" />
+  <meta name="twitter:description" content="Guía completa de múltiplos financieros: P/E, EV/EBITDA, P/B, FCF Yield, ROE, ROIC, Beta y más. Fórmulas, ejemplos reales y reglas de lectura." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Guía de Múltiplos","item":"https://bb-financial.vercel.app/pages/guia-multiplos.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -294,6 +307,42 @@
         <strong>⚠️ Disclaimer importante:</strong> Cada empresa es un caso particular y requiere análisis individual. Los rangos y parámetros presentados en esta guía son <strong>referencias orientativas</strong> basadas en promedios históricos del mercado estadounidense. Sectores distintos, geografías distintas y ciclos económicos distintos justifican múltiplos distintos. <strong>Todo inversor es dueño de su análisis y responsable de sus propias decisiones de inversión.</strong> Esta guía tiene fines exclusivamente educativos y no constituye recomendación de compra o venta de ningún activo financiero.
       </div>
 
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta guía</strong> — fuentes bibliográficas, alcance y cómo leerla</summary>
+        <div class="ti-content">
+          <p>Esta guía cubre los múltiplos más usados en valuación de equity y enterprise value. La estructura sigue el approach de Damodaran (Damodaran on Valuation, NYU Stern): primero los <em>equity multiples</em> (P/E, P/B, P/S — ratios del valor del equity), después los <em>firm multiples</em> (EV/EBITDA, EV/Sales, EV/EBIT — ratios del valor total de la firma).</p>
+
+          <p style="background:rgba(232,201,122,0.07);border:1px solid rgba(232,201,122,0.2);border-radius:8px;padding:0.75rem 1rem"><strong style="color:var(--gold)">📌 Sobre los números de ejemplo:</strong> las cifras de empresas concretas (CAT, KO, MELI, etc.) son <strong>aproximaciones ilustrativas</strong> para mostrar cómo se aplica cada fórmula — no son cotizaciones en tiempo real y pueden estar desactualizadas. Para múltiplos vivos usá la <a href="multiplos.html" style="color:var(--accent)">calculadora de múltiplos</a> o el <a href="ticker.html" style="color:var(--accent)">visor de acciones</a>.</p>
+
+          <p><strong>Cómo está armada:</strong></p>
+          <ul>
+            <li><strong>Fórmulas:</strong> definiciones técnicas con las matemáticas exactas, no simplificaciones.</li>
+            <li><strong>Rangos referenciales:</strong> basados en datos de Damodaran (publicados anualmente en pages.stern.nyu.edu/~adamodar) — promedio del S&P 500 y por sector. Estos rangos cambian con tasas de interés, ciclo económico y narrativa de mercado.</li>
+            <li><strong>Ejemplos reales:</strong> Apple, Nvidia, etc. — usamos métricas públicas para mostrar cómo se aplican.</li>
+            <li><strong>Reglas de lectura:</strong> heurísticas estándar (P/E &lt; sector mediana → posible undervalued, con caveats). Son atajos, no leyes.</li>
+          </ul>
+
+          <p><strong>Supuestos críticos:</strong></p>
+          <ul>
+            <li>Asumimos que <strong>EPS, EBITDA y otras métricas están "normalizadas"</strong> — sin cargos extraordinarios, sin one-off ganancias por venta de activos, sin períodos atípicos. Si una empresa tuvo un año raro, sus múltiplos engañan.</li>
+            <li>Asumimos que el <strong>peer group elegido es realmente comparable</strong>. Una empresa de software no se compara con un banco aunque ambos sean "USA mid-cap".</li>
+            <li>Los rangos del sector son <strong>medianas históricas</strong>. Cuando las tasas USA están altas (4-5%+), todos los múltiplos tienden a contraerse vs períodos de tasa baja.</li>
+          </ul>
+
+          <p><strong>Limitaciones de los múltiplos en general:</strong></p>
+          <ul>
+            <li><strong>Son comparativos, no absolutos.</strong> Te dicen "más barato que X" no "barato en términos absolutos". El sector entero puede estar caro.</li>
+            <li><strong>No capturan calidad ni crecimiento futuro.</strong> Una empresa con ventaja competitiva sostenible justifica un múltiplo premium. Una en declive merece un descuento.</li>
+            <li><strong>Pueden caer en value traps.</strong> P/E bajo no siempre es ganga — a veces es señal de problemas estructurales.</li>
+            <li><strong>Múltiplos de equity (P/E, P/B)</strong> son sensibles a la estructura de capital. Por eso para comparar entre países o estructuras se prefieren <strong>múltiplos de firma (EV/EBITDA)</strong>.</li>
+          </ul>
+
+          <p><strong>Recomendación de uso:</strong> los múltiplos son sanity check + comparación rápida. Para una decisión seria, combiná con DCF (descuento de flujos), análisis cualitativo (moats, gestión, riesgos), y margen de seguridad (Graham: 30% bajo el precio justo).</p>
+
+          <p><strong style="color:#ffb84d">⚠ NO es recomendación de inversión.</strong> Esta guía es educativa. Las cifras y rangos pueden cambiar con el tiempo. <span class="cite">Fuentes principales: Damodaran, Investment Valuation 4e (Caps. 17-19) y Damodaran on Valuation; Koller, Goedhart & Wessels, Valuation 8e (McKinsey); Graham, Security Analysis (1934).</span></p>
+        </div>
+      </details>
+
       <!-- TABS -->
       <div class="guide-tabs" role="tablist">
         <button class="guide-tab active" onclick="showTab('ganancias',this)">📊 Ganancias</button>
@@ -493,9 +542,9 @@
           </div>
           <p class="sec-label">Ejemplo real</p>
           <div class="example-box">
-            <strong>CAT:</strong> EV ≈ $340bn · EBITDA $13.4bn → EV/EBITDA 25.4x<br/>
+            <strong>CAT:</strong> EV ≈ $200bn · EBITDA ≈ $16.5bn → EV/EBITDA ≈ 12x<br/>
             Mediana industriales: 12–14x &nbsp;·&nbsp; Tech: 18–25x<br/>
-            <strong>KO:</strong> EV/EBITDA ≈ 19.2x &nbsp;·&nbsp; BRK/B: no aplica (holding)
+            <strong>KO:</strong> EV/EBITDA ≈ 19x &nbsp;·&nbsp; BRK/B: no aplica (holding)
           </div>
           <p class="sec-label">Reglas de lectura</p>
           <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Ignora diferencias de estructura de capital — más comparable entre empresas con distinto nivel de deuda</span></div>
@@ -913,12 +962,12 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     function showTab(name, btn) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));

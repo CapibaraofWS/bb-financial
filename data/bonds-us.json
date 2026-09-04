@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "fuente": "FRED — Federal Reserve Bank of St. Louis",
+    "actualizacion": "Yields actualizados en tiempo real via /api/fred. Series oficiales del Tesoro de EE.UU.",
+    "nota": "Los yields publicados por FRED son tasas anualizadas (par yield curve). Para Treasuries con cupón, FRED publica el constant maturity yield: la tasa hipotética a la cual un bono cotizaría a la par para ese plazo. Para T-Bills (≤1 año), el yield se anualiza desde la tasa de descuento (bond-equivalent yield)."
+  },
+  "treasuries": [
+    { "id": "DGS1MO", "label": "T-Bill 1M",   "plazoAnios": 0.0833, "tipo": "bill",  "categoria": "nominal", "descripcion": "Letra del Tesoro a 1 mes — cero cupón, descuento puro" },
+    { "id": "DGS3MO", "label": "T-Bill 3M",   "plazoAnios": 0.25,   "tipo": "bill",  "categoria": "nominal", "descripcion": "Letra del Tesoro a 3 meses — referencia del mercado monetario" },
+    { "id": "DGS6MO", "label": "T-Bill 6M",   "plazoAnios": 0.5,    "tipo": "bill",  "categoria": "nominal", "descripcion": "Letra del Tesoro a 6 meses" },
+    { "id": "DGS1",   "label": "T-Note 1Y",   "plazoAnios": 1,      "tipo": "note",  "categoria": "nominal", "descripcion": "Nota del Tesoro a 1 año" },
+    { "id": "DGS2",   "label": "T-Note 2Y",   "plazoAnios": 2,      "tipo": "note",  "categoria": "nominal", "descripcion": "Nota del Tesoro a 2 años — referencia de tasa corta soberana" },
+    { "id": "DGS5",   "label": "T-Note 5Y",   "plazoAnios": 5,      "tipo": "note",  "categoria": "nominal", "descripcion": "Nota del Tesoro a 5 años" },
+    { "id": "DGS10",  "label": "T-Note 10Y",  "plazoAnios": 10,     "tipo": "note",  "categoria": "nominal", "descripcion": "Nota del Tesoro a 10 años — benchmark global de tasa libre de riesgo" },
+    { "id": "DGS30",  "label": "T-Bond 30Y",  "plazoAnios": 30,     "tipo": "bond",  "categoria": "nominal", "descripcion": "Bono del Tesoro a 30 años — el plazo más largo emitido" }
+  ],
+  "tips": [
+    { "id": "DFII5",  "label": "TIPS 5Y",   "plazoAnios": 5,  "categoria": "real", "descripcion": "Treasury Inflation-Protected Security 5Y — yield real (descontada la inflación esperada). El capital se ajusta por CPI." },
+    { "id": "DFII10", "label": "TIPS 10Y",  "plazoAnios": 10, "categoria": "real", "descripcion": "TIPS 10Y — yield real benchmark del mercado USA" },
+    { "id": "DFII30", "label": "TIPS 30Y",  "plazoAnios": 30, "categoria": "real", "descripcion": "TIPS 30Y" }
+  ],
+  "breakeven": [
+    { "id": "T5YIE",  "label": "Breakeven 5Y",  "plazoAnios": 5,  "descripcion": "Inflación esperada implícita a 5 años (= Treasury 5Y − TIPS 5Y)" },
+    { "id": "T10YIE", "label": "Breakeven 10Y", "plazoAnios": 10, "descripcion": "Inflación esperada implícita a 10 años — termómetro de expectativas inflacionarias del mercado" }
+  ],
+  "spreads": [
+    { "id": "T10Y2Y", "label": "Spread 10Y − 2Y", "descripcion": "Diferencia entre yield del Treasury 10Y y 2Y. Si es negativo (curva invertida), históricamente ha precedido recesiones en EE.UU." },
+    { "id": "T10Y3M", "label": "Spread 10Y − 3M", "descripcion": "Diferencia entre Treasury 10Y y T-Bill 3M. Indicador preferido por la NY Fed para predecir recesión." }
+  ]
+}

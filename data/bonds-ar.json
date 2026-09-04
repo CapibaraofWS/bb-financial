@@ -1,0 +1,56 @@
+{
+  "_comment": "Esquemas de bonos soberanos AR del canje 2020 (Decreto 701/2020 + Res. 381/2020). Cupones step-up sobre residual, pagos 9-ene/9-jul, base 30/360. TODOS los esquemas verificados contra los prospectos oficiales (ver data/bonos-ar-referencia.txt, ISINs incluidos). Precios USD MEP live (serie 'D'). NOTA: AL29/GD29 tienen cupón FIJO 1.00% (no step-up).",
+  "templates": {
+    "2029": {
+      "maturity": "2029-07-09",
+      "amort": { "start": "2025-01-09", "count": 10, "pct": 10 },
+      "coupons": [["end", 0.01]]
+    },
+    "2030": {
+      "maturity": "2030-07-09",
+      "amortList": [["2024-07-09", 4], ["2025-01-09", 8], ["2025-07-09", 8], ["2026-01-09", 8], ["2026-07-09", 8], ["2027-01-09", 8], ["2027-07-09", 8], ["2028-01-09", 8], ["2028-07-09", 8], ["2029-01-09", 8], ["2029-07-09", 8], ["2030-01-09", 8], ["2030-07-09", 8]],
+      "coupons": [["2021-07-09", 0.00125], ["2023-07-09", 0.005], ["2027-07-09", 0.0075], ["end", 0.0175]]
+    },
+    "2035": {
+      "maturity": "2035-07-09",
+      "amort": { "start": "2031-01-09", "count": 10, "pct": 10 },
+      "coupons": [["2021-07-09", 0.00125], ["2022-07-09", 0.01125], ["2023-07-09", 0.015], ["2024-07-09", 0.03625], ["2027-07-09", 0.04125], ["2028-07-09", 0.0475], ["end", 0.05]]
+    },
+    "2038": {
+      "maturity": "2038-01-09",
+      "amort": { "start": "2027-07-09", "count": 22, "pct": 4.545454 },
+      "coupons": [["2021-07-09", 0.00125], ["2022-07-09", 0.02], ["2023-07-09", 0.03875], ["2024-07-09", 0.0425], ["end", 0.05]]
+    },
+    "2041": {
+      "maturity": "2041-07-09",
+      "amort": { "start": "2028-01-09", "count": 28, "pct": 3.571428 },
+      "coupons": [["2021-07-09", 0.00125], ["2022-07-09", 0.025], ["2029-07-09", 0.035], ["end", 0.04875]]
+    }
+  },
+  "bullets": [
+    { "sym": "AO27", "name": "BONTE USD 2027", "law": "Ley Arg.", "maturity": "2027-10-29", "coupon": 0.06,  "freq": 12 },
+    { "sym": "AO28", "name": "BONTE USD 2028", "law": "Ley Arg.", "maturity": "2028-10-31", "coupon": 0.06,  "freq": 12 },
+    { "sym": "AN29", "name": "BONTE USD 2029", "law": "Ley Arg.", "maturity": "2029-11-30", "coupon": 0.065, "freq": 2 }
+  ],
+  "_bopreales": "BOPREAL = bonos del BCRA (no del Tesoro) en USD. Serie 1: cupón 5% anual semestral base 30/360, primer pago 31-oct-2024, amortiza 50% el 30-abr-2027 + 50% el 31-oct-2027; las clases A/B/C/D tienen flujos idénticos y sólo difieren en la opción de rescate anticipado. Serie 4: bullet, cupón 3% anual semestral, primer pago 31-oct-2025, vence 31-oct-2028; clases 4A (con opción de rescate desde 30-abr-2028) y 4B (sin opción). 'chart' marca la clase más líquida de cada serie, la única que se dibuja en el scatter para no superponer 4 puntos idénticos.",
+  "boprales": [
+    { "sym": "BPOA7", "usdSym": "BPA7D", "name": "BOPREAL Serie 1-A", "serie": "S1", "maturity": "2027-10-31", "coupon": 0.05, "anchors": [[4,30],[10,31]], "firstCoupon": "2024-10-31", "amortList": [["2027-04-30", 50], ["2027-10-31", 50]] },
+    { "sym": "BPOB7", "usdSym": "BPB7D", "name": "BOPREAL Serie 1-B", "serie": "S1", "maturity": "2027-10-31", "coupon": 0.05, "anchors": [[4,30],[10,31]], "firstCoupon": "2024-10-31", "amortList": [["2027-04-30", 50], ["2027-10-31", 50]] },
+    { "sym": "BPOC7", "usdSym": "BPC7D", "name": "BOPREAL Serie 1-C", "serie": "S1", "maturity": "2027-10-31", "coupon": 0.05, "anchors": [[4,30],[10,31]], "firstCoupon": "2024-10-31", "amortList": [["2027-04-30", 50], ["2027-10-31", 50]], "chart": true, "chartLabel": "BOPREAL S1" },
+    { "sym": "BPOD7", "usdSym": "BPD7D", "name": "BOPREAL Serie 1-D", "serie": "S1", "maturity": "2027-10-31", "coupon": 0.05, "anchors": [[4,30],[10,31]], "firstCoupon": "2024-10-31", "amortList": [["2027-04-30", 50], ["2027-10-31", 50]] },
+    { "sym": "BPOA8", "usdSym": "BPA8D", "name": "BOPREAL Serie 4-A", "serie": "S4", "maturity": "2028-10-31", "coupon": 0.03, "anchors": [[4,30],[10,31]], "firstCoupon": "2025-10-31", "amortList": [["2028-10-31", 100]] },
+    { "sym": "BPOB8", "usdSym": "BPB8D", "name": "BOPREAL Serie 4-B", "serie": "S4", "maturity": "2028-10-31", "coupon": 0.03, "anchors": [[4,30],[10,31]], "firstCoupon": "2025-10-31", "amortList": [["2028-10-31", 100]], "chart": true, "chartLabel": "BOPREAL S4" }
+  ],
+  "bonds": [
+    { "sym": "AL29", "tpl": "2029", "law": "Ley Arg.", "name": "Bonar 2029" },
+    { "sym": "GD29", "tpl": "2029", "law": "Ley NY",  "name": "Global 2029" },
+    { "sym": "AL30", "tpl": "2030", "law": "Ley Arg.", "name": "Bonar 2030" },
+    { "sym": "GD30", "tpl": "2030", "law": "Ley NY",  "name": "Global 2030" },
+    { "sym": "AL35", "tpl": "2035", "law": "Ley Arg.", "name": "Bonar 2035" },
+    { "sym": "GD35", "tpl": "2035", "law": "Ley NY",  "name": "Global 2035" },
+    { "sym": "AE38", "tpl": "2038", "law": "Ley Arg.", "name": "Bonar 2038" },
+    { "sym": "GD38", "tpl": "2038", "law": "Ley NY",  "name": "Global 2038" },
+    { "sym": "AL41", "tpl": "2041", "law": "Ley Arg.", "name": "Bonar 2041" },
+    { "sym": "GD41", "tpl": "2041", "law": "Ley NY",  "name": "Global 2041" }
+  ]
+}

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -16,7 +15,21 @@
   <meta name="description" content="¿Cuánto tiempo necesitás para llegar a tu meta financiera? Compará ahorrar vs. invertir y descubrí cuántos años ganás poniendo tu dinero a trabajar." />
   <meta name="keywords" content="financial goal, saving vs investing, time to reach goal, investment calculator" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://bb.app/pages/meta-financiera.html" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/meta-financiera.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Meta Financiera: Ahorro vs Inversión — BB Financial" />
+  <meta property="og:description" content="¿Cuánto tiempo necesitás para llegar a tu meta financiera? Compará ahorrar vs. invertir y descubrí cuántos años ganás poniendo tu dinero a trabajar." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/meta-financiera.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Meta Financiera: Ahorro vs Inversión — BB Financial" />
+  <meta name="twitter:description" content="¿Cuánto tiempo necesitás para llegar a tu meta financiera? Compará ahorrar vs. invertir y descubrí cuántos años ganás poniendo tu dinero a trabajar." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Meta Financiera","item":"https://bb-financial.vercel.app/pages/meta-financiera.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -106,6 +119,30 @@
           <li><strong>Capital inicial:</strong> lo que ya tenés ahorrado (opcional).</li>
         </ol>
         <div class="tip">💡 <strong>Realidad cruda:</strong> si la meta requiere un aporte mensual mayor a 30% de tu ingreso, no es realista. Achicá la meta, alargá el plazo, o mejorá tus ingresos antes.</div>
+      </div>
+    </details>
+
+    <details class="tool-info">
+      <summary><strong>ℹ️ Sobre esta calculadora</strong> — qué calcula, supuestos, limitaciones</summary>
+      <div class="ti-content">
+        <p>Esta calculadora compara dos estrategias para llegar a una meta: <em>ahorrar puro</em> (la plata queda quieta en una cuenta) vs <em>invertir</em> (la plata genera interés compuesto). La diferencia en años puede ser brutal — esa es la lección.</p>
+        <p><strong>Las dos fórmulas:</strong></p>
+        <ul>
+          <li><strong>Solo ahorro</strong>: <code>Años = (Meta − VP) / (PMT × 12)</code> — lineal.</li>
+          <li><strong>Inversión</strong>: resolver <code>VP × (1+r)^n + PMT × ((1+r)^n − 1) / r = Meta</code> para n.</li>
+        </ul>
+        <p><strong>Supuestos:</strong></p>
+        <ul>
+          <li>Aportes <strong>al final de cada mes</strong>, constantes en términos nominales (no ajustamos por inflación los aportes).</li>
+          <li>La <strong>tasa de retorno</strong> que vos ingresás es constante. En la práctica oscila — usá una estimación conservadora.</li>
+          <li>NO contemplamos <strong>inflación de la meta</strong> ni impuestos. Si querés "una casa de USD 100k de hoy en 10 años", ajustá la meta al USD-CPI esperado.</li>
+        </ul>
+        <p><strong>Limitaciones:</strong></p>
+        <ul>
+          <li>Es proyección determinística — la realidad es volátil. Considerá un margen de seguridad de 10-20% sobre la meta o el plazo.</li>
+          <li>Asume que vas a poder mantener el aporte mensual TODOS los meses. Si te quedás sin trabajo 6 meses, el plan se atrasa.</li>
+        </ul>
+        <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> Es una proyección educativa para comparar dos estrategias. Para metas grandes (casa, jubilación) consultá un asesor.</p>
       </div>
     </details>
     </div>
@@ -263,11 +300,11 @@
         </ul>
       </nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let chart = null;
 

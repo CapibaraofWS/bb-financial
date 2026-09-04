@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -11,9 +10,24 @@
     gtag('config', 'G-1SF925SGNN');
   </script>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conversión de Tasas <span data-term="TNA">TNA</span> ↔ <span data-term="TEA">TEA</span> — BB Financial</title>
+  <title>Conversión de Tasas TNA ↔ TEA — BB Financial</title>
   <meta name="description" content="Convertí TNA a TEA, TEA a TNA, tasa mensual a anual y viceversa. Con cualquier frecuencia de capitalización." />
   <meta name="keywords" content="TNA a TEA, TEA a TNA, conversión tasas, tasa nominal efectiva, capitalización mensual" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/conversion-tasas.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Conversión de Tasas TNA ↔ TEA — BB Financial" />
+  <meta property="og:description" content="Convertí TNA a TEA, TEA a TNA, tasa mensual a anual y viceversa. Con cualquier frecuencia de capitalización." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/conversion-tasas.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Conversión de Tasas TNA ↔ TEA — BB Financial" />
+  <meta name="twitter:description" content="Convertí TNA a TEA, TEA a TNA, tasa mensual a anual y viceversa. Con cualquier frecuencia de capitalización." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Conversión de Tasas","item":"https://bb-financial.vercel.app/pages/conversion-tasas.html"}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
@@ -81,6 +95,32 @@
       • <strong>TNA → TEA</strong>: TEA = (1 + TNA/12)¹² − 1<br>
       La TEA siempre es <strong>mayor</strong> que la TNA por el efecto de reinversión.</div>
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>Cuidado al comparar</strong>: si un banco dice "TNA 30%" y otro dice "TEM 2.7%", parecen distintos pero son <strong>casi lo mismo</strong>. Siempre compará usando la MISMA medida (preferentemente TEA).</div>
+    </div>
+  </details>
+
+  <details class="tool-info">
+    <summary><strong>ℹ️ Sobre esta calculadora</strong> — fórmulas, qué significa cada tasa, errores comunes</summary>
+    <div class="ti-content">
+      <p>Saber convertir entre TNA, TEA y tasas periódicas no es trivia académica — es lo que te permite comparar oferta de bancos, productos de inversión y créditos en términos justos.</p>
+      <p><strong>Las tasas y sus fórmulas:</strong></p>
+      <ul>
+        <li><strong>TNA (Tasa Nominal Anual)</strong>: convención bancaria. Es la tasa periódica × cantidad de períodos en un año. <em>No</em> refleja el efecto de capitalización. Si TNA = 36% mensual: tasa mensual = 36/12 = 3%.</li>
+        <li><strong>TEA (Tasa Efectiva Anual)</strong>: la tasa "real" cuando se capitaliza. <code>TEA = (1 + TNA/m)^m − 1</code>. Si TNA = 36% mensual → TEA = (1.03)^12 − 1 ≈ 42.6%.</li>
+        <li><strong>TEM (Tasa Efectiva Mensual)</strong>: la tasa de un mes, lista para usar. <code>TEM = (1 + TEA)^(1/12) − 1</code>.</li>
+        <li><strong>Tasa diaria, trimestral, etc.</strong>: misma lógica, ajustá el exponente.</li>
+      </ul>
+      <p><strong>Supuestos:</strong></p>
+      <ul>
+        <li>Las conversiones asumen <strong>capitalización compuesta</strong> (que es lo estándar). No usamos interés simple.</li>
+        <li>Asumimos que el año tiene <strong>365 días</strong> para tasas diarias. Algunos contratos usan 360 (convención bancaria internacional) — verificá en cada caso.</li>
+      </ul>
+      <p><strong>Errores comunes:</strong></p>
+      <ul>
+        <li>Comparar TNA contra TEA es trampa. <strong>Siempre comparar TEA contra TEA</strong>.</li>
+        <li>Confundir "TNA simple" con "TNA capitalizable". TNA Simple no es composición compuesta (común en algunos plazos fijos cortos).</li>
+        <li>La <strong>CFT/CFTEA</strong> en créditos incluye comisiones y gastos — siempre es mayor que la TEA pura.</li>
+      </ul>
+      <p><strong style="color:#ffb84d">⚠ Es solo conversión matemática.</strong> No considera impuestos (ej. Bienes Personales, retenciones a no residentes) ni la calidad crediticia del producto.</p>
     </div>
   </details>
     </div>
@@ -265,11 +305,11 @@
         <li><a href="prestamo.html">Préstamo / Cuota</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     function switchTab(name, btn) {
       ['tna-tea','tea-tna','periodica'].forEach(t => document.getElementById('tab-'+t).style.display='none');

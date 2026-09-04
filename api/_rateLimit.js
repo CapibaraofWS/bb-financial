@@ -30,14 +30,9 @@ function getClientIp(req) {
  * @param {object} opts - { limit?: number, windowSecs?: number, key?: string }
  * @returns {Promise<boolean>} true si rate-limited (la función debe abortar)
  */
-function stripEnv(v) {
-  if (!v) return v;
-  return v.trim().replace(/^["']|["']$/g, '');
-}
-
 export async function denyRateLimited(req, res, opts = {}) {
-  const url = stripEnv(process.env.UPSTASH_REDIS_REST_URL);
-  const token = stripEnv(process.env.UPSTASH_REDIS_REST_TOKEN);
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) return false; // sin Upstash configurado, no rate-limit
 
   const limit = opts.limit || DEFAULT_LIMIT;
@@ -55,10 +50,7 @@ export async function denyRateLimited(req, res, opts = {}) {
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(2000),
     });
-    if (!r.ok) {
-      console.warn('[rateLimit] Upstash respondió', r.status, '— fail-open');
-      return false;
-    }
+    if (!r.ok) return false; // si Upstash falla, permitir (fail-open)
     const data = await r.json();
     const count = data?.[0]?.result;
     if (typeof count === 'number' && count > limit) {
@@ -73,8 +65,7 @@ export async function denyRateLimited(req, res, opts = {}) {
       res.setHeader('X-RateLimit-Remaining', String(Math.max(0, limit - count)));
     }
     return false;
-  } catch (err) {
-    console.warn('[rateLimit] Upstash error — fail-open:', err?.message || err);
-    return false;
+  } catch {
+    return false; // fail-open: si Upstash está caído, no bloquear al usuario
   }
 }

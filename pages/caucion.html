@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>html{background:#0a0c0f;color-scheme:dark}</style>
-    <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -15,6 +14,21 @@
   <title>Calculadora de Caución Bursátil — BB Financial</title>
   <meta name="description" content="Calculá tus ganancias en una caución colocadora. Ingresá monto, plazo, TNA, comisión del broker, derechos de mercado e IVA." />
   <meta name="keywords" content="caución bursátil, caución colocadora, BYMA, rendimiento caución, plazo fijo bursátil Argentina" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/caucion.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Financial" />
+  <meta property="og:title" content="Calculadora de Caución Bursátil — BB Financial" />
+  <meta property="og:description" content="Calculá tus ganancias en una caución colocadora. Ingresá monto, plazo, TNA, comisión del broker, derechos de mercado e IVA." />
+  <meta property="og:url" content="https://bb-financial.vercel.app/pages/caucion.html" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Calculadora de Caución Bursátil — BB Financial" />
+  <meta name="twitter:description" content="Calculá tus ganancias en una caución colocadora. Ingresá monto, plazo, TNA, comisión del broker, derechos de mercado e IVA." />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Caución Bursátil","item":"https://bb-financial.vercel.app/pages/caucion.html"}]}
+  </script>
   <meta name="robots" content="index, follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -64,15 +78,6 @@
   </header>
 
   <main>
-    <div style="background:linear-gradient(90deg,rgba(74,222,154,0.06),rgba(96,165,250,0.06));border-bottom:1px solid rgba(74,222,154,0.15)">
-      <div class="container" style="padding:0.7rem 1.2rem">
-        <a href="tasas-hoy.html" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;text-decoration:none;color:inherit;flex-wrap:wrap">
-          <span style="font-size:0.85rem;color:#9ba3b4">&#128202; <strong style="color:#e8eaed">&iquest;Quer&eacute;s ver d&oacute;nde rinde m&aacute;s tu plata hoy?</strong> Compar&aacute; todas las opciones en una sola tabla.</span>
-          <span style="font-family:DM Mono,monospace;font-size:0.78rem;color:#4ade9a;white-space:nowrap">Ver tasas en vivo &rarr;</span>
-        </a>
-      </div>
-    </div>
-
     <section class="page-hero">
       <div class="container">
         <p class="page-breadcrumb"><a href="calculadoras.html">Calculadoras</a><span>/</span>Caución Bursátil</p>
@@ -86,6 +91,35 @@
       <div class="info-box">
         <strong>¿Qué es una caución bursátil?</strong> Es una operación de préstamo garantizado en el mercado de capitales, similar a un plazo fijo pero con rendimientos generalmente más altos. Vos prestás dinero (<em>colocador</em>) a otro participante del mercado (<em>tomador</em>) que deja sus acciones como garantía. El tomador te devuelve el capital más los intereses al vencimiento del plazo. En Argentina operan en BYMA y el plazo más común es 1, 7, 14 o 30 días.
       </div>
+
+      <details class="tool-info">
+        <summary><strong>ℹ️ Sobre esta calculadora</strong> — comisiones, supuestos, comparación vs plazo fijo</summary>
+        <div class="ti-content">
+          <p>La caución bursátil es el "plazo fijo del mercado de capitales". Generalmente paga 2-5% más que un plazo fijo bancario porque hay menos intermediación, pero requiere cuenta comitente en una ALYC.</p>
+          <p><strong>Descuentos que aplicamos al rendimiento bruto:</strong></p>
+          <ul>
+            <li><strong>Comisión del agente</strong> (ALYC): típicamente 1.5% a 2.5% anual del rendimiento bruto. Varía por broker.</li>
+            <li><strong>Derecho de mercado BYMA</strong>: alícuota que cobra el mercado por la operación.</li>
+            <li><strong>IVA (21%)</strong> sobre las comisiones cobradas por el broker.</li>
+          </ul>
+          <p><strong>Supuestos:</strong></p>
+          <ul>
+            <li>Asumimos <strong>caución colocadora</strong> (vos prestás). Para caución tomadora la matemática es la inversa.</li>
+            <li>NO contemplamos <strong>Bienes Personales</strong> sobre el saldo invertido (aplica a saldos &gt; mínimo no imponible).</li>
+            <li>NO contemplamos <strong>retenciones de Ganancias</strong> sobre intereses (para residentes locales, generalmente exentas).</li>
+            <li>Asumimos <strong>capitalización al vencimiento</strong> (caución estándar BYMA). Si reinvertís cada vencimiento, el rendimiento efectivo compone.</li>
+          </ul>
+          <p><strong>Caución vs Plazo Fijo:</strong></p>
+          <ul>
+            <li>✅ <strong>Plazo</strong>: caución 1-30 días vs PF mínimo 30 días.</li>
+            <li>✅ <strong>Tasa</strong>: caución suele pagar más (mejor descubrimiento de precio en mercado).</li>
+            <li>✅ <strong>Liquidez</strong>: caución a 1 día permite armar una "escalera" para tener plata disponible siempre.</li>
+            <li>⚠️ <strong>Requisito</strong>: necesitás cuenta comitente en ALYC. Algunos brokers retail (IOL, Cocos, Bull, Balanz) lo simplifican.</li>
+            <li>⚠️ <strong>Garantía</strong>: NO tenés cobertura del Fondo de Garantía de Depósitos (FGD) como en plazo fijo bancario. La garantía es la acción del tomador.</li>
+          </ul>
+          <p><strong style="color:#ffb84d">⚠ NO es asesoramiento.</strong> Las comisiones reales dependen del broker que uses — confirmá antes de operar.</p>
+        </div>
+      </details>
 
       <div class="calc-layout">
         <section>
@@ -208,11 +242,11 @@
         <li><a href="prestamo.html">Préstamo / Cuota</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=22"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let chart = null;
 
