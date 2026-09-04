@@ -1,0 +1,11 @@
+# BB Financial
+User-agent: *
+Allow: /
+
+# Vistas privadas del usuario: no aportan nada al índice
+Disallow: /pages/mis-portafolios.html
+Disallow: /pages/portfolio-detalle.html
+Disallow: /pages/watchlist.html
+Disallow: /api/
+
+Sitemap: https://bb-financial.vercel.app/sitemap.xml
