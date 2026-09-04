@@ -519,3 +519,90 @@ document.addEventListener('click', () => {
     if (b) b.setAttribute('aria-expanded', 'false');
   });
 });
+
+// ============================================================
+// TABLAS EN MOBILE
+// En pantalla angosta una tabla obliga a scrollear de costado y se pierde de
+// vista a qué fila corresponde cada número. Acá cada fila pasa a ser una
+// tarjeta con "etiqueta: valor", tomando las etiquetas del propio <thead>.
+// Las tablas anchas o de matriz (más de 6 columnas, celdas combinadas, sin
+// encabezado) no se convierten: se dejan con scroll horizontal, pero con una
+// sombra al borde que avisa que hay más contenido a la derecha.
+// ============================================================
+(function tablasMobile() {
+  const MAX_COLUMNAS = 10;   // más que esto ya no entra ni como tarjeta
+  const MAX_FILAS = 40;      // planillas largas (amortización) se recorren mejor scrolleando
+
+  function encabezados(tabla) {
+    const filaTh = tabla.querySelector('thead tr');
+    if (!filaTh) return null;
+    const ths = [...filaTh.children].filter(c => c.tagName === 'TH' || c.tagName === 'TD');
+    if (!ths.length) return null;
+    if (ths.some(th => th.colSpan > 1)) return null;
+    return ths.map(th => th.textContent.trim());
+  }
+
+  function apta(tabla, labels) {
+    if (!labels || labels.length < 2 || labels.length > MAX_COLUMNAS) return false;
+    if (tabla.hasAttribute('data-no-cards')) return false;
+    const filas = tabla.querySelectorAll('tbody tr');
+    if (!filas.length || filas.length > MAX_FILAS) return false;
+    // Una matriz (correlaciones) tiene tantas columnas como filas: como tarjetas
+    // no se entiende, conviene dejarla con scroll.
+    if (labels.length > filas.length) return false;
+    const celdas = tabla.querySelectorAll('tbody td');
+    if (!celdas.length) return false;
+    for (const td of celdas) if (td.colSpan > 1 || td.rowSpan > 1) return false;
+    return true;
+  }
+
+  function envolver(tabla) {
+    if (tabla.parentElement && tabla.parentElement.classList.contains('tbl-wrap')) return;
+    // Respetamos los contenedores con scroll que ya existían en las páginas
+    const padre = tabla.parentElement;
+    if (padre && padre.tagName === 'DIV' && /auto|scroll/.test(getComputedStyle(padre).overflowX)) {
+      padre.classList.add('tbl-wrap');
+      return;
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'tbl-wrap';
+    tabla.parentNode.insertBefore(wrap, tabla);
+    wrap.appendChild(tabla);
+  }
+
+  function procesar(tabla) {
+    envolver(tabla);
+    const labels = encabezados(tabla);
+    // Se reevalúa en cada pasada: al principio la tabla puede tener sólo una fila
+    // de "Cargando…" con colspan y recién después llegar los datos reales.
+    if (!apta(tabla, labels)) {
+      tabla.classList.add('tbl-scroll');
+      tabla.classList.remove('tbl-cards');
+      return;
+    }
+    tabla.classList.remove('tbl-scroll');
+    tabla.querySelectorAll('tbody tr').forEach(tr => {
+      [...tr.children].forEach((td, i) => {
+        if (labels[i] && !td.hasAttribute('data-label')) td.setAttribute('data-label', labels[i]);
+      });
+    });
+    tabla.classList.add('tbl-cards');
+  }
+
+  function pasada() {
+    document.querySelectorAll('table').forEach(t => {
+      try { procesar(t); } catch (e) { /* una tabla rara no debe romper la página */ }
+    });
+  }
+
+  pasada();
+
+  // Muchas tablas se arman después, con datos de las APIs
+  let pendiente = null;
+  const obs = new MutationObserver(muts => {
+    if (!muts.some(m => [...m.addedNodes].some(n => n.nodeType === 1 && (n.tagName === 'TABLE' || n.querySelector?.('table') || n.tagName === 'TR')))) return;
+    clearTimeout(pendiente);
+    pendiente = setTimeout(pasada, 120);
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+})();

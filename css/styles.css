@@ -1366,3 +1366,119 @@ img { max-width: 100%; height: auto; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   TABLAS EN MOBILE
+   Dos estrategias según la tabla (la elige js/main.js):
+   .tbl-cards  → cada fila se vuelve una tarjeta "etiqueta: valor"
+   .tbl-scroll → se mantiene el scroll horizontal, con sombra que lo anuncia
+   ============================================================ */
+.tbl-wrap { position: relative; }
+
+@media (max-width: 640px) {
+  /* Aviso de que hay más columnas a la derecha */
+  .tbl-wrap:has(.tbl-scroll) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background:
+      linear-gradient(to right, var(--bg-card) 30%, rgba(17,20,26,0)) left center / 28px 100% no-repeat,
+      linear-gradient(to left, var(--bg-card) 30%, rgba(17,20,26,0)) right center / 28px 100% no-repeat,
+      radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.45), transparent) left center / 14px 100% no-repeat,
+      radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.45), transparent) right center / 14px 100% no-repeat;
+    background-attachment: local, local, scroll, scroll;
+  }
+
+  /* --- Filas como tarjetas --- */
+  /* Varias páginas fijan min-width: 720px en su tabla para que no se apriete en
+     escritorio. Como tarjetas eso sobra: hay que anularlo o la fila se sale de
+     la pantalla y los valores quedan fuera de vista. */
+  table.tbl-cards {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .tbl-wrap:has(> .tbl-cards) { overflow-x: visible; }
+  table.tbl-cards thead { display: none; }
+  table.tbl-cards tbody,
+  table.tbl-cards tr,
+  table.tbl-cards td { display: block; width: 100%; }
+
+  table.tbl-cards tr {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.35rem 0.9rem 0.5rem;
+    margin-bottom: 0.7rem;
+  }
+
+  table.tbl-cards td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    text-align: right;
+    white-space: normal;
+    font-size: 0.9rem;
+  }
+  table.tbl-cards td:last-child { border-bottom: none; }
+
+  table.tbl-cards td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    max-width: 55%;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    font-weight: 500;
+  }
+
+  /* La primera celda es el nombre de la fila: hace de título de la tarjeta */
+  table.tbl-cards td:first-child {
+    padding: 0.55rem 0 0.6rem;
+    margin-bottom: 0.15rem;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--text);
+    text-align: left;
+    justify-content: flex-start;
+  }
+  table.tbl-cards td:first-child::before { display: none; }
+
+  /* Filas sin datos (mensajes de carga) ocupan la tarjeta entera */
+  table.tbl-cards td[colspan] { text-align: center; justify-content: center; }
+  table.tbl-cards td[colspan]::before { display: none; }
+}
+
+/* ============================================================
+   LECTURA
+   El texto largo usaba el mismo gris que las etiquetas (#7a8599, contraste
+   5,3:1). Para leer varios minutos en un teléfono, y más con sol, queda corto.
+   --text-read sube el contraste a 9,3:1 sin tocar el resto del diseño.
+   ============================================================ */
+:root { --text-read: #a8b2c4; }
+
+body .article-body p,
+body .article-body li,
+body .acc-body,
+body .tool-info .ti-content,
+body .related-reads p,
+body .faq-body { color: var(--text-read); }
+
+@media (max-width: 720px) {
+  body .article-body p,
+  body .article-body li { font-size: 1.02rem; line-height: 1.8; }
+  .article-body { padding: 0 0.15rem; }
+  body .article-body h2 { font-size: 1.35rem; line-height: 1.25; }
+  body .article-body h3 { font-size: 1.12rem; }
+  .article-body blockquote { padding: 0.9rem 1.1rem; font-size: 0.95rem; }
+  /* Evita palabras cortadas raro en columnas angostas */
+  .article-body p, .article-body li { overflow-wrap: break-word; hyphens: auto; }
+}
