@@ -12,20 +12,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Visor de Bonos AR — Curva, TIR y Duration — BB Financial</title>
-  <meta name="description" content="Curva de bonos argentinos en dólares (Bonares, Globales, BONTE y BOPREAL): TIR, duration, paridad y scatter YTM×Duration. Calculado en vivo con precios de mercado." />
+  <meta name="description" content="Curva de bonos argentinos en dólares: Bonares, Globales, BONTE y BOPREAL con TIR y duration calculadas en vivo desde precios de mercado." />
   <meta name="keywords" content="bonos argentinos, AL30, GD30, BOPREAL, BPOC7, BPOB8, curva de bonos, TIR, duration, bonares, globales, hard dollar" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://bb-financial.vercel.app/pages/visor-bonos-ar.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Financial" />
   <meta property="og:title" content="Visor de Bonos AR — Curva, TIR y Duration — BB Financial" />
-  <meta property="og:description" content="Curva de bonos argentinos en dólares (Bonares, Globales, BONTE y BOPREAL): TIR, duration, paridad y scatter YTM×Duration. Calculado en vivo con precios de mercado." />
+  <meta property="og:description" content="Curva de bonos argentinos en dólares: Bonares, Globales, BONTE y BOPREAL con TIR y duration calculadas en vivo desde precios de mercado." />
   <meta property="og:url" content="https://bb-financial.vercel.app/pages/visor-bonos-ar.html" />
   <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Visor de Bonos AR — Curva, TIR y Duration — BB Financial" />
-  <meta name="twitter:description" content="Curva de bonos argentinos en dólares (Bonares, Globales, BONTE y BOPREAL): TIR, duration, paridad y scatter YTM×Duration. Calculado en vivo con precios de mercado." />
+  <meta name="twitter:description" content="Curva de bonos argentinos en dólares: Bonares, Globales, BONTE y BOPREAL con TIR y duration calculadas en vivo desde precios de mercado." />
   <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Bonos AR","item":"https://bb-financial.vercel.app/pages/visor-bonos-ar.html"}]}
@@ -135,6 +135,7 @@
           <h3>Curva soberana — TIR × Duration</h3>
           <p class="ch-sub" id="scatter-sub">Cargando precios…</p>
           <div class="chart-canvas-wrap"><canvas id="scatter-chart"></canvas></div>
+          <p id="scatter-nota" style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.55"></p>
         </div>
 
         <div class="chart-wrap">
@@ -176,8 +177,8 @@
         </div>
 
         <div class="chart-wrap">
-          <h3>Tasa real implícita vs inflación esperada (REM)</h3>
-          <p class="ch-sub">Cuánto rinde cada plazo <em>por encima</em> de la inflación que esperan los economistas relevados por el BCRA.</p>
+          <h3>¿La tasa fija le gana a la inflación?</h3>
+          <p class="ch-sub">Cuánto poder de compra ganás (o perdés) si la inflación termina siendo la que esperan los economistas relevados por el BCRA.</p>
           <div id="be-block"><p class="loading-cell">Calculando…</p></div>
         </div>
 
@@ -478,6 +479,21 @@
       if (!valid.length) { sub.textContent = 'Sin datos de precio disponibles.'; return; }
       sub.textContent = `${valid.length} bonos · TIR anual (USD) vs duration de Macaulay · regresión cuadrática sobre el canje`;
 
+      // Las clases de una misma serie BOPREAL tienen exactamente el mismo flujo de fondos,
+      // así que caerían una encima de otra: en el gráfico va una sola por serie.
+      const bopValid = valid.filter(b => b.kind === 'bopreal');
+      const bopEnChart = bopValid.filter(b => b.chart);
+      const nota = document.getElementById('scatter-nota');
+      if (nota) {
+        const porSerie = {};
+        bopValid.forEach(b => { (porSerie[b.serie] = porSerie[b.serie] || []).push(b.sym); });
+        const detalle = Object.entries(porSerie)
+          .map(([s, syms]) => `<strong>Serie ${s.replace('S','')}</strong> = ${syms.join(', ')}`).join('; ');
+        nota.innerHTML = bopValid.length > bopEnChart.length
+          ? `En la tabla vas a ver <strong>${bopValid.length} BOPREAL</strong> pero en el gráfico hay <strong>${bopEnChart.length} rombos</strong>, uno por serie. No falta ninguno: ${detalle}. Las clases de una misma serie tienen <strong>exactamente el mismo flujo de fondos</strong> y sólo se diferencian por la opción de rescate anticipado, así que caerían todas en el mismo punto. Graficamos la clase más operada de cada serie y el resto queda en el ladder de abajo.`
+          : '';
+      }
+
       const pts = valid.map(b => ({ x: b.mac, y: b.ytm*100, sym: b.chartLabel || b.sym, law: b.law, kind: b.kind, chart: b.chart }));
       const ny   = pts.filter(p=>p.kind==='canje' && p.law.includes('NY'));
       const arg  = pts.filter(p=>p.kind==='canje' && p.law.includes('Arg'));
@@ -664,23 +680,38 @@
       });
 
       // --- Tasa real implícita: (1+TEA)/(1+REM) − 1 ---
+      // El REM es una expectativa a 12 meses, así que sólo tiene sentido compararlo
+      // contra un instrumento de plazo parecido. Anualizar una letra a 10 días y
+      // medirla contra la inflación esperada a un año da números sin significado
+      // (por eso antes aparecía un −1,6% que no quería decir nada).
       const rem = data.rem && isFinite(data.rem.valor) ? data.rem.valor/100 : null;
       const be = document.getElementById('be-block');
+      const ref = list.reduce((mejor, b) => Math.abs(b.dtm-365) < Math.abs(mejor.dtm-365) ? b : mejor, list[0]);
       if (rem == null) {
         be.innerHTML = '<p class="loading-cell">El BCRA no devolvió el REM en este momento.</p>';
+      } else if (ref.dtm < 120) {
+        be.innerHTML = `<p class="loading-cell">Hoy no hay ningún instrumento con plazo cercano a un año (el más largo vence en ${ref.dtm} días), así que la comparación contra el REM no sería representativa.</p>`;
       } else {
-        const n = list.length;
-        const idx = [...new Set([0, Math.round((n-1)*0.34), Math.round((n-1)*0.67), n-1])];
-        const cards = idx.map(i => {
-          const b = list[i];
-          const real = (1 + b.tir) / (1 + rem) - 1;
-          const plazo = b.dtm < 45 ? `${b.dtm}d` : `${Math.round(b.dtm/30.4)}m`;
-          return stat(`${b.sym} · ${plazo}`, pct(real), real >= 0 ? '#4ade9a' : '#ff6b6b');
-        }).join('');
-        be.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem">
-          ${cards}${stat('REM · inflación 12m', pct(rem), '#bba7e8')}
+        const real = (1 + ref.tir) / (1 + rem) - 1;
+        const meses = Math.round(ref.dtm/30.4);
+        const gana = real >= 0;
+        const color = gana ? '#4ade9a' : '#ff6b6b';
+        be.innerHTML = `
+        <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.4rem">
+          <div>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem">Tasa real a ~1 año</p>
+            <p style="font-family:var(--font-display);font-size:2.4rem;line-height:1;color:${color}">${(real>=0?'+':'')+pct(real)}</p>
+          </div>
+          <p style="flex:1;min-width:260px;font-size:0.86rem;color:var(--text-muted);line-height:1.65;margin:0">
+            El <strong style="color:var(--accent)">${ref.sym}</strong> vence en ${meses} meses y rinde <strong>${pct(ref.tir)}</strong> anual en pesos.
+            Los economistas del <strong>REM</strong> esperan <strong>${pct(rem)}</strong> de inflación para los próximos 12 meses.
+            Si le aciertan, tu plata ${gana ? `<strong style="color:${color}">gana ${pct(real)} de poder de compra</strong>` : `<strong style="color:${color}">pierde ${pct(Math.abs(real))} de poder de compra</strong>`} en el año.
+          </p>
         </div>
-        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.5">Tasa real = <code>(1 + TEA) / (1 + REM) − 1</code>. Si da <strong>positiva</strong>, la tasa fija le gana a la inflación esperada por los economistas; si da <strong>negativa</strong>, el mercado está pagando menos que la inflación proyectada y conviene mirar instrumentos ajustados por CER. REM del ${data.rem.fecha}.</p>`;
+        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.55">
+          <code>tasa real = (1 + TEA) / (1 + inflación esperada) − 1</code>. Usamos el instrumento de plazo más cercano a un año porque el REM es una expectativa <em>a 12 meses</em>: comparar contra una letra a 10 días daría un número sin sentido económico.
+          El REM es del ${data.rem.fecha} y es una <strong>proyección</strong>, no un dato cerrado — si la inflación termina siendo más alta, tu tasa real efectiva va a ser peor que esta.
+        </p>`;
       }
 
       // --- Contexto macro BCRA ---
