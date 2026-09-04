@@ -148,7 +148,7 @@
       <details class="tool-info">
         <summary><strong>ℹ️ Sobre esta herramienta</strong> — datos, supuestos, limitaciones</summary>
         <div class="ti-content">
-          <p><strong>Qué datos usa:</strong> todo viene en vivo de <strong>FRED</strong> (Federal Reserve Bank of St. Louis) vía proxy <code>/api/fred</code>. Series consultadas:</p>
+          <p><strong>Qué datos usa:</strong> todo viene en vivo desde nuestro backend, con datos oficiales de la curva del Tesoro de EE.UU. (Reserva Federal). Series consultadas:</p>
           <ul>
             <li><strong>Treasuries</strong> nominales: DGS1MO, DGS3MO, DGS6MO, DGS1, DGS2, DGS5, DGS10, DGS30 (yield "constant maturity" — tasa hipotética a la par)</li>
             <li><strong>TIPS</strong> (yields reales): DFII5, DFII10, DFII30 — yield ya descontada la inflación</li>
@@ -517,7 +517,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=23"></script>
+  <script src="../js/main.js?v=24"></script>
   <script src="../js/bond-math.js?v=1"></script>
   <script>
     // ===== TABS =====

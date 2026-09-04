@@ -263,11 +263,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=23"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     let ddmChart = null;
 
@@ -333,7 +333,13 @@
       const ke = (parseFloat(document.getElementById('ke-2').value) || 0) / 100;
       const pm = parseFloat(document.getElementById('pm-2').value) || 0;
 
-      if (g2 >= ke) return;
+      const badge2 = document.getElementById('d2-safety-badge');
+      if (g2 >= ke) {
+        badge2.className = 'safety-badge safety-sell';
+        badge2.textContent = '⚠️ El crecimiento perpetuo (Etapa 2) debe ser menor que Ke. Con g₂ ≥ Ke el valor terminal explota. Reducí g₂ o subí Ke.';
+        ['d2-intrinsic','d2-price','d2-vp1','d2-vp2','d2-margin'].forEach(id=>document.getElementById(id).textContent='—');
+        return;
+      }
 
       // Stage 1: discount dividends growing at g1
       let vp1 = 0, d = d0;

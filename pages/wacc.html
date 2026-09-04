@@ -69,11 +69,12 @@
       <ol>
         <li><strong>Deuda y Equity:</strong> cuánta plata viene de préstamos (deuda) y cuánta de los dueños/accionistas (equity). La proporción importa.</li>
         <li><strong>Costo de la deuda (Rd):</strong> la tasa que pagás por los préstamos. Si tomás un crédito al 30% TNA, ese es Rd.</li>
-        <li><strong>Costo del equity (Ke):</strong> lo que esperan ganar los accionistas. Se calcula con <strong>CAPM</strong>: Ke = Rf + β × (Rm − Rf).
+        <li><strong>Costo del equity (Ke):</strong> lo que esperan ganar los accionistas. Se calcula con <strong>CAPM</strong>: Ke = Rf + β × ERP + CRP.
           <ul style="margin-top:0.4rem">
             <li><strong>Rf:</strong> tasa libre de riesgo (bono USA a 10 años, ~4.5%)</li>
             <li><strong>β (Beta):</strong> volatilidad de tu acción vs el mercado. β=1 = igual al mercado. β=1.5 = 50% más volátil.</li>
-            <li><strong>Rm:</strong> retorno esperado del mercado (~8-10% USA, S&P histórico)</li>
+            <li><strong>ERP (prima de riesgo de mercado):</strong> el campo pide la prima <em>ya neta</em> (Rm − Rf), NO el retorno total del mercado. Damodaran estima ~5.5% para EEUU.</li>
+            <li><strong>CRP (prima de riesgo país):</strong> opcional, para mercados emergentes. Se suma directo al Ke (Argentina ~20%).</li>
           </ul>
         </li>
         <li><strong>Tasa de impuestos:</strong> los intereses de la deuda son deducibles. Reduce el costo efectivo.</li>
@@ -258,11 +259,11 @@
         <li><a href="vpn.html">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, <span data-term="BCRA">BCRA</span>, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=23"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     function calcWACC() {
       const E   = parseFloat(document.getElementById('equity-val').value) || 0;
@@ -277,7 +278,9 @@
       const V    = E + D;
       const wE   = V > 0 ? E / V : 0;
       const wD   = V > 0 ? D / V : 0;
-      const ke   = rf + beta * (rm + erp);
+      // CAPM: Ke = Rf + β × ERP + CRP. La prima de riesgo país (CRP) se suma
+      // directamente al Ke (método estándar Damodaran, λ=1), NO se multiplica por β.
+      const ke   = rf + beta * rm + erp;
       const kdNet= kd * (1 - t);
       const wacc = wE * ke + wD * kdNet;
       const eqContrib = wE * ke;
@@ -292,7 +295,7 @@
       document.getElementById('ev-ratio').textContent    = (wE*100).toFixed(1)+'%';
       document.getElementById('dv-ratio').textContent    = (wD*100).toFixed(1)+'%';
       document.getElementById('total-v').textContent     = formatUSD(V);
-      document.getElementById('capm-formula').textContent= `Ke = ${(rf*100).toFixed(1)}% + ${beta.toFixed(2)} × (${(rm*100).toFixed(1)}%${erp>0?' + '+((erp)*100).toFixed(1)+'%':''})`;
+      document.getElementById('capm-formula').textContent= `Ke = ${(rf*100).toFixed(1)}% + ${beta.toFixed(2)} × ${(rm*100).toFixed(1)}%${erp>0?' + '+((erp)*100).toFixed(1)+'% (CRP)':''}`;
       document.getElementById('res-ke').textContent      = (ke*100).toFixed(2) + '%';
       document.getElementById('r-ke').textContent        = (ke*100).toFixed(2)+'%';
       document.getElementById('r-kd').textContent        = (kd*100).toFixed(2)+'%';

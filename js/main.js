@@ -228,10 +228,12 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Mercado',
       items: [
+        { href: pagesBase + 'agenda-ar.html',  label: 'Agenda AR 🇦🇷', icon: '📅' },
         { href: pagesBase + 'ranking-semanal.html', label: 'Ranking semanal 🔥', icon: '📊' },
         { href: pagesBase + 'ticker.html',     label: 'Acciones',     icon: '📈' },
         { href: pagesBase + 'mercado.html',    label: 'Mercado',      icon: '🌐' },
         { href: pagesBase + 'visor-bonos.html',label: 'Visor de Bonos USA', icon: '💵' },
+        { href: pagesBase + 'visor-bonos-ar.html', label: 'Visor de Bonos AR 🇦🇷', icon: '🇦🇷' },
         { href: pagesBase + 'calendario.html', label: 'Calendario',   icon: '📅' },
         { href: pagesBase + 'noticias.html',   label: 'Noticias',     icon: '📰' },
         { href: pagesBase + 'datos.html',      label: 'Datos macro',  icon: '📊' },

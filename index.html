@@ -101,6 +101,8 @@
                               <nav class="main-nav" role="navigation" aria-label="Navegación principal">
         <a href="index.html" class="nav-link active">Inicio</a>
         <a href="pages/calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="pages/agenda-ar.html" class="nav-link" style="color:var(--accent)">Agenda AR</a>
+        <a href="pages/visor-bonos-ar.html" class="nav-link" style="color:var(--accent)">Bonos AR</a>
         <a href="pages/guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
         <a href="pages/conceptos.html" class="nav-link">Conceptos</a>
         <a href="pages/ticker.html" class="nav-link">Acciones</a>
@@ -190,24 +192,38 @@
             <div class="b-stat loading"><p class="lbl">Treasury 10Y</p><p class="val"><span class="brief-loading-skel"></span></p></div>
           </div>
           <p class="brief-disclaimer">
-            <strong style="color:var(--text-muted)">Datos en vivo</strong> de DolarAPI, Yahoo Finance, ArgentinaDatos, FRED y CoinGecko (vía proxies propios). Pueden tener retrasos de 10-15 min según mercado. <strong>No es recomendación de inversión.</strong>
+            <strong style="color:var(--text-muted)">Datos en vivo</strong> servidos desde nuestro backend (fuentes públicas de mercado). Pueden tener retrasos de 10-15 min según mercado. <strong>No es recomendación de inversión.</strong>
           </p>
         </div>
       </div>
     </section>
 
-    <!-- ===== PIX CTA — banner divertido bajo el brief ===== -->
+    <!-- ===== AGENDA AR + PIX CTAs ===== -->
     <section style="padding:1.25rem 0 0">
       <div class="container">
-        <a href="pages/comparador-pix.html" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(135deg,rgba(0,178,170,0.08),rgba(255,200,80,0.06));border:1px solid rgba(0,178,170,0.25);border-radius:14px;padding:1.1rem 1.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(0,178,170,0.5)';this.style.boxShadow='0 10px 30px rgba(0,178,170,0.1)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(0,178,170,0.25)';this.style.boxShadow=''">
-          <div style="font-size:2.5rem;flex-shrink:0;line-height:1">🇧🇷</div>
-          <div style="flex:1;min-width:240px">
-            <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#00b2aa;margin-bottom:0.3rem">¿Te vas a Brasil? ☀️🏝️</p>
-            <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.35rem;color:var(--text)">Compará tasas de PIX antes de viajar</h3>
-            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.5">25 proveedores en vivo (Fiwind, Belo, Lemon, Mercado Pago, Ualá…). Hasta <strong style="color:#e8c97a">33% de diferencia</strong> entre el mejor y el peor. No la cagués pagando de más en la caipiriña.</p>
-          </div>
-          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#00b2aa;white-space:nowrap;font-weight:500">Ver tasas en vivo →</span>
-        </a>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem">
+
+          <a href="pages/agenda-ar.html" style="display:flex;align-items:center;gap:1.25rem;background:linear-gradient(135deg,rgba(74,222,154,0.08),rgba(96,165,250,0.06));border:1px solid rgba(74,222,154,0.28);border-radius:14px;padding:1.1rem 1.4rem;text-decoration:none;color:inherit;transition:all 0.25s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(74,222,154,0.55)';this.style.boxShadow='0 10px 30px rgba(74,222,154,0.1)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(74,222,154,0.28)';this.style.boxShadow=''">
+            <div style="font-size:2.2rem;flex-shrink:0;line-height:1">📅</div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem">Nuevo · En vivo</p>
+              <h3 style="font-family:var(--font-display);font-size:1.15rem;letter-spacing:-0.01em;margin-bottom:0.3rem;color:var(--text)">Agenda del mercado AR</h3>
+              <p style="color:var(--text-muted);font-size:0.83rem;line-height:1.5">Próximas licitaciones del Tesoro, calendario BCRA (REM, IPOM) y noticias oficiales de Finanzas. <strong style="color:var(--text)">Todo en una pantalla.</strong></p>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--accent);white-space:nowrap;font-weight:500;align-self:center">Ver agenda →</span>
+          </a>
+
+          <a href="pages/comparador-pix.html" style="display:flex;align-items:center;gap:1.25rem;background:linear-gradient(135deg,rgba(0,178,170,0.08),rgba(255,200,80,0.06));border:1px solid rgba(0,178,170,0.25);border-radius:14px;padding:1.1rem 1.4rem;text-decoration:none;color:inherit;transition:all 0.25s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(0,178,170,0.5)';this.style.boxShadow='0 10px 30px rgba(0,178,170,0.1)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(0,178,170,0.25)';this.style.boxShadow=''">
+            <div style="font-size:2.2rem;flex-shrink:0;line-height:1">🇧🇷</div>
+            <div style="flex:1;min-width:200px">
+              <p style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:#00b2aa;margin-bottom:0.3rem">¿Te vas a Brasil?</p>
+              <h3 style="font-family:var(--font-display);font-size:1.15rem;letter-spacing:-0.01em;margin-bottom:0.3rem;color:var(--text)">Compará tasas PIX antes de viajar</h3>
+              <p style="color:var(--text-muted);font-size:0.83rem;line-height:1.5">25 proveedores en vivo. Hasta <strong style="color:#e8c97a">33%</strong> de diferencia entre el mejor y el peor.</p>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:#00b2aa;white-space:nowrap;font-weight:500;align-self:center">Ver tasas →</span>
+          </a>
+
+        </div>
       </div>
     </section>
 
@@ -268,6 +284,21 @@
       </div>
     </section>
 
+    <!-- ===== VOCES DEL MERCADO CTA ===== -->
+    <section style="padding:1.5rem 0 0.5rem">
+      <div class="container">
+        <a href="pages/agenda-ar.html#voces" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(135deg,rgba(255,80,80,0.06),rgba(255,168,87,0.05));border:1px solid rgba(255,80,80,0.22);border-radius:14px;padding:1.2rem 1.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,80,80,0.5)';this.style.boxShadow='0 10px 30px rgba(255,80,80,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,80,80,0.22)';this.style.boxShadow=''">
+          <div style="font-size:2.4rem;flex-shrink:0;line-height:1">▶️</div>
+          <div style="flex:1;min-width:240px">
+            <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#ff5050;margin-bottom:0.3rem">Voces del mercado · YouTube en vivo</p>
+            <h3 style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:0.35rem;color:var(--text)">Lo último de los canales financieros AR</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.5">Bull Market, Rava, Mercado Salvaje, Bloomberg, Cocos, Lara López Calvo, Zicca y más. Se actualiza solo cuando suben videos. <strong style="color:var(--text)">Una pantalla, todos los canales.</strong></p>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:0.85rem;color:#ff5050;white-space:nowrap;font-weight:500">Ver videos →</span>
+        </a>
+      </div>
+    </section>
+
     <!-- ===== NEWS CAROUSEL ===== -->
     <section class="tools-section" style="padding-top:1rem;padding-bottom:4rem" aria-labelledby="noticias-title">
       <div class="container">
@@ -313,45 +344,82 @@
           <h2 id="tools-title" class="section-title">Calculadoras</h2>
           <p class="section-sub">Herramientas simples para decisiones inteligentes</p>
         </div>
-        <div class="tools-grid">
 
-          <article class="tool-card tool-card--featured" aria-labelledby="card-compuesto">
-            <div class="card-badge">Más popular</div>
-            <div class="card-icon" aria-hidden="true">⬡</div>
-            <h3 id="card-compuesto" class="card-title">Interés Compuesto</h3>
-            <p class="card-desc">La octava maravilla del mundo. Calculá cómo tu dinero crece exponencialmente cuando los intereses generan más intereses.</p>
-            <ul class="card-features">
+        <style>
+          .calc-hl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;}
+          .calc-hl{position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#0e1318 0%,#11141a 100%);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:1.65rem 1.75rem 1.6rem;text-decoration:none;color:inherit;transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;min-height:360px;}
+          .calc-hl:hover{transform:translateY(-4px);}
+          .calc-hl-tag{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.7rem;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;margin-bottom:1rem;align-self:flex-start;}
+          .calc-hl-tag .dot{font-size:0.85rem;line-height:1;}
+          .calc-hl.green{border-color:rgba(74,222,154,0.22);}
+          .calc-hl.green:hover{border-color:rgba(74,222,154,0.55);box-shadow:0 14px 36px rgba(74,222,154,0.10);}
+          .calc-hl.green .calc-hl-tag{background:rgba(74,222,154,0.12);color:#4ade9a;border:1px solid rgba(74,222,154,0.28);}
+          .calc-hl.green .calc-hl-link{color:#4ade9a;}
+          .calc-hl.blue{border-color:rgba(96,165,250,0.22);}
+          .calc-hl.blue:hover{border-color:rgba(96,165,250,0.55);box-shadow:0 14px 36px rgba(96,165,250,0.10);}
+          .calc-hl.blue .calc-hl-tag{background:rgba(96,165,250,0.12);color:#60a5fa;border:1px solid rgba(96,165,250,0.28);}
+          .calc-hl.blue .calc-hl-link{color:#60a5fa;}
+          .calc-hl.orange{border-color:rgba(255,168,87,0.22);}
+          .calc-hl.orange:hover{border-color:rgba(255,168,87,0.55);box-shadow:0 14px 36px rgba(255,168,87,0.10);}
+          .calc-hl.orange .calc-hl-tag{background:rgba(255,168,87,0.12);color:#ffa857;border:1px solid rgba(255,168,87,0.28);}
+          .calc-hl.orange .calc-hl-link{color:#ffa857;}
+          .calc-hl-icon{font-size:2.6rem;line-height:1;margin-bottom:0.9rem;}
+          .calc-hl-title{font-family:var(--font-display);font-size:1.45rem;letter-spacing:-0.015em;color:var(--text);line-height:1.2;margin-bottom:0.85rem;}
+          .calc-hl-desc{color:var(--text-muted);font-size:0.9rem;line-height:1.65;margin-bottom:1.1rem;}
+          .calc-hl-bullets{list-style:none;padding:0;margin:0 0 1.25rem;display:flex;flex-direction:column;gap:0.45rem;}
+          .calc-hl-bullets li{position:relative;padding-left:1.1rem;color:var(--text-muted);font-size:0.83rem;line-height:1.5;}
+          .calc-hl-bullets li::before{content:'';position:absolute;left:0;top:0.55rem;width:5px;height:5px;border-radius:50%;background:var(--text-subtle);}
+          .calc-hl.green .calc-hl-bullets li::before{background:#4ade9a;}
+          .calc-hl.blue .calc-hl-bullets li::before{background:#60a5fa;}
+          .calc-hl.orange .calc-hl-bullets li::before{background:#ffa857;}
+          .calc-hl-link{font-family:var(--font-mono);font-size:0.85rem;font-weight:600;margin-top:auto;display:inline-flex;align-items:center;gap:0.4rem;}
+        </style>
+
+        <div class="calc-hl-grid">
+
+          <a href="pages/inflacion.html" class="calc-hl green">
+            <span class="calc-hl-tag"><span class="dot">🔥</span> Más usada</span>
+            <div class="calc-hl-icon">📉</div>
+            <h3 class="calc-hl-title">¿Cuánto perdiste con la inflación?</h3>
+            <p class="calc-hl-desc">Descubrí en segundos cuánto poder de compra te robó la inflación si guardaste pesos en el cajón o caja de ahorro. <strong style="color:var(--text)">Aviso: duele.</strong></p>
+            <ul class="calc-hl-bullets">
+              <li>Ingresá monto y fecha de inicio</li>
+              <li>Te muestra el "agujero" en pesos y en USD</li>
+              <li>Comparativo vs. dólar, plazo fijo y S&amp;P 500</li>
+            </ul>
+            <span class="calc-hl-link">Ver cuánto perdí →</span>
+          </a>
+
+          <a href="pages/interes-compuesto.html" class="calc-hl blue">
+            <span class="calc-hl-tag"><span class="dot">📊</span> Top consultas</span>
+            <div class="calc-hl-icon">⬡</div>
+            <h3 class="calc-hl-title">Interés compuesto — la octava maravilla</h3>
+            <p class="calc-hl-desc">Calculá cómo tu plata crece <strong style="color:var(--text)">exponencialmente</strong> cuando los intereses generan más intereses. La fórmula que cambia tu futuro financiero.</p>
+            <ul class="calc-hl-bullets">
               <li>Capital inicial + aportes periódicos</li>
               <li>Frecuencia de capitalización ajustable</li>
               <li>Gráfico de crecimiento visual</li>
             </ul>
-            <a href="pages/interes-compuesto.html" class="card-link">Calcular →</a>
-          </article>
+            <span class="calc-hl-link">Calcular →</span>
+          </a>
 
-          <article class="tool-card" aria-labelledby="card-fire">
-            <div class="card-icon" aria-hidden="true">🔥</div>
-            <h3 id="card-fire" class="card-title">FIRE — Libertad financiera</h3>
-            <p class="card-desc">¿En cuántos años podés dejar de trabajar? Calculá tu número FIRE, Coast FIRE y tasa de ahorro necesaria.</p>
-            <ul class="card-features">
-              <li>4 tipos de FIRE (Lean, Coast, Fat, Barista)</li>
-              <li>Edad estimada para retirarte</li>
-              <li>Barra de progreso a tu objetivo</li>
+          <a href="pages/fire.html" class="calc-hl orange">
+            <span class="calc-hl-tag"><span class="dot">🔥</span> Tendencia</span>
+            <div class="calc-hl-icon">🏝️</div>
+            <h3 class="calc-hl-title">FIRE — ¿Cuánto necesito para retirarme?</h3>
+            <p class="calc-hl-desc">La regla del 4%: cuánto capital necesitás invertido para vivir de tus inversiones <strong style="color:var(--text)">el resto de tu vida</strong> sin volver a trabajar.</p>
+            <ul class="calc-hl-bullets">
+              <li>Gasto mensual deseado → capital objetivo</li>
+              <li>Años hasta tu independencia financiera</li>
+              <li>Comparativa de tasas de retiro seguras</li>
             </ul>
-            <a href="pages/fire.html" class="card-link">Calcular →</a>
-          </article>
+            <span class="calc-hl-link">Calcular FIRE →</span>
+          </a>
 
-          <article class="tool-card tool-card--highlight" aria-labelledby="card-meta">
-            <div class="card-icon" aria-hidden="true">◇</div>
-            <h3 id="card-meta" class="card-title">Meta Financiera</h3>
-            <p class="card-desc">¿Cuánto tiempo necesitás para llegar a tu objetivo? Compará ahorro puro vs. inversión y descubrí cuántos años ganás.</p>
-            <ul class="card-features">
-              <li>Objetivo en USD</li>
-              <li>Comparación ahorro vs. inversión</li>
-              <li>Diferencia de años visualizada</li>
-            </ul>
-            <a href="pages/meta-financiera.html" class="card-link">Calcular →</a>
-          </article>
+        </div>
 
+        <div style="text-align:center;margin-top:2rem">
+          <a href="pages/calculadoras.html" style="font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;border:1px solid var(--border);padding:0.7rem 1.4rem;border-radius:10px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Ver todas las calculadoras (20+) →</a>
         </div>
       </div>
     </section>
@@ -475,13 +543,13 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
   <script src="js/sanitize.js?v=1"></script>
-  <script src="js/main.js?v=23"></script>
-  <script src="js/ticker.js?v=2"></script>
+  <script src="js/main.js?v=24"></script>
+  <script src="js/ticker.js?v=4"></script>
   <script>
   /* ---- Homepage news carousel ---- */
   (function () {
@@ -664,14 +732,12 @@
 
     async function loadRiesgo() {
       try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(8000) });
+        const r = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(8000) });
         if (!r.ok) throw new Error();
         const d = await r.json();
-        if (!Array.isArray(d) || d.length < 2) return;
-        const last = d[d.length - 1];
-        const prev = d[d.length - 2];
-        const v = parseFloat(last.valor);
-        const pv = parseFloat(prev.valor);
+        if (d?.valor == null) return;
+        const v = parseFloat(d.valor);
+        const pv = parseFloat(d.prevValor);
         const delta = Number.isFinite(pv) ? v - pv : null;
         setStat(3, 'Riesgo País', Math.round(v) + ' pb', delta, delta != null ? (delta >= 0 ? '+' : '') + Math.round(delta) + ' pb vs ayer' : null);
       } catch {}

@@ -1,0 +1,43 @@
+REFERENCIA DE BONOS SOBERANOS AR — datos oficiales de prospecto (Decreto 701/2020, Res. 381/2020)
+Fuente: prospectos CNV/BYMA aportados por el usuario. Usar para verificar esquemas en bonds-ar.json.
+NO se sube al deploy si está en .vercelignore; es nota interna de referencia.
+
+============================================================
+MAPEO ISIN → TICKER  (los que YA están en el visor)
+============================================================
+CANJE 2020 — USD — LEY ARGENTINA (Bonares AL/AE):
+  ARARGE3209Y4  AL29  venc 09/07/2029  cupón FIJO 1.00%        amort 10 cuotas iguales (1ª 09/01/2025, últ 09/07/2029)
+  ARARGE3209S6  AL30  venc 09/07/2030  step 0.125/0.50/0.75/1.75  amort 13 cuotas (4% el 09/07/2024 + 8%x12)
+  ARARGE3209T4  AL35  venc 09/07/2035  step ...4.125/4.75/5.00   amort 10 cuotas (1ª 09/01/2031)
+  ARARGE3209U2  AE38  venc 09/01/2038  step ...4.25/5.00         amort 22 cuotas (1ª 09/07/2027)
+  ARARGE3209V0  AL41  venc 09/07/2041  step 0.125/2.50/3.50/4.875 amort 28 cuotas (1ª 09/01/2028)
+
+CANJE 2020 — USD — LEY NUEVA YORK (Globales GD) [mismos términos económicos por vencimiento]:
+  US040114HX11  GD29  venc 09/07/2029  cupón FIJO 1.00%
+  US040114HS26  GD30  venc 09/07/2030  step 0.125/0.50/0.75/1.75
+  US040114HT09  GD35  venc 09/07/2035  step ...4.75/5.00
+  US040114HU71  GD38  venc 09/01/2038  step ...4.25/5.00
+  US040114HV54  GD41  venc 09/07/2041  step 0.125/2.50/3.50/4.875
+
+DETALLE CUPONES STEP-UP (anual, sobre residual, base 30/360, pago 9-ene/9-jul):
+  2029: FIJO 1.00% todo el período.
+  2030: 0.125% (→09/07/2021) · 0.50% (→09/07/2023) · 0.75% (→09/07/2027) · 1.75% (→venc)
+  2035: 0.125% (→2021) · 1.125% (→2022) · 1.50% (→2023) · 3.625% (→2024) · 4.125% (→2027) · 4.75% (→2028) · 5.00% (→venc)
+  2038: 0.125% (→2021) · 2.00% (→2022) · 3.875% (→2023) · 4.25% (→2024) · 5.00% (→venc)
+  2041: 0.125% (→2021) · 2.50% (→2022) · 3.50% (→2029) · 4.875% (→venc)
+
+============================================================
+INSTRUMENTOS AÚN NO EN EL VISOR (data para sumar en el futuro)
+============================================================
+NUEVOS BONOS USD (BONTES, fuera del canje — bullet, cupón fijo, NO step-up):
+  AR0676997536  USD 6.00% mensual  venc 29/10/2027  emis 27/02/2026  (residual 1.445.370.497)
+  AR0474258297  USD 6.00% mensual  venc 31/10/2028  emis 31/03/2026  bullet (íntegra al vencimiento)
+  AR0963787574  USD 6.50% semestral venc 30/11/2029 emis 12/12/2025  bullet (pagos 30/05 y 30/11)
+  -> Son hard-dollar; podrían sumarse a la curva USD. Falta mapear su ticker en data912.
+
+BONOS / LETRAS CER (PESOS ajustado inflación — van en sección aparte, NO en curva USD):
+  ARARGE03E121  DICP  Discount $ CER 5.83%  venc 31/12/2033  (capitaliza intereses, amort 20 cuotas desde 30/06/2024)
+  ARARGE3209X6  (canje 2020 peso CER 2.25%)  venc 09/11/2028  amort 10 cuotas (pagos 9-may/9-nov)
+  AR0404416296  BONCER cero "a descuento" CER  venc 30/06/2028  bullet
+  AR0487777218  BONCER cero "a descuento" CER  venc 30/06/2027  bullet
+  -> Requieren curva separada en TASA REAL (CER), no comparable con la curva en dólares.

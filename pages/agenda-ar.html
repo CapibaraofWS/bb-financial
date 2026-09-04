@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda del Mercado AR — BB Financial</title>
+  <meta name="description" content="Agenda en vivo del mercado argentino: próximas licitaciones del Tesoro, calendario de informes del BCRA (REM, IPOM, IMM), últimas noticias de la Secretaría de Finanzas." />
+  <meta name="keywords" content="agenda mercado argentina, licitaciones tesoro, calendario bcra, rem, ipom, finanzas noticias" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bb-financial.vercel.app/pages/agenda-ar.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <style>
+    .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
+
+    .agenda-hero { padding: 3.5rem 0 2rem; text-align:center; border-bottom:1px solid var(--border); }
+    .agenda-hero-eyebrow { font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem; }
+    .agenda-hero h1 { font-family:var(--font-display); font-size:clamp(2rem,5vw,3.4rem); letter-spacing:-0.025em; line-height:1.1; margin-bottom:0.85rem; }
+    .agenda-hero h1 em { color:var(--accent); font-style:italic; }
+    .agenda-hero p { color:var(--text-muted); font-size:1rem; line-height:1.6; max-width:680px; margin:0 auto; }
+    .live-pill { display:inline-flex; align-items:center; gap:0.4rem; padding:0.3rem 0.75rem; border-radius:20px; background:rgba(74,222,154,0.12); color:var(--accent); border:1px solid rgba(74,222,154,0.25); font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:1rem; }
+    .live-pill::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 1.6s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    .agenda-section { padding: 3rem 0; }
+    .agenda-section-head { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .agenda-section-head h2 { font-family:var(--font-display); font-size:clamp(1.4rem,3vw,2rem); letter-spacing:-0.015em; margin:0; }
+    .agenda-section-head p { color:var(--text-subtle); font-size:0.82rem; margin:0.25rem 0 0; }
+    .agenda-section-head a.source-link { font-family:var(--font-mono); font-size:0.74rem; color:var(--text-muted); text-decoration:none; }
+    .agenda-section-head a.source-link:hover { color:var(--accent); }
+
+    /* COUNTDOWN HERO */
+    .countdown-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-bottom:2rem; }
+    .countdown-card { background:linear-gradient(140deg,#0e1318,#11141a); border:1px solid var(--border); border-radius:14px; padding:1.5rem 1.65rem; }
+    .countdown-card .cd-eyebrow { font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-subtle); margin-bottom:0.4rem; }
+    .countdown-card .cd-name { font-family:var(--font-display); font-size:1.05rem; color:var(--text); line-height:1.3; margin-bottom:0.6rem; }
+    .countdown-card .cd-days { font-family:var(--font-display); font-size:2.6rem; color:var(--accent); letter-spacing:-0.02em; line-height:1; }
+    .countdown-card .cd-days .unit { font-size:0.85rem; color:var(--text-subtle); font-family:var(--font-mono); margin-left:0.3rem; }
+    .countdown-card .cd-date { font-family:var(--font-mono); font-size:0.74rem; color:var(--text-muted); margin-top:0.45rem; }
+    .countdown-card.next { border-color:rgba(74,222,154,0.32); }
+    .countdown-card.today .cd-days { color:#ffa857; }
+    .countdown-card.today { border-color:rgba(255,168,87,0.32); }
+    .countdown-loading { color:var(--text-subtle); font-family:var(--font-mono); font-size:0.78rem; }
+
+    /* TIMELINE LIST (cronograma + BCRA) */
+    .timeline { display:flex; flex-direction:column; gap:0.55rem; }
+    .timeline-row { display:grid; grid-template-columns: 90px 1fr auto; gap:1rem; align-items:center; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0.85rem 1.1rem; transition:border-color 0.2s; }
+    .timeline-row:hover { border-color:rgba(74,222,154,0.25); }
+    .timeline-row .tl-date { font-family:var(--font-mono); font-size:0.78rem; color:var(--text); text-align:center; }
+    .timeline-row .tl-date .tl-day { display:block; font-family:var(--font-display); font-size:1.4rem; color:var(--text); line-height:1; }
+    .timeline-row .tl-date .tl-mon { display:block; font-size:0.66rem; color:var(--text-subtle); text-transform:uppercase; letter-spacing:0.1em; margin-top:0.2rem; }
+    .timeline-row .tl-title { font-size:0.92rem; color:var(--text); line-height:1.4; }
+    .timeline-row .tl-title .tl-meta { display:block; font-family:var(--font-mono); font-size:0.7rem; color:var(--text-subtle); margin-top:0.2rem; }
+    .timeline-row .tl-pill { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.22rem 0.55rem; border-radius:20px; white-space:nowrap; }
+    .tl-pill.llamado    { background:rgba(96,165,250,0.12); color:#60a5fa; border:1px solid rgba(96,165,250,0.25); }
+    .tl-pill.licitacion { background:rgba(74,222,154,0.12); color:#4ade9a; border:1px solid rgba(74,222,154,0.25); }
+    .tl-pill.liquidacion{ background:rgba(232,201,122,0.12); color:#e8c97a; border:1px solid rgba(232,201,122,0.25); }
+    .tl-pill.feriado    { background:rgba(255,99,99,0.08); color:#ff9b9b; border:1px solid rgba(255,99,99,0.18); }
+    .tl-pill.bcra       { background:rgba(160,140,220,0.12); color:#bba7e8; border:1px solid rgba(160,140,220,0.25); }
+    .tl-pill.bcra-key   { background:rgba(74,222,154,0.14); color:#4ade9a; border:1px solid rgba(74,222,154,0.3); }
+    .timeline-row.today { border-color:rgba(255,168,87,0.5); background:rgba(255,168,87,0.04); }
+    .timeline-row.today .tl-date .tl-day { color:#ffa857; }
+
+    /* TWO COLUMN LAYOUT for cronograma + BCRA */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+    @media (max-width:900px) { .two-col { grid-template-columns:1fr; } }
+
+    /* NEWS CARDS */
+    .news-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.1rem; }
+    .news-card { display:flex; flex-direction:column; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; text-decoration:none; color:inherit; transition:transform 0.22s,border-color 0.22s; }
+    .news-card:hover { transform:translateY(-3px); border-color:rgba(74,222,154,0.32); }
+    .news-card .nc-img { aspect-ratio:16/9; background-size:cover; background-position:center; background-color:#1a1f2a; position:relative; }
+    .news-card .nc-img-fallback { aspect-ratio:16/9; background:linear-gradient(135deg,#1a1f2a,#0e1318); display:flex; align-items:center; justify-content:center; color:var(--text-subtle); font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; }
+    .news-card .nc-type { position:absolute; top:0.7rem; left:0.7rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.22rem 0.55rem; border-radius:20px; background:rgba(10,12,15,0.85); backdrop-filter:blur(6px); }
+    .news-card .nc-type.llamado    { color:#60a5fa; border:1px solid rgba(96,165,250,0.4); }
+    .news-card .nc-type.resultado  { color:#4ade9a; border:1px solid rgba(74,222,154,0.4); }
+    .news-card .nc-type.conversion { color:#e8c97a; border:1px solid rgba(232,201,122,0.4); }
+    .news-card .nc-type.comunicado { color:#bba7e8; border:1px solid rgba(160,140,220,0.4); }
+    .news-card .nc-type.otro       { color:var(--text-muted); border:1px solid var(--border); }
+    .news-card .nc-body { padding:0.95rem 1.1rem 1.1rem; flex:1; display:flex; flex-direction:column; gap:0.5rem; }
+    .news-card .nc-date { font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-subtle); }
+    .news-card .nc-title { font-size:0.92rem; line-height:1.4; color:var(--text); font-weight:500; }
+    .news-loading, .news-error { padding:2rem 1rem; text-align:center; color:var(--text-subtle); font-family:var(--font-mono); font-size:0.85rem; }
+
+    .agenda-disclaimer { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.25rem 1.5rem; margin-top:2rem; }
+    .agenda-disclaimer p { color:var(--text-muted); font-size:0.82rem; line-height:1.6; margin:0; }
+    .agenda-disclaimer p + p { margin-top:0.5rem; }
+    .agenda-disclaimer a { color:var(--accent); text-decoration:none; }
+
+    /* ============= RIESGO PAÍS INTRADAY ============= */
+    .rp-card { background:linear-gradient(140deg,#0e1318,#11141a); border:1px solid rgba(74,222,154,0.22); border-radius:14px; padding:1.6rem 1.75rem; }
+    .rp-head { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.85rem; }
+    .rp-head h3 { font-family:var(--font-display); font-size:1.2rem; margin:0; letter-spacing:-0.01em; }
+    .rp-head .rp-eyebrow { font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); }
+    .rp-main { display:grid; grid-template-columns: auto 1fr; gap:1.5rem; align-items:center; margin-bottom:1.1rem; }
+    .rp-value { font-family:var(--font-display); font-size:3.2rem; line-height:1; letter-spacing:-0.025em; color:var(--text); }
+    .rp-value .rp-unit { font-size:1.1rem; color:var(--text-muted); font-family:var(--font-mono); margin-left:0.3rem; }
+    .rp-delta { font-family:var(--font-mono); font-size:0.85rem; }
+    .rp-delta .lbl { color:var(--text-subtle); }
+    .rp-delta .up   { color:#ff9999; }
+    .rp-delta .down { color:#4ade9a; }
+    .rp-delta .flat { color:var(--text-subtle); }
+    .rp-summary { font-size:0.85rem; color:var(--text-muted); line-height:1.55; }
+    .rp-bonds-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.5rem; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .rp-bond { background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.7rem; }
+    .rp-bond .bn-sym { font-family:var(--font-mono); font-size:0.66rem; color:var(--text-subtle); letter-spacing:0.06em; }
+    .rp-bond .bn-price { font-family:var(--font-display); font-size:1rem; color:var(--text); margin-top:0.1rem; }
+    .rp-bond .bn-chg { font-family:var(--font-mono); font-size:0.72rem; }
+    .rp-bond .bn-chg.up { color:#4ade9a; }
+    .rp-bond .bn-chg.down { color:#ff9999; }
+    .rp-bond .bn-chg.flat { color:var(--text-subtle); }
+    .rp-fine { font-size:0.72rem; color:var(--text-subtle); margin-top:0.85rem; line-height:1.5; }
+
+    /* ============= VOCES DEL MERCADO ============= */
+    .voces-filters { display:flex; gap:0.35rem; flex-wrap:wrap; margin-bottom:1.25rem; }
+    .voces-filter { font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.05em; padding:0.4rem 0.85rem; border-radius:20px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-muted); cursor:pointer; transition:all 0.2s; }
+    .voces-filter:hover { border-color:rgba(74,222,154,0.3); color:var(--text); }
+    .voces-filter.active { background:rgba(74,222,154,0.12); border-color:rgba(74,222,154,0.35); color:var(--accent); }
+    .voces-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+    .voces-card { display:flex; flex-direction:column; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; text-decoration:none; color:inherit; transition:transform 0.22s, border-color 0.22s; }
+    .voces-card:hover { transform:translateY(-3px); border-color:rgba(255,80,80,0.4); }
+    .voces-card .v-thumb { aspect-ratio:16/9; background-size:cover; background-position:center; background-color:#0e1318; position:relative; }
+    .voces-card .v-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0); transition:background 0.2s; }
+    .voces-card:hover .v-play { background:rgba(0,0,0,0.3); }
+    .voces-card .v-play::after { content:'▶'; color:rgba(255,255,255,0.95); font-size:2.2rem; text-shadow:0 4px 14px rgba(0,0,0,0.5); opacity:0; transition:opacity 0.2s; }
+    .voces-card:hover .v-play::after { opacity:1; }
+    .voces-card .v-channel { position:absolute; bottom:0.5rem; left:0.5rem; font-family:var(--font-mono); font-size:0.62rem; color:#fff; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); padding:0.22rem 0.55rem; border-radius:20px; letter-spacing:0.04em; }
+    .voces-card .v-body { padding:0.9rem 1.05rem 1rem; flex:1; display:flex; flex-direction:column; gap:0.45rem; }
+    .voces-card .v-date { font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.06em; color:var(--text-subtle); }
+    .voces-card .v-title { font-size:0.88rem; line-height:1.4; color:var(--text); font-weight:500; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio">
+        <img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" />
+      </a>
+      <nav class="main-nav" role="navigation" aria-label="Navegación principal">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
+        <a href="agenda-ar.html" class="nav-link active" style="color:var(--accent)">Agenda AR</a>
+        <a href="mercado.html" class="nav-link">Mercado</a>
+        <a href="calendario.html" class="nav-link">Calendario</a>
+        <a href="noticias.html" class="nav-link">Noticias</a>
+        <a href="datos.html" class="nav-link">Datos</a>
+        <a href="brokers.html" class="nav-link">Brokers</a>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="agenda-hero">
+      <div class="container">
+        <span class="live-pill">En vivo</span>
+        <p class="agenda-hero-eyebrow">Agenda del mercado argentino</p>
+        <h1>¿Qué pasa hoy <em>y esta semana?</em></h1>
+        <p>Próximas licitaciones del Tesoro, calendario de informes del BCRA y últimas noticias de la Secretaría de Finanzas. Datos oficiales, actualizados en vivo. Sin tener que abrir 5 pestañas.</p>
+      </div>
+    </section>
+
+    <!-- ============== RIESGO PAÍS INTRADAY ============== -->
+    <section class="agenda-section" style="padding-top:2.5rem;padding-bottom:0">
+      <div class="container">
+        <div class="agenda-section-head">
+          <div>
+            <h2>Riesgo país — intraday</h2>
+            <p>Último valor oficial (EOD) + estimación intraday calculada desde precios de bonos AR en USD.</p>
+          </div>
+          <a class="source-link" href="https://www.argentina.gob.ar/economia/finanzas" target="_blank" rel="noopener">JP Morgan EMBI+ es EOD →</a>
+        </div>
+        <div id="rp-block">
+          <div class="rp-card"><p class="countdown-loading">Cargando bonos y riesgo país…</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== COUNTDOWN HERO ============== -->
+    <section class="agenda-section" style="padding-top:2.5rem">
+      <div class="container">
+        <div class="agenda-section-head">
+          <div>
+            <h2>Próximos eventos clave</h2>
+            <p>Lo que tenés que tener en el radar.</p>
+          </div>
+        </div>
+        <div class="countdown-grid" id="countdown-grid">
+          <div class="countdown-loading">Cargando próximos eventos…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== CRONOGRAMA + BCRA SIDE BY SIDE ============== -->
+    <section class="agenda-section" style="padding-top:0">
+      <div class="container">
+        <div class="two-col">
+
+          <div>
+            <div class="agenda-section-head">
+              <div>
+                <h2>Cronograma del Tesoro</h2>
+                <p>Llamados, licitaciones y liquidaciones de letras y bonos.</p>
+              </div>
+              <a class="source-link" href="https://www.argentina.gob.ar/economia/finanzas/licitaciones-de-letras-y-bonos-del-tesoro/cronograma-2026" target="_blank" rel="noopener">Fuente oficial →</a>
+            </div>
+            <div class="timeline" id="cronograma-list">
+              <p class="news-loading">Cargando cronograma…</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="agenda-section-head">
+              <div>
+                <h2>Calendario BCRA</h2>
+                <p>REM, IPOM, IMM y demás informes del Central.</p>
+              </div>
+              <a class="source-link" href="https://www.bcra.gob.ar/calendario-de-informes/" target="_blank" rel="noopener">Fuente oficial →</a>
+            </div>
+            <div class="timeline" id="bcra-list">
+              <p class="news-loading">Cargando calendario BCRA…</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== NOTICIAS FINANZAS ============== -->
+    <section class="agenda-section">
+      <div class="container">
+        <div class="agenda-section-head">
+          <div>
+            <h2>Noticias oficiales de Finanzas</h2>
+            <p>Lo último que publicó la Secretaría: llamados, resultados, comunicados.</p>
+          </div>
+          <a class="source-link" href="https://www.argentina.gob.ar/economia/finanzas/noticias" target="_blank" rel="noopener">Ver todas en argentina.gob.ar →</a>
+        </div>
+        <div class="news-grid" id="news-grid">
+          <p class="news-loading" style="grid-column:1/-1">Cargando noticias…</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============== VOCES DEL MERCADO ============== -->
+    <section id="voces" class="agenda-section" style="scroll-margin-top:80px">
+      <div class="container">
+        <div class="agenda-section-head">
+          <div>
+            <h2>Voces del mercado</h2>
+            <p>Últimos videos de canales financieros argentinos. Se actualiza solo cuando suben contenido.</p>
+          </div>
+          <a class="source-link" href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+        <div class="voces-filters" id="voces-filters"></div>
+        <div class="voces-grid" id="voces-grid">
+          <p class="news-loading" style="grid-column:1/-1">Cargando videos…</p>
+        </div>
+
+        <div class="agenda-disclaimer" style="margin-top:2.5rem">
+          <p><strong style="color:var(--text-muted)">Sobre esta agenda:</strong> los datos se traen en vivo desde fuentes oficiales (Secretaría de Finanzas, BCRA) y de mercado, y se cachean 5-60 min según la fuente. Si una fuente cambia formato, el panel queda con su última versión válida hasta que actualicemos el parser.</p>
+          <p><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> El riesgo país mostrado es el valor de mercado más reciente disponible; el EMBI+ oficial de JP Morgan se publica con cierre diario. Los videos linkeados no son recomendaciones nuestras. Consultá un asesor matriculado en CNV para invertir.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Navegación del pie">
+        <h3>Secciones</h3>
+        <ul>
+          <li><a href="calculadoras.html">Calculadoras</a></li>
+          <li><a href="agenda-ar.html">Agenda AR</a></li>
+          <li><a href="datos.html">Datos Macro</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="mis-portafolios.html">Portafolio (Beta)</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p>
+      <p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
+    </div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=24"></script>
+  <script src="../js/ticker.js?v=4"></script>
+  <script>
+  /* ============== AGENDA AR ============== */
+  (function() {
+    const MONTHS_FULL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const MONTHS_SHORT = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const WEEKDAYS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+
+    function daysFromNow(isoDate) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const target = new Date(isoDate + 'T00:00:00');
+      return Math.round((target - today) / 86400000);
+    }
+    function fmtDateLong(isoDate) {
+      const d = new Date(isoDate + 'T00:00:00');
+      return `${WEEKDAYS[d.getDay()]} ${d.getDate()} de ${MONTHS_FULL[d.getMonth()]}`;
+    }
+    function dayMonthChip(isoDate) {
+      const d = new Date(isoDate + 'T00:00:00');
+      return { day: d.getDate(), mon: MONTHS_SHORT[d.getMonth()] };
+    }
+
+    // === COUNTDOWN HERO ===
+    async function loadCountdowns() {
+      const grid = document.getElementById('countdown-grid');
+      const [cron, bcra] = await Promise.allSettled([
+        fetch('/api/agenda?source=finanzas-cronograma').then(r => r.ok ? r.json() : null),
+        fetch('/api/agenda?source=bcra-calendario').then(r => r.ok ? r.json() : null),
+      ]);
+      const c = cron.status === 'fulfilled' ? cron.value : null;
+      const b = bcra.status === 'fulfilled' ? bcra.value : null;
+
+      grid.textContent = '';
+
+      const cards = [];
+      // 1. Próxima licitación
+      if (c && c.nextLicitacion) {
+        cards.push({
+          eyebrow: 'Próxima licitación',
+          name: 'Licitación de Letras y Bonos del Tesoro',
+          iso: c.nextLicitacion.iso,
+          isKey: true,
+        });
+      }
+      // 2. Próximo REM
+      if (b && b.nextREM) {
+        cards.push({
+          eyebrow: 'Próximo REM',
+          name: 'Relevamiento de Expectativas (BCRA)',
+          iso: b.nextREM.iso,
+        });
+      }
+      // 3. Próximo Informe Monetario Mensual
+      if (b && b.nextMonetario) {
+        cards.push({
+          eyebrow: 'Próximo IMM',
+          name: 'Informe Monetario Mensual (BCRA)',
+          iso: b.nextMonetario.iso,
+        });
+      }
+      // 4. Próximo IPOM
+      if (b && b.nextIPOM) {
+        cards.push({
+          eyebrow: 'Próximo IPOM',
+          name: 'Informe de Política Monetaria',
+          iso: b.nextIPOM.iso,
+        });
+      }
+
+      if (cards.length === 0) {
+        grid.innerHTML = '<p class="countdown-loading">No pudimos cargar próximos eventos. <a href="https://www.argentina.gob.ar/economia/finanzas" target="_blank" rel="noopener" style="color:var(--accent)">Ver fuentes oficiales →</a></p>';
+        return;
+      }
+
+      cards.slice(0, 4).forEach((card, idx) => {
+        const days = daysFromNow(card.iso);
+        const div = document.createElement('div');
+        div.className = 'countdown-card' + (idx === 0 ? ' next' : '') + (days === 0 ? ' today' : '');
+        const eye = document.createElement('p'); eye.className = 'cd-eyebrow'; eye.textContent = card.eyebrow;
+        const nm  = document.createElement('p'); nm.className  = 'cd-name';    nm.textContent  = card.name;
+        const dd  = document.createElement('p'); dd.className  = 'cd-days';
+        if (days === 0)      dd.innerHTML = 'Hoy';
+        else if (days === 1) { dd.textContent = '1'; const u=document.createElement('span'); u.className='unit'; u.textContent='día'; dd.appendChild(u); }
+        else if (days < 0)   dd.innerHTML = 'Pasó';
+        else                 { dd.textContent = String(days); const u=document.createElement('span'); u.className='unit'; u.textContent='días'; dd.appendChild(u); }
+        const dt = document.createElement('p'); dt.className = 'cd-date'; dt.textContent = fmtDateLong(card.iso);
+        div.append(eye, nm, dd, dt);
+        grid.appendChild(div);
+      });
+    }
+
+    // === CRONOGRAMA TIMELINE ===
+    async function loadCronograma() {
+      const list = document.getElementById('cronograma-list');
+      try {
+        const r = await fetch('/api/agenda?source=finanzas-cronograma');
+        if (!r.ok) throw new Error('http ' + r.status);
+        const d = await r.json();
+        const events = (d.upcoming || []).slice(0, 10);
+        list.textContent = '';
+        if (!events.length) { list.innerHTML = '<p class="news-error">Sin próximos eventos en el cronograma.</p>'; return; }
+        const today = new Date(); today.setHours(0,0,0,0);
+        events.forEach(e => {
+          const chip = dayMonthChip(e.iso);
+          const isToday = daysFromNow(e.iso) === 0;
+          const row = document.createElement('div');
+          row.className = 'timeline-row' + (isToday ? ' today' : '');
+          row.innerHTML = `
+            <div class="tl-date"><span class="tl-day"></span><span class="tl-mon"></span></div>
+            <div class="tl-title"></div>
+            <span class="tl-pill"></span>`;
+          row.querySelector('.tl-day').textContent = chip.day;
+          row.querySelector('.tl-mon').textContent = chip.mon;
+          const title = row.querySelector('.tl-title');
+          title.textContent = e.label;
+          const meta = document.createElement('span'); meta.className = 'tl-meta';
+          const d2 = daysFromNow(e.iso);
+          meta.textContent = d2 === 0 ? 'Hoy' : d2 === 1 ? 'Mañana' : 'En ' + d2 + ' días · ' + fmtDateLong(e.iso);
+          title.appendChild(meta);
+          const pill = row.querySelector('.tl-pill');
+          pill.className = 'tl-pill ' + e.type;
+          pill.textContent = e.type;
+          list.appendChild(row);
+        });
+      } catch (err) {
+        list.innerHTML = '<p class="news-error">No pudimos cargar el cronograma. <a href="https://www.argentina.gob.ar/economia/finanzas/licitaciones-de-letras-y-bonos-del-tesoro/cronograma-2026" target="_blank" rel="noopener" style="color:var(--accent)">Fuente oficial →</a></p>';
+      }
+    }
+
+    // === BCRA CALENDARIO ===
+    async function loadBcraCal() {
+      const list = document.getElementById('bcra-list');
+      try {
+        const r = await fetch('/api/agenda?source=bcra-calendario');
+        if (!r.ok) throw new Error('http ' + r.status);
+        const d = await r.json();
+        const events = (d.upcoming || []).slice(0, 10);
+        list.textContent = '';
+        if (!events.length) { list.innerHTML = '<p class="news-error">Sin próximos informes en el calendario BCRA.</p>'; return; }
+        events.forEach(e => {
+          const chip = dayMonthChip(e.iso);
+          const isToday = daysFromNow(e.iso) === 0;
+          const isKey = /relevamiento|política monetaria|monetario mensual|estabilidad/i.test(e.report);
+          const row = document.createElement('div');
+          row.className = 'timeline-row' + (isToday ? ' today' : '');
+          row.innerHTML = `
+            <div class="tl-date"><span class="tl-day"></span><span class="tl-mon"></span></div>
+            <div class="tl-title"></div>
+            <span class="tl-pill"></span>`;
+          row.querySelector('.tl-day').textContent = chip.day;
+          row.querySelector('.tl-mon').textContent = chip.mon;
+          const title = row.querySelector('.tl-title');
+          title.textContent = e.report;
+          const meta = document.createElement('span'); meta.className = 'tl-meta';
+          const d2 = daysFromNow(e.iso);
+          meta.textContent = d2 === 0 ? 'Hoy' : d2 === 1 ? 'Mañana' : 'En ' + d2 + ' días · ' + fmtDateLong(e.iso);
+          title.appendChild(meta);
+          const pill = row.querySelector('.tl-pill');
+          pill.className = 'tl-pill ' + (isKey ? 'bcra-key' : 'bcra');
+          pill.textContent = isKey ? 'Clave' : 'BCRA';
+          list.appendChild(row);
+        });
+      } catch (err) {
+        list.innerHTML = '<p class="news-error">No pudimos cargar el calendario del BCRA. <a href="https://www.bcra.gob.ar/calendario-de-informes/" target="_blank" rel="noopener" style="color:var(--accent)">Fuente oficial →</a></p>';
+      }
+    }
+
+    // === NEWS FINANZAS ===
+    async function loadNews() {
+      const grid = document.getElementById('news-grid');
+      try {
+        const r = await fetch('/api/agenda?source=finanzas-news');
+        if (!r.ok) throw new Error('http ' + r.status);
+        const d = await r.json();
+        const items = (d.items || []).slice(0, 9);
+        grid.textContent = '';
+        if (!items.length) { grid.innerHTML = '<p class="news-error" style="grid-column:1/-1">Sin noticias publicadas recientemente.</p>'; return; }
+        items.forEach(it => {
+          const a = document.createElement('a');
+          a.className = 'news-card';
+          a.href = it.link;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+
+          if (it.img) {
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'nc-img';
+            imgDiv.style.backgroundImage = "url('" + it.img.replace(/'/g, '%27') + "')";
+            const pill = document.createElement('span');
+            pill.className = 'nc-type ' + (it.type || 'otro');
+            pill.textContent = it.type || 'noticia';
+            imgDiv.appendChild(pill);
+            a.appendChild(imgDiv);
+          } else {
+            const fb = document.createElement('div');
+            fb.className = 'nc-img-fallback';
+            fb.textContent = it.type || 'noticia';
+            a.appendChild(fb);
+          }
+
+          const body = document.createElement('div');
+          body.className = 'nc-body';
+          const dt = document.createElement('p'); dt.className = 'nc-date'; dt.textContent = it.dateLabel || '';
+          const ti = document.createElement('p'); ti.className = 'nc-title'; ti.textContent = it.title;
+          body.append(dt, ti);
+          a.appendChild(body);
+          grid.appendChild(a);
+        });
+      } catch (err) {
+        grid.innerHTML = '<p class="news-error" style="grid-column:1/-1">No pudimos cargar noticias. <a href="https://www.argentina.gob.ar/economia/finanzas/noticias" target="_blank" rel="noopener" style="color:var(--accent)">Ver en argentina.gob.ar →</a></p>';
+      }
+    }
+
+    // === RIESGO PAÍS INTRADAY ===
+    async function loadRiesgoPais() {
+      const block = document.getElementById('rp-block');
+      try {
+        const r = await fetch('/api/agenda?source=bonos-ar');
+        if (!r.ok) throw new Error('http ' + r.status);
+        const d = await r.json();
+        const rp = d.riesgoPais;
+        if (!rp || rp.valor == null) throw new Error('sin valor');
+
+        const card = document.createElement('div');
+        card.className = 'rp-card';
+
+        // Header
+        const head = document.createElement('div');
+        head.className = 'rp-head';
+        const sourceLbl = rp.source === 'ambito.com' ? 'En vivo · intraday' : 'En vivo · EOD (fallback)';
+        head.innerHTML = `<h3>Riesgo país</h3><span class="rp-eyebrow">${sourceLbl}</span>`;
+        card.appendChild(head);
+
+        // Main valor + delta
+        const main = document.createElement('div');
+        main.className = 'rp-main';
+        const valBox = document.createElement('div');
+        valBox.className = 'rp-value';
+        valBox.innerHTML = `${Math.round(rp.valor)}<span class="rp-unit">pb</span>`;
+
+        const deltaBox = document.createElement('div');
+        const cls = (n) => n > 0.05 ? 'up' : n < -0.05 ? 'down' : 'flat';
+        const sign = (n) => n > 0 ? '+' : '';
+        deltaBox.className = 'rp-delta';
+        const deltaBps = Number.isFinite(rp.prevValor) ? rp.valor - rp.prevValor : null;
+        const fechaFmt = rp.fecha ? new Date(rp.fecha).toLocaleDateString('es-AR', {day:'numeric',month:'short',year:'numeric'}) : '';
+        const lines = [];
+        if (Number.isFinite(deltaBps)) {
+          lines.push(`<p><span class="lbl">Variación día:</span> <span class="${cls(deltaBps)}">${sign(deltaBps)}${Math.round(deltaBps)} pb</span> ${Number.isFinite(rp.variacionPct) ? `(<span class="${cls(rp.variacionPct)}">${sign(rp.variacionPct)}${rp.variacionPct.toFixed(2)}%</span>)` : ''}</p>`);
+          lines.push(`<p><span class="lbl">Cierre anterior:</span> <strong style="color:var(--text)">${Math.round(rp.prevValor)} pb</strong></p>`);
+        }
+        lines.push(`<p><span class="lbl">Fecha:</span> ${fechaFmt}</p>`);
+        deltaBox.innerHTML = lines.join('');
+        main.append(valBox, deltaBox);
+        card.appendChild(main);
+
+        // Bonos grid (referencia)
+        const bondsLabel = document.createElement('p');
+        bondsLabel.style.cssText = 'font-family:var(--font-mono);font-size:0.7rem;color:var(--text-subtle);letter-spacing:0.06em;text-transform:uppercase;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)';
+        bondsLabel.textContent = 'Bonos AR en USD · hoy';
+        card.appendChild(bondsLabel);
+
+        const bondsGrid = document.createElement('div');
+        bondsGrid.className = 'rp-bonds-grid';
+        bondsGrid.style.marginTop = '0.5rem';
+        bondsGrid.style.borderTop = 'none';
+        bondsGrid.style.paddingTop = '0';
+        (d.bonos || []).forEach(b => {
+          const div = document.createElement('div');
+          div.className = 'rp-bond';
+          const sym = document.createElement('p'); sym.className = 'bn-sym'; sym.textContent = b.symbol;
+          const pr  = document.createElement('p'); pr.className  = 'bn-price';
+          pr.textContent = Number.isFinite(b.price) ? '$' + b.price.toFixed(2) : '—';
+          const ch  = document.createElement('p'); ch.className  = 'bn-chg ' + cls(b.change || 0);
+          ch.textContent = Number.isFinite(b.change) ? (sign(b.change) + b.change.toFixed(2) + '%') : '—';
+          div.append(sym, pr, ch);
+          bondsGrid.appendChild(div);
+        });
+        card.appendChild(bondsGrid);
+
+        // Fine print
+        const fine = document.createElement('p');
+        fine.className = 'rp-fine';
+        fine.textContent = rp.source === 'ambito.com'
+          ? 'Valor de mercado más reciente disponible (intraday). El EMBI+ oficial de JP Morgan se publica con cierre diario.'
+          : 'Valor de cierre diario (fuente de respaldo); el dato intraday no está disponible en este momento.';
+        card.appendChild(fine);
+
+        block.textContent = '';
+        block.appendChild(card);
+      } catch (err) {
+        block.innerHTML = '<div class="rp-card"><p class="news-error" style="padding:0;text-align:left">No pudimos cargar el riesgo país. <a href="/pages/datos.html" style="color:var(--accent)">Ver datos macro →</a></p></div>';
+      }
+    }
+
+    // === VOCES DEL MERCADO (YouTube) ===
+    async function loadVoces() {
+      const grid = document.getElementById('voces-grid');
+      const filters = document.getElementById('voces-filters');
+      try {
+        const r = await fetch('/api/agenda?source=youtube');
+        if (!r.ok) throw new Error('http ' + r.status);
+        const d = await r.json();
+        const videos = d.videos || [];
+        if (!videos.length) { grid.innerHTML = '<p class="news-error" style="grid-column:1/-1">No pudimos cargar videos. <a href="https://www.youtube.com" target="_blank" style="color:var(--accent)">Ver en YouTube →</a></p>'; return; }
+
+        const channels = ['Todos', ...Array.from(new Set(videos.map(v => v.channel)))];
+        let activeChannel = 'Todos';
+
+        function render() {
+          grid.textContent = '';
+          const list = activeChannel === 'Todos' ? videos : videos.filter(v => v.channel === activeChannel);
+          list.slice(0, 18).forEach(v => {
+            const a = document.createElement('a');
+            a.className = 'voces-card';
+            a.href = v.link;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+
+            const thumb = document.createElement('div');
+            thumb.className = 'v-thumb';
+            thumb.style.backgroundImage = "url('" + v.thumbnail.replace(/'/g, '%27') + "')";
+            const play = document.createElement('div'); play.className = 'v-play';
+            const ch = document.createElement('span'); ch.className = 'v-channel'; ch.textContent = v.channel;
+            thumb.append(play, ch);
+            a.appendChild(thumb);
+
+            const body = document.createElement('div');
+            body.className = 'v-body';
+            const dt = document.createElement('p'); dt.className = 'v-date';
+            try { dt.textContent = new Date(v.published).toLocaleDateString('es-AR', { day:'numeric', month:'short', year:'numeric' }); } catch { dt.textContent = ''; }
+            const ti = document.createElement('p'); ti.className = 'v-title'; ti.textContent = v.title;
+            body.append(dt, ti);
+            a.appendChild(body);
+            grid.appendChild(a);
+          });
+        }
+
+        filters.textContent = '';
+        channels.forEach(ch => {
+          const btn = document.createElement('button');
+          btn.className = 'voces-filter' + (ch === activeChannel ? ' active' : '');
+          btn.textContent = ch;
+          btn.addEventListener('click', () => {
+            activeChannel = ch;
+            [...filters.children].forEach(b => b.classList.toggle('active', b.textContent === ch));
+            render();
+          });
+          filters.appendChild(btn);
+        });
+
+        render();
+      } catch (err) {
+        grid.innerHTML = '<p class="news-error" style="grid-column:1/-1">No pudimos cargar los feeds de YouTube. Intentá refrescar.</p>';
+      }
+    }
+
+    Promise.all([loadRiesgoPais(), loadCountdowns(), loadCronograma(), loadBcraCal(), loadNews(), loadVoces()])
+      .finally(() => {
+        // Re-scroll al ancla después de que cargó todo el contenido async,
+        // sino el hash inicial scrollea antes de que la página tenga su altura final.
+        if (location.hash) {
+          const el = document.querySelector(location.hash);
+          if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+      });
+  })();
+  </script>
+</body>
+</html>

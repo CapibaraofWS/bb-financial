@@ -83,7 +83,7 @@
       <details class="tool-info">
         <summary><strong>ℹ️ Sobre esta herramienta</strong> — qué datos usa, cómo se calculan, limitaciones</summary>
         <div class="ti-content">
-          <p><strong>Qué datos usa:</strong> todas las tasas vienen en vivo de <strong>ArgentinaDatos</strong> (vía proxy propio <code>/api/argentinadatos</code>), que a su vez consume BCRA y CAFCI:</p>
+          <p><strong>Qué datos usa:</strong> todas las tasas vienen en vivo desde nuestro backend (fuentes oficiales del BCRA y cámaras de fondos):</p>
           <ul>
             <li><strong>Cuentas Remuneradas:</strong> <code>/fci/otros/ultimo</code> (Brubank, Fiwind, Ualá, Carrefour, BNA, etc. — TNA publicada) + <code>/fci/variables/ultimo</code> (billeteras con FCI variable como Global66) + <code>/fci/mercadoDinero/ultimo + /penultimo</code> para billeteras MM (Mercado Pago = Mercado Fondo, Personal Pay = Delta Pesos, Lemon = Fima Premium, Cocos, IOL, Prex).</li>
             <li><strong>Plazos Fijos:</strong> <code>/tasas/plazoFijo</code> — TNA clientes y no-clientes por banco directo del BCRA.</li>
@@ -266,7 +266,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=23"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     // ===== Tabs =====
     document.querySelectorAll('.tab-btn').forEach(btn => {

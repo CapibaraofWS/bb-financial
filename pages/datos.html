@@ -576,13 +576,13 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=23"></script>
-  <script src="../js/ticker.js?v=3"></script>
+  <script src="../js/main.js?v=24"></script>
+  <script src="../js/ticker.js?v=4"></script>
   <script>
   /* ==============================================
      DATOS MACRO — Data Layer
@@ -939,24 +939,21 @@
         }));
       }
     } catch {}
-    /* Riesgo País Argentina — ArgentinaDatos (EMBI+ JP Morgan) */
+    /* Riesgo País — Ámbito intraday (fallback argentinadatos EOD) */
     let riesgoOk = false;
     try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/indices/riesgo-pais', { signal: AbortSignal.timeout(9000) });
+      const r = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(9000) });
       if (r.ok) {
-        const arr = await r.json();
-        if (arr?.length >= 2) {
-          const last = arr.at(-1), prev = arr.at(-2);
-          if (last?.valor != null) {
-            cards.push(datoCard({
-              cat:'Mercado · 🇦🇷 Argentina', name:'Riesgo País (EMBI+)',
-              value: fmtNum(last.valor, 0), unit:'pts',
-              changeAbs: prev?.valor != null ? last.valor - prev.valor : null,
-              sub:'Spread sobre bonos del Tesoro EE.UU.',
-              period: fmtDate(last.fecha), source:'JP Morgan', cls:'red-card'
-            }));
-            riesgoOk = true;
-          }
+        const d = await r.json();
+        if (d?.valor != null) {
+          cards.push(datoCard({
+            cat:'Mercado · 🇦🇷 Argentina', name:'Riesgo País (EMBI+)',
+            value: fmtNum(d.valor, 0), unit:'pts',
+            changeAbs: Number.isFinite(d.prevValor) ? d.valor - d.prevValor : null,
+            sub:'Spread sobre bonos del Tesoro EE.UU.',
+            period: fmtDate(d.fecha), source: d.source === 'ambito.com' ? 'Ámbito · intraday' : 'JP Morgan · EOD', cls:'red-card'
+          }));
+          riesgoOk = true;
         }
       }
     } catch {}

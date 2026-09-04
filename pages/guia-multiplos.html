@@ -298,6 +298,8 @@
         <div class="ti-content">
           <p>Esta guía cubre los múltiplos más usados en valuación de equity y enterprise value. La estructura sigue el approach de Damodaran (Damodaran on Valuation, NYU Stern): primero los <em>equity multiples</em> (P/E, P/B, P/S — ratios del valor del equity), después los <em>firm multiples</em> (EV/EBITDA, EV/Sales, EV/EBIT — ratios del valor total de la firma).</p>
 
+          <p style="background:rgba(232,201,122,0.07);border:1px solid rgba(232,201,122,0.2);border-radius:8px;padding:0.75rem 1rem"><strong style="color:var(--gold)">📌 Sobre los números de ejemplo:</strong> las cifras de empresas concretas (CAT, KO, MELI, etc.) son <strong>aproximaciones ilustrativas</strong> para mostrar cómo se aplica cada fórmula — no son cotizaciones en tiempo real y pueden estar desactualizadas. Para múltiplos vivos usá la <a href="multiplos.html" style="color:var(--accent)">calculadora de múltiplos</a> o el <a href="ticker.html" style="color:var(--accent)">visor de acciones</a>.</p>
+
           <p><strong>Cómo está armada:</strong></p>
           <ul>
             <li><strong>Fórmulas:</strong> definiciones técnicas con las matemáticas exactas, no simplificaciones.</li>
@@ -526,9 +528,9 @@
           </div>
           <p class="sec-label">Ejemplo real</p>
           <div class="example-box">
-            <strong>CAT:</strong> EV ≈ $340bn · EBITDA $13.4bn → EV/EBITDA 25.4x<br/>
+            <strong>CAT:</strong> EV ≈ $200bn · EBITDA ≈ $16.5bn → EV/EBITDA ≈ 12x<br/>
             Mediana industriales: 12–14x &nbsp;·&nbsp; Tech: 18–25x<br/>
-            <strong>KO:</strong> EV/EBITDA ≈ 19.2x &nbsp;·&nbsp; BRK/B: no aplica (holding)
+            <strong>KO:</strong> EV/EBITDA ≈ 19x &nbsp;·&nbsp; BRK/B: no aplica (holding)
           </div>
           <p class="sec-label">Reglas de lectura</p>
           <div class="rule-item rule-ok"><span class="rule-icon">✓</span><span class="rule-text">Ignora diferencias de estructura de capital — más comparable entre empresas con distinto nivel de deuda</span></div>
@@ -946,12 +948,12 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes de datos: Yahoo Finance, Finnhub, FRED, BCRA, ArgentinaDatos, ExchangeRate-API, CoinGecko. Datos referenciales con posibles retrasos respecto al mercado en tiempo real. © 2026 BB Financial.</p>
+      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p>
     </div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=23"></script>
+  <script src="../js/main.js?v=24"></script>
   <script>
     function showTab(name, btn) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
