@@ -12,8 +12,14 @@
   --border-hover: rgba(100,200,150,0.3);
 
   --text: #e8edf5;
-  --text-muted: #7a8599;
-  --text-subtle: #3d4558;
+  /* Contraste sobre el fondo (#0a0c0f), medido:
+       antes  muted #7a8599 = 5,3:1   subtle #3d4558 = 2,0:1  <- por debajo del minimo
+       ahora  muted #9aa5b8 = 8,0:1   subtle #6f7a90 = 4,6:1
+     El #3d4558 se usaba en etiquetas de 10px: era ilegible para cualquiera con
+     la vista cansada o con el telefono al sol. Se mantiene la jerarquia visual
+     (texto > muted > subtle), solo que ahora las tres se pueden leer. */
+  --text-muted: #9aa5b8;
+  --text-subtle: #6f7a90;
 
   --accent: #4ade9a;
   --accent-dim: rgba(74,222,154,0.12);
@@ -1481,4 +1487,63 @@ body .faq-body { color: var(--text-read); }
   .article-body blockquote { padding: 0.9rem 1.1rem; font-size: 0.95rem; }
   /* Evita palabras cortadas raro en columnas angostas */
   .article-body p, .article-body li { overflow-wrap: break-word; hyphens: auto; }
+}
+
+/* ============================================================
+   TAMAÑOS DE TEXTO EN MOBILE
+   Medido en el home: 38 textos a 13,6px, 9 a 13,3px, y etiquetas
+   de 10px. En un telefono eso obliga a acercar la cara a la pantalla;
+   para alguien con la vista cansada directamente no se lee.
+   Acá se sube el piso sin tocar escritorio.
+   ============================================================ */
+@media (max-width: 720px) {
+  /* Texto de lectura. Prefijado con body porque estas clases se definen en el
+     <style> de cada pagina, que se aplica despues de esta hoja. */
+  body .home-cta-desc,
+  body .hb-desc,
+  body .calc-hl-bullets li,
+  body .card-desc,
+  body .section-sub,
+  body .tool-card p { font-size: 0.95rem; line-height: 1.6; }
+
+  /* Etiquetas y metadatos */
+  body .stat-label,
+  body .home-cta-eyebrow,
+  body .hb-cat,
+  body .lbl,
+  body .delta,
+  body .hb-link,
+  body .home-cta-link,
+  /* estas viven con selector compuesto en el <style> del home */
+  body .b-stat .lbl,
+  body .home-blog-card .hb-cat,
+  body .home-blog-card .hb-link { font-size: 0.8rem; letter-spacing: 0.05em; }
+
+  /* Ticker de mercado: era el texto mas chico de toda la pagina */
+  .mkt-flag, .mkt-price { font-size: 0.82rem; }
+  .mkt-label, .mkt-chg { font-size: 0.75rem; }
+  .mc-zone, .mc-time { font-size: 0.72rem; }
+
+  /* Piso general para parrafos y listas sueltas dentro del contenido */
+  main p, main li { font-size: max(0.95rem, 15px); }
+}
+
+/* ============================================================
+   BOTON DEL MENU
+   El area tactil ya era de 44px, pero el dibujo (3 barras de 22x2)
+   se veia diminuto y no parecia un boton. Se agranda el trazo y se
+   le da un contorno para que se lea como algo apretable.
+   ============================================================ */
+@media (max-width: 1100px) {
+  .menu-toggle {
+    width: 46px;
+    height: 46px;
+    gap: 6px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+  .menu-toggle span { width: 24px; height: 2.5px; }
+  .menu-toggle[aria-expanded="true"] { background: rgba(255,255,255,0.07); }
+  .menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+  .menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
 }

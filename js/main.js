@@ -259,6 +259,11 @@ window.BB_GLOSARIO = {
     },
     {
       kind: 'link',
+      href: pagesBase + 'sobre-el-proyecto.html',
+      label: 'Sobre el proyecto',
+    },
+    {
+      kind: 'link',
       href: pagesBase + 'proyectos.html',
       label: 'Proyectos',
       extraClass: 'nav-proyectos',
@@ -303,13 +308,18 @@ window.BB_GLOSARIO = {
 // FOOTER CONTACT — inject email/contact block in every footer
 // ============================================================
 (function injectFooterContact() {
+  const inBlog = location.pathname.includes('/blog/');
+  const inPages = location.pathname.includes('/pages/');
+  const root = inBlog ? '../../' : (inPages ? '../' : '');
   const footer = document.querySelector('.site-footer');
   if (!footer || footer.querySelector('.footer-contact')) return;
   const target = footer.querySelector('.footer-brand') || footer.querySelector('.footer-inner') || footer;
   const div = document.createElement('div');
   div.className = 'footer-contact';
   div.innerHTML = `
-    <span class="footer-contact-label">Contacto</span>
+    <span class="footer-contact-label">El proyecto</span>
+    <a href="${root}pages/sobre-el-proyecto.html">👤 Quién está detrás de BB Financial</a>
+        <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
     <a href="https://www.linkedin.com/in/bruno-behr-9647b6217/" target="_blank" rel="noopener noreferrer">💼 LinkedIn — Bruno Behr</a>
   `;

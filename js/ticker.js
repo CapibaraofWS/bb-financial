@@ -41,7 +41,7 @@
       letter-spacing:0.04em;
     }
     .mkt-label{
-      color:#3d4558;
+      color:var(--text-subtle);
       text-transform:uppercase;
       letter-spacing:0.09em;
       font-size:0.63rem;
@@ -50,13 +50,13 @@
     .mkt-chg{ font-size:0.68rem; font-weight:600; }
     .mkt-chg.pos{ color:#4ade9a; }
     .mkt-chg.neg{ color:#f08080; }
-    .mkt-chg.neu{ color:#7a8599; }
+    .mkt-chg.neu{ color:var(--text-muted); }
     .mkt-flag{ font-size:0.8rem; }
     .mkt-loader{
       padding:0 1.5rem;
       font-family:'DM Mono',monospace;
       font-size:0.68rem;
-      color:#3d4558;
+      color:var(--text-subtle);
       letter-spacing:0.08em;
     }
     .mkt-clock{
@@ -64,14 +64,22 @@
       display:flex; align-items:center; gap:0.5rem;
       padding:0 1rem 0 1.6rem;
       font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:0.06em;
-      color:#7a8599; pointer-events:none; white-space:nowrap;
+      color:var(--text-muted); pointer-events:none; white-space:nowrap;
       background:linear-gradient(90deg,transparent,#080a0d 28%);
       z-index:2;
     }
-    .mkt-clock .mc-zone{ color:#3d4558; text-transform:uppercase; letter-spacing:0.09em; font-size:0.6rem; }
+    .mkt-clock .mc-zone{ color:var(--text-subtle); text-transform:uppercase; letter-spacing:0.09em; font-size:0.6rem; }
     .mkt-clock .mc-time{ color:#4ade9a; font-weight:600; font-variant-numeric:tabular-nums; }
-    .mkt-clock .mc-act{ color:#3d4558; font-size:0.6rem; }
-    @media(max-width:600px){ .mkt-clock .mc-act{ display:none; } }
+    .mkt-clock .mc-act{ color:var(--text-subtle); font-size:0.6rem; }
+    @media(max-width:720px){
+      .mkt-clock .mc-act{ display:none; }
+      .mkt-item{ font-size:0.78rem; }
+      .mkt-label{ font-size:0.72rem; }
+      .mkt-chg{ font-size:0.76rem; }
+      .mkt-flag{ font-size:0.88rem; }
+      .mkt-clock{ font-size:0.74rem; }
+      .mkt-clock .mc-zone{ font-size:0.68rem; }
+    }
   `;
   document.head.appendChild(style);
 
