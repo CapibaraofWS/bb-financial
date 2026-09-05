@@ -338,14 +338,19 @@
 
     /**
      * Months to accumulate `meta` starting from `inicial`,
-     * adding `mensual` each month, with monthly rate = tasaAnual/12.
+     * adding `mensual` each month, with monthly rate = (1+tasaAnual)^(1/12)-1.
      * tasaAnual = 0  →  pure saving (no compounding).
      */
     function mesesHastaMeta(meta, inicial, mensual, tasaAnual) {
       if (inicial >= meta) return 0;
       if (mensual <= 0 && tasaAnual <= 0) return Infinity;
 
-      const rMes = tasaAnual / 12;
+      // La tasa que carga el usuario es anual EFECTIVA (asi la trata el resto
+      // de la pagina, que calcula la tasa real con Fisher anual). Dividirla por
+      // 12 la convertiria en nominal y capitalizaria de mas: al 10% anual, r/12
+      // termina rindiendo 10,47% efectivo, y a 30 anios eso son ~10% de capital
+      // proyectado de mas. El equivalente mensual correcto es (1+r)^(1/12)-1.
+      const rMes = Math.pow(1 + tasaAnual, 1 / 12) - 1;
 
       if (rMes === 0) {
         // Linear: months = ceil((meta - inicial) / mensual)
@@ -430,7 +435,7 @@
 
       const step = Math.max(1, Math.floor(maxM / 30));
       const labels = [], dSave = [], dInv = [];
-      const rS = tSave / 12, rI = tInv / 12;
+      const rS = Math.pow(1 + tSave, 1 / 12) - 1, rI = Math.pow(1 + tInv, 1 / 12) - 1;
 
       for (let m = 0; m <= maxM; m += step) {
         if (m % 12 === 0) labels.push(m === 0 ? 'Hoy' : `Año ${m/12}`);

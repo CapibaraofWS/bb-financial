@@ -497,7 +497,12 @@
 
     function mesesHastaFireCapital(objetivo, capitalActual, aporteMes, retornoAnual) {
       if (capitalActual >= objetivo) return 0;
-      const rMes = retornoAnual / 12;
+      // La tasa que carga el usuario es anual EFECTIVA (asi la trata el resto
+      // de la pagina, que calcula la tasa real con Fisher anual). Dividirla por
+      // 12 la convertiria en nominal y capitalizaria de mas: al 10% anual, r/12
+      // termina rindiendo 10,47% efectivo, y a 30 anios eso son ~10% de capital
+      // proyectado de mas. El equivalente mensual correcto es (1+r)^(1/12)-1.
+      const rMes = Math.pow(1 + retornoAnual, 1 / 12) - 1;
       if (rMes === 0) {
         if (aporteMes <= 0) return Infinity;
         return Math.ceil((objetivo - capitalActual) / aporteMes);
@@ -640,9 +645,9 @@
       // Chart: evolución del capital bajo los 3 escenarios
       const maxAños = Math.min(horizonte, 50);
       const labels = [], dBase = [], dOpt = [], dPes = [];
-      const rMesNeto = retornoNeto / 12;
-      const rMesOpt  = (retorno * 1.2 * (1-impuesto)) / 12;
-      const rMesPes  = (retorno * 0.8 * (1-impuesto)) / 12;
+      const rMesNeto = Math.pow(1 + retornoNeto, 1 / 12) - 1;
+      const rMesOpt  = Math.pow(1 + retorno * 1.2 * (1 - impuesto), 1 / 12) - 1;
+      const rMesPes  = Math.pow(1 + retorno * 0.8 * (1 - impuesto), 1 / 12) - 1;
 
       for (let y = 0; y <= maxAños; y++) {
         labels.push(y === 0 ? 'Hoy' : `Año ${y}`);

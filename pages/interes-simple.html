@@ -311,7 +311,8 @@
       const inicial  = parseFloat(document.getElementById('a-inicial').value) || 0;
       const r = (parseFloat(document.getElementById('a-rendimiento').value) || 0) / 100;
       const años = parseInt(document.getElementById('a-plazo').value);
-      const rM = r / 12, gastos = ingresos - mensual;
+      // Rendimiento anual efectivo -> equivalente mensual (no r/12, que capitaliza de mas)
+      const rM = Math.pow(1 + r, 1 / 12) - 1, gastos = ingresos - mensual;
       let total = inicial;
       const labels = ['Inicio'], dT = [inicial], dB = [inicial];
       for (let m = 1; m <= años*12; m++) {
