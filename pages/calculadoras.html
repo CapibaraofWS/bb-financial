@@ -87,6 +87,45 @@
     }
     .cc-badge.arg { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(232,201,122,0.2); }
     .cc-badge.new { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(74,222,154,0.2); }
+    /* ---- Buscador de herramientas ---- */
+    .calc-buscador { max-width: 720px; margin: 0 auto 2.5rem; }
+    .cb-label { display:block; font-family: var(--font-display); font-size: 1.15rem; color: var(--text); margin-bottom: 0.7rem; }
+    .cb-campo { position: relative; display: flex; align-items: center; }
+    .cb-lupa { position: absolute; left: 1rem; font-size: 0.95rem; opacity: 0.6; pointer-events: none; }
+    .cb-campo input {
+      width: 100%; min-height: 52px; padding: 0.85rem 2.75rem;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font-family: var(--font-body); font-size: 1rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      -webkit-appearance: none;
+    }
+    .cb-campo input::placeholder { color: var(--text-subtle); }
+    .cb-campo input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+    .cb-limpiar {
+      position: absolute; right: 0.5rem; width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; color: var(--text-muted); font-size: 1rem;
+      cursor: pointer; border-radius: 8px;
+    }
+    .cb-limpiar:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    /* display:flex le gana al atributo hidden, hay que decirlo explicito */
+    .cb-limpiar[hidden] { display: none; }
+    .cb-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.85rem; }
+    .cb-chip {
+      min-height: 40px; padding: 0.4rem 0.9rem; border-radius: 20px;
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+      font-family: var(--font-body); font-size: 0.85rem; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .cb-chip:hover, .cb-chip.activo { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .cb-estado { margin-top: 0.85rem; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-subtle); min-height: 1.2em; }
+    .cb-sin-resultados { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); }
+    .cb-sin-resultados strong { color: var(--text); display: block; margin-bottom: 0.4rem; font-family: var(--font-display); font-size: 1.1rem; }
+    .calc-card mark { background: var(--accent-dim); color: var(--accent); border-radius: 3px; padding: 0 2px; }
+    @media (max-width: 720px) {
+      .cb-chips { gap: 0.4rem; }
+      .cb-chip { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
+    }
   </style>
 </head>
 <body>
@@ -121,6 +160,112 @@
     </section>
 
     <div class="container" style="padding-top:2.5rem;padding-bottom:6rem">
+
+      <!-- BUSCADOR — la gente no sabe cómo se llama la herramienta que necesita,
+           sabe qué problema tiene. Se busca por nombre, descripción y sinónimos. -->
+      <div class="calc-buscador">
+        <label class="cb-label" for="cb-input">¿Qué querés resolver?</label>
+        <div class="cb-campo">
+          <span class="cb-lupa" aria-hidden="true">🔍</span>
+          <input id="cb-input" type="search" autocomplete="off"
+                 placeholder="Escribí lo que necesitás: cuotas, plazo fijo, inflación…"
+                 aria-describedby="cb-estado" />
+          <button type="button" class="cb-limpiar" hidden aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="cb-chips" role="list">
+          <button type="button" class="cb-chip" data-q="cuotas">¿Cuotas o contado?</button>
+          <button type="button" class="cb-chip" data-q="plazo fijo">Dónde rinde más</button>
+          <button type="button" class="cb-chip" data-q="inflación">Cuánto perdí</button>
+          <button type="button" class="cb-chip" data-q="ahorro">Cuánto junto</button>
+          <button type="button" class="cb-chip" data-q="préstamo">Cuota del préstamo</button>
+          <button type="button" class="cb-chip" data-q="dólar">Dólar</button>
+          <button type="button" class="cb-chip" data-q="bonos">Bonos</button>
+        </div>
+        <p class="cb-estado" id="cb-estado" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- TU PLATA DÍA A DÍA — van primero porque son las decisiones que la
+           mayoría de la gente tiene que tomar esta semana, no el año que viene -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">🛒</span>
+          <h2 class="category-title">Tu plata, día a día</h2>
+          <span class="category-desc">Las decisiones de todos los meses</span>
+        </div>
+        <div class="calc-grid">
+          <a href="contado-vs-cuotas.html" class="calc-card featured argentina">
+            <span class="cc-icon">🛒</span>
+            <span class="cc-title">¿Contado o cuotas?</span>
+            <span class="cc-desc">Te ofrecen 6 o 12 cuotas sin interés: con la inflación argentina, ¿conviene o no? Acá sale el número.</span>
+          </a>
+          <a href="comparador-tasas.html" class="calc-card featured argentina">
+            <span class="cc-icon">📊</span>
+            <span class="cc-title">¿Dónde rinde más mi plata?</span>
+            <span class="cc-desc">Plazo fijo por banco, FCI money market y billeteras (Mercado Pago, Ualá, Naranja X) comparados en vivo.</span>
+          </a>
+          <a href="cuanto-perdi.html" class="calc-card argentina">
+            <span class="cc-icon">🔥</span>
+            <span class="cc-title">¿Cuánto perdí ahorrando en pesos?</span>
+            <span class="cc-desc">Cuánto poder de compra te comió la inflación mientras la plata estaba quieta.</span>
+          </a>
+          <a href="comparador-dolares.html" class="calc-card argentina">
+            <span class="cc-icon">💵</span>
+            <span class="cc-title">Tipos de dólar</span>
+            <span class="cc-desc">Oficial, blue, MEP, CCL y tarjeta: cuál es cuál, cuánto vale cada uno y la brecha entre ellos.</span>
+          </a>
+          <a href="cuentas-remuneradas.html" class="calc-card argentina">
+            <span class="cc-icon">💳</span>
+            <span class="cc-title">Cuentas remuneradas</span>
+            <span class="cc-desc">Qué TNA paga hoy cada billetera, desde cuánto, con qué tope y si tiene garantía de depósitos.</span>
+          </a>
+          <a href="comparador-plazos-fijos.html" class="calc-card argentina">
+            <span class="cc-icon">🏦</span>
+            <span class="cc-title">Plazos fijos por banco</span>
+            <span class="cc-desc">La tasa que paga cada banco hoy, ordenada de mayor a menor. Datos del BCRA.</span>
+          </a>
+          <a href="comparador-creditos-uva.html" class="calc-card argentina">
+            <span class="cc-icon">🏠</span>
+            <span class="cc-title">Créditos hipotecarios UVA</span>
+            <span class="cc-desc">Cómo funciona un crédito UVA, cuánto pagarías de cuota y qué pasa si se dispara la inflación.</span>
+          </a>
+          <a href="comparador-pix.html" class="calc-card argentina">
+            <span class="cc-icon">💸</span>
+            <span class="cc-title">Comparador PIX 🇧🇷</span>
+            <span class="cc-desc">Si viajás a Brasil: cuánto te conviene pagar con PIX y a qué tipo de cambio real.</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- PARA EMPEZAR -->
+      <div class="category-section">
+        <div class="category-header">
+          <span class="category-icon">🚀</span>
+          <h2 class="category-title">Para empezar</h2>
+          <span class="category-desc">Si recién arrancás, empezá por acá</span>
+        </div>
+        <div class="calc-grid">
+          <a href="empezar-a-invertir.html" class="calc-card featured">
+            <span class="cc-icon">🚀</span>
+            <span class="cc-title">Empezar a invertir</span>
+            <span class="cc-desc">La guía de cero: qué necesitás, en qué orden, y los errores que se pagan caro al principio.</span>
+          </a>
+          <a href="test-inversor.html" class="calc-card">
+            <span class="cc-icon">🧭</span>
+            <span class="cc-title">Test del inversor</span>
+            <span class="cc-desc">Diez preguntas para saber qué tipo de inversor sos y qué instrumentos van con tu situación.</span>
+          </a>
+          <a href="brokers.html" class="calc-card argentina">
+            <span class="cc-icon">🏦</span>
+            <span class="cc-title">Comparador de brokers</span>
+            <span class="cc-desc">Comisiones, mínimos y servicios de los brokers argentinos, y cómo verificar que estén en la CNV.</span>
+          </a>
+          <a href="etfs-fci.html" class="calc-card">
+            <span class="cc-icon">💎</span>
+            <span class="cc-title">ETFs y FCI</span>
+            <span class="cc-desc">Qué son, quién maneja tu plata y adónde va, con ejemplos de fondos que se consiguen en Argentina.</span>
+          </a>
+        </div>
+      </div>
 
       <!-- INVERSIONES -->
       <div class="category-section">
@@ -208,6 +353,11 @@
           <span class="category-desc">Bonos, Obligaciones Negociables y Letras</span>
         </div>
         <div class="calc-grid">
+          <a href="visor-bonos-ar.html" class="calc-card featured argentina">
+            <span class="cc-icon">🇦🇷</span>
+            <span class="cc-title">Visor de Bonos AR</span>
+            <span class="cc-desc">Bonares, Globales, BONTE y BOPREAL: TIR, duration y paridad calculadas en vivo con el flujo real de cada bono.</span>
+          </a>
           <a href="visor-bonos.html" class="calc-card featured">
             <span class="cc-icon">🇺🇸</span>
             <span class="cc-title">Visor de Bonos USA</span>
@@ -344,6 +494,144 @@
   </footer>
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=28"></script>
+  <script>
+  // Buscador de herramientas.
+  // El problema que resuelve: la gente no sabe que la herramienta se llama
+  // "Contado vs Cuotas", sabe que quiere saber si le conviene pagar en cuotas.
+  // Por eso además del título y la descripción se busca sobre una lista de
+  // sinónimos por herramienta, escritos como los escribiría un usuario.
+  (function buscadorCalculadoras() {
+    const input   = document.getElementById('cb-input');
+    const limpiar = document.querySelector('.cb-limpiar');
+    const estado  = document.getElementById('cb-estado');
+    const chips   = [...document.querySelectorAll('.cb-chip')];
+    if (!input) return;
+
+    const SINONIMOS = {
+      'contado-vs-cuotas.html': 'cuotas tarjeta 3 6 12 sin interes financiacion comprar ahora pagar despues contado efectivo descuento conviene',
+      'interes-compuesto.html': 'capitalizacion aportes mensuales plazo largo bola de nieve rendimiento acumulado',
+      'interes-simple.html':    'interes lineal sin capitalizar',
+      'inflacion.html':         'ipc precios aumento poder adquisitivo canasta indec',
+      'cuanto-perdi.html':      'perdi plata pesos licuacion ahorro inflacion cuanto vale hoy',
+      'prestamo.html':          'credito cuota mensual sistema frances amortizacion banco cuanto pago',
+      'comparador-creditos-uva.html': 'hipotecario uva casa vivienda credito hipoteca',
+      'comparador-tasas.html':  'plazo fijo tasa banco billetera mercado pago uala naranja rendimiento donde conviene fci money market',
+      'comparador-plazos-fijos.html': 'plazo fijo banco tna rendimiento donde pongo la plata',
+      'cuentas-remuneradas.html': 'billetera virtual mercado pago uala brubank naranja rinde sola',
+      'comparador-cuentas.html': 'billetera cuenta remunerada comparar',
+      'comparador-dolares.html': 'dolar blue mep ccl oficial tarjeta turista cripto brecha',
+      'comparador-pix.html':    'brasil real pix viaje',
+      'meta-financiera.html':   'ahorrar objetivo meta juntar plata cuanto por mes auto viaje',
+      'fire.html':              'retiro temprano jubilarme independencia financiera regla del 4 vivir de rentas',
+      'salario.html':           'sueldo aumento paritaria recomposicion cuanto gano real',
+      'conversion-tasas.html':  'tna tea tem convertir tasa nominal efectiva mensual anual',
+      'caucion.html':           'caucion bursatil plazo corto garantia',
+      'roi.html':               'retorno rentabilidad gane perdi porcentaje inversion',
+      'dividendos.html':        'dividendo yield renta acciones cobro drip',
+      'renta-fija.html':        'bono on letra tir cupon obligacion negociable',
+      'visor-bonos.html':       'treasury eeuu curva tasas tips estados unidos',
+      'visor-bonos-ar.html':    'al30 gd30 bonar global bopreal bonos argentinos tir duration',
+      'vpn.html':               'valor presente neto van proyecto flujo descontado',
+      'wacc.html':              'costo de capital promedio ponderado tasa de descuento',
+      'ddm.html':               'dividendos gordon valuacion accion precio justo',
+      'multiplos.html':         'per ebitda ratio comparar empresas',
+      'guia-multiplos.html':    'per ebitda ratios guia interpretar',
+      'markowitz.html':         'cartera portafolio diversificar frontera eficiente sharpe riesgo',
+      'etfs-fci.html':          'etf fondo comun inversion cedear diversificar',
+      'test-inversor.html':     'perfil inversor conservador agresivo que tipo de inversor soy',
+      'brokers.html':           'broker alyc abrir cuenta comisiones cocos iol balanz bull market',
+      'empezar-a-invertir.html': 'empezar principiante primera inversion como arranco',
+      'conceptos.html':         'que es significa diccionario glosario terminos'
+    };
+
+    const normalizar = s => (s || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '');
+
+    const tarjetas = [...document.querySelectorAll('.calc-card')].map(el => {
+      const href = (el.getAttribute('href') || '').split('/').pop();
+      const titulo = el.querySelector('.cc-title') ? el.querySelector('.cc-title').textContent : '';
+      const desc = el.querySelector('.cc-desc') ? el.querySelector('.cc-desc').textContent : '';
+      const extra = SINONIMOS[href] || '';
+      return { el, href, texto: normalizar([titulo, desc, extra, href.replace(/[-.]/g, ' ')].join(' ')) };
+    });
+
+    let vacio = null;
+    function mostrarVacio(q) {
+      if (!vacio) {
+        vacio = document.createElement('div');
+        vacio.className = 'cb-sin-resultados';
+        document.querySelector('.calc-buscador').after(vacio);
+      }
+      vacio.textContent = '';
+      const t = document.createElement('strong');
+      t.textContent = 'No encontramos nada para "' + q + '"';
+      vacio.appendChild(t);
+      vacio.appendChild(document.createTextNode('Probá con otra palabra, o mirá todas las herramientas más abajo.'));
+      vacio.hidden = false;
+    }
+
+    function filtrar(q) {
+      const terminos = normalizar(q).trim().split(/\s+/).filter(Boolean);
+      limpiar.hidden = !q;
+
+      if (!terminos.length) {
+        tarjetas.forEach(t => { t.el.hidden = false; });
+        document.querySelectorAll('.category-section').forEach(s => { s.hidden = false; });
+        if (vacio) vacio.hidden = true;
+        estado.textContent = '';
+        chips.forEach(c => c.classList.remove('activo'));
+        return;
+      }
+
+      // Algunas herramientas figuran en dos categorias a proposito (caucion, VPN):
+      // se cuentan una sola vez para no decir "2 herramientas" siendo la misma.
+      const encontradas = new Set();
+      tarjetas.forEach(t => {
+        const ok = terminos.every(term => t.texto.includes(term));
+        t.el.hidden = !ok;
+        if (ok) encontradas.add(t.href);
+      });
+      const visibles = encontradas.size;
+      // Una sección sin resultados no debe mostrar su encabezado suelto
+      document.querySelectorAll('.category-section').forEach(s => {
+        s.hidden = !s.querySelector('.calc-card:not([hidden])');
+      });
+
+      if (visibles === 0) {
+        mostrarVacio(q);
+        estado.textContent = 'Sin resultados';
+      } else {
+        if (vacio) vacio.hidden = true;
+        estado.textContent = visibles === 1 ? '1 herramienta' : visibles + ' herramientas';
+      }
+    }
+
+    let timer = null;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => filtrar(input.value), 120);
+    });
+    limpiar.addEventListener('click', () => { input.value = ''; filtrar(''); input.focus(); });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { input.value = ''; filtrar(''); }
+    });
+
+    chips.forEach(chip => chip.addEventListener('click', () => {
+      const yaActivo = chip.classList.contains('activo');
+      chips.forEach(c => c.classList.remove('activo'));
+      input.value = yaActivo ? '' : chip.dataset.q;
+      if (!yaActivo) chip.classList.add('activo');
+      filtrar(input.value);
+    }));
+
+    // Permite llegar con la búsqueda ya hecha desde otra página:
+    // calculadoras.html?q=cuotas
+    const inicial = new URLSearchParams(location.search).get('q');
+    if (inicial) { input.value = inicial; filtrar(inicial); }
+  })();
+  </script>
 </body>
 </html>
 
