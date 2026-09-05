@@ -619,3 +619,38 @@ document.addEventListener('click', () => {
   });
   obs.observe(document.body, { childList: true, subtree: true });
 })();
+
+// ============================================================
+// "CALCULAR" EN MOBILE
+// En escritorio el panel de resultados esta al lado del formulario, asi que
+// apretar Calcular muestra el numero al instante. En un telefono los paneles
+// se apilan y el resultado queda ~650px mas abajo: la calculadora responde
+// bien pero parece rota, porque no cambia nada de lo que se ve.
+// Al tocar el boton llevamos la vista al resultado.
+// ============================================================
+(function calcularScrollMobile() {
+  document.addEventListener('click', ev => {
+    if (!window.matchMedia('(max-width: 900px)').matches) return;
+
+    const boton = ev.target.closest('.input-panel .btn-primary');
+    if (!boton) return;
+
+    // El panel de resultados que corresponde a ESTE formulario: el primero que
+    // aparece despues en la pagina. No alcanza con mirar el hermano siguiente
+    // porque cada panel suele venir envuelto en su propia <section>, y hay
+    // paginas (conversion de tasas, renta fija) con varios bloques.
+    const panel = boton.closest('.input-panel');
+    const destino = [...document.querySelectorAll('.result-panel')].find(r =>
+      r.offsetParent !== null &&   // en las paginas con pestañas hay paneles ocultos
+      (panel.compareDocumentPosition(r) & Node.DOCUMENT_POSITION_FOLLOWING)
+    );
+    if (!destino) return;
+
+    // Despues del calculo, para que el alto ya sea el definitivo
+    setTimeout(() => {
+      const nav = document.querySelector('.site-header');
+      const y = destino.getBoundingClientRect().top + window.scrollY - ((nav ? nav.offsetHeight : 0) + 12);
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 60);
+  });
+})();

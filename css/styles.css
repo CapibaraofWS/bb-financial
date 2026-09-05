@@ -1339,6 +1339,10 @@ img { max-width: 100%; height: auto; }
   }
   .form-group input[type="number"],
   .form-group select { padding: 0.8rem 1rem; min-height: 48px; }
+  /* El padding de arriba es un atajo y pisa el hueco que dejaba .has-prefix,
+     asi que el "$" o el "%" terminaban encima del numero. Se repone aca. */
+  .form-group input.has-prefix { padding-left: 2.2rem; }
+  .form-group input.has-suffix { padding-right: 2.5rem; }
   .mini-widget input, .mini-widget select { padding: 0.7rem 0.8rem; min-height: 46px; }
 }
 
