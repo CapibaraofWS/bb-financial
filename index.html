@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=8" />
+  <link rel="stylesheet" href="css/styles.css?v=9" />
 
   <style>
     /* Contact section on homepage */
@@ -120,7 +120,7 @@
   <main>
 
     <!-- ===== HERO ===== -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section data-seccion="hero" class="hero" aria-labelledby="hero-title">
       <div class="hero-bg">
         <div class="grid-overlay"></div>
         <div class="blob blob-1"></div>
@@ -149,14 +149,14 @@
 
     <!-- ===== DESDE TU ULTIMA VISITA — lo primero que quiere saber alguien
          que ya conoce el sitio: que cambio mientras no entraba ===== -->
-    <section style="padding:2rem 0 0">
+    <section data-seccion="visita" style="padding:2rem 0 0">
       <div class="container">
         <div id="desde-tu-visita" hidden></div>
       </div>
     </section>
 
     <!-- ===== MARKET BRIEF — live snapshot del mercado ===== -->
-    <section style="padding:2rem 0 0">
+    <section data-seccion="mercado" style="padding:2rem 0 0">
       <div class="container">
         <style>
           .brief-card{background:linear-gradient(135deg,#0e1318,#11141a);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.65rem;}
@@ -203,7 +203,7 @@
     </section>
 
     <!-- ===== AGENDA AR + PIX CTAs ===== -->
-    <section style="padding:1.25rem 0 0">
+    <section data-seccion="agenda" style="padding:1.25rem 0 0">
       <div class="container">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem">
 
@@ -232,7 +232,7 @@
     </section>
 
     <!-- ===== CTA GRID (4 cajas) ===== -->
-    <section style="padding:2.5rem 0">
+    <section data-seccion="empezar" style="padding:2.5rem 0">
       <div class="container">
         <style>
           .home-cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;}
@@ -289,7 +289,7 @@
     </section>
 
     <!-- ===== VOCES DEL MERCADO CTA ===== -->
-    <section style="padding:1.5rem 0 0.5rem">
+    <section data-seccion="voces" style="padding:1.5rem 0 0.5rem">
       <div class="container">
         <a href="pages/agenda-ar.html#voces" style="display:flex;align-items:center;gap:1.5rem;background:linear-gradient(135deg,rgba(255,80,80,0.06),rgba(255,168,87,0.05));border:1px solid rgba(255,80,80,0.22);border-radius:14px;padding:1.2rem 1.5rem;text-decoration:none;color:inherit;transition:all 0.25s;flex-wrap:wrap;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,80,80,0.5)';this.style.boxShadow='0 10px 30px rgba(255,80,80,0.08)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,80,80,0.22)';this.style.boxShadow=''">
           <div style="font-size:2.4rem;flex-shrink:0;line-height:1">▶️</div>
@@ -304,7 +304,7 @@
     </section>
 
     <!-- ===== NEWS CAROUSEL ===== -->
-    <section class="tools-section" style="padding-top:1rem;padding-bottom:4rem" aria-labelledby="noticias-title">
+    <section data-seccion="noticias" class="tools-section" style="padding-top:1rem;padding-bottom:4rem" aria-labelledby="noticias-title">
       <div class="container">
         <div class="news-home-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
           <div style="display:flex;align-items:center;gap:0.75rem">
@@ -342,7 +342,7 @@
     </section>
 
     <!-- ===== TOOLS GRID ===== -->
-    <section id="calculadoras" class="tools-section" aria-labelledby="tools-title">
+    <section data-seccion="calculadoras" id="calculadoras" class="tools-section" aria-labelledby="tools-title">
       <div class="container">
         <div class="section-header">
           <h2 id="tools-title" class="section-title">Calculadoras</h2>
@@ -429,7 +429,7 @@
     </section>
 
     <!-- ===== BLOG CTA — 3 destacados + link a todos ===== -->
-    <section class="tools-section" style="padding-top:3rem;padding-bottom:3rem" aria-labelledby="blog-title">
+    <section data-seccion="blog" class="tools-section" style="padding-top:3rem;padding-bottom:3rem" aria-labelledby="blog-title">
       <div class="container">
         <style>
           .home-blog-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;}
@@ -475,7 +475,7 @@
     </section>
 
     <!-- ===== WHY SECTION ===== -->
-    <section class="why-section" aria-labelledby="why-title">
+    <section data-seccion="porque" class="why-section" aria-labelledby="why-title">
       <div class="container why-inner">
         <div class="why-text">
           <h2 id="why-title" class="section-title">¿Por qué importa calcular?</h2>
@@ -502,7 +502,9 @@
     </section>
 
     <!-- ===== PROJECTS TEASER ===== -->
-    <section class="tools-section" style="padding-top:4rem;padding-bottom:4rem" aria-labelledby="proyectos-title">
+    <!-- Oculta mientras no haya modelos publicados. Para volver a mostrarla,
+         quitar el hidden. La pagina pages/proyectos.html sigue existiendo. -->
+    <section hidden data-seccion="proyectos" class="tools-section" style="padding-top:4rem;padding-bottom:4rem" aria-labelledby="proyectos-title">
       <div class="container">
         <div class="section-header">
           <h2 id="proyectos-title" class="section-title">Proyectos Financieros</h2>
@@ -661,7 +663,10 @@
         const k = i.title.toLowerCase().slice(0, 35);
         if (seen.has(k)) return false;
         seen.add(k); return true;
-      }).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6);
+      }).sort((a, b) => new Date(b.date) - new Date(a.date))
+        // En un telefono cada tarjeta ocupa ~450px: 6 noticias eran 2.700px de
+        // scroll en el medio del home. Con 3 se entiende igual que hay novedades.
+        .slice(0, window.matchMedia("(max-width: 900px)").matches ? 3 : 6);
 
       loader.remove();
       if (!items.length) {

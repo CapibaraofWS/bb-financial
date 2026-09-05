@@ -1629,3 +1629,36 @@ body .faq-body { color: var(--text-read); }
 }
 .wv-cta:hover { gap: 0.25rem; }
 .wv-cargando { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-subtle); }
+
+/* ============================================================
+   ORDEN DEL HOME EN MOBILE
+   Medido en un teléfono de 375px: el home eran 12.989px, 16 pantallas, y la
+   sección de calculadoras —la razón por la que la gente entra— arrancaba recién
+   en la pantalla 9, después de 2.700px de noticias.
+   Acá no se borra contenido: se reordena para pantalla chica con flex order,
+   así el escritorio queda exactamente igual. Lo que resuelve un problema va
+   arriba; lo que se explora, abajo.
+   ============================================================ */
+@media (max-width: 900px) {
+  main { display: flex; flex-direction: column; }
+
+  main > [data-seccion="hero"]         { order: 1; }
+  main > [data-seccion="visita"]       { order: 2; }
+  main > [data-seccion="mercado"]      { order: 3; }
+  main > [data-seccion="calculadoras"] { order: 4; }   /* subía desde la pantalla 9 */
+  main > [data-seccion="empezar"]      { order: 5; }
+  main > [data-seccion="agenda"]       { order: 6; }
+  main > [data-seccion="blog"]         { order: 7; }
+  main > [data-seccion="noticias"]     { order: 8; }   /* 2.700px: se va al final */
+  main > [data-seccion="voces"]        { order: 9; }
+  main > [data-seccion="porque"]       { order: 10; }
+  main > [data-seccion="proyectos"]    { order: 11; }
+
+  /* El hero ocupaba 777px antes de mostrar nada útil */
+  .hero-content { padding-top: 3rem; padding-bottom: 2.5rem; }
+  .hero-stats { gap: 1.25rem; margin-top: 1.5rem; }
+
+  /* Menos aire entre bloques: en vertical, 4rem de padding es media pantalla */
+  main > section { padding-top: 1.75rem !important; padding-bottom: 1.75rem !important; }
+  main > [data-seccion="hero"] { padding: 0 !important; }
+}
