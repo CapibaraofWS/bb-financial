@@ -257,15 +257,18 @@ window.BB_GLOSARIO = {
       href: pagesBase + 'blog/index.html',
       label: 'Blog',
     },
+    // "Proyectos" queda fuera del menu hasta que haya modelos publicados: hoy
+    // lleva a un "Proximamente" y solo carga la barra. La pagina sigue existiendo
+    // y accesible por URL; para volver a mostrarla, descomentar el bloque de abajo.
+    // {
+    //   kind: 'link',
+    //   href: pagesBase + 'proyectos.html',
+    //   label: 'Proyectos',
+    // },
     {
       kind: 'link',
       href: pagesBase + 'sobre-el-proyecto.html',
       label: 'Sobre el proyecto',
-    },
-    {
-      kind: 'link',
-      href: pagesBase + 'proyectos.html',
-      label: 'Proyectos',
       extraClass: 'nav-proyectos',
     },
   ];

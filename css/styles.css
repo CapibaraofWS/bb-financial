@@ -14,12 +14,12 @@
   --text: #e8edf5;
   /* Contraste sobre el fondo (#0a0c0f), medido:
        antes  muted #7a8599 = 5,3:1   subtle #3d4558 = 2,0:1  <- por debajo del minimo
-       ahora  muted #9aa5b8 = 8,0:1   subtle #6f7a90 = 4,6:1
+       ahora  muted #9aa5b8 = 8,0:1   subtle #757f96 = 5,3:1 sobre el fondo y 5,0:1 sobre las tarjetas
      El #3d4558 se usaba en etiquetas de 10px: era ilegible para cualquiera con
      la vista cansada o con el telefono al sol. Se mantiene la jerarquia visual
      (texto > muted > subtle), solo que ahora las tres se pueden leer. */
   --text-muted: #9aa5b8;
-  --text-subtle: #6f7a90;
+  --text-subtle: #757f96;
 
   --accent: #4ade9a;
   --accent-dim: rgba(74,222,154,0.12);
@@ -227,7 +227,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero-content {
   position: relative;
   z-index: 1;
-  padding: 6rem 0;
+  /* Solo vertical: el shorthand con 0 pisaba el padding lateral de .container
+     y en mobile el texto quedaba pegado al borde de la pantalla. */
+  padding-top: 6rem;
+  padding-bottom: 6rem;
   max-width: 700px;
 }
 .hero-eyebrow {
@@ -1187,7 +1190,6 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
   .article-body table,
   .compare-grid,
   .blog-grid { font-size: 0.82rem; }
-  .article-body { padding: 0 0.5rem; }
   .article-body table th,
   .article-body table td { padding: 0.55rem 0.6rem; }
 
@@ -1481,7 +1483,6 @@ body .faq-body { color: var(--text-read); }
 @media (max-width: 720px) {
   body .article-body p,
   body .article-body li { font-size: 1.02rem; line-height: 1.8; }
-  .article-body { padding: 0 0.15rem; }
   body .article-body h2 { font-size: 1.35rem; line-height: 1.25; }
   body .article-body h3 { font-size: 1.12rem; }
   .article-body blockquote { padding: 0.9rem 1.1rem; font-size: 0.95rem; }
