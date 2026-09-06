@@ -85,7 +85,7 @@
           anual   ? { k: 'Últimos 12 meses', v: num(anual.ultValorInformado, 1) + '%' } : null,
           rem     ? { k: 'Esperada a 12 meses (REM)', v: num(rem.ultValorInformado, 1) + '%', nota: 'lo que proyectan los economistas' } : null,
         ].filter(Boolean),
-        cta: { texto: 'Calcular cuánto perdiste', href: base + 'pages/cuanto-perdi.html' },
+        cta: { texto: 'Calcular cuánto perdiste', href: base + 'pages/inflacion.html' },
       };
     },
   };

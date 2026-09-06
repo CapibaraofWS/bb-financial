@@ -29,7 +29,8 @@
   <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=11" />
   <style>
     .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
@@ -138,7 +139,7 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
       <nav class="main-nav">
         <a href="../index.html" class="nav-link">Inicio</a>
         <a href="calculadoras.html" class="nav-link active">Calculadoras</a>
@@ -209,11 +210,6 @@
             <span class="cc-icon">📊</span>
             <span class="cc-title">¿Dónde rinde más mi plata?</span>
             <span class="cc-desc">Plazo fijo por banco, FCI money market y billeteras (Mercado Pago, Ualá, Naranja X) comparados en vivo.</span>
-          </a>
-          <a href="cuanto-perdi.html" class="calc-card argentina">
-            <span class="cc-icon">🔥</span>
-            <span class="cc-title">¿Cuánto perdí ahorrando en pesos?</span>
-            <span class="cc-desc">Cuánto poder de compra te comió la inflación mientras la plata estaba quieta.</span>
           </a>
           <a href="comparador-dolares.html" class="calc-card argentina">
             <span class="cc-icon">💵</span>
@@ -482,7 +478,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
         <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
       </div>
       <nav class="footer-nav">
@@ -519,8 +515,7 @@
       'contado-vs-cuotas.html': 'cuotas tarjeta 3 6 12 sin interes financiacion comprar ahora pagar despues contado efectivo descuento conviene',
       'interes-compuesto.html': 'capitalizacion aportes mensuales plazo largo bola de nieve rendimiento acumulado',
       'interes-simple.html':    'interes lineal sin capitalizar',
-      'inflacion.html':         'ipc precios aumento poder adquisitivo canasta indec inflacion acumulada convertir precios historicos cuanto valen hoy valor del peso serie historica nominalidad',
-      'cuanto-perdi.html':      'perdi plata pesos licuacion ahorro inflacion cuanto vale hoy',
+      'inflacion.html':         'ipc precios aumento poder adquisitivo canasta indec inflacion acumulada convertir precios historicos cuanto valen hoy valor del peso serie historica nominalidad perdi plata pesos licuacion ahorro cuanto vale hoy',
       'prestamo.html':          'credito cuota mensual sistema frances amortizacion banco cuanto pago',
       'comparador-creditos-uva.html': 'hipotecario uva casa vivienda credito hipoteca',
       'comparador-tasas.html':  'plazo fijo tasa banco billetera mercado pago uala naranja rendimiento donde conviene fci money market',

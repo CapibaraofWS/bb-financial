@@ -31,9 +31,9 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../../css/styles.css?v=11" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .article-hero { padding: 3.5rem 0 1rem; }
     .article-hero .article-cat { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.85rem; }
@@ -64,7 +64,7 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../../index.html" class="logo"><img src="../../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+      <a href="../../index.html" class="logo"><img src="../../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
       <nav class="main-nav"></nav>
       <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     </div>
@@ -334,13 +334,15 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="../../index.html" class="logo"><img src="../../assets/logo-bb.svg" alt="BB Financial" class="logo-img" /></a>
+        <a href="../../index.html" class="logo"><img src="../../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
         <p>Herramientas y artículos financieros gratuitos.</p>
       </div>
     </div>
     <div class="footer-bottom"><p style="font-weight:500;font-size:0.82rem"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio <strong>educativo</strong>. Esta información NO constituye asesoramiento financiero, recomendación de inversión, ni oferta de compra/venta de instrumentos. Es una guía orientativa — <strong>cada persona es un caso particular</strong>. Consultá un asesor matriculado en CNV antes de decisiones financieras importantes.</p><p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.5rem">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../../js/chart-mobile.js?v=1"></script>
   <script src="../../js/sanitize.js?v=1"></script>
   <script src="../../js/main.js?v=30"></script>
   <script src="../../js/esqueletos.js?v=2" defer></script>

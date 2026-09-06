@@ -29,5 +29,12 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/pages/cuanto-perdi.html",
+      "destination": "/pages/inflacion.html",
+      "permanent": true
+    }
   ]
 }

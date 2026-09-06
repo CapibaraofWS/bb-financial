@@ -193,7 +193,6 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'renta-fija.html',         label: 'Renta Fija',          icon: '📜' },
         { href: pagesBase + 'etfs-fci.html',           label: 'ETFs y FCI',          icon: '💎' },
         { href: pagesBase + 'cuentas-remuneradas.html',label: 'Cuentas remuneradas', icon: '💳' },
-        { href: pagesBase + 'cuanto-perdi.html',       label: '¿Cuánto perdí ahorrando?', icon: '🔥' },
         { href: pagesBase + 'comparador-dolares.html', label: 'Tipos de dólar',           icon: '💵' },
       ],
     },
