@@ -39,7 +39,8 @@
     {"@type":"Question","name":"Si la inflación fue 50% dos años seguidos, ¿el total no debería ser 100%?","acceptedAnswer":{"@type":"Answer","text":"No, porque la inflación se acumula sobre el precio ya aumentado. Un bien de $100 sube a $150 el primer año y a $225 el segundo, porque el 50% del segundo año se aplica sobre $150 y no sobre $100. El aumento total es 125%, no 100%."}},
     {"@type":"Question","name":"El dólar subió distinto a lo que dice la calculadora, ¿está mal?","acceptedAnswer":{"@type":"Answer","text":"No. La calculadora ajusta por el índice de precios al consumidor, que mide una canasta de bienes y servicios. El dólar es un precio más dentro de la economía y puede subir más rápido, más lento o igual que esa canasta en un período dado."}},
     {"@type":"Question","name":"¿Por qué la calculadora arranca en enero de 1992?","acceptedAnswer":{"@type":"Answer","text":"Porque en enero de 1992 se introdujo el peso actual. Antes hubo varios cambios de moneda que quitaron trece ceros en total, así que los importes nominales anteriores no son comparables sin convertir primero la moneda."}},
-    {"@type":"Question","name":"¿De dónde salen los datos de inflación?","acceptedAnswer":{"@type":"Answer","text":"Desde diciembre de 2016 se usa el índice de precios al consumidor nacional del INDEC, base diciembre 2016 igual a 100, publicado en el portal de datos abiertos del Estado. Para los meses anteriores se encadenan variaciones mensuales históricas. Entre 2007 y 2015 las cifras oficiales fueron cuestionadas y la serie usa estimaciones alternativas para ese tramo."}}
+    {"@type":"Question","name":"¿De dónde salen los datos de inflación?","acceptedAnswer":{"@type":"Answer","text":"Desde diciembre de 2016 se usa el índice de precios al consumidor nacional del INDEC, base diciembre 2016 igual a 100, publicado en el portal de datos abiertos del Estado. Para los meses anteriores se encadenan variaciones mensuales históricas. Entre 2007 y 2015 las cifras oficiales fueron cuestionadas y la serie usa estimaciones alternativas para ese tramo."}},
+    {"@type":"Question","name":"¿Por qué el resultado no coincide con otra calculadora de inflación?","acceptedAnswer":{"@type":"Answer","text":"Casi siempre es por lo que cada calculadora entiende por un mes, no porque los datos sean distintos. Puede ser el nivel de precios de ese mes según el INDEC, el primer día de ese mes (que equivale al cierre del mes anterior), o el período que va de principios de un mes a fines de otro, que suma un mes más de inflación. Sobre veinte mil pesos de enero de 2019 llevados a julio de 2026, esas tres lecturas dan 1.273.813, 1.283.699 y 1.310.833 pesos. Ninguna está mal: cambia qué se está midiendo."}}
   ]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -191,6 +192,19 @@
     .grafico-caja .cab { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
     .grafico-caja h3 { font-size: 0.95rem; font-weight: 500; }
     .grafico-caja .escala { font-size: 0.75rem; color: var(--text-subtle); font-family: var(--font-mono); }
+    /* Chart.js con responsive mantiene la proporcion del canvas, asi que en una
+       pantalla ancha el grafico se estira a lo alto sin freno. El alto lo fija
+       el contenedor y el grafico se adapta. */
+    .grafico-lienzo { position: relative; height: 320px; }
+
+    /* ---- Que sigue ---- */
+    .siguiente { list-style: none; padding: 0; margin: 0; }
+    .siguiente li {
+      padding: 0.85rem 0; border-bottom: 1px solid var(--border);
+      color: var(--text-read); line-height: 1.6; font-size: 0.92rem;
+    }
+    .siguiente li:last-child { border-bottom: none; }
+    .siguiente a { color: var(--accent); font-weight: 500; }
 
     @media (max-width: 720px) {
       .conv { padding: 1.25rem 1rem; }
@@ -276,6 +290,11 @@
 
         <div class="conv-frase" id="frase" role="status">Cargando el índice de precios…</div>
         <div class="conv-perdida" id="perdida" hidden></div>
+        <p class="conv-nota" id="nota-perdida" hidden>
+          Es el mismo cálculo mirado al revés. Arriba dice cuánto <em>subieron los precios</em>;
+          acá, cuánto <em>bajó tu plata</em> si se quedó quieta. Los dos números salen del mismo
+          índice: uno es el aumento, el otro lo que queda después de ese aumento.
+        </p>
         <p class="conv-nota" id="nota-datos"></p>
 
         <div class="conv-presets" id="presets"></div>
@@ -292,7 +311,9 @@
           <h3 id="titulo-grafico">Cómo evolucionó ese importe</h3>
           <span class="escala">escala logarítmica</span>
         </div>
-        <canvas id="serieChart" height="240" aria-label="Evolución del importe equivalente mes a mes"></canvas>
+        <div class="grafico-lienzo">
+          <canvas id="serieChart" aria-label="Evolución del importe equivalente mes a mes"></canvas>
+        </div>
         <p class="conv-nota">En escala logarítmica, una línea recta significa que los precios crecen a un ritmo constante. Cuando la curva se empina, la inflación se aceleró.</p>
       </div>
 
@@ -405,7 +426,12 @@
 
         <details>
           <summary>¿Por qué el resultado no coincide exactamente con otra calculadora?</summary>
-          <p>Suele ser por tres motivos. Primero, la fuente del tramo previo a 2017, donde no hay una serie oficial única. Segundo, el redondeo acumulado a lo largo de cientos de meses. Tercero, si la otra calculadora proyecta meses que el INDEC todavía no publicó, usando estimaciones de mercado. Acá sólo se usan meses ya publicados: nunca vas a poder elegir un mes que no tenga dato real.</p>
+          <p>Casi siempre es por lo que cada una entiende por "enero de 2019", no porque los datos sean distintos. Hay tres lecturas posibles y las tres son defendibles:</p>
+          <p><strong>1.</strong> El nivel de precios <em>de</em> enero de 2019, que es el número que publica el INDEC para ese mes. Es la que usamos acá, porque es la que podés verificar contra la tabla oficial.<br />
+          <strong>2.</strong> El <em>primer día</em> de enero de 2019, o sea el nivel de precios con el que terminó diciembre de 2018. Esto corre la serie un mes hacia atrás y da un número más alto.<br />
+          <strong>3.</strong> <em>Principios</em> de enero hasta <em>fin</em> de julio, que suma un mes más de inflación en el mismo período.</p>
+          <p>Sobre $20.000 de enero de 2019 llevados a julio de 2026, esas tres lecturas dan $1.273.813, $1.283.699 y $1.310.833. Son diferencias de hasta 2,9%, y ninguna está mal: cambia qué se está midiendo. Si comparás con otra calculadora, fijate primero qué convención usa.</p>
+          <p>Los otros dos motivos de diferencia son el redondeo acumulado a lo largo de cientos de meses, y que algunas calculadoras proyectan meses que el INDEC todavía no publicó usando estimaciones de mercado. Acá sólo se usan meses ya publicados.</p>
         </details>
 
         <details>
@@ -423,11 +449,11 @@
       <section class="bloque">
         <h2>Con esto ya sabés cuánto se movieron los precios</h2>
         <p>La pregunta que sigue casi siempre es qué hacer con esa información.</p>
-        <ul class="pasos" style="counter-reset:none">
-          <li style="padding-left:0"><a href="inflacion.html"><strong>¿Cuánto perdí ahorrando en pesos?</strong></a> — la misma cuenta, pero puesta sobre tu plata quieta: cuánto poder de compra te comió la inflación mientras no hacías nada.</li>
-          <li style="padding-left:0"><a href="comparador-plazos-fijos.html"><strong>Comparador de plazos fijos</strong></a> — qué tasa necesitás para al menos empatarle a la inflación.</li>
-          <li style="padding-left:0"><a href="comparador-dolares.html"><strong>Comparador de dólares</strong></a> — si el dólar te protegió o no en el período que miraste.</li>
-          <li style="padding-left:0"><a href="blog/que-es-la-inflacion.html"><strong>Qué es la inflación y cómo se mide</strong></a> — cómo arma el INDEC la canasta y por qué tu inflación personal puede ser distinta del promedio.</li>
+        <ul class="siguiente">
+          <li><a href="comparador-plazos-fijos.html">Comparador de plazos fijos</a> — qué tasa necesitás para al menos empatarle a la inflación.</li>
+          <li><a href="cuentas-remuneradas.html">Cuentas remuneradas</a> — dónde dejar la plata del día a día para que no se quede quieta.</li>
+          <li><a href="comparador-dolares.html">Comparador de dólares</a> — si el dólar te protegió o no en el período que miraste.</li>
+          <li><a href="blog/que-es-la-inflacion.html">Qué es la inflación y cómo se mide</a> — cómo arma el INDEC la canasta y por qué tu inflación personal puede ser distinta del promedio.</li>
         </ul>
       </section>
     </div>
@@ -497,7 +523,7 @@
       mesD: $('mes-desde'), anioD: $('anio-desde'), mesH: $('mes-hasta'), anioH: $('anio-hasta'),
       presets: $('presets'), swap: $('swap'), copiar: $('copiar'), copiado: $('copiado'),
       mal: $('mal-texto'), bien: $('bien-texto'), tituloGrafico: $('titulo-grafico'),
-      perdida: $('perdida'),
+      perdida: $('perdida'), notaPerdida: $('nota-perdida'),
     };
 
     let indice = {};        // { 'YYYY-MM': nivel }
@@ -607,7 +633,9 @@
     // si se quedo quieto. Es la pregunta que mas le importa a la gente, y solo
     // tiene sentido mirando hacia adelante en el tiempo.
     function pintarPerdida(desde, hasta, monto, factor) {
-      if (factor <= 1 || !Number.isFinite(monto) || monto <= 0) { el.perdida.hidden = true; return; }
+      const ocultar = factor <= 1 || !Number.isFinite(monto) || monto <= 0;
+      el.notaPerdida.hidden = ocultar;
+      if (ocultar) { el.perdida.hidden = true; return; }
       const queda = monto / factor;              // en pesos del mes de origen
       const perdido = (1 - 1 / factor) * 100;
       el.perdida.innerHTML =
@@ -658,19 +686,29 @@
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,   // el alto lo manda .grafico-lienzo
           interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: { display: false },
             tooltip: { callbacks: { label: ctx => '$' + fmt(ctx.parsed.y, 0) } },
           },
           scales: {
-            x: { ticks: { color: '#9aa5b8', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 8, maxRotation: 0 },
-                 grid: { color: 'rgba(255,255,255,0.04)' } },
-            // Logaritmica: si no, los ultimos anios aplastan todo lo anterior
+            x: { ticks: { color: '#9aa5b8', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 6, maxRotation: 0 },
+                 grid: { display: false } },
+            // Logaritmica: si no, los ultimos anios aplastan todo lo anterior.
+            // Chart.js pone una marca en cada 10, 20, 30..., que en una serie que
+            // cruza varios ordenes de magnitud llena el eje. Nos quedamos con la
+            // convencion 1-2-5 de las escalas logaritmicas: 20k, 50k, 100k, 200k...
             y: { type: 'logarithmic',
+                 border: { display: false },
                  ticks: { color: '#9aa5b8', font: { family: 'DM Mono', size: 9 },
-                          callback: v => '$' + (v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) },
-                 grid: { color: 'rgba(255,255,255,0.04)' } },
+                          autoSkip: false,
+                          callback: v => {
+                            const mant = Math.round(v / Math.pow(10, Math.floor(Math.log10(v))));
+                            if (![1, 2, 5].includes(mant)) return null;
+                            return '$' + (v >= 1e6 ? +(v / 1e6).toFixed(1) + 'M' : v >= 1000 ? Math.round(v / 1000) + 'k' : Math.round(v));
+                          } },
+                 grid: { color: 'rgba(255,255,255,0.05)' } },
           },
         },
       });
