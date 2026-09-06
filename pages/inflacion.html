@@ -452,13 +452,48 @@
             período pisa los años intervenidos, y ahí la calculadora te muestra los dos resultados.
           </dd>
 
-          <dt>De dónde sale la serie combinada</dt>
+          <dt>Qué son los índices provinciales, y por qué esos</dt>
           <dd>
-            Del proyecto de código abierto
+            La intervención fue <em>del INDEC</em>, el organismo nacional. Las provincias tienen sus
+            propias direcciones de estadística, que son organismos distintos, con su propio personal y
+            su propia metodología, y siguieron midiendo y publicando durante todos esos años. Esa es la
+            razón de fondo por la que sirven: no dependían de quien intervino al INDEC.
+            <br /><br />
+            No están elegidos por conveniencia. Son las tres provincias que publicaron un IPC mensual
+            continuo y público que abarca el período, con la serie completa descargable todavía hoy:
+            <table class="tabla-fuente">
+              <caption>Series que componen el índice</caption>
+              <tbody>
+                <tr><th>San Luis — Dirección Provincial de Estadística y Censos</th><td>desde oct-2005</td></tr>
+                <tr><th>Ciudad de Buenos Aires — IPCBA, Dirección General de Estadística y Censos</th><td>desde jul-2012</td></tr>
+                <tr><th>Córdoba — Dirección General de Estadística y Censos</th><td>desde ene-2014</td></tr>
+                <tr><th>INDEC, serie vieja</th><td>hasta feb-2007</td></tr>
+                <tr><th>INDEC, IPC Nacional actual</th><td>desde dic-2016</td></tr>
+              </tbody>
+            </table>
+            Fijate que la serie vieja del INDEC se corta en <strong>febrero de 2007</strong>, justo cuando
+            empieza la intervención, y la nueva arranca en diciembre de 2016, cuando el organismo se
+            normalizó. En el medio manda lo provincial.
+            <br /><br />
+            <strong>La limitación que tenés que conocer:</strong> entre 2007 y mediados de 2012 la única
+            de las tres que ya estaba publicando era San Luis. O sea que ese tramo de cinco años y medio
+            descansa sobre una sola provincia. Desde julio de 2012 se le suma CABA, y desde enero de 2014
+            también Córdoba. Cuantas más series hay, más sólido es el promedio: el tramo más flojo es
+            justamente el primero.
+            <br /><br />
+            Y una limitación de fondo: una provincia no es el país. Los precios y el peso de cada rubro
+            en el gasto no son iguales en San Luis que en el conurbano. El índice combinado es una
+            <em>aproximación</em> a lo que habría medido un IPC nacional bien hecho, no ese IPC.
+          </dd>
+
+          <dt>Cómo se combinan</dt>
+          <dd>
+            Usamos el proyecto de código abierto
             <a href="https://github.com/matuteiglesias/IPC-Argentina" target="_blank" rel="noopener noreferrer">IPC-Argentina</a>,
-            que enlaza los índices provinciales con los nacionales y publica la serie mensual desde 2000.
-            Sólo usamos su tramo anterior a diciembre de 2016; de ahí en adelante mandan los datos del
-            INDEC.
+            que toma esas series de las páginas oficiales de cada organismo, las alinea en escala
+            logarítmica —porque cada una tiene su propio año base— y en cada mes promedia las que estén
+            disponibles. Nosotros usamos sólo su tramo anterior a diciembre de 2016; de ahí en adelante
+            mandan los datos del INDEC.
             <br /><br />
             Antes de darla por buena la contrastamos contra tres referencias independientes:
             <table class="tabla-fuente">
