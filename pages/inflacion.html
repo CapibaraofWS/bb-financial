@@ -39,7 +39,7 @@
     {"@type":"Question","name":"Si la inflación fue 50% dos años seguidos, ¿el total no debería ser 100%?","acceptedAnswer":{"@type":"Answer","text":"No, porque la inflación se acumula sobre el precio ya aumentado. Un bien de $100 sube a $150 el primer año y a $225 el segundo, porque el 50% del segundo año se aplica sobre $150 y no sobre $100. El aumento total es 125%, no 100%."}},
     {"@type":"Question","name":"El dólar subió distinto a lo que dice la calculadora, ¿está mal?","acceptedAnswer":{"@type":"Answer","text":"No. La calculadora ajusta por el índice de precios al consumidor, que mide una canasta de bienes y servicios. El dólar es un precio más dentro de la economía y puede subir más rápido, más lento o igual que esa canasta en un período dado."}},
     {"@type":"Question","name":"¿Por qué la calculadora arranca en enero de 1992?","acceptedAnswer":{"@type":"Answer","text":"Porque en enero de 1992 se introdujo el peso actual. Antes hubo varios cambios de moneda que quitaron trece ceros en total, así que los importes nominales anteriores no son comparables sin convertir primero la moneda."}},
-    {"@type":"Question","name":"¿De dónde salen los datos de inflación?","acceptedAnswer":{"@type":"Answer","text":"Desde diciembre de 2016 se usa el índice de precios al consumidor nacional del INDEC, base diciembre 2016 igual a 100, publicado en el portal de datos abiertos del Estado. Para los meses anteriores se encadenan variaciones mensuales históricas. Atención: entre 2007 y 2015 el INDEC estuvo intervenido y la serie arrastra sus cifras oficiales. Un estudio de Alberto Cavallo (MIT), publicado en el Journal of Monetary Economics en 2013, midió precios reales de supermercado y encontró que entre octubre de 2007 y marzo de 2011 la inflación fue de 20,1% anual mientras el IPC oficial informaba 8,5%. Los cálculos que cruzan ese tramo quedan cortos, y la calculadora lo avisa."}},
+    {"@type":"Question","name":"¿De dónde salen los datos de inflación?","acceptedAnswer":{"@type":"Answer","text":"Desde diciembre de 2016 se usa el índice de precios al consumidor nacional del INDEC, base diciembre 2016 igual a 100, publicado en el portal de datos abiertos del Estado. Para los meses anteriores se encadenan variaciones mensuales históricas. Atención: entre 2007 y 2015 el INDEC estuvo intervenido y la serie arrastra sus cifras oficiales. Un estudio de Alberto Cavallo (MIT), publicado en el Journal of Monetary Economics en 2013, midió precios reales de supermercado y encontró que entre octubre de 2007 y marzo de 2011 la inflación fue de 20,1% anual mientras el IPC oficial informaba 8,5%. Para ese tramo la calculadora ofrece una segunda fuente, una serie combinada que usa los IPC de la Ciudad de Buenos Aires, Cordoba y San Luis, cuyas oficinas no fueron intervenidas. Desde diciembre de 2016 las dos series son identicas."}},
     {"@type":"Question","name":"¿Por qué el resultado no coincide con otra calculadora de inflación?","acceptedAnswer":{"@type":"Answer","text":"Casi siempre es por lo que cada calculadora entiende por un mes, no porque los datos sean distintos. Puede ser el nivel de precios de ese mes según el INDEC, el primer día de ese mes (que equivale al cierre del mes anterior), o el período que va de principios de un mes a fines de otro, que suma un mes más de inflación. Sobre veinte mil pesos de enero de 2019 llevados a julio de 2026, esas tres lecturas dan 1.273.813, 1.283.699 y 1.310.833 pesos. Ninguna está mal: cambia qué se está midiendo."}}
   ]}
   </script>
@@ -106,6 +106,24 @@
     .conv-frase strong { color: var(--text); font-family: var(--font-mono); }
     .conv-frase .destacado { color: var(--accent); }
     .conv-nota { margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-subtle); }
+
+    .conv-fuente {
+      display: flex; align-items: center; gap: 0.6rem; margin-top: 1rem;
+      padding-top: 1rem; border-top: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .conv-fuente label { font-size: 0.85rem; color: var(--text-muted); }
+    .conv-fuente select {
+      flex: 1; min-width: 200px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 0.85rem; padding: 0.6rem 0.7rem; min-height: 44px;
+    }
+    .conv-fuente select:focus { outline: none; border-color: var(--accent); }
+
+    .conv-otra {
+      margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;
+    }
+    .conv-otra strong { font-family: var(--font-mono); color: var(--text-read); }
+    .conv-otra[hidden] { display: none; }
 
     .conv-aviso {
       margin-top: 1rem; padding: 0.9rem 1.1rem;
@@ -300,16 +318,25 @@
           </div>
         </div>
 
+        <div class="conv-fuente">
+          <label for="fuente">Fuente</label>
+          <select id="fuente">
+            <option value="combinada">Serie combinada — INDEC + índices provinciales</option>
+            <option value="oficial">INDEC oficial únicamente</option>
+          </select>
+        </div>
+
         <div class="conv-frase" id="frase" role="status">Cargando el índice de precios…</div>
+        <p class="conv-otra" id="otra-fuente" hidden></p>
         <div class="conv-aviso" id="aviso-intervencion" hidden>
           <strong>⚠ Este período cruza los años 2007-2015 y el resultado se queda corto.</strong>
           Durante esos años el INDEC estuvo intervenido y la serie que usamos acá arrastra sus cifras
           oficiales. Un estudio del MIT que midió precios reales de supermercado encontró que entre
           octubre de 2007 y marzo de 2011 la inflación fue de <strong>20,1% anual</strong> mientras el
           IPC oficial informaba <strong>8,5%</strong>. Acumulado, casi el triple.
-          <strong>El número real es bastante más alto que el que ves</strong>
-          (<a href="#fuentes">de dónde sale esto</a>). Para períodos que arrancan en 2017 o después el
-          dato es el oficial del INDEC y no tiene este problema.
+          <strong>Para ver una estimación más realista, cambiá la fuente a "serie combinada"</strong>
+          arriba del todo (<a href="#fuentes">de dónde sale</a>). Para períodos que arrancan en 2017 o
+          después el dato es el oficial del INDEC y no tiene este problema.
         </div>
         <div class="conv-perdida" id="perdida" hidden></div>
         <p class="conv-nota" id="nota-perdida" hidden>
@@ -403,18 +430,54 @@
             El IPC Nacional no existía todavía, así que la serie se arma encadenando hacia atrás las
             variaciones mensuales históricas desde la base del INDEC.
           </dd>
-          <dt>El tramo 2007–2015: leé esto</dt>
+          <dt>El tramo 2007–2015, y por qué hay dos fuentes</dt>
           <dd>
             Durante esos años el INDEC estuvo intervenido y publicó cifras que hoy nadie considera
-            confiables. <strong>La serie que usamos arrastra esos números oficiales</strong>: da unos
-            11,6% de inflación anual para ese período, cuando las mediciones independientes daban más
-            del doble.
+            confiables: da unos <strong>11,6% de inflación anual</strong> para ese período, cuando las
+            mediciones independientes daban más del doble. Por eso el selector de arriba tiene dos
+            opciones.
             <br /><br />
-            En la práctica: si tu cálculo arranca en 2017 o después, el dato es el oficial del INDEC y
-            es exacto. Si cruza 2007–2015, <strong>el resultado que ves se queda corto</strong>. Por eso
-            la calculadora te avisa cuando el período pisa esos años. Otras calculadoras reconstruyen ese
-            tramo con series alternativas y por eso dan más: para períodos largos que empiezan antes de
-            2007, su número está más cerca de la realidad que el nuestro.
+            <strong>Serie combinada</strong> (la que viene puesta): usa el IPC oficial del INDEC desde
+            diciembre de 2016, y para los años anteriores un índice que enlaza los IPC de la Ciudad de
+            Buenos Aires, Córdoba y San Luis. Esas oficinas provinciales <em>no</em> fueron intervenidas
+            y siguieron midiendo. Da <strong>26,2% anual</strong> para 2007–2015.
+            <br /><br />
+            <strong>INDEC oficial</strong>: sólo la serie nacional. Es la que podés verificar contra la
+            tabla publicada del organismo, y la que corresponde si necesitás justamente el dato oficial
+            — por ejemplo para entender cómo se actualizó un contrato o una jubilación indexada por IPC
+            en esos años, porque a esa gente le aplicaron ese número, no el real.
+            <br /><br />
+            <strong>Desde diciembre de 2016 las dos series son idénticas</strong>, así que si tu cálculo
+            arranca en 2017 o después da lo mismo cuál elijas. El selector sólo cambia algo cuando el
+            período pisa los años intervenidos, y ahí la calculadora te muestra los dos resultados.
+          </dd>
+
+          <dt>De dónde sale la serie combinada</dt>
+          <dd>
+            Del proyecto de código abierto
+            <a href="https://github.com/matuteiglesias/IPC-Argentina" target="_blank" rel="noopener noreferrer">IPC-Argentina</a>,
+            que enlaza los índices provinciales con los nacionales y publica la serie mensual desde 2000.
+            Sólo usamos su tramo anterior a diciembre de 2016; de ahí en adelante mandan los datos del
+            INDEC.
+            <br /><br />
+            Antes de darla por buena la contrastamos contra tres referencias independientes:
+            <table class="tabla-fuente">
+              <caption>Controles sobre la serie combinada</caption>
+              <tbody>
+                <tr><th>Contra el INDEC donde el INDEC sí es confiable (dic-2016 a jul-2025)</th><td>−2,0%</td></tr>
+                <tr><th>Contra el INDEC en 2000–2006, tramo no discutido</th><td>0 a 1%</td></tr>
+                <tr><th>Contra la medición de Cavallo (oct-2007 a mar-2011)</th><td>20,9% vs 20,1% anual</td></tr>
+              </tbody>
+            </table>
+            El tercero es el que más pesa: dos métodos que no tienen nada que ver — uno raspa precios de
+            supermercados online, el otro promedia oficinas de estadística provinciales — llegan a menos
+            de un punto de diferencia, y los dos dan más del doble que la cifra oficial. Y la serie
+            combinada <em>no</em> se despega del INDEC en los años en que el INDEC medía bien, que es lo
+            que uno quiere de una reconstrucción.
+            <br /><br />
+            Aun así, es una reconstrucción: son índices de alcance provincial, no una medición nacional,
+            y distintas reconstrucciones dan resultados distintos entre sí. Por eso está como opción y
+            no como dato único.
           </dd>
 
           <dt>Cómo se sabe que esas cifras estaban mal</dt>
@@ -588,13 +651,17 @@
       presets: $('presets'), swap: $('swap'), copiar: $('copiar'), copiado: $('copiado'),
       mal: $('mal-texto'), bien: $('bien-texto'), tituloGrafico: $('titulo-grafico'),
       perdida: $('perdida'), notaPerdida: $('nota-perdida'), aviso: $('aviso-intervencion'),
+      fuente: $('fuente'), otra: $('otra-fuente'),
     };
 
     // Anios en que el INDEC estuvo intervenido: la serie oficial de ese tramo
     // subestima fuerte la inflacion real y arrastra todo calculo que lo cruce.
     const INTERV = { desde: '2007-01', hasta: '2015-12' };
 
-    let indice = {};        // { 'YYYY-MM': nivel }
+    // Las dos series comparten base (dic-2016 = 100) y son identicas de ahi en
+    // adelante: solo difieren en el tramo intervenido.
+    let series = { oficial: {}, combinada: {} };
+    let indice = {};        // la elegida ahora mismo
     let meses = [];         // claves ordenadas, ya recortadas a >= 1992-01
     let grafico = null;
 
@@ -687,7 +754,9 @@
 
       // El aviso salta si el periodo pisa aunque sea un mes del tramo intervenido
       const [ini, fin] = desde <= hasta ? [desde, hasta] : [hasta, desde];
-      el.aviso.hidden = !(ini <= INTERV.hasta && fin >= INTERV.desde);
+      const cruza = ini <= INTERV.hasta && fin >= INTERV.desde;
+      el.aviso.hidden = !(cruza && el.fuente.value === 'oficial');
+      pintarOtraFuente(cruza, desde, hasta, monto);
 
       pintarPerdida(desde, hasta, monto, factor);
       el.tituloGrafico.textContent = 'Cómo evolucionó ese importe entre ' + nombreMes(desde) + ' y ' + nombreMes(hasta);
@@ -699,6 +768,25 @@
     function mesesEntre(a, b) {
       const [ay, am] = a.split('-').map(Number), [by, bm] = b.split('-').map(Number);
       return (by - ay) * 12 + (bm - am);
+    }
+
+    // Cuando el periodo cruza el tramo intervenido las dos series dan distinto.
+    // Mostrar las dos es mas honesto que elegir por el lector: la diferencia no
+    // es un error de calculo, es cuanta inflacion hubo realmente en esos anios.
+    function pintarOtraFuente(cruza, desde, hasta, monto) {
+      const otra = el.fuente.value === 'oficial' ? 'combinada' : 'oficial';
+      const m = series[otra];
+      if (!cruza || !m || !m[desde] || !m[hasta] || !Number.isFinite(monto)) {
+        el.otra.hidden = true;
+        return;
+      }
+      const valor = monto * (m[hasta] / m[desde]);
+      el.otra.innerHTML = otra === 'oficial'
+        ? 'Con el IPC oficial del INDEC daría <strong>$' + fmt(valor) + '</strong>, bastante menos, ' +
+          'porque esa serie arrastra los años en que el organismo estuvo intervenido.'
+        : 'Con la serie combinada daría <strong>$' + fmt(valor) + '</strong>, que está más cerca de ' +
+          'la inflación que hubo de verdad en esos años.';
+      el.otra.hidden = false;
     }
 
     // La misma cuenta leida al reves: cuanto poder de compra perdio ese importe
@@ -787,13 +875,15 @@
     }
 
     function actualizarUrl(monto, desde, hasta) {
-      const p = new URLSearchParams({ monto, desde, hasta });
+      const p = new URLSearchParams({ monto, desde, hasta, fuente: el.fuente.value });
       history.replaceState(null, '', location.pathname + '?' + p);
     }
 
     function leerUrl() {
       const monto = parseFloat(PARAMS.get('monto'));
       if (Number.isFinite(monto) && monto >= 0) el.monto.value = monto;
+      const f = PARAMS.get('fuente');
+      if (f === 'oficial' || f === 'combinada') el.fuente.value = f;
       ['desde', 'hasta'].forEach(cual => {
         const v = PARAMS.get(cual);
         if (!v || !indice[v]) return;
@@ -852,8 +942,10 @@
 
       const tasas = new Map(serie.map(x => [String(x.fecha).slice(0, 7), x.valor]));
       let ult = hasta;
-      while (tasas.has(sig(ult)) && Number.isFinite(tasas.get(sig(ult)))) {
-        indice[sig(ult)] = indice[ult] * (1 + tasas.get(sig(ult)) / 100);
+      while (tasas.has(sig(ult)) && Number.isFinite(tasas.get(sig(ult))) && series.oficial[ult]) {
+        const f = 1 + tasas.get(sig(ult)) / 100;
+        series.oficial[sig(ult)] = series.oficial[ult] * f;
+        series.combinada[sig(ult)] = series.combinada[ult] * f;
         ult = sig(ult);
       }
       return ult;
@@ -869,7 +961,9 @@
         return;
       }
 
-      indice = doc.valores;
+      series.oficial = doc.valores;
+      series.combinada = doc.valoresCombinada || doc.valores;
+      indice = series.combinada;
       let ultimo = doc.hasta;
       try { ultimo = await extenderConDatosVivos(ultimo); } catch { /* seguimos con el archivo */ }
 
@@ -890,6 +984,11 @@
       [[el.mesD, el.anioD], [el.mesH, el.anioH]].forEach(([sm, sa]) => {
         sa.addEventListener('change', () => { ajustarMeses(sm, sa); calcular(); });
         sm.addEventListener('change', calcular);
+      });
+
+      el.fuente.addEventListener('change', () => {
+        indice = series[el.fuente.value];
+        calcular();
       });
 
       el.swap.addEventListener('click', () => {
