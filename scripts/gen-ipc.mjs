@@ -76,7 +76,7 @@ const doc = {
   fuentes: {
     '2016-12 en adelante': `INDEC, IPC Nacional base dic-2016=100, serie ${SERIE_INDEC} del portal de datos abiertos (apis.datos.gob.ar)`,
     'anterior a 2016-12': 'Serie de variaciones mensuales de argentinadatos.com, encadenada hacia atras desde la base del INDEC',
-    advertencia: 'Entre 2007 y 2015 las cifras oficiales del INDEC fueron cuestionadas; la serie usa estimaciones alternativas para ese tramo.',
+    advertencia: 'ATENCION: entre 2007 y 2015 el INDEC estuvo intervenido y esta serie arrastra sus cifras oficiales, que subestiman la inflacion real (da ~11,6% anual contra ~25% de las estimaciones privadas). Todo calculo que cruce ese tramo queda corto.',
   },
   valores: Object.fromEntries(claves.map(k => [k, Number(indice.get(k).toPrecision(9))])),
 };
