@@ -28,6 +28,24 @@
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.worldbank.org open.er-api.com api.alternative.me api.allorigins.win www.google-analytics.com analytics.google.com region1.google-analytics.com; frame-ancestors 'none'"
         }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/pages/(mis-portafolios|portfolio-detalle|watchlist).html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "redirects": [

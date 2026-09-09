@@ -1,11 +1,12 @@
 # BB Financial
+
+# Sin Disallow a proposito. Un Disallow impide que Google TRAIGA la URL, y 19
+# paginas del sitio arman su contenido pidiendo datos a /api/: bloquearlo hacia
+# que Google las renderizara vacias y rechazara la indexacion.
+# Lo que no queremos que se indexe (/api/ y las vistas privadas del usuario)
+# lleva la cabecera X-Robots-Tag: noindex, definida en vercel.json. Esa es la
+# forma correcta: se puede traer, no se puede indexar.
 User-agent: *
 Allow: /
-
-# Vistas privadas del usuario: no aportan nada al índice
-Disallow: /pages/mis-portafolios.html
-Disallow: /pages/portfolio-detalle.html
-Disallow: /pages/watchlist.html
-Disallow: /api/
 
 Sitemap: https://bb-financial.vercel.app/sitemap.xml
