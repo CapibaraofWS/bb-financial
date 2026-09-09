@@ -29,6 +29,14 @@ export function isAllowedOrigin(req) {
         || origin === 'https://' + h
         || origin === 'http://' + h) return true;
   }
+
+  // Sec-Fetch-Site lo pone el navegador y una pagina no lo puede falsificar:
+  // es cabecera prohibida para fetch y XHR. Sirve de red de seguridad cuando no
+  // llega el Referer, que es justo lo que puede pasar cuando Google renderiza
+  // la pagina para indexarla: sin esto sus 19 paginas con datos en vivo se le
+  // renderizan vacias.
+  if (req.headers['sec-fetch-site'] === 'same-origin') return true;
+
   return false;
 }
 
