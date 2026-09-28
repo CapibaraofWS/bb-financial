@@ -11,12 +11,15 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>BB Financial | Calculadora de Plazo Fijo, Dólar y Finanzas Argentina</title>
 
   <meta name="description" content="Calculadoras financieras gratis: interés compuesto, ahorro y metas. Compará ahorrar vs. invertir y tomá mejores decisiones con tu plata." />
   <meta name="keywords" content="calculadora interés compuesto, calculadora ahorro, calculadora financiera, interés simple, inversión, metas financieras, modelado financiero" />
   <meta name="author" content="BB Financial" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://bb-financial.vercel.app/" />
 
   <meta property="og:type" content="website" />
@@ -31,7 +34,7 @@
   <meta name="twitter:description" content="Calculadoras financieras gratis: interés compuesto, ahorro y metas. Compará ahorrar vs. invertir y tomá mejores decisiones con tu plata." />
   <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://bb-financial.vercel.app/#organizacion","name":"BB Financial","alternateName":"BB Financial Argentina","url":"https://bb-financial.vercel.app/","logo":{"@type":"ImageObject","url":"https://bb-financial.vercel.app/assets/logo-bb.png"},"image":"https://bb-financial.vercel.app/img/banner-bb-financial.jpg","email":"bb.financial10@gmail.com","description":"Proyecto argentino de herramientas financieras gratuitas: calculadoras, comparadores de tasas en vivo, curvas de bonos y contenido educativo sobre finanzas personales.","areaServed":{"@type":"Country","name":"Argentina"},"knowsLanguage":"es-AR","founder":{"@id":"https://bb-financial.vercel.app/#bruno"},"sameAs":["https://www.linkedin.com/in/bruno-behr-9647b6217/"]},{"@type":"Person","@id":"https://bb-financial.vercel.app/#bruno","name":"Bruno Behr","url":"https://bb-financial.vercel.app/pages/sobre-el-proyecto.html","email":"bb.financial10@gmail.com","nationality":{"@type":"Country","name":"Argentina"},"knowsAbout":["Finanzas personales","Renta fija","Valuación de empresas","Mercado de capitales argentino"],"sameAs":["https://www.linkedin.com/in/bruno-behr-9647b6217/"]},{"@type":"WebSite","@id":"https://bb-financial.vercel.app/#sitio","url":"https://bb-financial.vercel.app/","name":"BB Financial","inLanguage":"es-AR","publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"}},{"@type":"WebApplication","@id":"https://bb-financial.vercel.app/#app","name":"BB Financial — Calculadoras financieras","url":"https://bb-financial.vercel.app/","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"es-AR","description":"Más de 20 calculadoras financieras gratuitas: interés compuesto, inflación, préstamos, metas de ahorro, bonos y comparadores de tasas en vivo para Argentina.","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"creator":{"@id":"https://bb-financial.vercel.app/#bruno"},"publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"}}]}
+  {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://bb-financial.vercel.app/#organizacion","name":"BB Financial","alternateName":"BB Financial Argentina","url":"https://bb-financial.vercel.app/","logo":{"@type":"ImageObject","url":"https://bb-financial.vercel.app/assets/favicon-512.png","width":512,"height":512},"image":"https://bb-financial.vercel.app/img/banner-bb-financial.jpg","email":"bb.financial10@gmail.com","description":"Proyecto argentino de herramientas financieras gratuitas: calculadoras, comparadores de tasas en vivo, curvas de bonos y contenido educativo sobre finanzas personales.","areaServed":{"@type":"Country","name":"Argentina"},"knowsLanguage":"es-AR","founder":{"@id":"https://bb-financial.vercel.app/#bruno"},"sameAs":["https://www.linkedin.com/in/bruno-behr-9647b6217/"]},{"@type":"Person","@id":"https://bb-financial.vercel.app/#bruno","name":"Bruno Behr","url":"https://bb-financial.vercel.app/pages/sobre-el-proyecto.html","email":"bb.financial10@gmail.com","nationality":{"@type":"Country","name":"Argentina"},"knowsAbout":["Finanzas personales","Renta fija","Valuación de empresas","Mercado de capitales argentino"],"sameAs":["https://www.linkedin.com/in/bruno-behr-9647b6217/"]},{"@type":"WebSite","@id":"https://bb-financial.vercel.app/#sitio","url":"https://bb-financial.vercel.app/","name":"BB Financial","inLanguage":"es-AR","publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"}},{"@type":"WebApplication","@id":"https://bb-financial.vercel.app/#app","name":"BB Financial — Calculadoras financieras","url":"https://bb-financial.vercel.app/","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"es-AR","description":"Más de 20 calculadoras financieras gratuitas: interés compuesto, inflación, préstamos, metas de ahorro, bonos y comparadores de tasas en vivo para Argentina.","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"creator":{"@id":"https://bb-financial.vercel.app/#bruno"},"publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"}}]}
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -612,7 +615,7 @@
       div.addEventListener('mouseenter', () => { div.style.borderColor = 'rgba(255,255,255,0.12)'; div.style.transform = 'translateY(-2px)'; });
       div.addEventListener('mouseleave', () => { div.style.borderColor = ''; div.style.transform = ''; });
 
-      const PLACEHOLDER = 'img/imagen-para-noticias.png';
+      const PLACEHOLDER = 'img/imagen-para-noticias.jpg';
       const img = document.createElement('img');
       img.src = safeUrl(item.img) || PLACEHOLDER;
       img.alt = '';

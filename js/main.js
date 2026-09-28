@@ -140,27 +140,6 @@ window.BB_GLOSARIO = {
 // GA4 is now loaded inline at the top of every <head> (per Google's recommendation).
 
 // ============================================================
-// FAVICON injection (so every page shows the BB logo in tab)
-(function injectFavicon() {
-  if (document.querySelector('link[rel="icon"]')) return;
-  // Path is relative to where the document lives.
-  const inBlog = location.pathname.includes('/blog/');
-  const inPages = location.pathname.includes('/pages/');
-  const base = inBlog ? '../../assets/' : (inPages ? '../assets/' : 'assets/');
-  // Only JPG — browsers prefer SVG when both present and ours is the small old logo
-  const links = [
-    { rel: 'icon', type: 'image/jpeg', sizes: '512x512', href: base + 'favicon.jpg' },
-    { rel: 'shortcut icon', type: 'image/jpeg', href: base + 'favicon.jpg' },
-    { rel: 'apple-touch-icon', sizes: '180x180', href: base + 'favicon.jpg' },
-  ];
-  links.forEach(l => {
-    const link = document.createElement('link');
-    Object.entries(l).forEach(([k, v]) => link.setAttribute(k, v));
-    document.head.appendChild(link);
-  });
-})();
-
-// ============================================================
 // MAIN NAV — single source of truth, audience-based dropdowns
 // Replaces the static <nav class="main-nav"> on every page so
 // we don't have to edit 35 HTML files when nav changes.

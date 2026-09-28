@@ -11,10 +11,13 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Calculadora de inflación de Argentina: cuánto valen hoy los pesos de otro año — BB Financial</title>
-  <meta name="description" content="Convertí precios entre cualquier mes desde 1992 con el IPC del INDEC. Cuánto valen hoy $20.000 de 2019, cuánta inflación acumulada hubo y cómo comparar sueldos y precios sin equivocarte." />
+  <meta name="description" content="Convertí precios entre cualquier mes desde 1992 con el IPC del INDEC: cuánto valen hoy tus pesos, cuánta inflación acumulada hubo y cómo comparar sueldos." />
   <meta name="keywords" content="calculadora inflación argentina, inflación acumulada, poder adquisitivo, IPC INDEC, valor del peso, convertir precios históricos" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://bb-financial.vercel.app/pages/inflacion.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Financial" />
@@ -42,6 +45,9 @@
     {"@type":"Question","name":"¿De dónde salen los datos de inflación?","acceptedAnswer":{"@type":"Answer","text":"Desde diciembre de 2016 se usa el índice de precios al consumidor nacional del INDEC, base diciembre 2016 igual a 100, publicado en el portal de datos abiertos del Estado. Para los meses anteriores se encadenan variaciones mensuales históricas. Atención: entre 2007 y 2015 el INDEC estuvo intervenido y la serie arrastra sus cifras oficiales. Un estudio de Alberto Cavallo (MIT), publicado en el Journal of Monetary Economics en 2013, midió precios reales de supermercado y encontró que entre octubre de 2007 y marzo de 2011 la inflación fue de 20,1% anual mientras el IPC oficial informaba 8,5%. Para ese tramo la calculadora ofrece una segunda fuente, una serie combinada que usa los IPC de la Ciudad de Buenos Aires, Cordoba y San Luis, cuyas oficinas no fueron intervenidas. Desde diciembre de 2016 las dos series son identicas."}},
     {"@type":"Question","name":"¿Por qué el resultado no coincide con otra calculadora de inflación?","acceptedAnswer":{"@type":"Answer","text":"Casi siempre es por lo que cada calculadora entiende por un mes, no porque los datos sean distintos. Puede ser el nivel de precios de ese mes según el INDEC, el primer día de ese mes (que equivale al cierre del mes anterior), o el período que va de principios de un mes a fines de otro, que suma un mes más de inflación. Sobre veinte mil pesos de enero de 2019 llevados a julio de 2026, esas tres lecturas dan 1.273.813, 1.283.699 y 1.310.833 pesos. Ninguna está mal: cambia qué se está midiendo."}}
   ]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Dataset","name":"Índice de precios al consumidor de Argentina, serie mensual 1943-2026 (base diciembre 2016 = 100)","description":"Serie mensual del IPC de Argentina en dos versiones. La oficial usa el IPC Nacional del INDEC desde diciembre de 2016 y encadena hacia atrás las variaciones mensuales históricas. La combinada es idéntica desde diciembre de 2016 y reemplaza el tramo 2000-2016, que incluye la intervención del INDEC entre 2007 y 2015, por un promedio de los IPC provinciales de San Luis, CABA y Córdoba enlazados con el INDEC.","url":"https://bb-financial.vercel.app/pages/inflacion.html","keywords":["inflación","IPC","Argentina","INDEC","índice de precios al consumidor"],"inLanguage":"es-AR","isAccessibleForFree":true,"temporalCoverage":"1943-03/2026-07","spatialCoverage":{"@type":"Place","name":"Argentina"},"variableMeasured":"Índice de precios al consumidor, base diciembre 2016 = 100","isBasedOn":["https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26","https://github.com/matuteiglesias/IPC-Argentina"],"creator":{"@type":"Organization","name":"BB Financial","url":"https://bb-financial.vercel.app/"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://bb-financial.vercel.app/data/ipc-argentina.json"}]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
