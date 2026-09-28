@@ -241,7 +241,7 @@
     <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=31"></script>
@@ -259,7 +259,7 @@
       const capital    = parseFloat(document.getElementById('capital-div').value)    || 0;
       const precio     = parseFloat(document.getElementById('precio-accion').value)  || 1;
       const divAnual   = parseFloat(document.getElementById('div-anual').value)      || 0;
-      const freqDiv    = parseInt(document.getElementById('freq-div').value);
+      const freqDiv    = parseInt(document.getElementById('freq-div').value)        || 4;
       const plazo      = parseInt(document.getElementById('plazo-div').value)        || 1;
       const aporte     = parseFloat(document.getElementById('aporte-div').value)     || 0;
       const reinvertir = document.getElementById('reinvertir').value === 'si';
@@ -280,13 +280,16 @@
         const accionesAporte = (aporte * 12) / precioActual;
         acciones += accionesAporte;
 
-        // Dividendo bruto del año
-        const divBruto = acciones * divActual;
-        const divNeto  = divBruto * (1 - impDiv);
+        // El dividendo del año se cobra en freqDiv pagos. Con DRIP cada pago
+        // compra acciones que ya cobran el pago siguiente: por eso la frecuencia
+        // importa cuando se reinvierte, y da lo mismo cuando no.
+        let divNeto = 0;
+        for (let p = 0; p < freqDiv; p++) {
+          const pago = acciones * divActual / freqDiv * (1 - impDiv);
+          divNeto += pago;
+          if (reinvertir) acciones += pago / precioActual;
+        }
         totalDividendos += divNeto;
-
-        // DRIP: reinvertir compra más acciones al precio actual
-        if (reinvertir) acciones += divNeto / precioActual;
 
         // Actualizar precio y dividendo para el año siguiente
         precioActual *= (1 + crecPrecio);

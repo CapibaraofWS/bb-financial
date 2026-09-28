@@ -7,3 +7,11 @@ data/Renta fija/
 .claude/
 .git/
 node_modules/
+# Documentos internos y herramientas de desarrollo: no son parte del sitio.
+# auditoria.txt en particular describe puntos debiles; no tiene que ser publico.
+auditoria.txt
+ANTIGRAVITY.md
+README.md
+scripts/
+.vscode/
+data/bonos-ar-referencia.txt

@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (await denyRateLimited(req, res, { limit: 40, windowSecs: 60, key: 'acciones' })) return;
 
   const symbol = req.query.symbol;
-  if (symbol && !/^[A-Z0-9.\-^=]{1,15}$/i.test(symbol)) {
+  if (symbol && (!/^[A-Z0-9.\-^=]{1,15}$/i.test(symbol) || /^\.+$/.test(symbol))) {
     return res.status(400).json({ error: 'Symbol inválido' });
   }
   const range = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','max'].includes(req.query.range) ? req.query.range : '1d';
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
     return res.status(200).json(data);
-  } catch (err) {
-    return res.status(500).json({ error: 'No se pudo conectar con Yahoo Finance', detail: String(err?.message || err) });
+  } catch {
+    return res.status(500).json({ error: 'No se pudo conectar con Yahoo Finance' });
   }
 }

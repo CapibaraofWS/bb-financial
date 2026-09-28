@@ -310,7 +310,7 @@
     <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=31"></script>
@@ -456,7 +456,7 @@
       const clase = VALID_CLASES.has(a.clase) ? a.clase : 'otro';
       const tipo  = VALID_TIPOS.has(a.tipo)  ? a.tipo  : 'accion';
       const out = {
-        id: safeStr(a.id, 64) || genId(),
+        id: safeId(a.id),
         simbolo: safeStr(a.simbolo, 24).toUpperCase(),
         nombre:  safeStr(a.nombre, 120),
         clase, tipo,
@@ -484,6 +484,8 @@
       return out;
     }
 
+    function safeId(v) { return typeof v === 'string' && /^[\w-]{1,64}$/.test(v) ? v : genId(); }
+
     function sanitizePortfolio(p) {
       if (!p || typeof p !== 'object') return null;
       const activos = Array.isArray(p.activos)
@@ -492,7 +494,9 @@
       const nombre = safeStr(p.nombre, 80).trim();
       if (!nombre) return null;
       return {
-        id: safeStr(p.id, 64) || genId(),
+        // El id termina adentro de un onclick="...('id')": esc() no alcanza ahi porque el
+        // navegador decodifica &#39; antes de correr el JS. Solo letras, numeros, _ y -.
+        id: safeId(p.id),
         nombre,
         desc: safeStr(p.desc, 400),
         creadoEn: Number.isFinite(+p.creadoEn) ? +p.creadoEn : Date.now(),

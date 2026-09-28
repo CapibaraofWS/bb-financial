@@ -2,6 +2,7 @@
 // Devuelve { items: [{title, link, pubDate, img, description}] } parseado server-side.
 // Whitelist de fuentes para evitar abuso.
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 const SOURCES = {
   // Argentina
@@ -99,9 +100,10 @@ function parseRSS(xml) {
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'rss' })) return;
 
   const source = req.query.source;
-  if (!source || !SOURCES[source]) {
+  if (!source || !Object.hasOwn(SOURCES, source)) {
     return res.status(400).json({ error: 'Fuente inválida' });
   }
   const url = SOURCES[source];
@@ -120,7 +122,7 @@ export default async function handler(req, res) {
     const items = parseRSS(xml);
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=900');
     return res.status(200).json({ source, count: items.length, items });
-  } catch (err) {
-    return res.status(500).json({ error: 'No se pudo conectar con el feed', detail: String(err?.message || err) });
+  } catch {
+    return res.status(500).json({ error: 'No se pudo conectar con el feed' });
   }
 }

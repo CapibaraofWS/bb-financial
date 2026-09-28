@@ -23,12 +23,11 @@ export function isAllowedOrigin(req) {
   const referer = req.headers.referer || req.headers.referrer || '';
   const origin = req.headers.origin || '';
 
-  for (const h of ALLOWED_HOSTS) {
-    if (referer.includes('://' + h + '/') || referer.includes('://' + h + '?')
-        || referer === 'https://' + h
-        || origin === 'https://' + h
-        || origin === 'http://' + h) return true;
-  }
+  // Se compara el host exacto. Antes se buscaba el texto del host dentro del
+  // Referer, y cualquier sitio lo pasaba poniendo "?x=://bb-financial.vercel.app/"
+  // en su propia URL: sus visitantes terminaban gastando nuestras cuotas de API.
+  const host = u => { try { return new URL(u).host; } catch { return ''; } };
+  if (ALLOWED_HOSTS.has(host(referer)) || ALLOWED_HOSTS.has(host(origin))) return true;
 
   // Sec-Fetch-Site lo pone el navegador y una pagina no lo puede falsificar:
   // es cabecera prohibida para fetch y XHR. Sirve de red de seguridad cuando no

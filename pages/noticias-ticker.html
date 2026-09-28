@@ -194,9 +194,6 @@
   <script>
     const SYMBOL_REGEX = /^[A-Z0-9.\-^=]{1,15}$/;
 
-    function esc(s) {
-      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
     function safeUrl(url) {
       return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null;
     }
@@ -358,13 +355,6 @@
         card.appendChild(body);
         grid.appendChild(card);
       });
-    }
-
-    function makePlaceholder() {
-      const ph = document.createElement('div');
-      ph.className = 'news-img-placeholder';
-      ph.textContent = '📰';
-      return ph;
     }
 
     async function searchTicker(rawSym) {

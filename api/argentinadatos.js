@@ -1,5 +1,6 @@
 // Proxy para api.argentinadatos.com — whitelist de paths para prevenir SSRF
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 const ALLOWED_PATHS = [
   'finanzas/reservas',
@@ -38,6 +39,7 @@ const ALLOWED_PATHS = [
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 120, windowSecs: 60, key: 'argentinadatos' })) return;
   const path = req.query.path;
 
   if (!path || !ALLOWED_PATHS.includes(path)) {

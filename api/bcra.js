@@ -2,6 +2,7 @@
 // Soporta ?endpoint=Monetarias (default) — lista todas las variables con su ultValorInformado
 // La v3 está deprecada — migramos a v4 que es la actual del BCRA (api.bcra.gob.ar/estadisticas/v4.0).
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 // Además de Monetarias v4 exponemos Estadísticas Cambiarias v1 (tipos de cambio
 // oficiales del BCRA para ~40 monedas, con histórico por moneda).
@@ -43,6 +44,7 @@ function buildUrl(q) {
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'bcra' })) return;
   const endpoint = req.query.endpoint || 'Monetarias';
 
   if (!ALLOWED.has(endpoint)) {

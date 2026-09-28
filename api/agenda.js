@@ -4,6 +4,7 @@
 // ?source=bcra-calendario      → calendario de informes BCRA
 // Consolidado en un solo endpoint para no superar el límite de funciones del plan Hobby.
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 const UA = 'Mozilla/5.0 (compatible; BBFinancialBot/1.0)';
 const TIMEOUT = 9000;
@@ -495,14 +496,15 @@ const HANDLERS = {
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'agenda' })) return;
   const source = req.query.source;
-  const h = HANDLERS[source];
+  const h = Object.hasOwn(HANDLERS, source) ? HANDLERS[source] : null;
   if (!h) return res.status(400).json({ error: 'source inválido', validSources: Object.keys(HANDLERS) });
   try {
     const data = await h.fn();
     res.setHeader('Cache-Control', h.cache);
     return res.status(200).json(data);
-  } catch (err) {
-    return res.status(500).json({ error: 'Error al obtener datos', source, detail: String(err?.message || err) });
+  } catch {
+    return res.status(500).json({ error: 'Error al obtener datos', source });
   }
 }

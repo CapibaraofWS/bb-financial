@@ -147,13 +147,19 @@
   (function() {
     const KEY = 'bb_watchlist';
 
-    function load()  { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+    // Los símbolos terminan adentro de onclick="...('SIM')": solo se aceptan los que
+    // tienen forma de ticker, así ninguno puede traer comillas.
+    const SIMBOLO = /^[A-Z0-9.\-^=]{1,15}$/;
+    function load()  {
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]').filter(s => typeof s === 'string' && SIMBOLO.test(s)); }
+      catch { return []; }
+    }
     function save(l) { localStorage.setItem(KEY, JSON.stringify(l)); }
 
     window.agregar = async function() {
       const inp = document.getElementById('add-input');
       const sym = inp.value.trim().toUpperCase();
-      if (!sym) return;
+      if (!SIMBOLO.test(sym)) return;
       const list = load();
       if (list.includes(sym)) { inp.value = ''; return; }
       list.push(sym);

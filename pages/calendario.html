@@ -370,7 +370,7 @@
           }
           const title = `${esc(e.symbol)} · est: ${e.epsEstimate ?? '—'} · real: ${e.epsActual ?? '—'}`;
           return `<a class="cd-logo ${cls}" href="ticker.html?symbol=${encodeURIComponent(e.symbol)}" title="${title}" onclick="event.stopPropagation()">
-            <img src="${logoUrl(e.symbol)}" alt="${esc(e.symbol)}" loading="lazy" onerror="this.closest('.cd-logo').classList.add('noimg')">
+            <img src="${esc(logoUrl(e.symbol))}" alt="${esc(e.symbol)}" loading="lazy" onerror="this.closest('.cd-logo').classList.add('noimg')">
             <span class="cd-logo-txt">${esc(e.symbol)}</span>
           </a>`;
         }).join('');
@@ -412,7 +412,7 @@
         const dayCell = dayPct != null
           ? `<td class="${dayPct>0?'pos':dayPct<0?'neg':''}">${(dayPct>=0?'+':'')+dayPct.toFixed(2)}%</td>`
           : `<td style="color:var(--text-subtle)">—</td>`;
-        return `<tr onclick="location.href='ticker.html?symbol=${encodeURIComponent(e.symbol)}'">
+        return `<tr onclick="location.href='ticker.html?symbol=${encodeURIComponent(e.symbol).replace(/'/g, '%27')}'">
           <td class="dd-sym">${esc(e.symbol)}</td>
           <td>${capStr}</td>
           <td>${esc(e.hour === 'bmo' ? 'Pre-mkt' : e.hour === 'amc' ? 'After-hours' : (e.hour || '—'))}</td>

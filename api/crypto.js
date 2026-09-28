@@ -2,6 +2,7 @@
 // Modo 1 (default): ?ids=bitcoin,ethereum&vs_currencies=usd  → simple/price
 // Modo 2: ?path=coins/markets&vs_currency=usd&per_page=50&order=market_cap_desc → coins/markets
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 const ALLOWED_PATHS = new Set([
   'coins/markets',
@@ -11,6 +12,7 @@ const ALLOWED_PATHS = new Set([
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'crypto' })) return;
 
   const path = req.query.path;
   let url;
@@ -36,7 +38,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
     return res.status(200).json(data);
-  } catch (err) {
-    return res.status(500).json({ error: 'No se pudo conectar con CoinGecko', detail: String(err?.message || err) });
+  } catch {
+    return res.status(500).json({ error: 'No se pudo conectar con CoinGecko' });
   }
 }

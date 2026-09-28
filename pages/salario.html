@@ -505,7 +505,7 @@
     <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=31"></script>
@@ -711,7 +711,6 @@
       document.getElementById('fire-link').href = `fire.html?aporte=${Math.round(discrecional)}`;
 
       // Chart
-      const dAportes  = bruto - neto - (regimenActual === 'dependencia' ? bruto * (Object.values(APORTES_EMPLEADO).reduce((s,v)=>s+v,0)) : 0);
       const dGan      = regimenActual === 'dependencia' ? Math.max(0, bruto - neto - bruto*(Object.values(APORTES_EMPLEADO).reduce((s,v)=>s+v,0))) : 0;
       const totalAp2  = bruto - neto - dGan;
 

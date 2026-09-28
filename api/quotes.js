@@ -1,14 +1,16 @@
 // Batch quotes — ?symbols=AAPL,MSFT,...
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 30, windowSecs: 60, key: 'quotes' })) return;
 
   const symbols = (req.query.symbols || '').trim();
   if (!symbols) return res.status(400).json({ error: 'Parámetro symbols requerido (CSV)' });
   // Validar cada symbol y limitar a 60
   const list = symbols.split(',').map(s => s.trim())
-    .filter(s => s && /^[A-Z0-9.\-^=]{1,15}$/i.test(s))
+    .filter(s => s && /^[A-Z0-9.\-^=]{1,15}$/i.test(s) && !/^\.+$/.test(s))
     .slice(0, 60);
   if (!list.length) return res.status(400).json({ error: 'Lista inválida' });
 
@@ -66,7 +68,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       quoteResponse: { result: valid, error: null },
     });
-  } catch (err) {
-    return res.status(500).json({ error: 'Error al obtener quotes', detail: String(err?.message || err) });
+  } catch {
+    return res.status(500).json({ error: 'Error al obtener quotes' });
   }
 }

@@ -1020,66 +1020,6 @@
   }
 
   /* ══════════════════════════════════════════
-     FETCH: FISCAL (deshabilitado — APIs inestables)
-  ══════════════════════════════════════════ */
-  async function loadFiscal_DISABLED() {
-    document.getElementById('grid-fiscal').innerHTML = skeleton(3);
-    const cards = [];
-
-    /* Series conocidas de datos.gob.ar para el sector público no financiero */
-    const fiscSeries = [
-      { id:'26.3_RESULT_PRIM_0_M_33',  name:'Resultado Primario SPNF' },
-      { id:'26.3_RESULT_FINAN_0_M_37', name:'Resultado Financiero SPNF' },
-    ];
-
-    for (const s of fiscSeries) {
-      try {
-        const r = await fetch(`/api/indec?series=${s.id}&limit=3`, { signal: AbortSignal.timeout(8000) });
-        if (r.ok) {
-          const j = await r.json();
-          const rows = j.data?.filter(x => x[1] != null);
-          if (rows?.length >= 1) {
-            const last = rows.at(-1), prev = rows.at(-2);
-            const isPos = last[1] >= 0;
-            cards.push(datoCard({
-              cat:'Min. Economía', name: s.name,
-              value: (isPos?'+':'') + '$' + fmtBig(last[1]),
-              changeAbs: prev ? last[1]-prev[1] : null,
-              period: fmtDate(last[0]), source:'datos.gob.ar',
-              cls: isPos ? 'green-card' : 'red-card'
-            }));
-          }
-        }
-      } catch {}
-    }
-
-    /* Deuda externa — INDEC
-       Serie: 46.2_DEUDA_EXT_0_T_32 */
-    try {
-      const r = await fetch('/api/indec?series=46.2_DEUDA_EXT_0_T_32&limit=3', { signal: AbortSignal.timeout(8000) });
-      if (r.ok) {
-        const j = await r.json();
-        const rows = j.data?.filter(x => x[1] != null);
-        if (rows?.length >= 1) {
-          const last = rows.at(-1), prev = rows.at(-2);
-          const chgPct = prev ? (last[1]-prev[1])/Math.abs(prev[1])*100 : null;
-          cards.push(datoCard({
-            cat:'INDEC', name:'Deuda Externa Bruta',
-            value: 'USD ' + fmtBig(last[1]*1e6),
-            changePct: chgPct,
-            period: fmtDate(last[0]) + ' (trim.)', source:'INDEC'
-          }));
-        }
-      }
-    } catch {}
-
-    if (!cards.length) {
-      cards.push(errorCard('Fiscal', 'Series fiscales no disponibles actualmente via datos.gob.ar'));
-    }
-    document.getElementById('grid-fiscal').innerHTML = cards.join('');
-  }
-
-  /* ══════════════════════════════════════════
      FETCH: EE.UU. — World Bank + FRED
   ══════════════════════════════════════════ */
   async function loadEEUU() {

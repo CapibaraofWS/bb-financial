@@ -1,8 +1,10 @@
 // Soporta ?series=id1,id2 para pedir series del portal de datos abiertos
 import { denyExternalOrigin } from './_security.js';
+import { denyRateLimited } from './_rateLimit.js';
 
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
+  if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {

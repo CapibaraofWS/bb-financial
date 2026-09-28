@@ -421,7 +421,7 @@
       const q = map[s.sym];
       if (!q) return `<div class="sector-cell" style="background:#1a1f2a"><div class="sc-name">${esc(s.name)}</div><div class="sc-sym">${esc(s.sym)} · sin datos</div></div>`;
       const pct = q.regularMarketChangePercent;
-      return `<div class="sector-cell" style="background:${heatColor(pct)}" onclick="location.href='ticker.html?symbol=${encodeURIComponent(s.sym)}'">
+      return `<div class="sector-cell" style="background:${heatColor(pct)}" onclick="location.href='ticker.html?symbol=${encodeURIComponent(s.sym).replace(/'/g, '%27')}'">
         <div>
           <div class="sc-name">${esc(s.name)}</div>
           <div class="sc-sym">${esc(s.sym)}</div>
@@ -605,7 +605,7 @@
     const active  = [...valid].sort((a,b) => b.vol - a.vol).slice(0, 15);
 
     const renderList = arr => arr.map(r => `
-      <div class="movers-row" onclick="location.href='ticker.html?symbol=${encodeURIComponent(r.sym)}'">
+      <div class="movers-row" onclick="location.href='ticker.html?symbol=${encodeURIComponent(r.sym).replace(/'/g, '%27')}'">
         <span class="mv-sym">${esc(r.sym)}</span>
         <span class="mv-px">${fmtPrice(r.px)}</span>
         <span class="mv-pct ${chgClass(r.pct)}">${fmtPct(r.pct)}</span>
