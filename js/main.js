@@ -171,6 +171,7 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'brokers.html',            label: 'Brokers Argentina',  icon: '🏦' },
         { href: pagesBase + 'renta-fija.html',         label: 'Renta Fija',          icon: '📜' },
         { href: pagesBase + 'etfs-fci.html',           label: 'ETFs y FCI',          icon: '💎' },
+        { href: pagesBase + 'comparador-plazos-fijos.html', label: 'Calculadora de plazo fijo', icon: '💰' },
         { href: pagesBase + 'cuentas-remuneradas.html',label: 'Cuentas remuneradas', icon: '💳' },
         { href: pagesBase + 'comparador-dolares.html', label: 'Tipos de dólar',           icon: '💵' },
       ],
@@ -631,4 +632,46 @@ document.addEventListener('click', () => {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }, 60);
   });
+})();
+
+// ============================================================
+// APARICION AL SCROLLEAR
+// Los bloques que arrancan debajo del pliegue suben y aparecen cuando entran
+// en pantalla, de a uno si llegan juntos. Lo que ya se ve al cargar no se toca:
+// animarlo demoraria el primer pintado sin que nadie lo note como transicion.
+// Si falta IntersectionObserver o el usuario pidio menos movimiento, no pasa
+// nada y todo se ve como siempre.
+// ============================================================
+(function revelar() {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Los rastreadores sacan una foto de la pagina: que no la saquen a mitad de un fundido
+  if (/bot|crawl|spider|lighthouse/i.test(navigator.userAgent)) return;
+
+  const SEL = '.calc-card, .home-cta, .concept-card, .blog-card, .faq-item, .info-box, .example-box, ' +
+    '.formula-box, .chart-section, .step-section, .article-cta, .compare-card, .stat-card, ' +
+    '.example-card, .chart-card, .mult-card, .macro-card, .calc-hl, .related-reads li, main h2';
+
+  const alto = window.innerHeight;
+  const bloques = [...document.querySelectorAll(SEL)].filter(el =>
+    !el.parentElement.closest(SEL) &&            // uno adentro de otro animaria dos veces
+    el.getBoundingClientRect().top > alto);
+
+  const io = new IntersectionObserver(entradas => {
+    let orden = 0;
+    entradas.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      io.unobserve(el);
+      el.style.transitionDelay = Math.min(orden++, 5) * 70 + 'ms';
+      el.classList.add('bb-visible');
+      // Al terminar se sacan las clases para que vuelvan los hover de cada tarjeta
+      setTimeout(() => {
+        el.classList.remove('bb-reveal', 'bb-visible');
+        el.style.transitionDelay = '';
+      }, 1300);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+
+  bloques.forEach(el => { el.classList.add('bb-reveal'); io.observe(el); });
 })();

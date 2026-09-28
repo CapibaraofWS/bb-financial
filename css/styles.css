@@ -1701,3 +1701,53 @@ td[data-skel] { text-align: left !important; padding: 1rem 0.7rem !important; }
 @media (prefers-reduced-motion: reduce) {
   .bb-skel { animation: none; background: var(--bg-card-hover); }
 }
+
+/* ============================================================
+   MOVIMIENTO
+   Poco y con intención: cambiar de página se siente continuo, los bloques
+   aparecen a medida que llegan a la pantalla y los toques responden al dedo.
+   Las curvas son de desaceleración larga (arrancan rápido y se posan), que es
+   lo que hace que un movimiento se sienta físico y no mecánico.
+   ============================================================ */
+
+/* Transición entre páginas. El navegador que no la soporta navega igual. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 160ms cubic-bezier(0.4, 0, 1, 1) both bbVtSale; }
+::view-transition-new(root) { animation: 360ms cubic-bezier(0.16, 1, 0.3, 1) both bbVtEntra; }
+@keyframes bbVtSale  { to   { opacity: 0; } }
+@keyframes bbVtEntra { from { opacity: 0; transform: translateY(8px); } }
+.site-header { view-transition-name: bb-header; }
+
+/* Aparición al scrollear. La clase la pone js/main.js solo en bloques que
+   arrancan fuera de pantalla: lo que se ve al cargar no espera a nadie. */
+.bb-reveal { opacity: 0; transform: translateY(22px); }
+.bb-reveal.bb-visible {
+  opacity: 1; transform: none;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Respuesta al toque */
+.btn:active, .calc-card:active, .home-cta:active, .blog-card:active {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  .bb-reveal { opacity: 1; transform: none; }
+}
+
+/* Preguntas cortas al pie de las herramientas: cerradas no ocupan lugar,
+   y el texto igual queda en la página para quien lo busque. */
+.bb-faq { max-width: 760px; margin: 2.5rem auto 1rem; }
+.bb-faq details { border-top: 1px solid var(--border); }
+.bb-faq details:last-child { border-bottom: 1px solid var(--border); }
+.bb-faq summary {
+  cursor: pointer; list-style: none; min-height: 48px; padding: 0.9rem 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  color: var(--text); font-size: 0.95rem;
+}
+.bb-faq summary::-webkit-details-marker { display: none; }
+.bb-faq summary::after { content: '+'; color: var(--text-subtle); font-size: 1.2rem; transition: transform var(--transition); }
+.bb-faq details[open] summary::after { transform: rotate(45deg); }
+.bb-faq p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; padding: 0 0 1rem; }

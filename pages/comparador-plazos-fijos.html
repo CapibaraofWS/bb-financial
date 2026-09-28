@@ -14,39 +14,101 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Plazo fijo: tasas estimadas por banco — BB Financial</title>
-  <meta name="description" content="Tasa de plazo fijo a 30 días estimada para cada banco argentino a partir de la BADLAR del BCRA, con su TEA y la cobertura del FGD. Confirmala en tu banco." />
+  <title>Calculadora de plazo fijo: tasas de hoy por banco — BB Financial</title>
+  <meta name="description" content="Simulá tu plazo fijo con las tasas que publica el BCRA para cada banco, actualizadas todos los días. Cuánto cobrás a 30, 60, 90 o 365 días." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://bb-financial.vercel.app/pages/comparador-plazos-fijos.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Financial" />
-  <meta property="og:title" content="Plazo fijo: tasas estimadas por banco — BB Financial" />
-  <meta property="og:description" content="Tasa de plazo fijo a 30 días estimada para cada banco argentino a partir de la BADLAR del BCRA, con su TEA y la cobertura del FGD. Confirmala en tu banco." />
+  <meta property="og:title" content="Calculadora de plazo fijo: tasas de hoy por banco" />
+  <meta property="og:description" content="Simulá tu plazo fijo con las tasas que publica el BCRA para cada banco, actualizadas todos los días." />
   <meta property="og:url" content="https://bb-financial.vercel.app/pages/comparador-plazos-fijos.html" />
   <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Plazo fijo: tasas estimadas por banco — BB Financial" />
-  <meta name="twitter:description" content="Tasa de plazo fijo a 30 días estimada para cada banco argentino a partir de la BADLAR del BCRA, con su TEA y la cobertura del FGD. Confirmala en tu banco." />
+  <meta name="twitter:title" content="Calculadora de plazo fijo: tasas de hoy por banco" />
+  <meta name="twitter:description" content="Simulá tu plazo fijo con las tasas que publica el BCRA para cada banco, actualizadas todos los días." />
   <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebApplication","name":"Plazo fijo: tasas estimadas por banco","description":"Tasa de plazo fijo a 30 días estimada para cada banco argentino a partir de la BADLAR del BCRA, con su TEA y la cobertura del FGD. Confirmala en tu banco.","url":"https://bb-financial.vercel.app/pages/comparador-plazos-fijos.html","applicationCategory":"FinanceApplication","operatingSystem":"Web","browserRequirements":"Requiere JavaScript","inLanguage":"es-AR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"creator":{"@id":"https://bb-financial.vercel.app/#bruno"},"publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"},"audience":{"@type":"Audience","geographicArea":{"@type":"Country","name":"Argentina"}}}
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Calculadora de plazo fijo con las tasas de hoy","description":"Simulá tu plazo fijo con las tasas que publica el BCRA para cada banco, actualizadas todos los días. Cuánto cobrás a 30, 60, 90 o 365 días.","url":"https://bb-financial.vercel.app/pages/comparador-plazos-fijos.html","applicationCategory":"FinanceApplication","operatingSystem":"Web","browserRequirements":"Requiere JavaScript","inLanguage":"es-AR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"creator":{"@id":"https://bb-financial.vercel.app/#bruno"},"publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"},"audience":{"@type":"Audience","geographicArea":{"@type":"Country","name":"Argentina"}}}
   </script>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Plazo fijo por banco","item":"https://bb-financial.vercel.app/pages/comparador-plazos-fijos.html"}]}
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Calculadora de plazo fijo","item":"https://bb-financial.vercel.app/pages/comparador-plazos-fijos.html"}]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=11" />
+  <link rel="stylesheet" href="../css/styles.css?v=12" />
   <style>
-    .freshness-badge { display:inline-block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);background:var(--bg-card);border:1px solid var(--border);padding:0.3rem 0.7rem;border-radius:20px;margin-top:1rem;}
-    .cmp-table { width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:0.88rem;margin:2rem 0;}
-    .cmp-table th, .cmp-table td { padding:0.85rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
-    .cmp-table th { background:rgba(74,222,154,0.06);color:var(--accent);font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;}
-    .cmp-table td { color:var(--text-muted); }
-    .cmp-table td strong { color:var(--text); }
-    .cmp-table .tna { font-family:var(--font-display);font-size:1.05rem;color:var(--accent);}
+    .pf { max-width: 640px; margin: 0 auto; padding: 3.5rem 0 2rem; }
+    .pf-hero { text-align: center; margin-bottom: 2rem; }
+    .pf-hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, 7vw, 3.4rem); line-height: 1.05; letter-spacing: -0.03em; }
+    .pf-hero p { color: var(--text-muted); font-size: 1rem; margin-top: 0.7rem; }
+
+    .pf-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 1.5rem; }
+    .pf-label { display: block; font-size: 0.78rem; color: var(--text-subtle); letter-spacing: 0.02em; margin-bottom: 0.45rem; }
+    .pf-monto { display: flex; align-items: baseline; gap: 0.35rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; transition: border-color var(--transition); }
+    .pf-monto:focus-within { border-color: var(--accent); }
+    .pf-monto span { font-family: var(--font-display); font-size: 2rem; color: var(--text-subtle); }
+    .pf-monto input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text); font-family: var(--font-display); font-size: clamp(2rem, 9vw, 2.6rem) !important; letter-spacing: -0.02em; padding: 0; }
+    /* el !important le gana a la regla global de 16px en mobile, que existe para que iOS no haga zoom: este tamaño ya la cumple */
+    .pf-rapidos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin: 0.8rem 0 1.4rem; }
+    .pf-rapidos button { font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 0.4rem 0.3rem; min-height: 36px; white-space: nowrap; transition: all var(--transition); }
+    .pf-rapidos button:hover { color: var(--text); border-color: var(--text-subtle); }
+
+    /* Control segmentado: la opción elegida es una píldora que se desliza */
+    .pf-seg { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 3px; margin-bottom: 1rem; }
+    .pf-seg button { position: relative; z-index: 1; min-height: 40px; font-size: 0.88rem; color: var(--text-muted); border-radius: 9px; transition: color var(--transition); }
+    .pf-seg button[aria-pressed="true"] { color: var(--bg); font-weight: 500; }
+    .pf-seg .pf-pildora { position: absolute; top: 3px; bottom: 3px; left: 3px; border-radius: 9px; background: var(--accent); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), width 0.35s cubic-bezier(0.32, 0.72, 0, 1); }
+
+    .pf-res { text-align: center; padding: 2.2rem 0 1.6rem; min-height: 11rem; }
+    .pf-res-eyebrow { font-size: 0.85rem; color: var(--text-muted); }
+    .pf-res-eyebrow strong { color: var(--text); font-weight: 500; }
+    .pf-res-num { font-family: var(--font-display); font-size: clamp(2.8rem, 12vw, 4.2rem); line-height: 1.05; letter-spacing: -0.03em; color: var(--accent); margin: 0.3rem 0 0.4rem; font-variant-numeric: tabular-nums; }
+    .pf-res-det { font-size: 0.88rem; color: var(--text-muted); }
+    .pf-infl { display: inline-block; margin-top: 0.9rem; font-size: 0.8rem; padding: 0.35rem 0.8rem; border-radius: 999px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); }
+    .pf-infl.gana { color: var(--accent); border-color: rgba(74,222,154,0.3); }
+    .pf-infl.pierde { color: #ff8a7a; border-color: rgba(255,138,122,0.3); }
+
+    .pf-lista { list-style: none; margin: 0; padding: 0; }
+    .pf-fila { display: grid; grid-template-columns: 34px 1fr auto; gap: 0.75rem; align-items: center; padding: 0.8rem 0.2rem; border-top: 1px solid var(--border); opacity: 0; transform: translateY(8px); animation: pfEntra 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
+    .pf-fila:first-child { border-top: 0; }
+    .pf-lista.quieta .pf-fila { animation: none; opacity: 1; transform: none; }
+    @keyframes pfEntra { to { opacity: 1; transform: none; } }
+    .pf-logo { width: 34px; height: 34px; border-radius: 10px; background: #fff; object-fit: contain; padding: 3px; }
+    .pf-logo.sin { background: var(--bg-card-hover); }
+    .pf-nombre { font-size: 0.95rem; color: var(--text); line-height: 1.25; }
+    .pf-nombre a { color: inherit; }
+    .pf-nombre a:hover { color: var(--accent); }
+    .pf-sub { font-size: 0.75rem; color: var(--text-subtle); font-family: var(--font-mono); }
+    .pf-barra { height: 3px; border-radius: 3px; background: var(--border); margin-top: 0.4rem; overflow: hidden; }
+    .pf-barra i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transform-origin: left; transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
+    .pf-monto-fila { text-align: right; font-family: var(--font-mono); font-size: 0.95rem; color: var(--text); white-space: nowrap; }
+    .pf-fila:first-child .pf-monto-fila { color: var(--accent); }
+    .pf-aprox { color: var(--gold); }
+    .pf-pie { font-size: 0.78rem; color: var(--text-subtle); text-align: center; margin-top: 1.2rem; line-height: 1.6; }
+    .pf-error { text-align: center; color: var(--text-muted); padding: 2rem 0; }
+    .pf-error button { margin-top: 0.8rem; }
+
+    .pf-info { margin-top: 2rem; border-top: 1px solid var(--border); }
+    .pf-info summary { cursor: pointer; padding: 1rem 0; color: var(--text-muted); font-size: 0.92rem; list-style: none; display: flex; justify-content: space-between; min-height: 44px; }
+    .pf-info summary::after { content: '+'; color: var(--text-subtle); transition: transform var(--transition); }
+    .pf-info[open] summary::after { transform: rotate(45deg); }
+    .pf-info summary::-webkit-details-marker { display: none; }
+    .pf-info div { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; padding-bottom: 1rem; }
+    .pf-info p + p { margin-top: 0.7rem; }
+    .pf-info strong { color: var(--text); font-weight: 500; }
+
+    @media (max-width: 600px) {
+      .pf { padding-top: 2.2rem; }
+      .pf-card { padding: 1.2rem; border-radius: 20px; }
+      .pf-seg button { font-size: 0.82rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pf-fila { opacity: 1; transform: none; animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -59,39 +121,62 @@
   </header>
 
   <main>
-    <section style="padding:3rem 0 1rem;text-align:center">
-      <div class="container">
-        <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-0.02em;margin-bottom:0.6rem">🏦 Plazos Fijos por Banco</h1>
-        <p style="color:var(--text-muted);max-width:600px;margin:0 auto;font-size:0.95rem;line-height:1.6">Tasas referenciales de plazo fijo a 30 días en bancos argentinos. Los datos provienen de la BADLAR (BCRA) y reportes públicos de bancos.</p>
-        <div class="freshness-badge" id="badge">Cargando BADLAR...</div>
-        <div style="background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.25);border-radius:10px;padding:0.9rem 1.2rem;margin:1.25rem auto;max-width:720px;font-size:0.85rem;color:var(--text-muted);line-height:1.6">
-          <strong style="color:#ffb84d">⚠ Datos referenciales:</strong> las TNAs se calculan a partir del BADLAR del BCRA con offsets aproximados por banco. NO son las tasas reales que cada banco publica en su home banking hoy — son estimaciones. Para el valor real, consultá en la web de cada banco antes de constituir el plazo fijo.
-        </div>
-      </div>
-    </section>
-
     <div class="container">
-      <table class="cmp-table">
-        <thead>
-          <tr><th>Banco</th><th>Tipo</th><th>TNA online</th><th>TEA estimada</th><th>FGD</th></tr>
-        </thead>
-        <tbody id="pf-tbody"></tbody>
-      </table>
+      <section class="pf">
+        <div class="pf-hero">
+          <h1>Calculadora de plazo fijo</h1>
+          <p>Las tasas de hoy de cada banco, publicadas por el BCRA.</p>
+        </div>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.4rem;margin:1.5rem auto;max-width:900px;font-size:0.88rem;color:var(--text-muted);line-height:1.7">
-        <strong style="color:var(--accent)">💡 Cómo funciona:</strong> el <strong style="color:var(--text)">plazo fijo bloquea tu plata 30 días</strong> a una TNA fija. La <strong style="color:var(--text)">TEA</strong> es la tasa anualizada con reinversiones. Todos los bancos están protegidos por el <strong style="color:var(--text)">FGD hasta $1.140.000 por persona</strong>. Si la tasa va a la baja, plazo fijo conviene (te asegura el rendimiento que pactaste). Si va al alza, una cuenta remunerada acompaña mejor.
-      </div>
+        <div class="pf-card">
+          <label class="pf-label" for="pf-monto">Cuánto querés invertir</label>
+          <div class="pf-monto">
+            <span aria-hidden="true">$</span>
+            <input id="pf-monto" type="text" inputmode="numeric" autocomplete="off" value="1.000.000" />
+          </div>
+          <div class="pf-rapidos" aria-label="Montos rápidos">
+            <button type="button" data-monto="100000">100 mil</button>
+            <button type="button" data-monto="500000">500 mil</button>
+            <button type="button" data-monto="1000000">1 millón</button>
+            <button type="button" data-monto="5000000">5 millones</button>
+          </div>
 
-      <p style="color:var(--text-subtle);font-size:0.8rem;line-height:1.6;text-align:center;max-width:680px;margin:1rem auto">
-        <strong style="color:var(--text-muted)">Nota:</strong> tasas indicativas. Antes de constituir el plazo fijo, verificá la TNA actual en el home banking del banco — varía día a día con la política monetaria del BCRA.
-      </p>
+          <span class="pf-label" id="lbl-dias">Plazo</span>
+          <div class="pf-seg" id="seg-dias" role="group" aria-labelledby="lbl-dias">
+            <span class="pf-pildora" aria-hidden="true"></span>
+            <button type="button" data-v="30" aria-pressed="true">30 días</button>
+            <button type="button" data-v="60" aria-pressed="false">60</button>
+            <button type="button" data-v="90" aria-pressed="false">90</button>
+            <button type="button" data-v="180" aria-pressed="false">180</button>
+            <button type="button" data-v="365" aria-pressed="false">1 año</button>
+          </div>
 
-      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin:2rem 0">
-        <a href="comparador-cuentas.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">💳 Comparar con cuentas remuneradas →</a>
-        <a href="interes-simple.html" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">◎ Calculadora de plazo fijo →</a>
-      </div>
+          <span class="pf-label" id="lbl-cliente">¿Ya tenés cuenta en el banco?</span>
+          <div class="pf-seg" id="seg-cliente" role="group" aria-labelledby="lbl-cliente">
+            <span class="pf-pildora" aria-hidden="true"></span>
+            <button type="button" data-v="si" aria-pressed="true">Sí, soy cliente</button>
+            <button type="button" data-v="no" aria-pressed="false">No</button>
+          </div>
+        </div>
+
+        <div class="pf-res" id="pf-res" aria-live="polite">
+          <p class="pf-res-eyebrow">Buscando las tasas de hoy…</p>
+        </div>
+
+        <ul class="pf-lista" id="pf-lista"></ul>
+        <p class="pf-pie" id="pf-pie"></p>
+
+        <details class="pf-info">
+          <summary>Cómo se calcula</summary>
+          <div>
+            <p>El plazo fijo tradicional paga interés simple: <strong>monto × TNA × días ÷ 365</strong>. Al vencimiento recibís lo que pusiste más ese interés.</p>
+            <p>Las tasas son las que cada banco informa al BCRA para plazos fijos por canales electrónicos. Cuando un banco no informa una tasa para el plazo que elegiste, usamos la de 30 días y lo marcamos con <span class="pf-aprox">≈</span>: la real puede ser distinta.</p>
+            <p>Para comparar contra la inflación pasamos la tasa a su equivalente mensual. Los depósitos están cubiertos por el Fondo de Garantía de Depósitos hasta el tope vigente. Confirmá la tasa en tu banco antes de invertir: esto no es una recomendación.</p>
+          </div>
+        </details>
+      </section>
     </div>
-  
+
     <aside class="related-reads">
       <h2>Seguí leyendo</h2>
       <ul>
@@ -111,66 +196,200 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
-        <p>Datos referenciales BCRA. Verificá en cada banco.</p>
+        <p>Tasas publicadas por el BCRA. Confirmalas en cada banco.</p>
       </div>
     </div>
     <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=30"></script>
-  <script src="../js/esqueletos.js?v=2" defer></script>
+  <script src="../js/main.js?v=31"></script>
   <script>
-  // Bancos con TNA referencial. Se ajusta dinámicamente al BADLAR si disponible.
-  const bancosBase = [
-    { nombre: 'Banco Nación',       tipo: 'Público',   tnaOffset: +1.5 },
-    { nombre: 'Banco Provincia',    tipo: 'Público',   tnaOffset: +1.0 },
-    { nombre: 'Banco Galicia',      tipo: 'Privado',   tnaOffset: -0.5 },
-    { nombre: 'Banco Santander',    tipo: 'Privado',   tnaOffset: -0.8 },
-    { nombre: 'Banco Macro',        tipo: 'Privado',   tnaOffset: 0    },
-    { nombre: 'BBVA',               tipo: 'Privado',   tnaOffset: -1.0 },
-    { nombre: 'Banco Ciudad',       tipo: 'Público',   tnaOffset: +0.8 },
-    { nombre: 'Banco Comafi',       tipo: 'Privado',   tnaOffset: +0.5 },
-    { nombre: 'Banco ICBC',         tipo: 'Privado',   tnaOffset: -1.2 },
-    { nombre: 'Banco Hipotecario',  tipo: 'Privado',   tnaOffset: +1.2 },
-    { nombre: 'Brubank',            tipo: 'Digital',   tnaOffset: +2.0 },
-    { nombre: 'Banco BIND',         tipo: 'Privado',   tnaOffset: +0.6 },
-  ];
+  (function () {
+    const $ = id => document.getElementById(id);
+    const fmt = n => Math.round(n).toLocaleString('es-AR');
+    const pct = n => (n * 100).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  const calcTEA = tna => (Math.pow(1 + tna/12/100, 12) - 1) * 100;
+    let bancos = null;
+    let inflacion = null;   // { valor: 0.019, mes: 'agosto' }
+    let dias = 30, cliente = true;
 
-  async function loadBADLAR() {
-    try {
-      const r = await fetch('/api/bcra?endpoint=principalesvariables', { signal: AbortSignal.timeout(8000) });
-      if (!r.ok) throw new Error();
-      const data = await r.json();
-      const arr = data.results || data;
-      // BADLAR descripcion contiene "BADLAR"
-      const badlar = arr.find(v => /badlar/i.test(v.descripcion));
-      return badlar ? { val: badlar.ultValorInformado || badlar.valor, date: badlar.ultFechaInformada || badlar.fecha } : null;
-    } catch { return null; }
-  }
+    // ---- Nombres legibles: el BCRA los publica con razón social en mayúsculas ----
+    const NOMBRES = {
+      'BANCO DE LA NACION ARGENTINA': 'Banco Nación',
+      'BANCO DE GALICIA Y BUENOS AIRES S.A.': 'Galicia',
+      'BANCO DE LA PROVINCIA DE BUENOS AIRES': 'Banco Provincia',
+      'BANCO DE LA CIUDAD DE BUENOS AIRES': 'Banco Ciudad',
+      'BANCO DE LA PROVINCIA DE CORDOBA S.A.': 'Bancor',
+      'BANCO BBVA ARGENTINA S.A.': 'BBVA',
+      'BANCO SANTANDER ARGENTINA S.A.': 'Santander',
+      'INDUSTRIAL AND COMMERCIAL BANK OF CHINA (ARGENTINA) S.A.U.': 'ICBC',
+      'BANCO CREDICOOP COOPERATIVO LIMITADO': 'Credicoop',
+      'BANCO PROVINCIA DE TIERRA DEL FUEGO': 'Banco de Tierra del Fuego',
+      'BANCO CMF S.A.': 'Banco CMF',
+      'UALA': 'Ualá',
+    };
+    function nombre(e) {
+      if (NOMBRES[e]) return NOMBRES[e];
+      const limpio = e.replace(/\s+(S\.?A\.?U?\.?|SOCIEDAD AN[OÓ]NIMA|COOPERATIVO LIMITADO)$/i, '').trim();
+      return limpio.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase())
+        .replace(/\b(De|Del|La|Y)\b/g, w => w.toLowerCase());
+    }
 
-  (async function() {
-    const badlar = await loadBADLAR();
-    const baseTNA = badlar?.val ?? 28; // fallback
-    document.getElementById('badge').textContent = badlar
-      ? `📊 BADLAR ${baseTNA.toFixed(2)}% (BCRA, ${badlar.date}) · TNA estimadas alrededor de este valor`
-      : '⚠ Sin conexión BCRA · Mostrando referencias';
+    // ---- Tasa para un banco, plazo y monto ----
+    // Devuelve { tna, aprox } o null si el banco no ofrece esa opción.
+    function tasa(b, d, monto) {
+      const base = cliente ? b.tnaClientes : b.tnaNoClientes;
+      if (!(base > 0)) return null;              // 0 = no lo ofrece a no clientes
+      if (cliente && Array.isArray(b.tasas)) {
+        const aplican = b.tasas.filter(t =>
+          t && t.tna > 0 &&
+          (t.plazoMinDias == null || d >= t.plazoMinDias) &&
+          (t.plazoMaxDias == null || d <= t.plazoMaxDias) &&
+          (t.montoMinimo == null || monto >= t.montoMinimo) &&
+          (t.montoMaximo == null || monto <= t.montoMaximo));
+        if (aplican.length) return { tna: Math.max(...aplican.map(t => t.tna)), aprox: false };
+      }
+      return { tna: base, aprox: d !== 30 };
+    }
 
-    const rows = bancosBase
-      .map(b => ({ ...b, tna: Math.max(0, baseTNA + b.tnaOffset) }))
-      .sort((a, b) => b.tna - a.tna);
+    function monto() { return Number($('pf-monto').value.replace(/\D/g, '')) || 0; }
 
-    document.getElementById('pf-tbody').innerHTML = rows.map(r => `
-      <tr>
-        <td><strong>${r.nombre}</strong></td>
-        <td><span style="color:var(--text-subtle);font-size:0.78rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.05em">${r.tipo}</span></td>
-        <td><span class="tna">${r.tna.toFixed(2)}%</span></td>
-        <td>${calcTEA(r.tna).toFixed(2)}%</td>
-        <td><span style="font-family:var(--font-mono);font-size:0.62rem;background:rgba(232,201,122,0.15);color:var(--gold);padding:0.15rem 0.45rem;border-radius:4px">✓ FGD</span></td>
-      </tr>
-    `).join('');
+    // ---- Número que corre hasta su valor ----
+    let anim = 0;
+    function contar(el, hasta) {
+      cancelAnimationFrame(anim);
+      const desde = Number(el.dataset.v || 0);
+      el.dataset.v = hasta;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches || !desde) { el.textContent = '$' + fmt(hasta); return; }
+      const t0 = performance.now(), dur = 550;
+      (function paso(t) {
+        const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        el.textContent = '$' + fmt(desde + (hasta - desde) * e);
+        if (k < 1) anim = requestAnimationFrame(paso);
+      })(t0);
+    }
+
+    function pintar(animarLista) {
+      if (!bancos) return;
+      const m = monto();
+      const filas = bancos
+        .map(b => ({ b, t: tasa(b, dias, m) }))
+        .filter(x => x.t)
+        .map(x => ({ ...x, interes: m * x.t.tna * dias / 365 }))
+        .sort((a, b) => b.interes - a.interes || a.t.aprox - b.t.aprox);
+
+      const res = $('pf-res');
+      if (!filas.length || !m) {
+        res.innerHTML = '<p class="pf-res-eyebrow">' + (m ? 'Ningún banco informa esa opción.' : 'Poné un monto para ver cuánto cobrás.') + '</p>';
+        $('pf-lista').innerHTML = '';
+        return;
+      }
+
+      const top = filas[0];
+      const mensual = Math.pow(1 + top.t.tna * dias / 365, 30 / dias) - 1;
+      if (!res.querySelector('.pf-res-num')) {
+        res.innerHTML = '<p class="pf-res-eyebrow"></p><p class="pf-res-num" data-v="0"></p><p class="pf-res-det"></p><span class="pf-infl" hidden></span>';
+      }
+      res.querySelector('.pf-res-eyebrow').innerHTML = 'Lo mejor hoy: <strong>' + esc(nombre(top.b.entidad)) + '</strong> te paga';
+      contar(res.querySelector('.pf-res-num'), top.interes);
+      res.querySelector('.pf-res-det').textContent =
+        'TNA ' + pct(top.t.tna) + (top.t.aprox ? ' ≈' : '') + ' · a los ' + dias + ' días retirás $' + fmt(m + top.interes);
+
+      const inf = res.querySelector('.pf-infl');
+      if (inflacion) {
+        const gana = mensual >= inflacion.valor;
+        inf.hidden = false;
+        inf.className = 'pf-infl ' + (gana ? 'gana' : 'pierde');
+        inf.textContent = 'Rinde ' + pct(mensual) + ' por mes · la inflación de ' + inflacion.mes + ' fue ' + pct(inflacion.valor);
+      }
+
+      $('pf-lista').classList.toggle('quieta', !animarLista);
+      const max = top.interes;
+      $('pf-lista').innerHTML = filas.map((x, i) => {
+        const logo = x.b.logo ? String(x.b.logo).replace(/^http:/, 'https:') : '';
+        const nom = esc(nombre(x.b.entidad));
+        const link = x.b.enlace && /^https:\/\//.test(x.b.enlace)
+          ? '<a href="' + esc(x.b.enlace) + '" target="_blank" rel="nofollow noopener">' + nom + ' ↗</a>' : nom;
+        return '<li class="pf-fila" style="animation-delay:' + (animarLista ? Math.min(i, 12) * 35 : 0) + 'ms">' +
+          (logo ? '<img class="pf-logo" src="' + esc(logo) + '" alt="" width="34" height="34" loading="lazy" />' : '<span class="pf-logo sin"></span>') +
+          '<div><div class="pf-nombre">' + link + '</div>' +
+          '<div class="pf-sub">TNA ' + pct(x.t.tna) + (x.t.aprox ? ' <span class="pf-aprox" title="Tasa a 30 días: el banco no informa una para este plazo">≈</span>' : '') + '</div>' +
+          '<div class="pf-barra"><i style="transform:scaleX(' + (max ? x.interes / max : 0).toFixed(3) + ')"></i></div></div>' +
+          '<div class="pf-monto-fila">+$' + fmt(x.interes) + '</div></li>';
+      }).join('');
+
+      const aprox = filas.some(x => x.t.aprox);
+      $('pf-pie').innerHTML = filas.length + ' entidades · BCRA vía ArgentinaDatos' +
+        (aprox ? '<br><span class="pf-aprox">≈</span> el banco no informa tasa para ' + dias + ' días: usamos la de 30.' : '');
+    }
+
+    // Logo que no carga: un cuadrado vacío en vez del ícono de imagen rota.
+    // En captura porque el error de una imagen no burbujea.
+    $('pf-lista').addEventListener('error', e => {
+      if (e.target.tagName === 'IMG') e.target.replaceWith(Object.assign(document.createElement('span'), { className: 'pf-logo sin' }));
+    }, true);
+
+    // ---- Controles segmentados ----
+    function segmento(id, alElegir) {
+      const seg = $(id), pild = seg.querySelector('.pf-pildora');
+      const botones = [...seg.querySelectorAll('button')];
+      const mover = () => {
+        const b = botones.find(x => x.getAttribute('aria-pressed') === 'true');
+        pild.style.width = b.offsetWidth + 'px';
+        pild.style.transform = 'translateX(' + (b.offsetLeft - 3) + 'px)';
+      };
+      botones.forEach(b => b.addEventListener('click', () => {
+        botones.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+        mover(); alElegir(b.dataset.v);
+      }));
+      addEventListener('resize', mover);
+      mover();
+    }
+    segmento('seg-dias', v => { dias = Number(v); pintar(true); });
+    segmento('seg-cliente', v => { cliente = v === 'si'; pintar(true); });
+
+    // ---- Monto con separador de miles mientras escribís ----
+    const inp = $('pf-monto');
+    let espera;
+    inp.addEventListener('input', () => {
+      const n = monto();
+      inp.value = n ? fmt(n) : '';
+      clearTimeout(espera); espera = setTimeout(() => pintar(false), 120);
+    });
+    document.querySelectorAll('[data-monto]').forEach(b => b.addEventListener('click', () => {
+      inp.value = fmt(Number(b.dataset.monto)); pintar(false);
+    }));
+
+    // ---- Datos ----
+    async function cargar() {
+      $('pf-res').innerHTML = '<p class="pf-res-eyebrow">Buscando las tasas de hoy…</p><span class="bb-skel" style="width:60%;height:3.4rem;margin:0.6rem auto;border-radius:10px"></span>';
+      try {
+        const r = await fetch('/api/argentinadatos?path=finanzas/tasas/plazoFijo', { signal: AbortSignal.timeout(9000) });
+        if (!r.ok) throw new Error();
+        const data = await r.json();
+        bancos = (Array.isArray(data) ? data : []).filter(b => b && b.entidad && (b.tnaClientes > 0 || b.tnaNoClientes > 0));
+        if (!bancos.length) throw new Error();
+        pintar(true);
+      } catch {
+        $('pf-res').innerHTML = '<div class="pf-error">No pudimos traer las tasas del BCRA.<br><button type="button" class="btn btn-secondary" id="pf-reintentar">Reintentar</button></div>';
+        $('pf-reintentar').addEventListener('click', cargar);
+      }
+    }
+    cargar();
+
+    // La inflación es un extra: si no llega, la calculadora funciona igual
+    fetch('/api/argentinadatos?path=finanzas/indices/inflacion', { signal: AbortSignal.timeout(9000) })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        const u = Array.isArray(d) && d[d.length - 1];
+        if (!u || !Number.isFinite(u.valor)) return;
+        const mes = new Date(String(u.fecha).slice(0, 7) + '-15').toLocaleDateString('es-AR', { month: 'long' });
+        inflacion = { valor: u.valor / 100, mes };
+        pintar(false);
+      })
+      .catch(() => {});
   })();
   </script>
 </body>
