@@ -54,6 +54,11 @@
   ],
   "redirects": [
     {
+      "source": "/pages/portafolio.html",
+      "destination": "/pages/markowitz.html",
+      "permanent": true
+    },
+    {
       "source": "/pages/cuanto-perdi.html",
       "destination": "/pages/inflacion.html",
       "permanent": true

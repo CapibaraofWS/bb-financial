@@ -9,22 +9,22 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>¿Dónde conviene poner la plata hoy? Tasas en vivo — BB Financial</title>
-  <meta name="description" content="Plazo fijo por banco, FCI money market y billeteras (Mercado Pago, Ualá, Naranja X) comparados en vivo. Datos del BCRA y CAFCI." />
+  <meta name="description" content="Fondos money market y cuentas en dólares comparados en vivo, con acceso directo a las calculadoras de plazo fijo y cuentas remuneradas. Datos del BCRA y la CAFCI." />
   <meta name="keywords" content="comparador tasas, plazo fijo bancos, FCI money market, cuentas remuneradas, mercado pago, ualá, naranja x, BCRA, argentinadatos" />
   <link rel="canonical" href="https://bb-financial.vercel.app/pages/comparador-tasas.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Financial" />
   <meta property="og:title" content="¿Dónde conviene poner la plata hoy? Tasas en vivo — BB Financial" />
-  <meta property="og:description" content="Plazo fijo por banco, FCI money market y billeteras (Mercado Pago, Ualá, Naranja X) comparados en vivo. Datos del BCRA y CAFCI." />
+  <meta property="og:description" content="Fondos money market y cuentas en dólares comparados en vivo, con acceso directo a las calculadoras de plazo fijo y cuentas remuneradas. Datos del BCRA y la CAFCI." />
   <meta property="og:url" content="https://bb-financial.vercel.app/pages/comparador-tasas.html" />
   <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="¿Dónde conviene poner la plata hoy? Tasas en vivo — BB Financial" />
-  <meta name="twitter:description" content="Plazo fijo por banco, FCI money market y billeteras (Mercado Pago, Ualá, Naranja X) comparados en vivo. Datos del BCRA y CAFCI." />
+  <meta name="twitter:description" content="Fondos money market y cuentas en dólares comparados en vivo, con acceso directo a las calculadoras de plazo fijo y cuentas remuneradas. Datos del BCRA y la CAFCI." />
   <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebApplication","name":"¿Dónde conviene poner la plata hoy? Tasas en vivo","description":"Plazo fijo por banco, FCI money market y billeteras (Mercado Pago, Ualá, Naranja X) comparados en vivo. Datos del BCRA y CAFCI.","url":"https://bb-financial.vercel.app/pages/comparador-tasas.html","applicationCategory":"FinanceApplication","operatingSystem":"Web","browserRequirements":"Requiere JavaScript","inLanguage":"es-AR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"creator":{"@id":"https://bb-financial.vercel.app/#bruno"},"publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"},"audience":{"@type":"Audience","geographicArea":{"@type":"Country","name":"Argentina"}}}
+  {"@context":"https://schema.org","@type":"WebApplication","name":"¿Dónde conviene poner la plata hoy? Tasas en vivo","description":"Fondos money market y cuentas en dólares comparados en vivo, con acceso directo a las calculadoras de plazo fijo y cuentas remuneradas. Datos del BCRA y la CAFCI.","url":"https://bb-financial.vercel.app/pages/comparador-tasas.html","applicationCategory":"FinanceApplication","operatingSystem":"Web","browserRequirements":"Requiere JavaScript","inLanguage":"es-AR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"creator":{"@id":"https://bb-financial.vercel.app/#bruno"},"publisher":{"@id":"https://bb-financial.vercel.app/#organizacion"},"audience":{"@type":"Audience","geographicArea":{"@type":"Country","name":"Argentina"}}}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Calculadoras","item":"https://bb-financial.vercel.app/pages/calculadoras.html"},{"@type":"ListItem","position":2,"name":"Comparador de Tasas","item":"https://bb-financial.vercel.app/pages/comparador-tasas.html"}]}
@@ -51,6 +51,12 @@
     .tool-info .ti-content ul { margin:0.3rem 0 0.7rem; padding-left:1.4rem; }
     .tool-info .ti-content li { margin-bottom:0.3rem; }
     .tab-bar{display:flex;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.35rem;margin-bottom:1.75rem;flex-wrap:wrap;}
+    .atajos-calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.75rem;margin:0 0 1.5rem}
+    .atajos-calc a{display:grid;grid-template-columns:auto 1fr;gap:0.1rem 0.8rem;align-items:center;padding:1rem 1.2rem;border:1px solid var(--border);border-radius:16px;background:var(--bg-card);transition:border-color var(--transition),transform var(--transition)}
+    .atajos-calc a:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+    .atajos-calc span{grid-row:span 2;font-size:1.5rem}
+    .atajos-calc strong{color:var(--text);font-weight:500}
+    .atajos-calc em{font-style:normal;font-size:0.8rem;color:var(--text-muted)}
     .tab-btn{flex:1 1 140px;padding:0.7rem 0.5rem;border-radius:7px;font-family:var(--font-body);font-size:0.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--transition);background:transparent;border:none;text-align:center;}
     .tab-btn.active{background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
     .tab-panel{display:none;}
@@ -107,8 +113,6 @@
         <div class="ti-content">
           <p><strong>Qué datos usa:</strong> todas las tasas vienen en vivo desde nuestro backend (fuentes oficiales del BCRA y cámaras de fondos):</p>
           <ul>
-            <li><strong>Cuentas Remuneradas:</strong> <code>/fci/otros/ultimo</code> (Brubank, Fiwind, Ualá, Carrefour, BNA, etc. — TNA publicada) + <code>/fci/variables/ultimo</code> (billeteras con FCI variable como Global66) + <code>/fci/mercadoDinero/ultimo + /penultimo</code> para billeteras MM (Mercado Pago = Mercado Fondo, Personal Pay = Delta Pesos, Lemon = Fima Premium, Cocos, IOL, Prex).</li>
-            <li><strong>Plazos Fijos:</strong> <code>/tasas/plazoFijo</code> — TNA clientes y no-clientes por banco directo del BCRA.</li>
             <li><strong>FCI Money Market:</strong> <code>/fci/mercadoDinero/ultimo</code> + <code>/penultimo</code> — VCP de cada fondo en dos fechas para calcular TNA implícita.</li>
             <li><strong>Cuentas USD:</strong> <code>/cuentas-remuneradas-usd</code> (bancos) + <code>/rendimientos</code> (wallets cripto con APY en USDC/USDT/DAI).</li>
           </ul>
@@ -129,49 +133,18 @@
         </div>
       </details>
 
+      <div class="atajos-calc">
+        <a href="comparador-plazos-fijos.html"><span>🏦</span><strong>Plazo fijo</strong><em>Cuánto cobrás en cada banco, con las tasas de hoy →</em></a>
+        <a href="comparador-cuentas.html"><span>💳</span><strong>Cuentas remuneradas</strong><em>Cuánto te paga cada billetera por mes →</em></a>
+      </div>
+
       <div class="tab-bar">
-        <button class="tab-btn active" data-tab="cr">💳 Cuentas Remuneradas</button>
-        <button class="tab-btn" data-tab="pf">🏦 Plazos Fijos</button>
-        <button class="tab-btn" data-tab="fci">📊 FCI Money Market</button>
+        <button class="tab-btn active" data-tab="fci">📊 FCI Money Market</button>
         <button class="tab-btn" data-tab="usd">💵 Cuentas USD</button>
       </div>
 
-      <!-- ===== PLAZOS FIJOS ===== -->
-      <div class="tab-panel" id="tab-pf">
-        <div class="info-box">
-          <strong>Plazo fijo tradicional:</strong> tasa nominal anual (TNA) que paga cada banco a 30 días para clientes vs no-clientes. Bancos grandes (Nación, BBVA, Santander, Galicia, Macro) suelen aparecer primero para fácil comparación. Datos en vivo del <strong>BCRA</strong> vía ArgentinaDatos.
-        </div>
-
-        <div class="controls">
-          <span class="ord-label">Ordenar:</span>
-          <select class="input-mini" id="pf-sort">
-            <option value="priority">Por relevancia (top bancos primero)</option>
-            <option value="tnaClientes-desc">TNA Clientes (mayor)</option>
-            <option value="tnaClientes-asc">TNA Clientes (menor)</option>
-            <option value="tnaNoClientes-desc">TNA No-Clientes (mayor)</option>
-            <option value="nombre">Alfabético</option>
-          </select>
-          <input class="input-mini" id="pf-search" placeholder="Buscar banco…" />
-          <span class="top-banks-note" id="pf-updated">—</span>
-        </div>
-
-        <div style="overflow-x:auto">
-          <table class="tasa-table" id="pf-table">
-            <thead>
-              <tr>
-                <th>Banco / Entidad</th>
-                <th>TNA Clientes</th>
-                <th>TEA Clientes</th>
-                <th>TNA No-Clientes</th>
-              </tr>
-            </thead>
-            <tbody id="pf-body"><tr><td colspan="4" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
       <!-- ===== FCI ===== -->
-      <div class="tab-panel" id="tab-fci">
+      <div class="tab-panel active" id="tab-fci">
         <div class="info-box">
           <strong>¿Qué es un FCI?</strong> Fondo Común de Inversión — un patrimonio de muchos inversores administrado por una <strong>Sociedad Gerente</strong> (BBVA Asset, Galicia Fondos, Pellegrini, etc.). Cada peso comprás <em>cuotapartes</em>. El <strong>Money Market</strong> (mercado de dinero) es el más conservador: invierte solo en cauciones y plazos fijos, no tiene riesgo de capital y rescate en el día (T+0). Es lo que está detrás de Mercado Pago, Ualá y otras billeteras "remuneradas". Datos en vivo de <strong>CAFCI</strong> vía ArgentinaDatos.
           <br><br><strong>Para más detalle:</strong> <a href="etfs-fci.html" style="color:var(--accent)">Guía completa de ETFs y FCI →</a>
@@ -213,44 +186,6 @@
         <p style="font-size:0.8rem;color:var(--text-muted);margin-top:1rem;line-height:1.65">
           <strong style="color:var(--text)">¿Cómo se calcula la TNA estimada?</strong> Tomamos VCP del último día publicado vs el penúltimo (endpoints <code>/ultimo</code> y <code>/penultimo</code> de ArgentinaDatos/CAFCI), calculamos el rendimiento diario y anualizamos: <em>(VCP_ultimo / VCP_penultimo − 1) × (365/días)</em>. Es la <strong>tasa diaria anualizada</strong> — un día puede ser atípico. Para datos definitivos: <a href="https://www.cafci.org.ar" target="_blank" rel="noopener" style="color:var(--accent)">CAFCI</a> o la web del fondo.
         </p>
-      </div>
-
-      <!-- ===== CUENTAS REMUNERADAS — DATA EN VIVO ===== -->
-      <div class="tab-panel active" id="tab-cr">
-        <div class="info-box">
-          <strong>Cuentas remuneradas y billeteras virtuales — TNA en vivo.</strong> Combinamos 3 fuentes en tiempo real de ArgentinaDatos:
-          <ol style="margin:0.5rem 0 0.3rem 1.25rem;padding:0;color:var(--text-muted)">
-            <li><strong style="color:var(--text)">Cuentas con TNA publicada</strong> (Ualá, Naranja X, Brubank, Fiwind, etc.) — endpoint <code>/fci/otros/ultimo</code></li>
-            <li><strong style="color:var(--text)">Billeteras con FCI variable</strong> (Global66, etc.) — endpoint <code>/fci/variables/ultimo</code></li>
-            <li><strong style="color:var(--text)">Billeteras Money Market</strong> (Mercado Pago, Personal Pay, Lemon, Cocos, IOL) — TNA calculada de la variación diaria del FCI detrás (VCP último vs penúltimo, anualizado)</li>
-          </ol>
-        </div>
-
-        <div class="controls">
-          <span class="ord-label">Ordenar:</span>
-          <select class="input-mini" id="cr-sort">
-            <option value="tna-desc">TNA (mayor)</option>
-            <option value="tna-asc">TNA (menor)</option>
-            <option value="entidad">Alfabético</option>
-          </select>
-          <input class="input-mini" id="cr-search" placeholder="Buscar entidad…" />
-          <span class="top-banks-note" id="cr-updated">—</span>
-        </div>
-
-        <div style="overflow-x:auto">
-          <table class="tasa-table" id="cr-table">
-            <thead>
-              <tr>
-                <th>Entidad</th>
-                <th>TNA</th>
-                <th>TEA</th>
-                <th>Tope ARS</th>
-                <th>Fuente / Condiciones</th>
-              </tr>
-            </thead>
-            <tbody id="cr-body"><tr><td colspan="5" class="empty-state"><span class="loading-skel" style="width:160px"></span></td></tr></tbody>
-          </table>
-        </div>
       </div>
 
       <!-- ===== CUENTAS USD ===== -->
@@ -298,7 +233,7 @@
         <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
       </div>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio <strong>educativo</strong>. La información NO constituye asesoramiento financiero ni recomendación de inversión. Las tasas cambian; verificá siempre en el sitio oficial de cada entidad.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes: BCRA, CAFCI (vía ArgentinaDatos). Cuentas remuneradas: verificación manual periódica.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio <strong>educativo</strong>. La información NO constituye asesoramiento financiero ni recomendación de inversión. Las tasas cambian; verificá siempre en el sitio oficial de cada entidad.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Fuentes: BCRA, CAFCI (vía ArgentinaDatos).</p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
@@ -315,132 +250,8 @@
       });
     });
 
-    // ===== Plazos Fijos =====
-    // Lista de "bancos importantes" para mostrar primero (orden de relevancia)
-    const TOP_BANKS = [
-      'NACION',
-      'PROVINCIA',
-      'BBVA',
-      'SANTANDER',
-      'GALICIA',
-      'MACRO',
-      'ICBC',
-      'HSBC',
-      'CIUDAD',
-      'CREDICOOP',
-      'PATAGONIA',
-      'COMAFI',
-      'SUPERVIELLE',
-      'HIPOTECARIO',
-      'ITAU',
-    ];
-
+    // Plazo fijo y cuentas remuneradas tienen calculadora propia (enlazadas arriba)
     function normalize(s) { return (s || '').toUpperCase().replace(/[^A-Z]/g, ''); }
-    function getPriority(entidad) {
-      const u = normalize(entidad);
-      for (let i = 0; i < TOP_BANKS.length; i++) {
-        if (u.includes(TOP_BANKS[i])) return i;
-      }
-      return 999;
-    }
-
-    // TEA = (1 + TNA/12)^12 - 1
-    function teaFromTna(tna) {
-      return Math.pow(1 + tna / 12, 12) - 1;
-    }
-
-    let pfData = [];
-    async function loadPF() {
-      try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/tasas/plazoFijo', { signal: AbortSignal.timeout(8000) });
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const data = await r.json();
-        if (!Array.isArray(data)) throw new Error('Formato inválido');
-        pfData = data.filter(b => b && b.entidad && Number.isFinite(b.tnaClientes));
-        renderPF();
-        document.getElementById('pf-updated').textContent = '✓ ' + pfData.length + ' entidades · BCRA en vivo';
-      } catch (e) {
-        document.getElementById('pf-body').textContent = '';
-        const tr = document.createElement('tr'); const td = document.createElement('td');
-        td.colSpan = 4; td.className = 'empty-state';
-        td.textContent = 'No se pudieron cargar las tasas. Reintentá en unos minutos.';
-        tr.appendChild(td); document.getElementById('pf-body').appendChild(tr);
-      }
-    }
-
-    function renderPF() {
-      const body = document.getElementById('pf-body');
-      const sort = document.getElementById('pf-sort').value;
-      const q = normalize(document.getElementById('pf-search').value);
-      let rows = pfData.slice();
-
-      if (q) rows = rows.filter(b => normalize(b.entidad).includes(q));
-
-      if (sort === 'priority') {
-        rows.sort((a, b) => getPriority(a.entidad) - getPriority(b.entidad) || b.tnaClientes - a.tnaClientes);
-      } else if (sort === 'tnaClientes-desc') {
-        rows.sort((a, b) => b.tnaClientes - a.tnaClientes);
-      } else if (sort === 'tnaClientes-asc') {
-        rows.sort((a, b) => a.tnaClientes - b.tnaClientes);
-      } else if (sort === 'tnaNoClientes-desc') {
-        rows.sort((a, b) => (b.tnaNoClientes || 0) - (a.tnaNoClientes || 0));
-      } else if (sort === 'nombre') {
-        rows.sort((a, b) => a.entidad.localeCompare(b.entidad));
-      }
-
-      body.textContent = '';
-      if (rows.length === 0) {
-        const tr = document.createElement('tr'); const td = document.createElement('td');
-        td.colSpan = 4; td.className = 'empty-state'; td.textContent = 'Sin resultados';
-        tr.appendChild(td); body.appendChild(tr); return;
-      }
-
-      rows.forEach((b, i) => {
-        const tr = document.createElement('tr');
-        if (sort === 'priority' && i < 6) tr.classList.add('featured');
-
-        const tdBank = document.createElement('td');
-        const wrap = document.createElement('div'); wrap.className = 'bank-cell';
-        if (b.logo) {
-          const img = document.createElement('img'); img.src = b.logo; img.alt = ''; img.className = 'bank-logo';
-          img.onerror = () => img.remove();
-          wrap.appendChild(img);
-        }
-        const nm = document.createElement('span'); nm.className = 'bank-name'; nm.textContent = b.entidad;
-        wrap.appendChild(nm);
-        if (sort === 'priority' && i < 5) {
-          const badge = document.createElement('span'); badge.className = 'badge-top'; badge.textContent = 'TOP'; wrap.appendChild(badge);
-        }
-        tdBank.appendChild(wrap); tr.appendChild(tdBank);
-
-        const tdTna = document.createElement('td');
-        const tnaSpan = document.createElement('span'); tnaSpan.className = 'tna-value';
-        tnaSpan.textContent = (b.tnaClientes * 100).toFixed(2) + '%';
-        tdTna.appendChild(tnaSpan); tr.appendChild(tdTna);
-
-        const tdTea = document.createElement('td');
-        const teaSpan = document.createElement('span'); teaSpan.className = 'tea-value';
-        teaSpan.textContent = (teaFromTna(b.tnaClientes) * 100).toFixed(2) + '%';
-        tdTea.appendChild(teaSpan); tr.appendChild(tdTea);
-
-        const tdNoCli = document.createElement('td');
-        if (b.tnaNoClientes && b.tnaNoClientes > 0) {
-          const span = document.createElement('span'); span.className = 'tea-value';
-          span.textContent = (b.tnaNoClientes * 100).toFixed(2) + '%';
-          tdNoCli.appendChild(span);
-        } else {
-          tdNoCli.textContent = '—';
-          tdNoCli.style.color = 'var(--text-subtle)';
-        }
-        tr.appendChild(tdNoCli);
-
-        body.appendChild(tr);
-      });
-    }
-
-    document.getElementById('pf-sort').addEventListener('change', renderPF);
-    document.getElementById('pf-search').addEventListener('input', renderPF);
-
     // ===== FCI =====
     // Cache por categoría
     const fciCache = {};
@@ -614,170 +425,6 @@
     document.getElementById('fci-sort').addEventListener('change', renderFCI);
     document.getElementById('fci-search').addEventListener('input', renderFCI);
 
-    // ===== Cuentas Remuneradas — 3 fuentes en vivo =====
-    // (1) /fci/otros/ultimo → cuentas con TNA publicada (Ualá, Naranja X, Brubank, Fiwind, etc.)
-    // (2) /fci/variables/ultimo → billeteras con FCI variable (Global66, etc.)
-    // (3) /fci/mercadoDinero/ultimo + penultimo → billeteras MM (Mercado Pago, Personal Pay, Lemon, Cocos, IOL)
-    //     mapeo fondoName → billetera vía data/fci-billeteras.json
-    let crData = [];
-    let crMapping = null;
-
-    async function loadCR() {
-      const out = [];
-
-      // Fuente (1) — TNA publicada
-      try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/fci/otros/ultimo', { signal: AbortSignal.timeout(8000) });
-        if (r.ok) {
-          const data = await r.json();
-          if (Array.isArray(data)) {
-            for (const it of data) {
-              if (!it || !it.fondo) continue;
-              if (!Number.isFinite(it.tna) || it.tna <= 0) continue;
-              out.push({
-                entidad: it.fondo,
-                tna: it.tna,
-                tea: Number.isFinite(it.tea) ? it.tea : Math.pow(1 + it.tna / 12, 12) - 1,
-                tope: it.tope,
-                fecha: it.fecha,
-                condiciones: (it.condicionesCorto && it.condicionesCorto !== 'null') ? it.condicionesCorto : (it.condiciones && it.condiciones !== 'null' ? it.condiciones : ''),
-                fuente: 'TNA publicada',
-                _src: 1,
-              });
-            }
-          }
-        }
-      } catch {}
-
-      // Fuente (2) — billeteras con FCI variable
-      try {
-        const r = await fetch('/api/argentinadatos?path=finanzas/fci/variables/ultimo', { signal: AbortSignal.timeout(8000) });
-        if (r.ok) {
-          const data = await r.json();
-          if (Array.isArray(data)) {
-            for (const it of data) {
-              if (!it || !Number.isFinite(it.tna) || it.tna <= 0) continue;
-              out.push({
-                entidad: it.nombre || it.fondo,
-                tna: it.tna,
-                tea: Number.isFinite(it.tea) ? it.tea : null,
-                tope: it.tope,
-                fecha: it.fecha,
-                condiciones: ((it.condicionesCorto && it.condicionesCorto !== 'null') ? it.condicionesCorto : ((it.condiciones && it.condiciones !== 'null') ? it.condiciones : (it.fondo ? 'FCI: ' + it.fondo : ''))),
-                fuente: 'FCI variable',
-                _src: 2,
-              });
-            }
-          }
-        }
-      } catch {}
-
-      // Fuente (3) — billeteras Money Market (calculamos TNA con ultimo vs penultimo)
-      try {
-        if (!crMapping) {
-          const mr = await fetch('/data/fci-billeteras.json', { signal: AbortSignal.timeout(5000) });
-          if (mr.ok) crMapping = await mr.json();
-        }
-        if (crMapping?.accounts) {
-          const [rU, rP] = await Promise.all([
-            fetch('/api/argentinadatos?path=finanzas/fci/mercadoDinero/ultimo', { signal: AbortSignal.timeout(8000) }),
-            fetch('/api/argentinadatos?path=finanzas/fci/mercadoDinero/penultimo', { signal: AbortSignal.timeout(8000) }),
-          ]);
-          if (rU.ok) {
-            const dataU = await rU.json();
-            const dataP = rP.ok ? await rP.json() : [];
-            const penMap = {};
-            for (const f of (dataP || [])) if (f?.fondo) penMap[f.fondo] = f;
-            for (const f of (dataU || [])) {
-              if (!crMapping.accounts[f.fondo]) continue;
-              const pen = penMap[f.fondo];
-              const tna = pen ? tnaFromVcp(f.vcp, pen.vcp, f.fecha, pen.fecha) : null;
-              if (!Number.isFinite(tna) || tna <= 0) continue;
-              const tea = Math.pow(1 + tna / 365, 365) - 1;
-              out.push({
-                entidad: crMapping.accounts[f.fondo],
-                tna,
-                tea,
-                tope: null,
-                fecha: f.fecha,
-                condiciones: 'FCI: ' + f.fondo,
-                fuente: 'Money Market (TNA diaria)',
-                _src: 3,
-              });
-            }
-          }
-        }
-      } catch {}
-
-      // Dedup por entidad — preferir la más alta
-      const dedup = new Map();
-      for (const it of out) {
-        const key = (it.entidad || '').toLowerCase().trim();
-        const prev = dedup.get(key);
-        if (!prev || it.tna > prev.tna) dedup.set(key, it);
-      }
-      crData = Array.from(dedup.values());
-      document.getElementById('cr-updated').textContent = '✓ ' + crData.length + ' cuentas · vivo';
-      renderCR();
-    }
-
-    function renderCR() {
-      const body = document.getElementById('cr-body');
-      const sort = document.getElementById('cr-sort').value;
-      const q = normalize(document.getElementById('cr-search').value);
-      let rows = crData.slice();
-      if (q) rows = rows.filter(b => normalize(b.entidad).includes(q));
-      if (sort === 'tna-desc') rows.sort((a, b) => b.tna - a.tna);
-      else if (sort === 'tna-asc') rows.sort((a, b) => a.tna - b.tna);
-      else if (sort === 'entidad') rows.sort((a, b) => a.entidad.localeCompare(b.entidad));
-
-      body.textContent = '';
-      if (rows.length === 0) {
-        const tr = document.createElement('tr'); const td = document.createElement('td');
-        td.colSpan = 5; td.className = 'empty-state'; td.textContent = 'Sin resultados';
-        tr.appendChild(td); body.appendChild(tr); return;
-      }
-      rows.forEach((b, i) => {
-        const tr = document.createElement('tr');
-        if (sort === 'tna-desc' && i < 5) tr.classList.add('featured');
-
-        const td1 = document.createElement('td');
-        const nm = document.createElement('strong'); nm.textContent = b.entidad; nm.style.color = 'var(--text)';
-        td1.appendChild(nm); tr.appendChild(td1);
-
-        const td2 = document.createElement('td');
-        const sp = document.createElement('span'); sp.className = 'tna-value'; sp.textContent = (b.tna * 100).toFixed(2) + '%';
-        td2.appendChild(sp); tr.appendChild(td2);
-
-        const td3 = document.createElement('td');
-        if (Number.isFinite(b.tea)) {
-          const ts = document.createElement('span'); ts.className = 'tea-value'; ts.textContent = (b.tea * 100).toFixed(2) + '%';
-          td3.appendChild(ts);
-        } else { td3.textContent = '—'; td3.style.color = 'var(--text-subtle)'; }
-        tr.appendChild(td3);
-
-        const td4 = document.createElement('td');
-        td4.textContent = b.tope ? '$ ' + b.tope.toLocaleString('es-AR') : 'Sin tope';
-        td4.style.color = 'var(--text-muted)'; td4.style.fontSize = '0.82rem';
-        tr.appendChild(td4);
-
-        const td5 = document.createElement('td');
-        const f1 = document.createElement('span'); f1.style.fontSize = '0.7rem'; f1.style.color = 'var(--text-subtle)';
-        f1.textContent = b.fuente; td5.appendChild(f1);
-        if (b.condiciones) {
-          td5.appendChild(document.createElement('br'));
-          const c = document.createElement('span'); c.style.fontSize = '0.78rem'; c.style.color = 'var(--text-muted)';
-          c.textContent = b.condiciones.length > 60 ? b.condiciones.slice(0, 60) + '…' : b.condiciones;
-          td5.appendChild(c);
-        }
-        tr.appendChild(td5);
-
-        body.appendChild(tr);
-      });
-    }
-    document.getElementById('cr-sort').addEventListener('change', renderCR);
-    document.getElementById('cr-search').addEventListener('input', renderCR);
-
     // ===== Cuentas USD — bancos + rendimientos cripto USD (USDC/USDT) =====
     async function loadUSD() {
       const out = [];
@@ -850,9 +497,7 @@
     }
 
     // ===== Init =====
-    loadPF();
     loadFCI('mercadoDinero');
-    loadCR();
     loadUSD();
   </script>
 </body>

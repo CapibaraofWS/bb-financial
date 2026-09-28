@@ -544,7 +544,10 @@
       const fireBase= gastoAnual / 0.04;
 
       // Tiempo para alcanzar FIRE
-      const mesesFire = mesesHastaFireCapital(fireNum, capActual, aporteMes, retornoNeto);
+      // Con la tasa REAL: el objetivo está en plata de hoy, así que el capital tiene que
+      // crecer por encima de la inflación (y el aporte se asume ajustado por inflación).
+      // Con la nominal se llegaba "antes": al 10% con 3% de inflación, varios años menos.
+      const mesesFire = mesesHastaFireCapital(fireNum, capActual, aporteMes, tasaRealNet);
 
       // UI principal
       document.getElementById('fire-number').textContent = '$' + formatUSD(fireNum);

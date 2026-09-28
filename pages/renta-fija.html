@@ -455,16 +455,17 @@
       const dur = pvSum > 0 ? weightedSum / pvSum : 0;
       const mdur = dur / (1 + y/m);
 
-      // Convexity = Σ [t(t+1) × CF / (1+y/m)^(t·m+2)] / P  con t en años (Fabozzi cap. 4)
+      // Convexidad (Fabozzi cap. 4): con k en PERÍODOS y tasa periódica y/m,
+      //   C = Σ k(k+1)·CF / (1+y/m)^(k+2) / P, y se anualiza dividiendo por m².
+      // Antes se usaba t en años dentro de t(t+1) con descuento periódico: mezclaba
+      // unidades y sobrestimaba la convexidad de los bonos no anuales (10 años, 5%
+      // semestral, TIR 6%: daba 75,5 y la segunda derivada del precio da 71,8).
       let convSum = 0;
       for (let k = 1; k <= n; k++) {
-        const t = k / m;
-        const tm = t * m + 2;
-        convSum += (t * (t + 1) * cFlow) / Math.pow(1 + y/m, tm);
+        convSum += (k * (k + 1) * cFlow) / Math.pow(1 + y/m, k + 2);
       }
-      const tVN = years;
-      convSum += (tVN * (tVN + 1) * VN) / Math.pow(1 + y/m, n + 2);
-      const conv = pvSum > 0 ? convSum / pvSum : 0;
+      convSum += (n * (n + 1) * VN) / Math.pow(1 + y/m, n + 2);
+      const conv = pvSum > 0 ? convSum / pvSum / (m * m) : 0;
       // Cambio % estimado precio si yield sube 100 bps (Fabozzi): ΔP/P ≈ -ModDur × Δy + 0.5 × Conv × Δy²
       const deltaY = 0.01;
       const dpPct = (-mdur * deltaY + 0.5 * conv * deltaY * deltaY) * 100;

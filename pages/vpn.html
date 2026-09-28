@@ -200,7 +200,7 @@
                 <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.3rem;font-family:var(--font-mono)">Si los flujos crecen perpetuamente al g%, el valor terminal = FCF_n × (1+g) / (WACC − g). Dejá en 0 para ignorar.</p>
               </div>
               <div class="form-group">
-                <label for="inflacion-vpn">Inflación <span>(% para VPN real)</span></label>
+                <label for="inflacion-vpn">Inflación <span>(%, para ver los flujos en pesos de hoy)</span></label>
                 <div class="input-wrap"><input type="number" id="inflacion-vpn" class="has-suffix" value="3" min="0" max="300" step="0.5" oninput="calcVPN()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
               </div>
             </div>
@@ -357,7 +357,12 @@
       if (tvAmount > 0) fcForTIR[fcForTIR.length - 1] = fcForTIR[fcForTIR.length - 1] + tvAmount;
       const allFlows = [-inv0, ...fcForTIR];
 
-      // Discount real (inflation-adjusted) flows at tasa
+      // Flujos reales se descuentan a tasa REAL (Fisher). Descontarlos a la nominal
+      // restaba la inflación dos veces: con 10% nominal y 3% de inflación el descuento
+      // efectivo era 13,3%, y el VPN dejaba de ser coherente con la TIR (que es nominal).
+      // Principio de consistencia (Damodaran): nominal con nominal, real con real.
+      // Así el VPN no depende de la inflación: es el mismo en pesos de hoy.
+      const tasaReal = inf > 0 ? (1 + tasa) / (1 + inf) - 1 : tasa;
       let vpn = -inv0, sumaNom = 0, sumaDesc = 0;
       let vpnAcum = -inv0, payback = null;
       let accNom = -inv0;
@@ -368,7 +373,7 @@
         const flujoReal = fcReal[k-1];
         const tvEste = k === fcReal.length ? tvReal : 0;
         const flujoTotal = flujoReal + tvEste;
-        const factor = Math.pow(1 + tasa, k);
+        const factor = Math.pow(1 + tasaReal, k);
         const vp = flujoTotal / factor;
         sumaNom  += flujoNom + (k === fc.length ? tvAmount : 0);
         sumaDesc += vp;

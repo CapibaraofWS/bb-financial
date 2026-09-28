@@ -108,6 +108,7 @@
           <div>
             <p>El plazo fijo tradicional paga interés simple: <strong>monto × TNA × días ÷ 365</strong>. Al vencimiento recibís lo que pusiste más ese interés.</p>
             <p>Las tasas son las que cada banco informa al BCRA para plazos fijos por canales electrónicos. Cuando un banco no informa una tasa para el plazo que elegiste, usamos la de 30 días y lo marcamos con <span class="pf-aprox">≈</span>: la real puede ser distinta.</p>
+            <p>Algunos bancos pagan <strong>más a quien todavía no es cliente</strong>, para captarlo. No es un error: es la tasa que informan al BCRA para cada caso.</p>
             <p>Para comparar contra la inflación pasamos la tasa a su equivalente mensual. Los depósitos están cubiertos por el Fondo de Garantía de Depósitos hasta el tope vigente. Confirmá la tasa en tu banco antes de invertir: esto no es una recomendación.</p>
           </div>
         </details>
@@ -197,6 +198,13 @@
       return { tna: base, aprox: d !== 30 };
     }
 
+    // Algunos bancos pagan más a quien todavía no es cliente, para captarlo. Es lo que
+    // informan al BCRA (Provincia: 21% clientes, 22% no clientes), no un error de cálculo.
+    function nota(b) {
+      if (!(b.tnaNoClientes > b.tnaClientes && b.tnaClientes > 0)) return '';
+      return cliente ? ' · sin cuenta paga ' + pct(b.tnaNoClientes) : ' · paga más a quien no es cliente';
+    }
+
     function monto() { return Number($('pf-monto').value.replace(/\D/g, '')) || 0; }
 
     // ---- Número que corre hasta su valor ----
@@ -241,7 +249,7 @@
         (soloGrandes ? ' entre los conocidos' : '') + ': <strong>' + esc(nombre(top.b.entidad)) + '</strong> te paga';
       contar(res.querySelector('.pf-res-num'), top.interes);
       res.querySelector('.pf-res-det').textContent =
-        'TNA ' + pct(top.t.tna) + (top.t.aprox ? ' ≈' : '') + ' · a los ' + dias + ' días retirás $' + fmt(m + top.interes);
+        'TNA ' + pct(top.t.tna) + (top.t.aprox ? ' ≈' : '') + ' · a los ' + dias + ' días retirás $' + fmt(m + top.interes) + nota(top.b);
 
       const inf = res.querySelector('.pf-infl');
       if (inflacion) {
@@ -261,7 +269,7 @@
         return '<li class="pf-fila" style="animation-delay:' + (animarLista ? Math.min(i, 12) * 35 : 0) + 'ms">' +
           (logo ? '<img class="pf-logo" src="' + esc(logo) + '" alt="" width="34" height="34" loading="lazy" />' : '<span class="pf-logo sin"></span>') +
           '<div><div class="pf-nombre">' + link + '</div>' +
-          '<div class="pf-sub">TNA ' + pct(x.t.tna) + (x.t.aprox ? ' <span class="pf-aprox" title="Tasa a 30 días: el banco no informa una para este plazo">≈</span>' : '') + '</div>' +
+          '<div class="pf-sub">TNA ' + pct(x.t.tna) + (x.t.aprox ? ' <span class="pf-aprox" title="Tasa a 30 días: el banco no informa una para este plazo">≈</span>' : '') + esc(nota(x.b)) + '</div>' +
           '<div class="pf-barra"><i style="transform:scaleX(' + (max ? x.interes / max : 0).toFixed(3) + ')"></i></div></div>' +
           '<div class="pf-monto-fila">+$' + fmt(x.interes) + '</div></li>';
       }).join('') + soloClientes.map(b =>

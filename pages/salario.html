@@ -216,13 +216,13 @@
         <li><strong>Aportes jubilatorios</strong>: 11% del bruto (Régimen General).</li>
         <li><strong>Obra social</strong>: 3% del bruto.</li>
         <li><strong>PAMI</strong>: 3% del bruto.</li>
-        <li><strong>Ganancias 4ta categoría</strong> (Impuesto a las Ganancias): escala progresiva sobre el remunerativo. Aplica desde cierto piso (~$1.5M en 2026, según escala vigente).</li>
+        <li><strong>Ganancias 4ta categoría</strong> (Impuesto a las Ganancias): escala progresiva sobre el remunerativo. Con los valores de ARCA para julio a diciembre de 2026, un empleado sin hijos empieza a pagar con alrededor de $3.000.000 brutos por mes.</li>
         <li><strong>Aguinaldo (SAC)</strong>: estimación de 1/12 del bruto adicional (se cobra dos veces al año).</li>
       </ul>
       <p><strong>Supuestos importantes:</strong></p>
       <ul>
         <li>Estamos aplicando <strong>parámetros vigentes al momento del desarrollo</strong>. La legislación laboral/tributaria argentina cambia frecuentemente (reforma laboral 2024, actualizaciones de mínimos no imponibles, escalas Ganancias).</li>
-        <li>NO contemplamos <strong>deducciones específicas</strong> (hijos a cargo, alquiler, expensas de gimnasio, donaciones, intereses hipotecarios) — esto puede reducir Ganancias significativamente.</li>
+        <li>Contemplamos los hijos a cargo, pero NO otras <strong>deducciones</strong> (cónyuge, alquiler, expensas de gimnasio, donaciones, intereses hipotecarios) — esto puede reducir Ganancias significativamente.</li>
         <li>NO contemplamos <strong>plus, comisiones, bonos no remunerativos</strong>, ni adicionales por antigüedad/zona.</li>
         <li>Asumimos relación de dependencia (4ta categoría). Para monotributistas o autónomos los descuentos son completamente distintos.</li>
       </ul>
@@ -288,17 +288,17 @@
               <div class="form-group">
                 <label for="cat-mono">Categoría monotributo</label>
                 <select id="cat-mono" onchange="calcularSalario()">
-                  <option value="A">A — hasta $1.700.000 facturación</option>
-                  <option value="B">B — hasta $2.550.000</option>
-                  <option value="C">C — hasta $3.400.000</option>
-                  <option value="D">D — hasta $5.100.000</option>
-                  <option value="E" selected>E — hasta $6.800.000</option>
-                  <option value="F">F — hasta $8.500.000</option>
-                  <option value="G">G — hasta $10.200.000</option>
-                  <option value="H">H — hasta $12.700.000</option>
-                  <option value="I">I — hasta $15.300.000</option>
-                  <option value="J">J — hasta $18.300.000</option>
-                  <option value="K">K — hasta $21.800.000</option>
+                  <option value="A">A — hasta $12.009.410 por año</option>
+                  <option value="B">B — hasta $17.595.183 por año</option>
+                  <option value="C">C — hasta $24.670.494 por año</option>
+                  <option value="D">D — hasta $30.628.651 por año</option>
+                  <option value="E" selected>E — hasta $36.028.231 por año</option>
+                  <option value="F">F — hasta $45.151.659 por año</option>
+                  <option value="G">G — hasta $53.995.799 por año</option>
+                  <option value="H">H — hasta $81.924.660 por año</option>
+                  <option value="I">I — hasta $91.699.762 por año</option>
+                  <option value="J">J — hasta $105.012.519 por año</option>
+                  <option value="K">K — hasta $126.610.839 por año</option>
                 </select>
               </div>
               <div class="form-group">
@@ -454,7 +454,7 @@
         </details>
         <details class="faq-item">
           <summary>¿Cómo afecta Ganancias a mi sueldo?</summary>
-          <div class="faq-body">El Impuesto a las Ganancias se calcula sobre el sueldo bruto anual, escalonado. Mínimo no imponible (2025): ~$2.300.000/mes. Si superás ese umbral, una parte se retiene mes a mes. La calculadora estima usando las escalas vigentes — para el cálculo oficial exacto consultá tu liquidación o ARCA.</div>
+          <div class="faq-body">El Impuesto a las Ganancias se calcula sobre el sueldo bruto anual, escalonado. Con las escalas de ARCA de julio a diciembre de 2026, sin hijos empieza a retenerse desde unos $3.000.000 brutos por mes. La calculadora usa esos valores oficiales — para el cálculo oficial exacto consultá tu liquidación o ARCA.</div>
         </details>
         <details class="faq-item">
           <summary>¿Qué porcentaje del sueldo debería ahorrar?</summary>
@@ -517,8 +517,7 @@
     // Aportes patronales Argentina (aprox.)
     const APORTES_EMPLEADO = {
       jubilacion: 0.11,
-      obraSocial: 0.03,
-      anssal:     0.005,
+      obraSocial: 0.03,   // el 0,5% del ANSSAL va DENTRO de este 3%, no se suma aparte
       ley19032:   0.03,
     };
     const APORTES_PATRONALES = {
@@ -529,47 +528,54 @@
       art:        0.015,
       fondoDesempleo: 0.015,
     };
-    // Monotributo cuotas estimadas 2024 (ARS) - valores aproximados
+    // Monotributo: cuotas OFICIALES de ARCA vigentes desde el 1/08/2026 (afip.gob.ar/monotributo/categorias.asp).
+    // imp = impuesto integrado de locaciones y servicios; jub = aporte SIPA; os = obra social.
     const MONO_CUOTAS = {
-      A:{ imp:1700,  jub:14000,  os:22000 },
-      B:{ imp:2500,  jub:14000,  os:22000 },
-      C:{ imp:3500,  jub:14000,  os:22000 },
-      D:{ imp:5500,  jub:14000,  os:22000 },
-      E:{ imp:8000,  jub:14000,  os:22000 },
-      F:{ imp:11000, jub:14000,  os:22000 },
-      G:{ imp:16000, jub:14000,  os:22000 },
-      H:{ imp:23000, jub:20000,  os:32000 },
-      I:{ imp:32000, jub:20000,  os:32000 },
-      J:{ imp:46000, jub:20000,  os:32000 },
-      K:{ imp:65000, jub:20000,  os:32000 },
+      A:{ imp:5585.77,    jub:18246.86,  os:25694.55 },
+      B:{ imp:10612.98,   jub:20071.55,  os:25694.55 },
+      C:{ imp:18246.86,   jub:22078.71,  os:25694.55 },
+      D:{ imp:29790.79,   jub:24286.58,  os:30535.56 },
+      E:{ imp:55857.73,   jub:26715.24,  os:37238.48 },
+      F:{ imp:78573.20,   jub:29386.76,  os:42824.25 },
+      G:{ imp:142995.76,  jub:41141.46,  os:46175.72 },
+      H:{ imp:409623.31,  jub:57598.04,  os:55485.33 },
+      I:{ imp:814591.79,  jub:80637.26,  os:68518.81 },
+      J:{ imp:977510.14,  jub:112892.16, os:76897.46 },
+      K:{ imp:1368514.20, jub:158049.02, os:87882.82 },
     };
 
-    // Ganancias 4ta categoría - escala progresiva estimada 2024
-    // Mínimo no imponible aprox $3.5M/año + deducciones
+    // Ganancias 4ta categoría — valores OFICIALES de ARCA para el régimen de retención
+    // julio a diciembre de 2026 (RG 4.003, actualizados por IPC), en montos anuales:
+    //   Deducciones art. 30: Deducciones-personales-art-30-jul-dic-2026.pdf
+    //   Escala art. 94:      Tabla-Art-94-LIG-per-jul-a-dic-2026.pdf
+    // Antes usaba una escala estimada de 2024 y aplicaba el impuesto sobre el bruto sin
+    // descontar los aportes, que son deducibles.
+    const GAN_2026 = {
+      noImponible: 5585736.93,
+      especialEmpleado: 26811537.29,   // art. 30 inc. c) ap. 2
+      hijo: 2652961.90,
+      conyuge: 5260643.86,
+      escala: [                         // [hasta, fijo, %]
+        [2168491.89,        0.00,        5],
+        [4336983.77,   108424.59,        9],
+        [6505475.65,   303588.86,       12],
+        [9758213.49,   563807.89,       15],
+        [19516426.99, 1051718.57,       19],
+        [29274640.48, 2905779.13,       23],
+        [43911960.73, 5150168.23,       27],
+        [65867941.10, 9102244.70,       31],
+        [Infinity,   15908598.62,       35],
+      ],
+    };
+
     function calcularGanancias(brutoAnual, hijos) {
-      const MNI = 3500000;
-      const DEDUCCION_ESPECIAL = MNI * 3.8;
-      const CARGA_HIJO = 300000;
-      const baseImponible = Math.max(0, brutoAnual - MNI - DEDUCCION_ESPECIAL - (hijos * CARGA_HIJO));
-      if (baseImponible <= 0) return 0;
-      // Escala simplificada progresiva
-      const tramos = [
-        { hasta: 419768,   tasa: 0.05, fijo: 0 },
-        { hasta: 838537,   tasa: 0.09, fijo: 20988 },
-        { hasta: 1258306,  tasa: 0.12, fijo: 58658 },
-        { hasta: 1677933,  tasa: 0.15, fijo: 108984 },
-        { hasta: 2517058,  tasa: 0.19, fijo: 171960 },
-        { hasta: 3355926,  tasa: 0.23, fijo: 331566 },
-        { hasta: 5033889,  tasa: 0.27, fijo: 524568 },
-        { hasta: 6711852,  tasa: 0.31, fijo: 977558 },
-        { hasta: Infinity, tasa: 0.35, fijo: 1497682 },
-      ];
-      let anterior = 0;
-      for (const t of tramos) {
-        if (baseImponible <= t.hasta) {
-          return t.fijo + (baseImponible - anterior) * t.tasa;
-        }
-        anterior = t.hasta;
+      const aportes = brutoAnual * Object.values(APORTES_EMPLEADO).reduce((s, v) => s + v, 0);
+      const base = brutoAnual - aportes - GAN_2026.noImponible - GAN_2026.especialEmpleado - hijos * GAN_2026.hijo;
+      if (base <= 0) return 0;
+      let desde = 0;
+      for (const [hasta, fijo, pct] of GAN_2026.escala) {
+        if (base <= hasta) return fijo + (base - desde) * pct / 100;
+        desde = hasta;
       }
       return 0;
     }
@@ -607,9 +613,8 @@
         // Aportes empleado
         const dJub    = bruto * APORTES_EMPLEADO.jubilacion;
         const dOS     = bruto * APORTES_EMPLEADO.obraSocial;
-        const dAns    = bruto * APORTES_EMPLEADO.anssal;
         const dPAMI   = bruto * APORTES_EMPLEADO.ley19032;
-        const totalAp = dJub + dOS + dAns + dPAMI;
+        const totalAp = dJub + dOS + dPAMI;
 
         // Ganancias sobre bruto anual aprox
         const brutoAnual = bruto * 13; // 12 meses + SAC
@@ -622,9 +627,8 @@
         descuentosDetalle = [
           { label: 'Jubilación (11%)',        pct: '11.0%', monto: dJub },
           { label: 'Obra social (3%)',         pct: '3.0%',  monto: dOS },
-          { label: 'ANSSAL (0.5%)',            pct: '0.5%',  monto: dAns },
           { label: 'PAMI / Ley 19.032 (3%)',   pct: '3.0%',  monto: dPAMI },
-          { label: 'Ganancias 4ta cat. (est.)',pct: '—',     monto: ganMensual },
+          { label: 'Ganancias 4ta cat. (escala ARCA jul-dic 2026)', pct: '—', monto: ganMensual },
         ];
 
         // Costo empresa

@@ -199,12 +199,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bb-financial.vercel.app/pages/portafolio.html</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://bb-financial.vercel.app/pages/prestamo.html</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>

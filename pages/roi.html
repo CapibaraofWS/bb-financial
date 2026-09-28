@@ -252,6 +252,9 @@
       calcROI();
     }
 
+    // Valores de respaldo si las APIs no responden; se reemplazan con los del día
+    const BENCH = { pf: 25, sp: 9.9, t10: 4.5 };
+
     function calcROI() {
       const ini  = parseFloat(document.getElementById('inv-inicial').value) || 0;
       const fin  = parseFloat(document.getElementById('inv-final').value)   || 0;
@@ -285,16 +288,15 @@
 
       // Benchmarks
       const benchmarks = [
-        { name: 'Plazo fijo arg. (est.)', anual: 70 },
-        { name: 'S&P 500 (hist. real)',   anual: 7 },
-        { name: 'Bonos EEUU (10y)',       anual: 4.5 },
-        { name: 'Inflación global (est.)',anual: 3 },
+        { name: 'Plazo fijo en pesos (hoy, TEA)', anual: BENCH.pf },
+        { name: 'S&P 500 (histórico en USD)',     anual: BENCH.sp },
+        { name: 'Bono EE.UU. 10 años (hoy)',      anual: BENCH.t10 },
       ];
       document.getElementById('bench-body').innerHTML = benchmarks.map(b => {
         const diff = cagr - b.anual;
         const cls  = diff >= 0 ? 'highlight' : '';
         const sgn  = diff >= 0 ? '+' : '';
-        return `<tr><td>${b.name}</td><td>${b.anual}%/año</td><td class="${cls}">${sgn}${diff.toFixed(1)} pp</td></tr>`;
+        return `<tr><td>${b.name}</td><td>${b.anual.toFixed(1).replace(".", ",")}%/año</td><td class="${cls}">${sgn}${diff.toFixed(1)} pp</td></tr>`;
       }).join('');
 
       // Chart: crecimiento de $1000 comparado
@@ -303,16 +305,16 @@
       for (let y = 0; y <= maxAños; y++) {
         labels.push(y === 0 ? 'Inicio' : `Año ${y}`);
         dMia.push(+(1000 * Math.pow(1 + cagr/100, y)).toFixed(2));
-        dSP500.push(+(1000 * Math.pow(1.07, y)).toFixed(2));
-        dPF.push(+(1000 * Math.pow(1.70, y)).toFixed(2));
+        dSP500.push(+(1000 * Math.pow(1 + BENCH.sp / 100, y)).toFixed(2));
+        dPF.push(+(1000 * Math.pow(1 + BENCH.pf / 100, y)).toFixed(2));
       }
       if (roiChart) roiChart.destroy();
       roiChart = new Chart(document.getElementById('roiChart'), {
         type: 'line',
         data: { labels, datasets: [
           { label:'Tu inversión (CAGR)', data:dMia,   borderColor:'#4ade9a', backgroundColor:'rgba(74,222,154,0.07)', borderWidth:2.5, fill:true, tension:0.3, pointRadius:2 },
-          { label:'S&P 500 (7% est.)',   data:dSP500, borderColor:'#e8c97a', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
-          { label:'Plazo fijo AR (70%)', data:dPF,    borderColor:'#8899ee', borderDash:[3,3], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
+          { label:'S&P 500 (' + BENCH.sp.toFixed(1).replace('.', ',') + '%)',   data:dSP500, borderColor:'#e8c97a', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
+          { label:'Plazo fijo (' + BENCH.pf.toFixed(1).replace('.', ',') + '%)', data:dPF,    borderColor:'#8899ee', borderDash:[3,3], borderWidth:1.5, pointRadius:0, fill:false, tension:0.3 },
         ]},
         options: {
           responsive:true, interaction:{mode:'index',intersect:false},
@@ -326,6 +328,21 @@
       });
     }
     calcROI();
+
+    // Referencias con datos del día. El S&P 500 es su promedio geométrico anual en
+    // USD desde 1928 (Damodaran, ~9,9%): nominal, igual que el CAGR que se compara.
+    // Antes decía "7% real" (se comparaba nominal contra real) y "plazo fijo 70%" fijo.
+    (async function referenciasDeHoy() {
+      const get = u => fetch(u, { signal: AbortSignal.timeout(9000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+      const [pf, fred] = await Promise.all([get('/api/argentinadatos?path=finanzas/tasas/plazoFijo'), get('/api/fred?series_id=DGS10&limit=5')]);
+      if (Array.isArray(pf)) {
+        const tna = Math.max(0, ...pf.map(b => b && b.tnaClientes > 0 ? b.tnaClientes : 0));
+        if (tna > 0) BENCH.pf = (Math.pow(1 + tna * 30 / 365, 365 / 30) - 1) * 100;   // renovando cada 30 días
+      }
+      const obs = fred && Array.isArray(fred.observations) ? fred.observations.find(o => Number.isFinite(parseFloat(o.value))) : null;
+      if (obs) BENCH.t10 = parseFloat(obs.value);
+      calcROI();
+    })();
   </script>
 </body>
 </html>
