@@ -10,12 +10,17 @@ import { denyRateLimited } from './_rateLimit.js';
 //   ?endpoint=Cotizaciones[&fecha=YYYY-MM-DD]                 → todas las divisas de un día
 //   ?endpoint=Divisas                                         → maestro de monedas
 //   ?endpoint=Cotizaciones&moneda=USD[&desde=&hasta=&limit=]  → serie histórica de una moneda
-const ALLOWED = new Set(['Monetarias', 'Cotizaciones', 'Divisas']);
+const ALLOWED = new Set(['Monetarias', 'Cotizaciones', 'Divisas', 'Hipotecarios']);
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const COD_MONEDA = /^[A-Z]{3}$/;
 
 function buildUrl(q) {
   const endpoint = q.endpoint || 'Monetarias';
+
+  // Régimen de Transparencia: lo que cada entidad informa de sus hipotecarios
+  if (endpoint === 'Hipotecarios') {
+    return 'https://api.bcra.gob.ar/transparencia/v1.0/Prestamos/Hipotecarios';
+  }
 
   if (endpoint === 'Divisas') {
     return 'https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Maestros/Divisas';
@@ -56,6 +61,15 @@ export default async function handler(req, res) {
     const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
     if (!response.ok) return res.status(response.status).json({ error: 'Error desde BCRA API' });
     const data = await response.json();
+    if (endpoint === 'Hipotecarios') {
+      // 230 KB con todos los productos: solo viajan los UVA y los campos que se muestran
+      const campos = ['descripcionEntidad', 'destinoFondos', 'tasaEfectivaAnualMaxima', 'costoFinancieroEfectivoTotalMaximo',
+        'plazoMaximoOtorgable', 'montoMaximoOtorgable', 'relacionMontoTasacion', 'relacionCuotaIngreso', 'beneficiario', 'fechaInformacion'];
+      const results = (data.results || []).filter(x => /UVA/i.test(x.denominacion || ''))
+        .map(x => Object.fromEntries(campos.map(c => [c, x[c] ?? null])));
+      res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
+      return res.status(200).json({ results });
+    }
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=900');
     return res.status(200).json(data);
   } catch {

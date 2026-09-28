@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=12" />
+  <link rel="stylesheet" href="../css/styles.css?v=13" />
   <style>
     .freshness-badge { display:inline-block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);background:var(--bg-card);border:1px solid var(--border);padding:0.3rem 0.7rem;border-radius:20px;margin-top:1rem;}
     .uva-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:2rem 0;}
@@ -73,7 +73,7 @@
         <p style="color:var(--text-muted);max-width:640px;margin:0 auto;font-size:0.95rem;line-height:1.6">Tu mejor camino a la vivienda propia hoy — pero entendé cómo funcionan antes de firmar. Tu cuota se ajusta por inflación, no por dólar.</p>
         <div class="freshness-badge" id="badge">Cargando valor UVA...</div>
         <div style="background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.25);border-radius:10px;padding:0.9rem 1.2rem;margin:1.25rem auto;max-width:720px;font-size:0.85rem;color:var(--text-muted);line-height:1.6">
-          <strong style="color:#ffb84d">⚠ TNAs referenciales:</strong> el valor UVA es del <span data-term="BCRA">BCRA</span> en vivo, pero las TNAs por banco son aproximaciones — verificá la oferta actual en cada banco antes de avanzar con el trámite.
+          <strong style="color:#ffb84d">⚠ Tasas máximas informadas:</strong> el valor UVA y las condiciones de cada banco salen del <span data-term="BCRA">BCRA</span> (Régimen de Transparencia). Son las tasas máximas que cada entidad informa: la tuya puede ser menor según tu perfil. Confirmala en el banco antes de avanzar.
         </div>
       </div>
     </section>
@@ -86,14 +86,14 @@
           <div class="meta" id="uva-date">cargando</div>
         </div>
         <div class="uva-card">
-          <div class="lbl">Crédito típico</div>
-          <div class="val">4-9%</div>
-          <div class="meta"><span data-term="TNA">TNA</span> + UVA · 20-30 años</div>
+          <div class="lbl">Tasa hoy (vivienda única)</div>
+          <div class="val" id="tasa-rango">—</div>
+          <div class="meta" id="tasa-meta"><span data-term="TEA">TEA</span> + UVA</div>
         </div>
         <div class="uva-card">
           <div class="lbl">Cuota inicial estimada</div>
           <div class="val" id="cuota-ej">$—</div>
-          <div class="meta">por $100.000.000 a 25 años</div>
+          <div class="meta" id="cuota-meta">por $100.000.000 a 20 años</div>
         </div>
       </div>
 
@@ -105,20 +105,12 @@
 
       <div class="explainer-block" style="border-left:3px solid var(--accent)">
         <h3>Bancos con créditos UVA hoy</h3>
-        <p>Estos son los principales bancos ofreciendo créditos hipotecarios UVA. Los plazos, tasas y montos máximos cambian — siempre verificá con cada banco antes de avanzar.</p>
+        <p>Para comprar tu vivienda única, la mejor condición que informa cada entidad al BCRA, ordenadas de menor a mayor tasa. La mayoría pide cobrar el sueldo en el banco para darte la tasa más baja.</p>
         <table class="cmp-table">
-          <thead><tr><th>Banco</th><th>TNA típica</th><th>Plazo</th><th>Tope</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Banco Hipotecario</strong></td><td>4-6%</td><td>30 años</td><td>Sin tope</td></tr>
-            <tr><td><strong>Banco Nación</strong></td><td>4.5%</td><td>30 años</td><td>$250M</td></tr>
-            <tr><td><strong>Banco Ciudad</strong></td><td>5.5%</td><td>20 años</td><td>$300M</td></tr>
-            <tr><td><strong>Galicia</strong></td><td>7-9%</td><td>20 años</td><td>$250M</td></tr>
-            <tr><td><strong>Santander</strong></td><td>7-9%</td><td>20 años</td><td>$300M</td></tr>
-            <tr><td><strong>Macro</strong></td><td>6-8%</td><td>20-30 años</td><td>$200M</td></tr>
-            <tr><td><strong>ICBC</strong></td><td>7-8%</td><td>20 años</td><td>$250M</td></tr>
-            <tr><td><strong>Brubank</strong></td><td>8-9%</td><td>20 años</td><td>$200M</td></tr>
-          </tbody>
+          <thead><tr><th>Banco</th><th>TEA máx.</th><th>Plazo</th><th>Monto máx.</th><th>Financia</th></tr></thead>
+          <tbody id="hip-body"><tr><td colspan="5">Cargando…</td></tr></tbody>
         </table>
+        <p id="hip-pie" style="font-size:0.75rem;color:var(--text-subtle)"></p>
       </div>
 
       <div class="explainer-block" style="border-left:3px solid #ff6b6b">
@@ -172,15 +164,59 @@
       document.getElementById('uva-val').textContent = '$' + val.toLocaleString('es-AR', { maximumFractionDigits: 2 });
       document.getElementById('uva-date').textContent = last.fecha;
       document.getElementById('badge').textContent = `📊 UVA al ${last.fecha} · BCRA`;
-      // Cuota inicial $100M a 25 años, 5% TNA UVA, sistema francés
-      const monto = 100000000;
-      const tnaUVA = 0.05;
-      const tnaM = tnaUVA / 12;
-      const n = 25 * 12;
-      const cuota = monto * (tnaM * Math.pow(1 + tnaM, n)) / (Math.pow(1 + tnaM, n) - 1);
-      document.getElementById('cuota-ej').textContent = '$' + Math.round(cuota).toLocaleString('es-AR');
+
     } catch {
       document.getElementById('badge').textContent = '⚠ No se pudo cargar UVA';
+    }
+  })();
+
+  // ---- Hipotecarios UVA por banco: Régimen de Transparencia del BCRA ----
+  (async function hipotecarios() {
+    const $ = id => document.getElementById(id);
+    const esc = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const pct = v => v.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+    const millones = v => '$' + Math.round(v / 1e6).toLocaleString('es-AR') + ' M';
+    const NOMBRES = { 'BANCO DE LA NACION ARGENTINA': 'Banco Nación', 'BANCO DE GALICIA Y BUENOS AIRES S.A.': 'Galicia',
+      'BANCO DE LA CIUDAD DE BUENOS AIRES': 'Banco Ciudad', 'BANCO DE LA PROVINCIA DE CORDOBA S.A.': 'Bancor',
+      'INDUSTRIAL AND COMMERCIAL BANK OF CHINA (ARGENTINA) S.A.U.': 'ICBC', 'BANCO BBVA ARGENTINA S.A.': 'BBVA',
+      'BANCO SANTANDER ARGENTINA S.A.': 'Santander', 'BANCO CREDICOOP COOPERATIVO LIMITADO': 'Credicoop' };
+    const nombre = e => NOMBRES[e] || e.replace(/\s+(S\.?A\.?U?\.?|SOCIEDAD AN[OÓ]NIMA.*)$/i, '').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase()).replace(/\b(De|Del|La|Y)\b/g, w => w.toLowerCase());
+    try {
+      const r = await fetch('/api/bcra?endpoint=Hipotecarios', { signal: AbortSignal.timeout(12000) });
+      if (!r.ok) throw new Error();
+      const { results } = await r.json();
+      const hoy = Date.now();
+      // Vivienda única, informado en los últimos 6 meses y con tasa: una fila por banco, su mejor oferta
+      const mejor = new Map();
+      for (const x of results || []) {
+        if (!/única/i.test(x.destinoFondos || '') || !(x.tasaEfectivaAnualMaxima > 0)) continue;
+        if (hoy - new Date(x.fechaInformacion) > 183 * 864e5) continue;
+        const prev = mejor.get(x.descripcionEntidad);
+        if (!prev || x.tasaEfectivaAnualMaxima < prev.tasaEfectivaAnualMaxima) mejor.set(x.descripcionEntidad, x);
+      }
+      const filas = [...mejor.values()].sort((a, b) => a.tasaEfectivaAnualMaxima - b.tasaEfectivaAnualMaxima);
+      if (!filas.length) throw new Error();
+
+      $('hip-body').innerHTML = filas.map(x =>
+        '<tr><td><strong>' + esc(nombre(x.descripcionEntidad)) + '</strong>' +
+        (x.beneficiario ? '<div style="font-size:0.72rem;color:var(--text-subtle)">' + esc(x.beneficiario) + '</div>' : '') + '</td>' +
+        '<td>' + pct(x.tasaEfectivaAnualMaxima) + '</td>' +
+        '<td>' + (x.plazoMaximoOtorgable ? Math.round(x.plazoMaximoOtorgable / 12) + ' años' : '—') + '</td>' +
+        '<td>' + (x.montoMaximoOtorgable ? millones(x.montoMaximoOtorgable) : '—') + '</td>' +
+        '<td>' + (x.relacionMontoTasacion ? Math.round(x.relacionMontoTasacion) + '%' : '—') + '</td></tr>').join('');
+      $('hip-pie').textContent = filas.length + ' entidades · BCRA, Régimen de Transparencia · "Financia" es el porcentaje del valor de la propiedad que presta.';
+
+      // Rango de tasas y cuota inicial de ejemplo con la mejor tasa, a 20 años (el plazo más ofrecido)
+      const tasas = filas.map(x => x.tasaEfectivaAnualMaxima);
+      $('tasa-rango').textContent = pct(Math.min(...tasas)).replace(',00', '') + ' a ' + pct(Math.max(...tasas)).replace(',00', '');
+      // Para el ejemplo, Banco Nación si informa: la tasa más baja suele ser de un banco provincial y solo para sus empleados
+      const top = filas.find(x => /NACION ARGENTINA/.test(x.descripcionEntidad)) || filas[0];
+      const i = Math.pow(1 + top.tasaEfectivaAnualMaxima / 100, 1 / 12) - 1, n = 240, monto = 100000000;
+      const cuota = monto * i * Math.pow(1 + i, n) / (Math.pow(1 + i, n) - 1);
+      $('cuota-ej').textContent = '$' + Math.round(cuota).toLocaleString('es-AR');
+      $('cuota-meta').textContent = 'por $100.000.000 a 20 años, con la tasa de ' + nombre(top.descripcionEntidad) + ' (' + pct(top.tasaEfectivaAnualMaxima) + ')';
+    } catch {
+      $('hip-body').innerHTML = '<tr><td colspan="5">No pudimos traer los datos del BCRA. Probá de nuevo en unos minutos.</td></tr>';
     }
   })();
   </script>

@@ -13,9 +13,10 @@ export default async function handler(req, res) {
 
   // datos.html ya venia mandando ?limit=N y se ignoraba: siempre devolvia 12 puntos
   const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 12, 1), 1000);
+  const sort = req.query.sort === 'desc' ? 'desc' : 'asc';
 
   try {
-    const url = `https://apis.datos.gob.ar/series/api/series/?ids=${encodeURIComponent(series)}&format=json&limit=${limit}`;
+    const url = `https://apis.datos.gob.ar/series/api/series/?ids=${encodeURIComponent(series)}&format=json&limit=${limit}&sort=${sort}`;
     const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
     if (!response.ok) return res.status(response.status).json({ error: 'Error desde INDEC API' });
     const data = await response.json();

@@ -386,6 +386,39 @@ async function getArPesos() {
   }
 
   const now = Date.now();
+
+  // ArgentinaDatos cambio el formato: ahora devuelve { fechaActualizacion, letras: [...] }
+  // con precio, TNA, TEA y TEM ya calculados. Con el formato viejo (una lista con
+  // vpv) esto devolvia 0 bonos y la curva de pesos quedaba vacia.
+  if (letras && Array.isArray(letras.letras)) {
+    const bonds = letras.letras.map(l => {
+      const dtm = Number(l.diasAlVencimiento);
+      // Solo LECAP (S30S6) y BONCAP (T15E7): cero cupon, comparables en una curva.
+      // Quedan afuera los duales (TTD26) y los bonos con cupon (TO26, TY30P).
+      if (!/^[ST]\d{2}[A-Z]\d$/.test(l.ticker || '')) return null;
+      if (!(l.precioArs > 0) || !(l.teaPorcentaje > 0) || !(dtm >= 4)) return null;
+      const tea = l.teaPorcentaje / 100;
+      return {
+        sym: l.ticker, tipo: 'nominal', vencimiento: l.fechaVencimiento, dtm,
+        price: l.precioArs, pct: Number.isFinite(l.variacionPorcentaje) ? l.variacionPorcentaje : null,
+        vpv: l.precioArs * Math.pow(1 + tea, dtm / 365),   // lo que paga al vencimiento, implicito en la TEA
+        tem: l.temPorcentaje / 100, tna: l.tnaPorcentaje / 100, tir: tea,
+        duration: dtm / 365,
+      };
+    }).filter(Boolean).sort((a, b) => a.dtm - b.dtm);
+    return {
+      source: 'ArgentinaDatos (precios de BYMA y condiciones de emisión)',
+      asOf: letras.fechaActualizacion || new Date().toISOString(),
+      bonds,
+      cer:                 pickVar(bcra, 30),
+      rem:                 pickVar(bcra, 29),
+      inflacionMensual:    pickVar(bcra, 27),
+      inflacionInteranual: pickVar(bcra, 28),
+      tamar:               pickVar(bcra, 44),
+      badlar:              pickVar(bcra, 7),
+    };
+  }
+
   const bonds = (Array.isArray(letras) ? letras : []).map(l => {
     const q = px[l.ticker];
     const vto = Date.parse(l.fechaVencimiento + 'T00:00:00Z');

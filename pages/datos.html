@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=12" />
+  <link rel="stylesheet" href="../css/styles.css?v=13" />
 
   <style>
     /* ---- BETA BADGE (shared) ---- */
@@ -657,7 +657,9 @@
   function fmtDate(str) {
     if (!str) return '';
     try {
-      const d = new Date(str.length === 7 ? str + '-01' : str);
+      // Por partes y en hora local: new Date('2026-08-01') es UTC y en Argentina da 31 de julio
+      const [y, m, dd] = String(str).slice(0, 10).split('-').map(Number);
+      const d = new Date(y, (m || 1) - 1, dd || 1);
       return d.toLocaleDateString('es-AR', { month: 'short', year: 'numeric' });
     } catch { return String(str).slice(0,7); }
   }
@@ -832,10 +834,11 @@
     const cards = [];
 
     async function serieGobAr(id, n = 3) {
-      const r = await fetch(`/api/indec?series=${id}&limit=${n}`, { signal: AbortSignal.timeout(9000) });
+      // sort=desc: sin eso la API devuelve los PRIMEROS n datos de la serie (2004), no los últimos
+      const r = await fetch(`/api/indec?series=${id}&limit=${n}&sort=desc`, { signal: AbortSignal.timeout(9000) });
       if (!r.ok) return null;
       const j = await r.json();
-      const rows = j.data?.filter(x => x[1] != null);
+      const rows = j.data?.filter(x => x[1] != null).reverse();
       return rows?.length ? rows : null;
     }
 
@@ -858,117 +861,123 @@
       }
     } catch {}
 
-    /* CBA */
-    try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/indices/canasta/basica/alimentaria', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const arr = await r.json();
-        if (arr?.length >= 2) {
-          const last = arr.at(-1), prev = arr.at(-2);
+    /* Series del portal de datos abiertos (apis.datos.gob.ar). Las anteriores
+       (11.3_VMATOTAL, 170.2_TASA_*, 204.1_PIBCONST, 11.2_IM_2016) fueron dadas
+       de baja y devolvían error: estas son sus reemplazos vigentes. Los
+       porcentajes vienen como fracción (0,079 = 7,9%). */
+    // Todas las series a la vez: una por una tardaban varios segundos en frío
+    const pre = Object.fromEntries([
+      ['150.1_CSTA_BARIA_0_D_26', 2],
+      ['150.1_CSTA_BATAL_0_D_20', 2],
+      ['42.3_EPH_PUNTUATAL_0_M_30', 2],
+      ['42.3_EPH_PUNTUATAL_0_M_24', 2],
+      ['143.3_ICE_SERVIA_2004_A_25', 2],
+      ['143.3_ICE_SER_VM_2004_A_34', 1],
+      ['4.2_OGP_2004_T_17', 5],
+      ['453.1_SERIE_ORIGNAL_0_0_14_46', 13],
+      ['64.2_POBLACION_NUA_0_0_34_74', 2],
+    ].map(([id, n]) => [id, serieGobAr(id, n).catch(() => null)]));
+    const pct100 = v => v * 100;
+    // La serie de pobreza fecha cada semestre con el día en que termina: 2025-07-01
+    // es el 1.er semestre de 2025 y 2026-01-01 el 2.º de 2025 (verificado contra
+    // los informes: 1.er sem. 2024 = 52,9%). Las trimestrales usan el inicio.
+    const semestre = f => Number(f.slice(5, 7)) === 7 ? '1.er sem. ' + f.slice(0, 4) : '2.º sem. ' + (Number(f.slice(0, 4)) - 1);
+    const trimestre = f => Math.ceil(Number(f.slice(5, 7)) / 3) + '.º trim. ' + f.slice(0, 4);
+
+    /* Canasta básica alimentaria y total — por adulto equivalente */
+    for (const [id, name] of [['150.1_CSTA_BARIA_0_D_26', 'Canasta Básica Alimentaria'], ['150.1_CSTA_BATAL_0_D_20', 'Canasta Básica Total']]) {
+      try {
+        const rows = await pre[id];
+        if (rows?.length >= 2) {
+          const last = rows.at(-1), prev = rows.at(-2);
           cards.push(datoCard({
-            cat:'INDEC', name:'Canasta Básica Alimentaria',
-            value: '$'+fmtNum(last.valor,0),
-            changePct: (last.valor-prev.valor)/prev.valor*100,
-            sub: 'Por adulto equivalente / mes',
-            period: fmtDate(last.fecha), source:'INDEC'
+            cat:'INDEC', name,
+            value: '$'+fmtNum(last[1],0),
+            changePct: (last[1]-prev[1])/prev[1]*100,
+            sub: name.endsWith('Total') ? 'Por adulto / mes · es la línea de pobreza' : 'Por adulto / mes · es la línea de indigencia',
+            period: fmtDate(last[0]), source:'INDEC'
           }));
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
-    /* CBT */
+    /* Actividad económica — EMAE, variación interanual */
     try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/indices/canasta/basica/total', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const arr = await r.json();
-        if (arr?.length >= 2) {
-          const last = arr.at(-1), prev = arr.at(-2);
-          cards.push(datoCard({
-            cat:'INDEC', name:'Canasta Básica Total',
-            value: '$'+fmtNum(last.valor,0),
-            changePct: (last.valor-prev.valor)/prev.valor*100,
-            sub: 'Por adulto equivalente / mes',
-            period: fmtDate(last.fecha), source:'INDEC'
-          }));
-        }
-      }
-    } catch {}
-
-    /* EMAE — variación mensual — datos.gob.ar
-       Serie: 11.3_VMATOTAL_2004_M_28 (EMAE Total, base 2004, mensual) */
-    try {
-      const rows = await serieGobAr('11.3_VMATOTAL_2004_M_28', 3);
-      if (rows?.length >= 2) {
-        const last = rows.at(-1), prev = rows.at(-2);
+      const [ia, mm] = await Promise.all([
+        pre['143.3_ICE_SERVIA_2004_A_25'],
+        pre['143.3_ICE_SER_VM_2004_A_34'],
+      ]);
+      if (ia?.length >= 2) {
+        const last = ia.at(-1), prev = ia.at(-2);
         cards.push(datoCard({
-          cat:'INDEC', name:'EMAE — Estimador Mensual Actividad Económica',
-          value: fmtNum(last[1],1), unit:'base 2004',
-          changeAbs: last[1]-prev[1],
+          cat:'INDEC', name:'Actividad económica (EMAE)',
+          value: (last[1] > 0 ? '+' : '') + fmtNum(pct100(last[1]),1)+'%', unit:'interanual',
+          changeAbs: pct100(last[1]-prev[1]),
+          sub: mm?.length ? 'Contra el mes anterior (desestacionalizado): ' + (mm.at(-1)[1] > 0 ? '+' : '') + fmtNum(pct100(mm.at(-1)[1]),1) + '%' : '',
           period: fmtDate(last[0]), source:'INDEC'
         }));
       }
     } catch {}
 
-    /* Tasa de Desocupación — datos.gob.ar
-       Serie: 170.2_TASA_DESOCUP_0_T_34 (trimestral) */
+    /* PBI real — trimestre contra el mismo trimestre del año anterior */
     try {
-      const rows = await serieGobAr('170.2_TASA_DESOCUP_0_T_34', 4);
-      if (rows?.length >= 1) {
-        const last = rows.at(-1), prev = rows.at(-2);
+      const rows = await pre['4.2_OGP_2004_T_17'];
+      if (rows?.length >= 5) {
+        const last = rows.at(-1), haceUnAnio = rows.at(-5);
         cards.push(datoCard({
-          cat:'INDEC', name:'Tasa de Desocupación',
-          value: fmtNum(last[1],1)+'%',
-          changeAbs: prev ? last[1]-prev[1] : null,
-          period: fmtDate(last[0]) + ' (trim.)', source:'INDEC'
+          cat:'INDEC', name:'PBI real',
+          value: (last[1] >= haceUnAnio[1] ? '+' : '') + fmtNum((last[1]/haceUnAnio[1]-1)*100,1)+'%', unit:'interanual',
+          sub: 'A precios constantes: descuenta la inflación',
+          period: trimestre(last[0]), source:'INDEC'
         }));
       }
     } catch {}
 
-    /* Tasa de Empleo — datos.gob.ar
-       Serie: 170.2_TASA_EMPLEO_0_T_34 */
-    try {
-      const rows = await serieGobAr('170.2_TASA_EMPLEO_0_T_34', 4);
-      if (rows?.length >= 1) {
-        const last = rows.at(-1), prev = rows.at(-2);
-        cards.push(datoCard({
-          cat:'INDEC', name:'Tasa de Empleo',
-          value: fmtNum(last[1],1)+'%',
-          changeAbs: prev ? last[1]-prev[1] : null,
-          period: fmtDate(last[0]) + ' (trim.)', source:'INDEC'
-        }));
-      }
-    } catch {}
+    /* Desocupación y empleo — EPH, 31 aglomerados, trimestral */
+    for (const [id, name] of [['42.3_EPH_PUNTUATAL_0_M_30', 'Tasa de Desocupación'], ['42.3_EPH_PUNTUATAL_0_M_24', 'Tasa de Empleo']]) {
+      try {
+        const rows = await pre[id];
+        if (rows?.length >= 1) {
+          const last = rows.at(-1), prev = rows.at(-2);
+          cards.push(datoCard({
+            cat:'INDEC', name,
+            value: fmtNum(pct100(last[1]),1)+'%',
+            changeAbs: prev ? pct100(last[1]-prev[1]) : null,
+            period: trimestre(last[0]), source:'INDEC · EPH'
+          }));
+        }
+      } catch {}
+    }
 
-    /* PBI — datos.gob.ar
-       Serie: 204.1_PIBCONST_DICI_A_28 (anual, precios constantes) */
+    /* Industria — IPI manufacturero, variación interanual de la serie original */
     try {
-      const rows = await serieGobAr('204.1_PIBCONST_DICI_A_28', 3);
-      if (rows?.length >= 1) {
-        const last = rows.at(-1), prev = rows.at(-2);
-        const chgPct = prev ? (last[1]-prev[1])/Math.abs(prev[1])*100 : null;
+      const rows = await pre['453.1_SERIE_ORIGNAL_0_0_14_46'];
+      if (rows?.length >= 13) {
+        const last = rows.at(-1), haceUnAnio = rows.at(-13);
         cards.push(datoCard({
-          cat:'INDEC', name:'PBI (precios constantes 2004)',
-          value: '$'+fmtBig(last[1]*1e6),
-          changePct: chgPct,
-          period: fmtDate(last[0]) + ' (anual)', source:'INDEC'
-        }));
-      }
-    } catch {}
-
-    /* IPI — Índice de Producción Industrial — datos.gob.ar
-       Serie: 11.2_IM_2016_M_20 */
-    try {
-      const rows = await serieGobAr('11.2_IM_2016_M_20', 3);
-      if (rows?.length >= 2) {
-        const last = rows.at(-1), prev = rows.at(-2);
-        cards.push(datoCard({
-          cat:'INDEC', name:'IPI — Índice Producción Industrial',
-          value: fmtNum(last[1],1), unit:'base 2016',
-          changeAbs: last[1]-prev[1],
+          cat:'INDEC', name:'Producción industrial (IPI)',
+          value: (last[1] >= haceUnAnio[1] ? '+' : '') + fmtNum((last[1]/haceUnAnio[1]-1)*100,1)+'%', unit:'interanual',
+          sub: 'Índice ' + fmtNum(last[1],1) + ' (base 2004 = 100)',
           period: fmtDate(last[0]), source:'INDEC'
         }));
       }
     } catch {}
+
+    /* Pobreza — personas bajo la línea de pobreza, total 31 aglomerados, semestral */
+    try {
+      const rows = await pre['64.2_POBLACION_NUA_0_0_34_74'];
+      if (rows?.length >= 1) {
+        const last = rows.at(-1), prev = rows.at(-2);
+        cards.push(datoCard({
+          cat:'INDEC', name:'Pobreza (personas)',
+          value: fmtNum(last[1] > 1 ? last[1] : pct100(last[1]),1)+'%',
+          changeAbs: prev ? (last[1] > 1 ? last[1]-prev[1] : pct100(last[1]-prev[1])) : null,
+          sub: 'Personas con ingresos bajo la línea de pobreza',
+          period: semestre(last[0]), source:'INDEC · EPH', cls:'red-card'
+        }));
+      }
+    } catch {}
+
     /* Riesgo País — Ámbito intraday (fallback argentinadatos EOD) */
     let riesgoOk = false;
     try {
@@ -1007,14 +1016,6 @@
         }
       }
     } catch {}
-    /* Pobreza e Indigencia — sin API limpia, dato semestral. Link directo a indec.gob.ar */
-    cards.push(datoCard({
-      cat:'INDEC', name:'Pobreza e Indigencia',
-      value:'<a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-46-152" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-family:var(--font-display);font-size:1.6rem">Ver INDEC →</a>',
-      sub:'Publicación semestral (EPH). Sin API de acceso programático. Clickeá para ver datos oficiales.',
-      period:'Datos semestrales', source:'INDEC'
-    }));
-
     if (!cards.length) cards.push(errorCard('INDEC', 'No se pudieron cargar los datos'));
     document.getElementById('grid-indec').innerHTML = cards.join('');
   }

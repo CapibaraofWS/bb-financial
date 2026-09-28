@@ -3,13 +3,9 @@ import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
 
 const ALLOWED_PATHS = [
-  'finanzas/reservas',
-  'finanzas/riesgo-pais',
   'finanzas/indices/riesgo-pais',
   'finanzas/indices/inflacion',
   'finanzas/indices/uva',
-  'finanzas/indices/canasta/basica/alimentaria',
-  'finanzas/indices/canasta/basica/total',
   // Tasas en vivo
   'finanzas/tasas/plazoFijo',
   'finanzas/tasas/depositos30Dias',

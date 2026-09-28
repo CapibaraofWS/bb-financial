@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=12" />
+  <link rel="stylesheet" href="../css/styles.css?v=13" />
   <style>
     .calc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; max-width: 760px; margin: 2rem auto; }
     .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
@@ -94,14 +94,13 @@
             <li><strong>¿Dónde está tu plata?</strong> Acá elegís dónde guardás la plata que NO usaste de contado. Cada opción tiene una <span data-term="TNA">TNA</span> aproximada:
               <ul style="margin-top:0.4rem;padding-left:1rem">
                 <li>💵 <strong>Efectivo / Cajón:</strong> 0% — la plata no rinde nada</li>
-                <li>💳 <strong>Cuenta remunerada:</strong> ~28% — Mercado Pago, Ualá, Brubank</li>
-                <li>🏦 <strong>Plazo fijo:</strong> ~32% — bloqueada 30 días</li>
-                <li>📜 <strong>FCI / LECAP:</strong> ~40% — rinde más, requiere broker</li>
-                <li>📈 <strong>Cartera activa:</strong> ~55% — acciones/bonos, riesgo y trabajo activo</li>
+                <li>💳 <strong>Cuenta remunerada:</strong> la mejor tasa de hoy entre las billeteras que no piden requisitos</li>
+                <li>🏦 <strong>Plazo fijo:</strong> la mejor tasa de hoy a 30 días según el BCRA — bloqueada 30 días</li>
+                <li>📜 <strong>LECAP:</strong> la tasa de mercado de la letra del Tesoro a unos 3 meses — requiere broker</li>
               </ul>
             </li>
           </ol>
-          <div class="tip">💡 <strong>Tip rápido:</strong> si dejás la plata en el cajón (0%), las cuotas casi nunca te convienen. Si tu plata rinde 40%+ al año, las cuotas suelen ganar contra el sobrecargo. La verdadera diferencia depende del <strong>rendimiento concreto</strong> que conseguís — por eso elegimos eso, no la inflación.</div>
+          <div class="tip">💡 <strong>Tip rápido:</strong> si dejás la plata en el cajón (0%), las cuotas casi nunca te convienen. Cuanto más rinde tu plata mientras pagás, más chances tienen las cuotas de ganarle al sobrecargo. La verdadera diferencia depende del <strong>rendimiento concreto</strong> que conseguís — por eso elegimos eso, no la inflación.</div>
         </div>
       </details>
 
@@ -128,15 +127,14 @@
           <label style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.4rem">¿Dónde está tu plata? (define tu costo de oportunidad)</label>
           <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.6rem">
             <button type="button" class="opt-preset" data-tna="0">💵 Efectivo (0%)</button>
-            <button type="button" class="opt-preset" data-tna="28">💳 Cuenta remunerada (28%)</button>
-            <button type="button" class="opt-preset active" data-tna="32">🏦 Plazo fijo (32%)</button>
-            <button type="button" class="opt-preset" data-tna="40">📜 FCI / LECAP (40%)</button>
-            <button type="button" class="opt-preset" data-tna="55">📈 Cartera activa (55%)</button>
+            <button type="button" class="opt-preset" data-tna="19" data-vivo="cuenta">💳 Cuenta remunerada (19%)</button>
+            <button type="button" class="opt-preset active" data-tna="23" data-vivo="pf">🏦 Plazo fijo (23%)</button>
+            <button type="button" class="opt-preset" data-tna="24" data-vivo="lecap">📜 LECAP (24%)</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
             <div>
               <label style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.35rem">TNA personalizada</label>
-              <input type="number" id="tna" value="32" step="0.1" min="0" max="500" / inputmode="decimal">
+              <input type="number" id="tna" value="23" step="0.1" min="0" max="500" / inputmode="decimal">
             </div>
             <div>
               <label style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);display:block;margin-bottom:0.35rem">TEM equivalente</label>
@@ -359,6 +357,40 @@
   });
   ['precio-contado','precio-cuotas','cuotas','tna'].forEach(id => $(id).addEventListener('input', calc));
   calc();
+
+  // ---- Tasas del día para los botones ----
+  // Plazo fijo: la mejor TNA a 30 días que publica el BCRA. Cuenta remunerada: la
+  // mejor de las que no piden requisitos. LECAP: la más cercana a 90 días.
+  (async function tasasDelDia() {
+    const api = p => fetch(p, { signal: AbortSignal.timeout(9000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+    const [pf, cuentas, pesos] = await Promise.all([
+      api('/api/argentinadatos?path=finanzas/tasas/plazoFijo'),
+      api('/api/argentinadatos?path=finanzas/fci/otros/ultimo'),
+      api('/api/agenda?source=ar-pesos'),
+    ]);
+    const vivo = {};
+    if (Array.isArray(pf)) vivo.pf = Math.max(0, ...pf.map(b => b && b.tnaClientes > 0 ? b.tnaClientes : 0));
+    if (Array.isArray(cuentas)) {
+      const hoy = Date.now();
+      vivo.cuenta = Math.max(0, ...cuentas.filter(c => c && c.tna > 0 && hoy - new Date(c.fecha) < 45 * 864e5 &&
+        !/sum[aá]|solo|clientes|sueldo|jur[ií]dicas/i.test((c.condicionesCorto || '') + ' ' + (c.condiciones || ''))).map(c => c.tna));
+    }
+    const letras = pesos && Array.isArray(pesos.bonds) ? pesos.bonds.filter(b => b.tna > 0) : [];
+    if (letras.length) vivo.lecap = letras.reduce((a, b) => Math.abs(b.dtm - 90) < Math.abs(a.dtm - 90) ? b : a).tna;
+
+    const nombres = { cuenta: '💳 Cuenta remunerada', pf: '🏦 Plazo fijo', lecap: '📜 LECAP' };
+    const activo = document.querySelector('.opt-preset.active');
+    document.querySelectorAll('.opt-preset[data-vivo]').forEach(b => {
+      const t = vivo[b.dataset.vivo];
+      if (!(t > 0)) return;
+      const v = (t * 100).toFixed(1);
+      b.dataset.tna = v;
+      b.textContent = nombres[b.dataset.vivo] + ' (' + v.replace('.', ',') + '%)';
+      b.title = 'Tasa de hoy';
+    });
+    // Si la persona no tocó la TNA, que el cálculo use la del día
+    if (activo && activo.dataset.vivo && document.activeElement !== $('tna')) { $('tna').value = activo.dataset.tna; calc(); }
+  })();
 
   // Mini-calculadora: Tasa implícita escondida en cuotas
   function calcTI() {

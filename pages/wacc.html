@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=12"/>
+  <link rel="stylesheet" href="../css/styles.css?v=13"/>
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
     .wacc-result{background:linear-gradient(135deg,rgba(74,222,154,0.07),rgba(74,222,154,0.03));border:1px solid rgba(74,222,154,0.25);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:1.5rem;}
@@ -93,10 +93,10 @@
         <li><strong>Costo de la deuda (Rd):</strong> la tasa que pagás por los préstamos. Si tomás un crédito al 30% TNA, ese es Rd.</li>
         <li><strong>Costo del equity (Ke):</strong> lo que esperan ganar los accionistas. Se calcula con <strong>CAPM</strong>: Ke = Rf + β × ERP + CRP.
           <ul style="margin-top:0.4rem">
-            <li><strong>Rf:</strong> tasa libre de riesgo (bono USA a 10 años, ~4.5%)</li>
+            <li><strong>Rf:</strong> tasa libre de riesgo (bono del Tesoro de EE.UU. a 10 años)</li>
             <li><strong>β (Beta):</strong> volatilidad de tu acción vs el mercado. β=1 = igual al mercado. β=1.5 = 50% más volátil.</li>
             <li><strong>ERP (prima de riesgo de mercado):</strong> el campo pide la prima <em>ya neta</em> (Rm − Rf), NO el retorno total del mercado. Damodaran estima ~5.5% para EEUU.</li>
-            <li><strong>CRP (prima de riesgo país):</strong> opcional, para mercados emergentes. Se suma directo al Ke (Argentina ~20%).</li>
+            <li><strong>CRP (prima de riesgo país):</strong> opcional, para mercados emergentes. Se suma directo al Ke. Una aproximación habitual es el riesgo país (100 puntos = 1%).</li>
           </ul>
         </li>
         <li><strong>Tasa de impuestos:</strong> los intereses de la deuda son deducibles. Reduce el costo efectivo.</li>
@@ -168,7 +168,7 @@
             <div class="form-group">
               <label for="rf">Tasa libre de riesgo <span>(Rf, %)</span></label>
               <div class="input-wrap"><input type="number" id="rf" class="has-suffix" value="4.5" min="0" max="20" step="0.1" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
-              <p class="field-note">Rendimiento del bono soberano de EEUU a 10 años (~4.5%). Búscalo en Bloomberg o US Treasury.</p>
+              <p class="field-note" id="nota-rf">Rendimiento del bono del Tesoro de EE.UU. a 10 años.</p>
             </div>
             <div class="form-group">
               <label for="beta">Beta de la empresa</label>
@@ -183,7 +183,7 @@
             <div class="form-group">
               <label for="erp-pais">Prima de riesgo país <span>(opcional, %)</span></label>
               <div class="input-wrap"><input type="number" id="erp-pais" class="has-suffix" value="0" min="0" max="50" step="0.5" oninput="calcWACC()"/ inputmode="decimal"><span class="input-suffix">%</span></div>
-              <p class="field-note">Para empresas en mercados emergentes. Argentina 2024: ~20%. Brasil: ~3%. Dato: Damodaran website.</p>
+              <p class="field-note" id="nota-crp">Para empresas en mercados emergentes. Una aproximación habitual es el riesgo país: 100 puntos = 1%.</p>
             </div>
 
             <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0"/>
@@ -329,6 +329,23 @@
       document.getElementById('r-dt-contrib').textContent= (dtContrib*100).toFixed(2)+' pp';
     }
     calcWACC();
+
+    // Los dos datos de mercado del formulario, con su valor de hoy. Solo cambian
+    // la nota y un botón: el valor lo decide quien valúa.
+    (async function datosDeHoy() {
+      const get = u => fetch(u, { signal: AbortSignal.timeout(9000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+      const usar = (nota, id, v, texto) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'btn-link'; b.textContent = 'Usar ' + v.toFixed(2).replace('.', ',') + '%';
+        b.style.cssText = 'margin-left:0.4rem;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer';
+        b.addEventListener('click', () => { document.getElementById(id).value = v.toFixed(2); calcWACC(); });
+        nota.textContent = texto; nota.appendChild(b);
+      };
+      const [fred, rp] = await Promise.all([get('/api/fred?series_id=DGS10&limit=5'), get('/api/agenda?source=riesgo-pais')]);
+      const obs = fred && Array.isArray(fred.observations) ? fred.observations.find(o => Number.isFinite(parseFloat(o.value))) : null;
+      if (obs) usar(document.getElementById('nota-rf'), 'rf', parseFloat(obs.value), 'Treasury a 10 años hoy: ' + parseFloat(obs.value).toFixed(2).replace('.', ',') + '% (FRED, ' + obs.date + ').');
+      if (rp && Number.isFinite(rp.valor)) usar(document.getElementById('nota-crp'), 'erp-pais', rp.valor / 100, 'Riesgo país de Argentina hoy: ' + Math.round(rp.valor) + ' puntos, o sea ' + (rp.valor / 100).toFixed(2).replace('.', ',') + '%.');
+    })();
   </script>
 </body>
 </html>
