@@ -2,6 +2,93 @@
 window.__BB_MAIN_JS_VERSION = 'v22';
 
 // ============================================================
+// GLIFOS — íconos de las herramientas
+// Un trazo blanco sobre un cuadrado de color con esquinas suaves, como los
+// íconos de iOS: se reconocen de un vistazo y no dependen de cómo dibuje los
+// emojis cada teléfono. Cada herramienta tiene el suyo según su archivo, así
+// el mismo ícono aparece en el menú, el home y el listado de calculadoras.
+// Si JavaScript no corre, quedan los emojis del HTML.
+// ============================================================
+var BB_TRAZOS = {
+  subida:   '<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>',
+  bajada:   '<path d="M3 7l6 6 4-4 8 8"/><path d="M14 17h7v-7"/>',
+  banco:    '<path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',
+  billetera:'<rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2"/><path d="M6 6V5a2 2 0 0 1 2-2h8"/>',
+  casa:     '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+  porcentaje:'<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+  objetivo: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+  sol:      '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  maletin:  '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
+  tarjeta:  '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/>',
+  flecha:   '<path d="M7 17L17 7"/><path d="M8 7h9v9"/>',
+  capas:    '<path d="M12 3L3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  torta:    '<path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',
+  monedas:  '<ellipse cx="12" cy="6" rx="7" ry="2.8"/><path d="M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6"/><path d="M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6"/>',
+  grilla:   '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  cambio:   '<path d="M17 3l4 4-4 4"/><path d="M3 11V9a2 2 0 0 1 2-2h16"/><path d="M7 21l-4-4 4-4"/><path d="M21 13v2a2 2 0 0 1-2 2H3"/>',
+  reloj:    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  bono:     '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  dolar:    '<path d="M12 2v20"/><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  enviar:   '<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',
+  brujula:  '<circle cx="12" cy="12" r="9"/><path d="M16 8l-2.5 5.5L8 16l2.5-5.5z"/>',
+  recibo:   '<path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+  balanza:  '<path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/>',
+  lupa:     '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  diario:   '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>',
+  calendario:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  globo:    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>',
+  libro:    '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21a2 2 0 0 1 2-2h13"/>',
+  destello: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/>',
+  barras:   '<path d="M4 20V11M10 20V5M16 20v-7M2 20h20"/>',
+  estrella: '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/>',
+  calculadora:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/>',
+};
+
+// archivo → [trazo, color]. Paleta de sistema de Apple (modo oscuro).
+var BB_GLIFO_DE = {
+  'interes-compuesto': ['subida', '#30d158'],   'interes-simple': ['porcentaje', '#64d2ff'],
+  'inflacion': ['bajada', '#ff453a'],            'comparador-plazos-fijos': ['banco', '#0a84ff'],
+  'comparador-cuentas': ['billetera', '#5e5ce6'], 'cuentas-remuneradas': ['billetera', '#5e5ce6'],
+  'comparador-creditos-uva': ['casa', '#ff9f0a'], 'prestamo': ['recibo', '#ff9f0a'],
+  'meta-financiera': ['objetivo', '#ff375f'],     'fire': ['sol', '#ff9f0a'],
+  'salario': ['maletin', '#64d2ff'],             'contado-vs-cuotas': ['tarjeta', '#bf5af2'],
+  'roi': ['flecha', '#30d158'],                  'vpn': ['capas', '#5e5ce6'],
+  'wacc': ['torta', '#bf5af2'],                  'ddm': ['monedas', '#ffb340'],
+  'dividendos': ['monedas', '#30d158'],          'multiplos': ['grilla', '#0a84ff'],
+  'guia-multiplos': ['libro', '#0a84ff'],        'markowitz': ['torta', '#64d2ff'],
+  'conversion-tasas': ['cambio', '#0a84ff'],     'caucion': ['reloj', '#ff9f0a'],
+  'renta-fija': ['bono', '#5e5ce6'],             'visor-bonos': ['bono', '#0a84ff'],
+  'visor-bonos-ar': ['bono', '#64d2ff'],         'comparador-dolares': ['dolar', '#30d158'],
+  'comparador-pix': ['enviar', '#64d2ff'],       'comparador-tasas': ['barras', '#0a84ff'],
+  'test-inversor': ['brujula', '#bf5af2'],       'ticker': ['lupa', '#0a84ff'],
+  'comparar': ['balanza', '#5e5ce6'],            'noticias': ['diario', '#ff453a'],
+  'noticias-ticker': ['diario', '#ff453a'],      'calendario': ['calendario', '#ff453a'],
+  'agenda-ar': ['calendario', '#ff9f0a'],        'mercado': ['globo', '#64d2ff'],
+  'ranking-semanal': ['barras', '#30d158'],      'datos': ['barras', '#5e5ce6'],
+  'empezar-a-invertir': ['destello', '#30d158'], 'conceptos': ['libro', '#ff9f0a'],
+  'brokers': ['banco', '#8e8e93'],               'etfs-fci': ['torta', '#0a84ff'],
+  'mis-portafolios': ['maletin', '#0a84ff'],     'watchlist': ['estrella', '#ffb340'],
+  'calculadoras': ['calculadora', '#8e8e93'],
+};
+
+function bbGlifo(href) {
+  var m = String(href || '').match(/([a-z0-9-]+)\.html/);
+  var g = m && BB_GLIFO_DE[m[1]];
+  if (!g) return '';
+  return '<span class="bb-glifo" style="--g:' + g[1] + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + BB_TRAZOS[g[0]] + '</svg></span>';
+}
+
+// Tarjetas del HTML: el ícono de cada una sale del enlace que la contiene
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.cc-icon, .calc-hl-icon, .home-cta-icon, .atajos-calc span').forEach(function (el) {
+    var a = el.closest('a[href]');
+    var g = a && bbGlifo(a.getAttribute('href'));
+    if (g) { el.innerHTML = g; el.classList.add('con-glifo'); }
+  });
+});
+
+
+// ============================================================
 // GA4 EVENTS — helper centralizado
 // Uso: window.bbTrack('calculation_complete', { calc: 'cuotas' })
 // ============================================================
@@ -268,7 +355,7 @@ window.BB_GLOSARIO = {
     const anyActive = g.items.some(it => isActive(it.href));
     const itemsHtml = g.items.map(it => `
       <a href="${it.href}" class="${isActive(it.href) ? 'active' : ''}">
-        <span class="dd-icon">${it.icon || ''}</span>
+        <span class="dd-icon">${bbGlifo(it.href) || it.icon || ''}</span>
         <span>${it.label}${it.beta ? ' <span class="beta-badge">Beta</span>' : ''}</span>
       </a>`).join('');
     const btnStyle = g.highlight ? ' style="color:#4ade9a"' : '';
@@ -674,4 +761,40 @@ document.addEventListener('click', () => {
   }, { rootMargin: '0px 0px -8% 0px' });
 
   bloques.forEach(el => { el.classList.add('bb-reveal'); io.observe(el); });
+})();
+
+// ============================================================
+// MEDICION DE USO (para iterar el diseño con datos, no a ojo)
+// Tres preguntas que Google Analytics no contesta solo:
+//   - hasta dónde baja la gente en cada página (25/50/75/100%)
+//   - si llega a tocar la calculadora o se va antes
+//   - qué tarjeta o acceso eligió para entrar a una herramienta
+// Todo va por window.bbTrack; si GA no cargó, no pasa nada.
+// ============================================================
+(function medirUso() {
+  var pagina = location.pathname.replace(/^.*\//, '') || 'index.html';
+
+  var marcas = [25, 50, 75, 100], vistas = {};
+  function scroll() {
+    var alto = document.documentElement.scrollHeight - innerHeight;
+    if (alto <= 0) return;
+    var pct = (scrollY / alto) * 100;
+    marcas.forEach(function (m) {
+      if (pct >= m - 1 && !vistas[m]) { vistas[m] = 1; window.bbTrack('scroll_profundidad', { pagina: pagina, porcentaje: m }); }
+    });
+  }
+  addEventListener('scroll', function () { clearTimeout(scroll.t); scroll.t = setTimeout(scroll, 250); }, { passive: true });
+
+  var t0 = performance.now(), usada = false;
+  document.addEventListener('input', function (e) {
+    if (usada || !e.target.closest('main')) return;
+    usada = true;
+    window.bbTrack('calculadora_usada', { pagina: pagina, segundos_hasta_usar: Math.round((performance.now() - t0) / 1000) });
+  }, true);
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('.calc-card, .calc-hl, .home-cta, .hero-stats.hoy .stat, .atajos-calc a, .hero-cta a');
+    if (!a) return;
+    window.bbTrack('select_content', { content_type: a.className.split(' ')[0], item_id: a.getAttribute('href'), pagina: pagina });
+  });
 })();
