@@ -515,6 +515,7 @@
       const curvePts = pts.filter(p=>p.kind==='canje');
       const coef = quadFit(curvePts.length>=3?curvePts:pts);
       const xs = pts.map(p=>p.x); const xmin=Math.min(...xs), xmax=Math.max(...xs);
+      const ys = pts.map(p=>p.y); const yMin=Math.max(0,Math.floor(Math.min(...ys)-1)), yMax=Math.ceil(Math.max(...ys)+1), xLo=Math.max(0,Math.floor((xmin-0.3)*2)/2);
       const line = [];
       for (let i=0;i<=40;i++){ const x=xmin+(xmax-xmin)*i/40; line.push({x, y: coef[0]+coef[1]*x+coef[2]*x*x}); }
 
@@ -524,10 +525,10 @@
         type:'scatter',
         data:{ datasets:[
           { label:'Curva (regresión)', data:line, type:'line', borderColor:'rgba(232,201,122,0.7)', borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false, tension:0 },
-          { label:'Ley NY (Globales)', data:ny, backgroundColor:'#4ade9a', pointRadius:7, pointHoverRadius:9 },
-          { label:'Ley Arg. (Bonares)', data:arg, backgroundColor:'#60a5fa', pointRadius:7, pointHoverRadius:9 },
-          { label:'BONTE USD (tasa fija)', data:bull, backgroundColor:'#ffa857', pointStyle:'triangle', pointRadius:8, pointHoverRadius:10 },
-          { label:'BOPREAL (BCRA)', data:bop, backgroundColor:'#bba7e8', pointStyle:'rectRot', pointRadius:8, pointHoverRadius:10 },
+          { label:'Ley NY (Globales)', data:ny, backgroundColor:'rgba(74,222,154,0.55)', borderColor:'#4ade9a', borderWidth:1.5, pointRadius:5.5, pointHoverRadius:8 },
+          { label:'Ley Arg. (Bonares)', data:arg, backgroundColor:'rgba(96,165,250,0.55)', borderColor:'#60a5fa', borderWidth:1.5, pointRadius:5.5, pointHoverRadius:8 },
+          { label:'BONTE USD (tasa fija)', data:bull, backgroundColor:'rgba(255,168,87,0.6)', borderColor:'#ffa857', borderWidth:1.5, pointStyle:'triangle', pointRadius:6.5, pointHoverRadius:9 },
+          { label:'BOPREAL (BCRA)', data:bop, backgroundColor:'rgba(187,167,232,0.6)', borderColor:'#bba7e8', borderWidth:1.5, pointStyle:'rectRot', pointRadius:6.5, pointHoverRadius:9 },
         ]},
         options:{
           maintainAspectRatio:false,
@@ -539,21 +540,23 @@
             tooltip:{callbacks:{label:c=>c.raw.sym?`${c.raw.sym}: TIR ${c.raw.y.toFixed(2)}% · dur ${c.raw.x.toFixed(2)}`:''}}
           },
           scales:{
-            x:{title:{display:true,text:'Duration (años)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
-            y:{title:{display:true,text:'TIR anual USD (%)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}
+            x:{min:xLo,title:{display:true,text:'Duration (años)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{min:yMin,max:yMax,title:{display:true,text:'TIR anual USD (%)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}
           }
         },
-        plugins:[{ id:'labels', afterDatasetsDraw(chart){ const {ctx}=chart; ctx.save(); ctx.font='10px DM Mono'; ctx.fillStyle='#e8edf5'; const usadas=[];
-          [1,2,3,4].forEach(di=>{ const meta=chart.getDatasetMeta(di); if(!meta)return; meta.data.forEach((pt,i)=>{
-            const d=chart.data.datasets[di].data[i]; if(!d||!d.sym) return;
-            const w=ctx.measureText(d.sym).width;
-            // si no entra a la derecha, la etiqueta se dibuja a la izquierda del punto
-            const x = (pt.x+8+w > chart.width-4) ? pt.x-8-w : pt.x+8;
-            // si pisa a otra etiqueta ya dibujada, se omite (el nombre sigue en el toque/tooltip)
-            if (usadas.some(r => x < r.x+r.w+2 && x+w+2 > r.x && Math.abs(pt.y-r.y) < 11)) return;
-            usadas.push({x, w, y:pt.y});
-            ctx.fillText(d.sym, x, pt.y+3);
-          }); }); ctx.restore(); } }]
+        plugins:[{ id:'labels', afterDatasetsDraw(chart){ const {ctx}=chart; ctx.save(); ctx.font='10px DM Mono'; ctx.lineJoin='round'; ctx.lineWidth=3; ctx.strokeStyle='#0d1015';
+          const todos=[]; [1,2,3,4].forEach(di=>{ const m=chart.getDatasetMeta(di); m.data.forEach((pt,i)=>{ const d=chart.data.datasets[di].data[i]; if(d&&d.sym) todos.push({pt,d}); }); });
+          const cajas=[]; const choca=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+          const puntos=todos.map(({pt})=>({x:pt.x-8,y:pt.y-8,w:16,h:16}));
+          const ca=chart.chartArea;
+          todos.sort((a,b)=>a.pt.x-b.pt.x).forEach(({pt,d})=>{
+            const w=ctx.measureText(d.sym).width, h=10;
+            const opciones=[[pt.x+9,pt.y-h/2],[pt.x-9-w,pt.y-h/2],[pt.x-w/2,pt.y-9-h],[pt.x-w/2,pt.y+9]];
+            const libre=opciones.map(([x,y])=>({x,y,w,h})).find(c=>c.x>=ca.left-4&&c.x+c.w<=chart.width-2&&c.y>=ca.top-4&&c.y+c.h<=ca.bottom+4&&!cajas.some(o=>choca(c,o))&&!puntos.some(p=>choca(c,p)&&!(Math.abs(p.x+8-pt.x)<1&&Math.abs(p.y+8-pt.y)<1)));
+            if(!libre) return;   // sin lugar claro: el nombre queda en el tooltip al tocar
+            cajas.push(libre); ctx.fillStyle='#e8edf5';
+            ctx.strokeText(d.sym,libre.x,libre.y+h-1); ctx.fillText(d.sym,libre.x,libre.y+h-1);
+          }); ctx.restore(); } }]
       });
     }
 
