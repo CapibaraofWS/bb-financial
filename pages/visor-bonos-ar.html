@@ -40,7 +40,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=14" />
+  <link rel="stylesheet" href="../css/styles.css?v=15" />
   <style>
     .beta-badge{display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem;}
     .vb-tabs{display:flex;gap:0.4rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;flex-wrap:wrap;}
@@ -296,7 +296,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=32"></script>
+  <script src="../js/main.js?v=33"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/bond-math.js?v=2"></script>
   <script src="../js/ticker.js?v=5"></script>
@@ -543,12 +543,15 @@
             y:{title:{display:true,text:'TIR anual USD (%)',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}
           }
         },
-        plugins:[{ id:'labels', afterDatasetsDraw(chart){ const {ctx}=chart; ctx.save(); ctx.font='10px DM Mono'; ctx.fillStyle='#e8edf5';
+        plugins:[{ id:'labels', afterDatasetsDraw(chart){ const {ctx}=chart; ctx.save(); ctx.font='10px DM Mono'; ctx.fillStyle='#e8edf5'; const usadas=[];
           [1,2,3,4].forEach(di=>{ const meta=chart.getDatasetMeta(di); if(!meta)return; meta.data.forEach((pt,i)=>{
             const d=chart.data.datasets[di].data[i]; if(!d||!d.sym) return;
             const w=ctx.measureText(d.sym).width;
             // si no entra a la derecha, la etiqueta se dibuja a la izquierda del punto
             const x = (pt.x+8+w > chart.width-4) ? pt.x-8-w : pt.x+8;
+            // si pisa a otra etiqueta ya dibujada, se omite (el nombre sigue en el toque/tooltip)
+            if (usadas.some(r => x < r.x+r.w+2 && x+w+2 > r.x && Math.abs(pt.y-r.y) < 11)) return;
+            usadas.push({x, w, y:pt.y});
             ctx.fillText(d.sym, x, pt.y+3);
           }); }); ctx.restore(); } }]
       });

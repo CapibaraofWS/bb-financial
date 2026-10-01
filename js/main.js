@@ -610,7 +610,7 @@ document.addEventListener('click', () => {
 // ============================================================
 (function tablasMobile() {
   const MAX_COLUMNAS = 10;   // más que esto ya no entra ni como tarjeta
-  const MAX_FILAS = 40;      // planillas largas (amortización) se recorren mejor scrolleando
+  const MAX_FILAS = 12;      // listas largas como tarjetas son kilómetros de scroll: ahí conviene la tabla con scroll lateral
 
   function encabezados(tabla) {
     const filaTh = tabla.querySelector('thead tr');
@@ -742,6 +742,7 @@ document.addEventListener('click', () => {
   const alto = window.innerHeight;
   const bloques = [...document.querySelectorAll(SEL)].filter(el =>
     !el.parentElement.closest(SEL) &&            // uno adentro de otro animaria dos veces
+    !(alto && window.innerWidth <= 700 && el.matches('.calc-hl-grid > *, .home-cta-grid > *')) && // carruseles: el overflow recortaria el desplazamiento
     el.getBoundingClientRect().top > alto);
 
   const io = new IntersectionObserver(entradas => {

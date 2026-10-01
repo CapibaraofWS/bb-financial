@@ -1286,7 +1286,7 @@ img { max-width: 100%; height: auto; }
 /* ── Seguí leyendo: enlaza herramientas con las notas del blog que las explican ── */
 .related-reads {
   max-width: 760px;
-  margin: 3.5rem auto 0;
+  margin: 3.5rem auto 3rem;
   padding: 1.6rem 1.75rem 1.75rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -1365,7 +1365,7 @@ img { max-width: 100%; height: auto; }
   /* Respiro entre bloques: el texto corrido en columna angosta cansa */
   .article-body p { line-height: 1.75; margin-bottom: 1.15rem; }
   .article-body h2 { margin-top: 2.25rem; }
-  .related-reads { margin-top: 2.5rem; padding: 1.25rem 1.1rem 1.4rem; }
+  .related-reads { margin: 2.5rem 1rem 2.5rem; padding: 1.25rem 1.1rem 1.4rem; }
   .related-reads a { font-size: 1rem; }
 }
 
@@ -1398,6 +1398,14 @@ img { max-width: 100%; height: auto; }
       radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.45), transparent) left center / 14px 100% no-repeat,
       radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.45), transparent) right center / 14px 100% no-repeat;
     background-attachment: local, local, scroll, scroll;
+  }
+
+  /* Con scroll lateral, la primera columna (el nombre) queda fija para no perder de qué fila se habla */
+  table.tbl-scroll th:first-child,
+  table.tbl-scroll td:first-child {
+    position: sticky; left: 0; z-index: 1;
+    background: var(--bg-card);
+    box-shadow: 1px 0 0 var(--border);
   }
 
   /* --- Filas como tarjetas --- */
@@ -1868,15 +1876,19 @@ td[data-skel] { text-align: left !important; padding: 1rem 0.7rem !important; }
 @media (max-width: 700px) {
   main .calc-hl-grid, main .home-cta-grid {
     display: flex; gap: 0.85rem;
-    overflow-x: auto; overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory; scroll-padding: 0 1.25rem;
-    margin: 0 -1.25rem; padding: 0.25rem 1.25rem 1rem;
+    /* overflow-y: hidden evita que el carrusel se coma el scroll vertical del dedo */
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity; scroll-padding: 0 1.25rem;
+    margin: 0 -1.25rem; padding: 0.75rem 1.25rem 1.25rem;
     scrollbar-width: none;
   }
   main .calc-hl-grid::-webkit-scrollbar, main .home-cta-grid::-webkit-scrollbar { display: none; }
   main .calc-hl-grid > *, main .home-cta-grid > * { flex: 0 0 84%; scroll-snap-align: start; min-width: 0; }
 }
 @media (max-width: 600px) {
+  /* Cajas "Agenda" y "PIX" del home: el link pasa abajo en vez de salirse de la pantalla */
+  section[data-seccion="agenda"] a { flex-wrap: wrap; }
+  section[data-seccion="agenda"] a > span:last-child { flex-basis: 100%; }
   .hero-cta { margin-bottom: 2rem; }
   .hero-stats.hoy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
   .hero-stats.hoy .stat-number { font-size: clamp(1.35rem, 6.8vw, 1.9rem); white-space: nowrap; }
