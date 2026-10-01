@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
-  <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1SF925SGNN');</script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -194,7 +195,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=33"></script>
+  <script src="../js/main.js?v=34"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     // ===== Preguntas (cada opción suma puntos al perfil: 1=conservador, 2=moderado, 3=agresivo) =====

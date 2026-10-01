@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN"></script>
-  <script>
+    <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -144,10 +145,10 @@
           <a href="pages/calculadoras.html" class="btn btn-ghost">Ver calculadoras</a>
         </div>
         <!-- Hoy en números: tres datos que cambian todos los días, cada uno lleva a su herramienta -->
-        <div class="hero-stats hoy" role="list" aria-label="Hoy en números">
-          <a class="stat" role="listitem" href="pages/comparador-dolares.html"><span class="stat-number" data-hoy="blue">—</span><span class="stat-label">Dólar blue</span></a>
-          <a class="stat" role="listitem" href="pages/comparador-plazos-fijos.html"><span class="stat-number" data-hoy="pf">—</span><span class="stat-label">Mejor plazo fijo</span></a>
-          <a class="stat" role="listitem" href="pages/inflacion.html"><span class="stat-number" data-hoy="ipc">—</span><span class="stat-label" data-hoy-label="ipc">Inflación del mes</span></a>
+        <div class="hero-stats hoy">
+          <a class="stat" href="pages/comparador-dolares.html"><span class="stat-number" data-hoy="blue">—</span><span class="stat-label">Dólar blue</span></a>
+          <a class="stat" href="pages/comparador-plazos-fijos.html"><span class="stat-number" data-hoy="pf">—</span><span class="stat-label">Mejor plazo fijo</span></a>
+          <a class="stat" href="pages/inflacion.html"><span class="stat-number" data-hoy="ipc">—</span><span class="stat-label" data-hoy-label="ipc">Inflación del mes</span></a>
         </div>
       </div>
     </section>
@@ -559,10 +560,10 @@
   </footer>
 
   <script src="js/sanitize.js?v=1"></script>
-  <script src="js/main.js?v=33"></script>
+  <script src="js/main.js?v=34"></script>
   <script src="js/esqueletos.js?v=2" defer></script>
   <script src="js/desde-tu-visita.js?v=1" defer></script>
-  <script src="js/ticker.js?v=5"></script>
+  <script src="js/ticker.js?v=6"></script>
   <script>
   /* ---- Homepage news carousel ---- */
   (function () {
@@ -694,7 +695,7 @@
       updateArrows();
     }
 
-    loadCarousel();
+    bbTrasCarga(loadCarousel);
   })();
 
   /* ---- Market Brief — live snapshot ---- */
@@ -821,11 +822,7 @@
     }
 
     // Lanzar todos en paralelo — cada uno se renderiza independiente
-    loadDolares();
-    loadRiesgo();
-    loadIndices();
-    loadCrypto();
-    loadTreasury();
+    bbTrasCarga(() => { loadDolares(); loadRiesgo(); loadIndices(); loadCrypto(); loadTreasury(); });
   })();
   </script>
   <script>

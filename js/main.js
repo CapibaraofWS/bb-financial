@@ -1,6 +1,12 @@
 // FinCalc — main.js v22
 window.__BB_MAIN_JS_VERSION = 'v22';
 
+// Corre fn cuando la pagina ya cargo y el navegador esta ocioso: lo que no se ve en el primer pantallazo no debe competir con el.
+window.bbTrasCarga = function (fn) {
+  const ir = () => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 300));
+  document.readyState === 'complete' ? ir() : addEventListener('load', ir, { once: true });
+};
+
 // ============================================================
 // GLIFOS — íconos de las herramientas
 // Un trazo blanco sobre un cuadrado de color con esquinas suaves, como los
@@ -729,7 +735,7 @@ document.addEventListener('click', () => {
 // Si falta IntersectionObserver o el usuario pidio menos movimiento, no pasa
 // nada y todo se ve como siempre.
 // ============================================================
-(function revelar() {
+bbTrasCarga(function revelar() {
   if (!('IntersectionObserver' in window)) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   // Los rastreadores sacan una foto de la pagina: que no la saquen a mitad de un fundido
@@ -762,7 +768,7 @@ document.addEventListener('click', () => {
   }, { rootMargin: '0px 0px -8% 0px' });
 
   bloques.forEach(el => { el.classList.add('bb-reveal'); io.observe(el); });
-})();
+});
 
 // ============================================================
 // MEDICION DE USO (para iterar el diseño con datos, no a ojo)

@@ -250,7 +250,7 @@
   function stopTimer() {
     if (timer) { clearInterval(timer); timer = null; }
   }
-  refresh();
+  (window.bbTrasCarga || (f => f()))(refresh);
   startTimer();
   // Si el usuario vuelve a la pestaña después de >90s, refrescamos inmediatamente.
   let lastRefresh = Date.now();
