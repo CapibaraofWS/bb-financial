@@ -241,7 +241,7 @@ window.BB_GLOSARIO = {
   const nav = document.querySelector('.main-nav');
   if (!nav) return;
 
-  const inBlog = location.pathname.includes('/blog/');
+  const inBlog = /\/(blog|atlas)\//.test(location.pathname);
   const inPages = location.pathname.includes('/pages/');
   const root = inBlog ? '../../' : (inPages ? '../' : '');
   const pagesBase = inBlog ? '../' : (inPages ? '' : 'pages/');
@@ -252,7 +252,6 @@ window.BB_GLOSARIO = {
       kind: 'link',
       href: root + 'index.html',
       label: 'Inicio',
-      match: ['index.html', '/'],
     },
     {
       kind: 'dropdown',
@@ -329,6 +328,11 @@ window.BB_GLOSARIO = {
       href: pagesBase + 'blog/index.html',
       label: 'Blog',
     },
+    {
+      kind: 'link',
+      href: pagesBase + 'atlas/index.html',
+      label: 'Atlas',
+    },
     // "Proyectos" queda fuera del menu hasta que haya modelos publicados: hoy
     // lleva a un "Proximamente" y solo carga la barra. La pagina sigue existiendo
     // y accesible por URL; para volver a mostrarla, descomentar el bloque de abajo.
@@ -345,16 +349,14 @@ window.BB_GLOSARIO = {
     },
   ];
 
-  const currentFile = location.pathname.split('/').pop() || 'index.html';
 
-  const isActive = (href) => {
-    const file = href.split('/').pop();
-    return file === currentFile;
-  };
+  // Se compara la ruta completa: blog/index.html y atlas/index.html no son el inicio
+  const ruta = p => (p.endsWith('/') ? p + 'index.html' : p);
+  const isActive = (href) => ruta(new URL(href, location.href).pathname) === ruta(location.pathname);
 
   const html = groups.map(g => {
     if (g.kind === 'link') {
-      const active = (g.match || []).some(m => currentFile === m || (m === '/' && currentFile === '')) || isActive(g.href);
+      const active = isActive(g.href);
       return `<a href="${g.href}" class="nav-link${active ? ' active' : ''}${g.extraClass ? ' ' + g.extraClass : ''}">${g.label}</a>`;
     }
     // dropdown
@@ -383,7 +385,7 @@ window.BB_GLOSARIO = {
 // FOOTER CONTACT — inject email/contact block in every footer
 // ============================================================
 (function injectFooterContact() {
-  const inBlog = location.pathname.includes('/blog/');
+  const inBlog = /\/(blog|atlas)\//.test(location.pathname);
   const inPages = location.pathname.includes('/pages/');
   const root = inBlog ? '../../' : (inPages ? '../' : '');
   const footer = document.querySelector('.site-footer');
