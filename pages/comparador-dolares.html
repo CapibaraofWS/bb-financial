@@ -62,6 +62,29 @@
     .dolar-update { font-size: 0.7rem; color: var(--text-subtle); margin-top: 0.85rem; font-family: var(--font-mono); }
     .dolar-brecha { background: rgba(255,107,107,0.08); color: #ff9999; font-family: var(--font-mono); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 0.5rem; }
 
+    /* En el celular, 2 por fila: el historial queda a una pantalla y no a seis */
+    @media (max-width: 600px) {
+      .dolar-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 1.25rem 0; }
+      .dolar-card { padding: 0.95rem 0.9rem; }
+      .dolar-card h3 { font-size: 1rem; }
+      .dolar-price { font-size: 1.35rem; }
+      .dolar-cv { flex-direction: column; gap: 0.1rem; }
+      .dolar-update { font-size: 0.62rem; margin-top: 0.6rem; }
+      .dolar-brecha { font-size: 0.64rem; }
+    }
+    /* Historial */
+    .hist-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem 1.25rem 1rem; margin: 0 0 2rem; }
+    .hist-card h2 { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: -0.01em; margin-bottom: 0.9rem; }
+    .hist-ctl { display: flex; gap: 0.5rem 0.75rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.9rem; }
+    .hist-ctl .grp { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .hist-btn { padding: 0.35rem 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; letter-spacing: 0.04em; transition: all var(--transition); }
+    .hist-btn:hover { color: var(--text); }
+    .hist-btn.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(74,222,154,0.3); }
+    #hist-wrap { position: relative; height: 320px; width: 100%; }
+    #hist-leyenda { position: absolute; top: 4px; left: 6px; z-index: 3; pointer-events: none; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); line-height: 1.55; text-shadow: 0 0 6px var(--bg-card), 0 0 6px var(--bg-card); }
+    #hist-leyenda b { color: var(--text); font-weight: 500; }
+    .hist-nota { font-size: 0.72rem; color: var(--text-subtle); font-family: var(--font-mono); margin-top: 0.6rem; }
+
     .explainer { max-width: 880px; margin: 3rem auto 0; }
     .explain-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
     .explain-card h3 { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.5rem; }
@@ -91,6 +114,33 @@
 
     <div class="container">
       <div class="dolar-grid" id="dolar-grid"></div>
+
+      <section class="hist-card" aria-label="Evolución del dólar">
+        <h2>Cómo se movió</h2>
+        <div class="hist-ctl">
+          <div class="grp" id="hist-casas" role="group" aria-label="Tipo de dólar">
+            <button class="hist-btn" data-casa="oficial">Oficial</button>
+            <button class="hist-btn active" data-casa="blue">Blue</button>
+            <button class="hist-btn" data-casa="bolsa">MEP</button>
+            <button class="hist-btn" data-casa="contadoconliqui">CCL</button>
+            <button class="hist-btn" data-casa="cripto">Cripto</button>
+          </div>
+          <div class="grp" id="hist-rangos" role="group" aria-label="Período">
+            <button class="hist-btn" data-d="30">1M</button>
+            <button class="hist-btn" data-d="90">3M</button>
+            <button class="hist-btn" data-d="180">6M</button>
+            <button class="hist-btn active" data-d="365">1A</button>
+            <button class="hist-btn" data-d="1825">5A</button>
+            <button class="hist-btn" data-d="0">Max</button>
+          </div>
+          <div class="grp" id="hist-tipo" role="group" aria-label="Tipo de gráfico">
+            <button class="hist-btn active" data-t="area">Área</button>
+            <button class="hist-btn" data-t="line">Línea</button>
+          </div>
+        </div>
+        <div id="hist-wrap"><div id="hist-leyenda"></div><div id="hist-chart" style="height:100%;width:100%"></div></div>
+        <p class="hist-nota">Precio de venta diario. La línea gris es el dólar oficial, para ver la brecha.</p>
+      </section>
 
       <section class="explainer">
         <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;letter-spacing:-0.01em">¿Por qué hay tantos dólares?</h2>
@@ -172,6 +222,7 @@
     <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Financial · Datos referenciales · No constituye asesoramiento financiero · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js" integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK" crossorigin="anonymous"></script>
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=34"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
@@ -224,6 +275,91 @@
       grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">No se pudieron cargar las cotizaciones. Reintentá en unos segundos.</p>';
       badge.textContent = '⚠ Error de conexión';
     }
+  })();
+  </script>
+  <script>
+  // Historial del dólar: TradingView Lightweight Charts, con el oficial de referencia
+  (function () {
+    const cache = {};
+    let casa = 'blue', dias = 365, tipo = 'area', chart = null, sPrinc = null, sOf = null, datos = [], datosOf = [];
+    const fmt = n => new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+
+    async function traer(c) {
+      if (cache[c]) return cache[c];
+      const r = await fetch('/api/dolar-historico?casa=' + encodeURIComponent(c), { signal: AbortSignal.timeout(12000) });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const j = await r.json();
+      cache[c] = (j.filas || []).map(x => ({ time: x[0], value: x[2] }));
+      return cache[c];
+    }
+    function recortar(arr) {
+      if (!dias || !arr.length) return arr;
+      const corte = new Date(Date.now() - dias * 864e5).toISOString().slice(0, 10);
+      return arr.filter(p => p.time >= corte);
+    }
+    async function dibujar() {
+      const el = document.getElementById('hist-chart');
+      if (!el || !window.LightweightCharts) return;
+      try {
+        const [a, o] = await Promise.all([traer(casa), casa === 'oficial' ? Promise.resolve([]) : traer('oficial')]);
+        datos = recortar(a); datosOf = recortar(o);
+      } catch (e) {
+        document.getElementById('hist-leyenda').textContent = 'No se pudo cargar el historial. Reintentá en unos segundos.';
+        return;
+      }
+      if (!datos.length) { document.getElementById('hist-leyenda').textContent = 'Sin datos para este período.'; return; }
+      if (chart) { chart.remove(); chart = null; }
+      chart = LightweightCharts.createChart(el, {
+        autoSize: true,
+        layout: { background: { type: 'solid', color: 'transparent' }, textColor: '#7a8599', fontFamily: 'DM Mono, monospace', fontSize: 10 },
+        grid: { vertLines: { color: 'rgba(255,255,255,0.04)' }, horzLines: { color: 'rgba(255,255,255,0.04)' } },
+        rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.2, bottom: 0.08 } },
+        timeScale: { borderVisible: false },
+        localization: { locale: 'es-AR', priceFormatter: v => '$' + fmt(v) },
+        handleScroll: { vertTouchDrag: false },
+      });
+      const color = '#60a5fa';
+      if (datosOf.length) {
+        sOf = chart.addLineSeries({ color: 'rgba(164,173,186,0.6)', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false });
+        sOf.setData(datosOf);
+      }
+      sPrinc = tipo === 'line'
+        ? chart.addLineSeries({ color, lineWidth: 2, priceLineVisible: false })
+        : chart.addAreaSeries({ lineColor: color, topColor: 'rgba(96,165,250,0.28)', bottomColor: 'rgba(0,0,0,0)', lineWidth: 2, priceLineVisible: false });
+      sPrinc.setData(datos);
+      chart.timeScale().fitContent();
+      chart.subscribeCrosshairMove(p => leyenda(p && p.time ? p.time : null));
+      leyenda(null);
+    }
+    function leyenda(t) {
+      const box = document.getElementById('hist-leyenda');
+      if (!box || !datos.length) return;
+      const p = t ? (datos.find(x => x.time === t) || datos[datos.length - 1]) : datos[datos.length - 1];
+      const ref = datos[0].value, v = ref ? (p.value - ref) / ref * 100 : 0;
+      const of = datosOf.find(x => x.time === p.time);
+      const nombre = { oficial: 'Oficial', blue: 'Blue', bolsa: 'MEP', contadoconliqui: 'CCL', cripto: 'Cripto' }[casa];
+      const fecha = new Date(p.time + 'T12:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+      let h = fecha + '<br>' + nombre + ' <b>$' + fmt(p.value) + '</b> <span style="color:' + (v >= 0 ? '#4ade9a' : '#ff6b6b') + '">' + (v >= 0 ? '+' : '') + v.toFixed(1) + '% en el período</span>';
+      if (of && casa !== 'oficial') h += '<br>Brecha vs oficial <b>' + ((p.value - of.value) / of.value * 100).toFixed(1) + '%</b>';
+      box.innerHTML = h;
+    }
+    function grupo(id, attr, fn) {
+      const g = document.getElementById(id);
+      g.addEventListener('click', e => {
+        const b = e.target.closest('.hist-btn'); if (!b) return;
+        g.querySelectorAll('.hist-btn').forEach(x => x.classList.toggle('active', x === b));
+        fn(b.dataset[attr]); dibujar();
+      });
+    }
+    grupo('hist-casas', 'casa', v => { casa = v; });
+    grupo('hist-rangos', 'd', v => { dias = +v; });
+    grupo('hist-tipo', 't', v => { tipo = v; });
+    // El gráfico está más abajo que la primera pantalla: se carga cuando se acerca
+    const wrap = document.getElementById('hist-wrap');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); dibujar(); } }, { rootMargin: '300px' });
+      io.observe(wrap);
+    } else dibujar();
   })();
   </script>
 </body>

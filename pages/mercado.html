@@ -474,6 +474,8 @@
   /* ════════════════════════════════════════════════
      CRIPTO TREEMAP — CoinGecko top 60
   ════════════════════════════════════════════════ */
+  // Monedas con cotización en Yahoo Finance (SYM-USD): para ellas se abre el gráfico de velas del sitio
+  const YAHOO_COINS = new Set(['BTC','ETH','BNB','XRP','SOL','ADA','DOGE','TRX','AVAX','LINK','DOT','LTC','BCH','XLM','ATOM','UNI','ETC','NEAR','USDT','USDC']);
   async function loadCripto() {
     const wrap = document.getElementById('treemap-cripto');
     try {
@@ -488,6 +490,7 @@
         pct: c.price_change_percentage_24h,
         price: c.current_price,
         link: `https://www.coingecko.com/en/coins/${c.id}`,
+        internal: YAHOO_COINS.has(c.symbol.toUpperCase()),   // las grandes tienen gráfico propio (Yahoo: SYM-USD)
       }));
       // Compresión logarítmica para suavizar el dominio de BTC/ETH y dar mejor visualidad
       // sqrt(cap) suaviza la curva: BTC sigue siendo el más grande pero no aplasta a los demás
@@ -579,9 +582,9 @@
     container.innerHTML = cells.map(c => {
       const area = c.w * c.h;
       const sizeClass = area < 600 ? 'tiny' : area < 2200 ? 'small' : area < 8000 ? 'med' : area < 25000 ? 'big' : 'huge';
-      const rawHref = opts.cryptoLinks ? c.link : `ticker.html?symbol=${encodeURIComponent(c.sym)}`;
+      const rawHref = c.internal ? `ticker.html?symbol=${encodeURIComponent(c.sym)}-USD` : opts.cryptoLinks ? c.link : `ticker.html?symbol=${encodeURIComponent(c.sym)}`;
       const href = safeHref(rawHref, '#');
-      const target = opts.cryptoLinks ? 'target="_blank" rel="noopener noreferrer"' : '';
+      const target = opts.cryptoLinks && !c.internal ? 'target="_blank" rel="noopener noreferrer"' : '';
       return `<a href="${esc(href)}" ${target} class="tm-cell ${sizeClass}" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px;background:${heatColor(c.pct)};text-decoration:none">
         <div class="tm-sym">${esc(c.sym)}</div>
         <div class="tm-pct">${fmtPct(c.pct, 2)}</div>
