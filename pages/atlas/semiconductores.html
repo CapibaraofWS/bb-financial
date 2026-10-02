@@ -35,7 +35,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../../css/styles.css?v=15" />
-  <link rel="stylesheet" href="../../css/atlas.css?v=2" />
+  <link rel="stylesheet" href="../../css/atlas.css?v=3" />
 </head>
 <body>
   <header class="site-header">
@@ -89,6 +89,11 @@
           <div class="ax-escena">
             <div class="ax-globo"><canvas id="globo-viaje" role="img" aria-label="Globo con los países de cada etapa de la cadena de los chips"></canvas><span class="ax-globo-hint">Arrastrá para girar · tocá un país</span></div>
             <div class="ax-paso-movil" aria-live="polite"></div>
+            <div class="ax-paso-ctl">
+              <button type="button" class="ax-btn" id="viaje-ant" aria-label="Parada anterior">←</button>
+              <span class="ax-puntos" id="viaje-puntos"></span>
+              <button type="button" class="ax-btn primario" id="viaje-sig">Siguiente →</button>
+            </div>
           </div>
           <ol class="ax-pasos">
             <li class="ax-paso" style="--c:#a78bfa"><div class="ax-paso-card">
@@ -503,7 +508,7 @@
   <script src="../../js/sanitize.js?v=1"></script>
   <script src="../../js/main.js?v=35"></script>
   <script src="../../js/vendor/atlas-geo.min.js" defer></script>
-  <script src="../../js/atlas-globo.js?v=2" defer></script>
-  <script src="../../js/atlas-semis.js?v=2" defer></script>
+  <script src="../../js/atlas-globo.js?v=3" defer></script>
+  <script src="../../js/atlas-semis.js?v=3" defer></script>
 </body>
 </html>

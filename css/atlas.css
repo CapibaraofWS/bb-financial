@@ -55,7 +55,7 @@
 .ax-tip.on { opacity: 1; transform: none; }
 .ax-tip b { display: block; color: var(--text); font-size: 0.92rem; margin-bottom: 0.2rem; }
 .ax-pasos { list-style: none; padding: 0; margin: 0; }
-.ax-paso-movil { display: none; }
+.ax-paso-movil, .ax-paso-ctl { display: none; }
 .ax-paso { min-height: 88vh; display: flex; align-items: center; padding: 2rem 0; }
 .ax-paso:first-child { min-height: 70vh; }
 .ax-paso-card { background: rgba(17,20,26,0.9); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.6rem 1.6rem 1.4rem; opacity: 0.35; transition: opacity .5s, border-color .5s, transform .5s; transform: scale(0.98); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
@@ -247,18 +247,21 @@ a.ax-cap:hover { transform: translateY(-4px); border-color: rgba(74,222,154,0.35
   .ax-viaje-grid { display: block; }
   .ax-paso-card { padding: 1.25rem 1.2rem 1.1rem; background: #11141a; opacity: 1; transform: none; }
   .ax-paso { min-height: 0; padding: 0.6rem 0; }
-  /* Con JS: el globo queda fijo arriba y la tarjeta del paso activo abajo, en la misma pantalla.
-     Los pasos originales quedan invisibles y solo marcan cuánto hay que scrollear. */
-  .js-movil .ax-escena { top: 104px; height: calc(100vh - 104px); height: calc(100svh - 104px); flex-direction: column; justify-content: flex-start; padding-bottom: 0.75rem; background: var(--bg); z-index: 1; }
-  .js-movil .ax-globo { flex: 1 1 auto; min-height: 180px; height: auto; }
-  .js-movil .ax-paso-movil { display: block; flex: 0 0 auto; width: 100%; }
+  /* Con JS: nada de scroll "secuestrado". El globo y la tarjeta van en el flujo normal
+     y las paradas se pasan con botones o deslizando la tarjeta. */
+  .js-movil .ax-escena { position: relative; top: auto; height: auto; display: block; margin-top: 1.5rem; }
+  .js-movil .ax-globo { height: min(54vh, 400px); min-height: 280px; }
+  .js-movil .ax-paso-movil { display: block; width: 100%; margin-top: 0.5rem; touch-action: pan-y; }
   .js-movil .ax-paso-movil .ax-paso { min-height: 0; padding: 0; display: block; }
-  .js-movil .ax-paso-movil .ax-paso-card { padding: 1rem 1.1rem 0.95rem; }
+  .js-movil .ax-paso-movil .ax-paso-card { padding: 1rem 1.1rem 0.95rem; min-height: 17.5rem; }
   .js-movil .ax-paso-movil h3 { font-size: 1.32rem; margin: 0.35rem 0 0.45rem; }
   .js-movil .ax-paso-movil p { font-size: 0.92rem; line-height: 1.58; }
   .js-movil .ax-paso-movil .ax-barras { margin-top: 0.7rem; gap: 0.4rem; }
-  .js-movil .ax-pasos .ax-paso { min-height: 62vh; padding: 0; visibility: hidden; }
-  .js-movil .ax-pasos .ax-paso:last-child { min-height: 40vh; }
+  .js-movil .ax-pasos { display: none; }
+  .js-movil .ax-paso-ctl { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-top: 0.75rem; }
+  .ax-puntos { display: flex; gap: 6px; }
+  .ax-puntos i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background .3s, transform .3s; }
+  .ax-puntos i.on { background: var(--accent); transform: scale(1.3); }
   .ax-barras li { grid-template-columns: 6.4rem 1fr 3.2rem; font-size: 0.8rem; }
   .ax-rutas, .ax-zoom, .ax-proc, .ax-sim, .ax-cel, .ax-portada { grid-template-columns: minmax(0, 1fr); }
   .ax-rutas { gap: 1rem; }

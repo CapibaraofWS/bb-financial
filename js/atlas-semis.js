@@ -66,7 +66,7 @@
     const canvas = $('#globo-viaje'); if (!canvas) return;
     const g = AtlasGlobo(canvas, { base: BASE, foco: VIAJE[0].foco, onPais: tooltip(canvas.parentElement) });
     const pasos = $$('.ax-pasos .ax-paso');
-    // Celular: la tarjeta activa se copia a un panel fijo debajo del globo
+    // Celular: la tarjeta activa se copia a un panel debajo del globo
     const movil = $('.ax-paso-movil');
     $('.ax-viaje-grid').classList.add('js-movil');
     let actual = -1;
@@ -83,15 +83,38 @@
       g.set({ resaltes: res, etiquetas: v.et, arcos: v.arcos.map(a => ({ de: a[0], a: a[1], c: v.c, w: 1.8 })), foco: v.foco, ms: 1400 });
     }
     let pend = false;
+    const esMovil = () => window.innerWidth < 900;
+    // Desktop: la parada activa sale del scroll. Celular: de los botones o de deslizar la tarjeta.
     function medir() {
       pend = false;
-      const linea = window.innerHeight * (window.innerWidth < 900 ? 0.82 : 0.55);
+      if (esMovil()) return;
+      const linea = window.innerHeight * 0.55;
       let i = 0;
       pasos.forEach((p, j) => { if (p.getBoundingClientRect().top < linea) i = j; });
       activar(i);
     }
     addEventListener('scroll', () => { if (!pend) { pend = true; requestAnimationFrame(medir); } }, { passive: true });
     addEventListener('resize', medir);
+
+    const puntos = $('#viaje-puntos'), ant = $('#viaje-ant'), sig = $('#viaje-sig');
+    puntos.innerHTML = pasos.map(() => '<i></i>').join('');
+    const ir = i => {
+      i = Math.max(0, Math.min(pasos.length - 1, i));
+      activar(i);
+      $$('i', puntos).forEach((p, j) => p.classList.toggle('on', j === i));
+      ant.disabled = i === 0;
+      sig.textContent = i === pasos.length - 1 ? 'Volver a empezar' : 'Siguiente →';
+    };
+    ant.addEventListener('click', () => ir(actual - 1));
+    sig.addEventListener('click', () => { ir(actual === pasos.length - 1 ? 0 : actual + 1); track('atlas_viaje', { parada: actual + 1 }); });
+    let x0 = null;
+    movil.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    movil.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50) ir(actual + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+    ir(0);
     medir();
   }
 
