@@ -139,7 +139,7 @@ window.TickerData = (function() {
       perf1Y: mt['52WeekPriceReturnDaily'] ?? mt['1YearPriceReturnDaily'],
       perf5Y: mt['5YearPriceReturnDaily'],
       // Chart histórico
-      chart: { closes, timestamps }
+      chart: { closes, timestamps, opens: yChart.indicators?.quote?.[0]?.open || [], highs: yChart.indicators?.quote?.[0]?.high || [], lows: yChart.indicators?.quote?.[0]?.low || [], volumes: yChart.indicators?.quote?.[0]?.volume || [] }
     };
   }
 

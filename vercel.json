@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx --yes esbuild@0.25.0 css/styles.css js/*.js --minify --allow-overwrite --outbase=. --outdir=.",
+  "buildCommand": "node build.mjs",
   "outputDirectory": ".",
   "headers": [
     {

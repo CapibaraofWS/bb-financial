@@ -88,6 +88,10 @@
     .range-bar { display:flex;gap:0.3rem;flex-wrap:wrap; }
     .range-btn { padding:0.3rem 0.7rem;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:var(--font-mono);font-size:0.7rem;cursor:pointer;letter-spacing:0.06em;transition:all var(--transition); }
     .range-btn:hover { color:var(--text); }
+    .chart-ctl { display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center; }
+    #chart-wrap { position:relative;height:340px;width:100%; }
+    #chart-leyenda { position:absolute;top:4px;left:6px;z-index:3;pointer-events:none;font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);line-height:1.5;text-shadow:0 0 6px var(--bg-card),0 0 6px var(--bg-card); }
+    #chart-leyenda b { color:var(--text);font-weight:500; }
     .range-btn.active { background:var(--accent-dim);color:var(--accent);border-color:rgba(74,222,154,0.3); }
 
     /* Sections */
@@ -191,13 +195,13 @@
     <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js" integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=34"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/ticker.js?v=6"></script>
-  <script src="../js/ticker-data.js"></script>
+  <script src="../js/ticker-data.js?v=2"></script>
   <script>
   (function() {
     const QUICK = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','GGAL.BA','YPFD.BA','PAMP.BA'];
@@ -283,6 +287,13 @@
         <div class="chart-card">
           <div class="chart-head">
             <p class="chart-title">Precio histórico</p>
+            <div class="chart-ctl">
+            <div class="range-bar" id="tipo-bar" role="group" aria-label="Tipo de gráfico">
+              <button class="range-btn" data-tipo="candle">Velas</button>
+              <button class="range-btn" data-tipo="bar">Barras</button>
+              <button class="range-btn" data-tipo="line">Línea</button>
+              <button class="range-btn" data-tipo="area">Área</button>
+            </div>
             <div class="range-bar" id="range-bar">
               <button class="range-btn" data-range="1mo">1M</button>
               <button class="range-btn" data-range="3mo">3M</button>
@@ -291,9 +302,11 @@
               <button class="range-btn" data-range="5y">5A</button>
               <button class="range-btn" data-range="max">Max</button>
             </div>
+            </div>
           </div>
-          <div style="position:relative;height:320px;width:100%">
-            <canvas id="price-chart"></canvas>
+          <div id="chart-wrap">
+            <div id="chart-leyenda"></div>
+            <div id="price-chart" style="height:100%;width:100%"></div>
           </div>
         </div>
 
@@ -342,12 +355,21 @@
 
       // Render chart with default 1y data
       drawChart(d.chart, '1y', d.currency);
+      const tipoBar = document.getElementById('tipo-bar');
+      tipoBar.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.tipo === tipoGrafico));
+      tipoBar.addEventListener('click', e => {
+        const b = e.target.closest('.range-btn'); if (!b) return;
+        tipoGrafico = b.dataset.tipo;
+        try { localStorage.setItem('bb_chart_tipo', tipoGrafico); } catch (_) {}
+        tipoBar.querySelectorAll('.range-btn').forEach(x => x.classList.toggle('active', x === b));
+        dibujarSerie();
+      });
 
       // Range buttons
       document.getElementById('range-bar').addEventListener('click', async e => {
         const btn = e.target.closest('.range-btn');
         if (!btn) return;
-        document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#range-bar .range-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const range = btn.dataset.range;
         const interval = (range === '1mo' || range === '3mo') ? '1d' : (range === '5y' || range === 'max') ? '1wk' : '1d';
@@ -356,7 +378,8 @@
         const j = await r.json();
         const result = j?.chart?.result?.[0];
         if (!result) return;
-        drawChart({ closes: result.indicators?.quote?.[0]?.close || [], timestamps: result.timestamp || [] }, range, d.currency);
+        const q = result.indicators?.quote?.[0] || {};
+        drawChart({ closes: q.close || [], opens: q.open || [], highs: q.high || [], lows: q.low || [], volumes: q.volume || [], timestamps: result.timestamp || [] }, range, d.currency);
       });
     }
 
@@ -373,150 +396,87 @@
       return `<div class="fund-row"><span class="lbl">${label}</span><span class="val ${cls}">${suffix === '%' ? TD.fmtPct(display) : TD.fmtNum(display, 2)}</span></div>`;
     }
 
-    // Crosshair plugin: línea vertical punteada al hover
-    const crosshair = {
-      id: 'crosshair',
-      afterDraw(chart) {
-        const active = chart.tooltip?.getActiveElements?.();
-        if (!active || !active.length) return;
-        const { ctx, chartArea: { top, bottom } } = chart;
-        const x = active[0].element.x;
-        ctx.save();
-        ctx.beginPath();
-        ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = 'rgba(74,222,154,0.55)';
-        ctx.lineWidth = 1;
-        ctx.moveTo(x, top); ctx.lineTo(x, bottom);
-        ctx.stroke();
-        ctx.restore();
-      }
-    };
-
     function fmtPriceCurr(v, currency='USD') {
       if (v == null || isNaN(v)) return '—';
       const sym = currency === 'USD' ? '$' : currency + ' ';
       return sym + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // Devuelve { tickLabels, fullDates } según el rango — formato adaptativo
-    function formatLabels(timestamps, range) {
-      const dates = timestamps.map(ts => new Date(ts * 1000));
-      const fullDates = dates.map(d => d.toLocaleDateString('es-AR', { day:'numeric', month:'long', year:'numeric' }));
-      let tickLabels;
-      const MONTH_ABBR = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-      if (range === 'max') {
-        // Solo año, marcar 1ª vez que aparece cada año
-        const seen = new Set();
-        tickLabels = dates.map(d => {
-          const y = d.getFullYear();
-          if (seen.has(y)) return '';
-          seen.add(y); return String(y);
-        });
-      } else if (range === '5y') {
-        // Año al cambio de año, sino vacío
-        let lastY = null;
-        tickLabels = dates.map(d => {
-          const y = d.getFullYear();
-          if (y !== lastY) { lastY = y; return String(y); }
-          return '';
-        });
-      } else if (range === '1y' || range === '6mo') {
-        // Mes corto al cambio de mes
-        let lastM = null;
-        tickLabels = dates.map(d => {
-          const m = d.getMonth();
-          if (m !== lastM) { lastM = m; return MONTH_ABBR[m]; }
-          return '';
-        });
-      } else if (range === '3mo') {
-        // Mes corto al cambio de mes
-        let lastM = null;
-        tickLabels = dates.map(d => {
-          const m = d.getMonth();
-          if (m !== lastM) { lastM = m; return MONTH_ABBR[m]; }
-          return '';
-        });
-      } else { // 1mo o default
-        // Día del mes cada ~5 días
-        tickLabels = dates.map((d,i) => i % 5 === 0 ? `${d.getDate()} ${MONTH_ABBR[d.getMonth()]}` : '');
-      }
-      return { tickLabels, fullDates };
-    }
+    // ---- Gráfico de precio: TradingView Lightweight Charts (velas, barras, línea o área) ----
+    const VERDE = '#4ade9a', ROJO = '#ff6b6b';
+    let tipoGrafico = 'area';
+    try { const t = localStorage.getItem('bb_chart_tipo'); if (['candle','bar','line','area'].includes(t)) tipoGrafico = t; } catch (_) {}
+    let filas = [], monedaGrafico = 'USD', serie = null, serieVol = null;
 
     function drawChart(chartData, range = '1y', currency = 'USD') {
-      const ctx = document.getElementById('price-chart');
-      if (!ctx) return;
-      if (chart) chart.destroy();
-      const timestamps = chartData.timestamps || [];
-      const data = (chartData.closes || []).map(c => c == null ? null : c);
-      // Truncar arrays al mismo largo (Yahoo a veces tiene 1 timestamp extra al final)
-      const N = Math.min(timestamps.length, data.length);
-      const ts = timestamps.slice(0, N);
-      const closes = data.slice(0, N);
-      const { tickLabels, fullDates } = formatLabels(ts, range);
-
-      // Color basado en performance: verde si terminó > inicio, rojo si bajó
-      const first = closes.find(c => c != null);
-      const last = [...closes].reverse().find(c => c != null);
-      const isUp = last >= first;
-      const line = isUp ? '#4ade9a' : '#ff6b6b';
-      const fill = isUp ? 'rgba(74,222,154,0.10)' : 'rgba(255,107,107,0.10)';
-
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: { labels: tickLabels, datasets: [{
-          data: closes,
-          borderColor: line,
-          backgroundColor: fill,
-          borderWidth: 2,
-          fill: true,
-          tension: 0.15,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: line,
-          pointHoverBorderColor: '#0a0c0f',
-          pointHoverBorderWidth: 2,
-          spanGaps: true,
-        }] },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false, axis: 'x' },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              enabled: true,
-              backgroundColor: 'rgba(10,12,15,0.95)',
-              titleColor: '#a4adba',
-              bodyColor: '#fff',
-              titleFont: { family: 'DM Mono', size: 11, weight: 'normal' },
-              bodyFont: { family: 'DM Mono', size: 14, weight: '600' },
-              padding: 12,
-              borderColor: 'rgba(74,222,154,0.3)',
-              borderWidth: 1,
-              displayColors: false,
-              callbacks: {
-                title: items => fullDates[items[0].dataIndex] || '',
-                label: c => fmtPriceCurr(c.parsed.y, currency),
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: { color: '#7a8599', font: { family: 'DM Mono', size: 9 }, maxRotation: 0, autoSkip: false },
-              grid: { color: 'rgba(255,255,255,0.04)' }
-            },
-            y: {
-              position: 'right',
-              ticks: {
-                color: '#7a8599', font: { family: 'DM Mono', size: 9 },
-                callback: v => fmtPriceCurr(v, currency),
-              },
-              grid: { color: 'rgba(255,255,255,0.04)' }
-            }
-          }
-        },
-        plugins: [crosshair],
+      const el = document.getElementById('price-chart');
+      if (!el || !window.LightweightCharts) return;
+      monedaGrafico = currency;
+      const ts = chartData.timestamps || [];
+      const porDia = new Map();                       // una barra por fecha (Yahoo repite la última a veces)
+      ts.forEach((t, i) => {
+        const o = chartData.opens?.[i], h = chartData.highs?.[i], l = chartData.lows?.[i], c = chartData.closes?.[i];
+        if ([o, h, l, c].some(v => v == null || isNaN(v))) return;
+        const dia = new Date(t * 1000).toISOString().slice(0, 10);
+        porDia.set(dia, { time: dia, open: o, high: h, low: l, close: c, volume: chartData.volumes?.[i] || 0 });
       });
+      filas = [...porDia.values()].sort((a, b) => a.time < b.time ? -1 : 1);
+      if (chart) { chart.remove(); chart = null; serie = null; serieVol = null; }
+      chart = LightweightCharts.createChart(el, {
+        autoSize: true,
+        layout: { background: { type: 'solid', color: 'transparent' }, textColor: '#7a8599', fontFamily: 'DM Mono, monospace', fontSize: 10 },
+        grid: { vertLines: { color: 'rgba(255,255,255,0.04)' }, horzLines: { color: 'rgba(255,255,255,0.04)' } },
+        rightPriceScale: { borderVisible: false },
+        timeScale: { borderVisible: false, timeVisible: false },
+        crosshair: { mode: 0 },
+        localization: { locale: 'es-AR' },
+        handleScroll: { vertTouchDrag: false },       // el dedo vertical sigue scrolleando la página
+      });
+      chart.subscribeCrosshairMove(param => leyenda(param && param.time ? param : null));
+      dibujarSerie();
+    }
+
+    function dibujarSerie() {
+      if (!chart || !filas.length) return;
+      if (serie) { chart.removeSeries(serie); serie = null; }
+      if (serieVol) { chart.removeSeries(serieVol); serieVol = null; }
+      const sube = filas[filas.length - 1].close >= filas[0].close;
+      const color = sube ? VERDE : ROJO;
+      const hayVol = filas.some(f => f.volume > 0);
+      if (tipoGrafico === 'candle') {
+        serie = chart.addCandlestickSeries({ upColor: VERDE, downColor: ROJO, borderVisible: false, wickUpColor: VERDE, wickDownColor: ROJO });
+        serie.setData(filas);
+      } else if (tipoGrafico === 'bar') {
+        serie = chart.addBarSeries({ upColor: VERDE, downColor: ROJO });
+        serie.setData(filas);
+      } else if (tipoGrafico === 'line') {
+        serie = chart.addLineSeries({ color, lineWidth: 2, priceLineVisible: false });
+        serie.setData(filas.map(f => ({ time: f.time, value: f.close })));
+      } else {
+        serie = chart.addAreaSeries({ lineColor: color, topColor: sube ? 'rgba(74,222,154,0.28)' : 'rgba(255,107,107,0.28)', bottomColor: 'rgba(0,0,0,0)', lineWidth: 2, priceLineVisible: false });
+        serie.setData(filas.map(f => ({ time: f.time, value: f.close })));
+      }
+      chart.priceScale('right').applyOptions({ scaleMargins: { top: 0.2, bottom: hayVol ? 0.25 : 0.05 } });
+      if (hayVol) {
+        serieVol = chart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'vol', priceLineVisible: false, lastValueVisible: false });
+        chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
+        serieVol.setData(filas.map(f => ({ time: f.time, value: f.volume, color: f.close >= f.open ? 'rgba(74,222,154,0.35)' : 'rgba(255,107,107,0.35)' })));
+      }
+      chart.timeScale().fitContent();
+      leyenda(null);
+    }
+
+    // Leyenda arriba a la izquierda: la barra bajo el dedo/cursor, o la última
+    function leyenda(param) {
+      const box = document.getElementById('chart-leyenda');
+      if (!box || !filas.length) return;
+      const f = param ? filas.find(x => x.time === param.time) : filas[filas.length - 1];
+      if (!f) return;
+      const i = filas.indexOf(f), prev = i > 0 ? filas[i - 1].close : f.open;
+      const v = prev ? (f.close - prev) / prev * 100 : 0;
+      const fecha = new Date(f.time + 'T12:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+      const m = monedaGrafico;
+      box.innerHTML = fecha + '<br>A <b>' + fmtPriceCurr(f.open, m) + '</b> · M <b>' + fmtPriceCurr(f.high, m) + '</b> · m <b>' + fmtPriceCurr(f.low, m) + '</b> · C <b>' + fmtPriceCurr(f.close, m) + '</b> <span style="color:' + (v >= 0 ? VERDE : ROJO) + '">' + (v >= 0 ? '+' : '') + v.toFixed(2) + '%</span>';
     }
 
     window.toggleWatch = function() {
