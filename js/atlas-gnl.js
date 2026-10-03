@@ -65,15 +65,73 @@
   }
 
   // ============ 2. El barco: a escala y por dentro ============
+  // Siluetas a escala (metros; el suelo es y=0 y hacia arriba es negativo). Los barcos van parados sobre la popa.
+  const poli = pts => 'M' + pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join('L') + 'Z';
+  function siluetaBarco(L, o) {
+    const T = (u, v) => [v, -u]; // u: a lo largo del barco, v: altura sobre la quilla
+    let d = poli([[0, 6], [5, 0], [L - 16, 0], [L - 6, o.depth * 0.35], [L, o.depth], [0, o.depth]].map(p => T(p[0], p[1])));
+    if (o.trunk) d += poli([[0.2 * L, o.depth], [0.93 * L, o.depth], [0.93 * L, o.depth + o.trunk], [0.2 * L, o.depth + o.trunk]].map(p => T(p[0], p[1])));
+    if (o.sup) d += poli([[o.supU[0], o.depth], [o.supU[1], o.depth], [o.supU[1], o.depth + o.sup], [o.supU[0], o.depth + o.sup]].map(p => T(p[0], p[1])));
+    if (o.funnel) d += poli([[o.supU[0] + 4, o.depth + o.sup], [o.supU[0] + 11, o.depth + o.sup], [o.supU[0] + 11, o.depth + o.sup + 7], [o.supU[0] + 4, o.depth + o.sup + 7]].map(p => T(p[0], p[1])));
+    (o.funnels || []).forEach(f => { d += poli([[f * L - 3.5, o.depth + o.sup], [f * L + 3.5, o.depth + o.sup], [f * L + 0.5, o.depth + o.sup + 22], [f * L - 6.5, o.depth + o.sup + 22]].map(p => T(p[0], p[1]))); });
+    (o.masts || []).forEach(f => { d += poli([[f * L - 0.8, o.depth], [f * L + 0.8, o.depth], [f * L + 0.8, 58], [f * L - 0.8, 58]].map(p => T(p[0], p[1]))); });
+    return d;
+  }
+  // me: 1 = metanero, 2 = Prelude
+  const SIL = [
+    { n: 'Obelisco', m: 67.5, x: 0, w: 6.8, cap: 'Obelisco de Buenos Aires', txt: 'Entra 5 veces en un Q-Max.', d: 'M0,0L6.8,0L6,-63L3.4,-67.5L0.8,-63Z' },
+    { n: 'Cancha de fútbol', c: 'Cancha', m: 105, x: 22, w: 68, cap: 'Cancha de fútbol', txt: '105 m de largo. Un metanero estándar mide casi 3 canchas.', cancha: 1 },
+    { n: 'Edificio Kavanagh', c: 'Kavanagh', m: 120, x: 106, w: 30, cap: 'Edificio Kavanagh (1936)', txt: 'Fue el edificio más alto de Sudamérica. Un Q-Max parado casi lo triplica.', d: 'M0,0L30,0L30,-70L26,-70L26,-90L22,-90L22,-105L19,-105L19,-120L11,-120L11,-105L8,-105L8,-90L4,-90L4,-70L0,-70Z' },
+    { n: 'Alvear Tower', c: 'Alvear', m: 235, x: 152, w: 40, cap: 'Alvear Tower, Puerto Madero', txt: 'El edificio más alto de la Argentina. El Q-Max le saca 110 m.', d: 'M0,0L40,0L40,-212Q40,-235 20,-235Q0,-235 0,-212Z' },
+    { n: 'Titanic', m: 269, x: 208, w: 53, cap: 'Titanic (1912)', txt: 'El barco más famoso de la historia. Un metanero estándar le saca 26 m.', ship: { depth: 19, sup: 11, supU: [0.14 * 269, 0.8 * 269], funnels: [0.36, 0.48, 0.6, 0.72], masts: [0.1, 0.9] } },
+    { n: 'Metanero estándar', c: 'Metanero', m: 295, x: 277, w: 50, me: 1, cap: 'Metanero estándar', txt: 'Carga 174.000 m³ de GNL. Es el tamaño más común de los más de 800 que navegan.', ship: { depth: 26, trunk: 5, sup: 20, supU: [4, 26], funnel: 1 } },
+    { n: 'Q-Max', m: 345, x: 343, w: 56, me: 1, cap: 'Q-Max, el metanero más grande', txt: 'Carga 266.000 m³. Parado sobre la popa sería más alto que cualquier edificio de la Argentina.', ship: { depth: 27, trunk: 6, sup: 24, supU: [4, 30], funnel: 1 } },
+    { n: 'Prelude', m: 488, x: 420, w: 78, me: 2, cap: 'Prelude, el barco más grande del mundo', txt: '488 m de largo y 74 m de ancho. No navega: está amarrado frente a Australia y licúa el gas en el mar, sin planta en tierra. Pesa unas 600.000 toneladas.', ship: { depth: 44, sup: 32, supU: [0.07 * 488, 0.9 * 488] } },
+  ];
   function barco() {
-    const filas = $$('#gx-escala .b'); if (!filas.length) return;
-    const max = Math.max(...filas.map(b => +b.dataset.m));
-    const io = new IntersectionObserver(es => {
-      if (!es.some(e => e.isIntersecting)) return;
-      io.disconnect();
-      filas.forEach((b, i) => setTimeout(() => { b.style.width = (b.dataset.m / max * 100) + '%'; }, REDUCIR ? 0 : 120 * i));
-    }, { threshold: 0.3 });
-    io.observe($('#gx-escala'));
+    const svg = $('#gx-sil-svg'); if (!svg) return;
+    const caja = $('#gx-sil'), N = $('#gx-sil-num'), C = $('#gx-sil-cap'), X = $('#gx-sil-txt'), chips = $('#gx-sil-chips');
+    let sel = SIL.length - 1;
+    const color = o => (o.me === 2 ? 'url(#gx-sil-p)' : o.me ? 'url(#gx-sil-g)' : 'rgba(255,255,255,0.3)');
+    const tinta = o => (o.me === 2 ? '#fb923c' : o.me ? '#22d3ee' : '#9aa5b8');
+    function dibujar() {
+      // Los textos se dibujan siempre al mismo tamaño en pantalla, sea cual sea el ancho
+      const r = svg.getBoundingClientRect(), ancho = r.width || 524, u = Math.max(524 / ancho, 585 / (r.height || 585)), chico = ancho < 520;
+      let h = '<defs><linearGradient id="gx-sil-g" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#0891b2"/><stop offset="1" stop-color="#67e8f9"/></linearGradient>' +
+        '<linearGradient id="gx-sil-p" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ea580c"/><stop offset="1" stop-color="#fdba74"/></linearGradient></defs>' +
+        '<line x1="-14" x2="510" y1="0.5" y2="0.5" stroke="rgba(255,255,255,0.25)" stroke-width="' + u.toFixed(2) + '"/>';
+      SIL.forEach((o, i) => {
+        let forma;
+        if (o.ship) forma = '<path d="' + siluetaBarco(o.m, o.ship) + '" fill="' + color(o) + '"/>';
+        else if (o.cancha) forma = '<rect x="0" y="-105" width="68" height="105" rx="1" fill="' + color(o) + '"/><g fill="none" stroke="rgba(10,12,15,0.6)" stroke-width="1"><rect x="2" y="-103" width="64" height="101"/><line x1="2" x2="66" y1="-52.5" y2="-52.5"/><circle cx="34" cy="-52.5" r="9.15"/><rect x="13.85" y="-103" width="40.3" height="16.5"/><rect x="13.85" y="-18.5" width="40.3" height="16.5"/></g>';
+        else forma = '<path d="' + o.d + '" fill="' + color(o) + '"/>';
+        const cx = o.x + o.w / 2;
+        h += '<g class="obj' + (i === sel ? '' : ' dim') + '" data-i="' + i + '" tabindex="0" role="button" aria-label="' + esc(o.n + ', ' + num(o.m) + ' metros') + '">' +
+          '<rect x="' + (o.x - 6) + '" y="' + (-o.m - 26) + '" width="' + (o.w + 12) + '" height="' + (o.m + 60) + '" fill="transparent"/>' +
+          '<g transform="translate(' + o.x + ',0)"><g class="shape" style="transition-delay:' + (i * 0.1) + 's">' + forma + '</g></g>' +
+          '<text x="' + cx + '" y="' + (-o.m - 7 * u).toFixed(1) + '" text-anchor="middle" font-family="DM Mono, monospace" font-size="' + ((chico ? 9.5 : 11.5) * u).toFixed(1) + '" fill="' + tinta(o) + '">' + num(o.m) + (chico ? '' : ' m') + '</text>' +
+          (chico ? '' : '<text x="' + cx + '" y="' + (15 * u).toFixed(1) + '" text-anchor="middle" font-family="Outfit, sans-serif" font-size="' + (10.5 * u).toFixed(1) + '" fill="#e8edf5">' + esc(o.c || o.n) + '</text>') + '</g>';
+      });
+      svg.innerHTML = h;
+    }
+    function elegir(i) {
+      sel = i;
+      const o = SIL[i];
+      $$('.obj', svg).forEach((g, k) => g.classList.toggle('dim', k !== i));
+      $$('button', chips).forEach((b, k) => { b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', k === i); });
+      N.textContent = num(o.m) + ' m'; N.style.color = tinta(o) === '#9aa5b8' ? '' : tinta(o);
+      C.textContent = o.cap; X.textContent = o.txt;
+    }
+    chips.innerHTML = SIL.map((o, i) => '<button type="button" class="ax-btn" data-i="' + i + '" aria-pressed="false">' + esc(o.c || o.n) + '</button>').join('');
+    chips.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { elegir(+b.dataset.i); track('atlas_gnl_escala', { obj: SIL[+b.dataset.i].n }); } });
+    svg.addEventListener('click', e => { const g = e.target.closest('.obj'); if (g) elegir(+g.dataset.i); });
+    svg.addEventListener('keydown', e => { const g = e.target.closest('.obj'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); elegir(+g.dataset.i); } });
+    let w0 = 0;
+    new ResizeObserver(() => { const q = svg.getBoundingClientRect(), w = Math.round(q.width) + 'x' + Math.round(q.height); if (w !== w0) { w0 = w; dibujar(); } }).observe(svg);
+    dibujar(); elegir(sel);
+    // Las siluetas "crecen" desde el piso cuando la sección entra en pantalla
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); caja.classList.add('go'); } }, { threshold: 0.25 });
+    io.observe(caja);
     piezas('#gx-piezas', '#gx-barco-svg', '#gx-pieza-det');
   }
   function piezas(lista, svg, det) {
@@ -298,16 +356,17 @@
   }
 
   // ============ 6. El mismo gas, tres precios ============
-  // US$ por MMBtu, promedio del período (aprox.): Henry Hub, TTF, JKM
+  // US$ por MMBtu, promedio del período: Henry Hub y TTF (Banco Mundial / EIA); Asia: JKM spot (S&P Global) desde 2020,
+  // antes precio de importación de GNL en Japón (Banco Mundial). 2025 es aproximado.
   const PRECIOS = [
-    ['2010–15', 3.75, 9, 15, 'Mercados separados. Tras Fukushima, Japón compra todo el gas que encuentra y Asia paga carísimo.'],
-    ['2016–19', 3.0, 6, 8, 'EE.UU. empieza a exportar su gas de shale y sobra oferta: precios bajos en todos lados.'],
+    ['2010–15', 3.6, 9.8, 14.2, 'Mercados separados. Tras Fukushima, Japón compra todo el gas que encuentra y Asia paga carísimo.'],
+    ['2016–19', 2.8, 5.7, 9.3, 'EE.UU. empieza a exportar su gas de shale y sobra oferta: precios bajos en todos lados.'],
     ['2020', 2.0, 3.2, 4.4, 'Pandemia: la demanda se desploma y se cancelan cargamentos enteros.'],
-    ['2021', 3.9, 16, 18, 'Rebote: la industria vuelve con los depósitos vacíos.'],
-    ['2022', 6.45, 40, 34, 'Guerra en Ucrania: Europa se queda sin gas ruso y paga lo que sea. Por primera vez paga más que Asia. El pico diario pasó los US$ 70.'],
-    ['2023', 2.5, 13, 14, 'Los precios bajan, pero Europa ya no vuelve al gas ruso barato.'],
-    ['2024', 2.9, 9.2, 11.9, 'Inviernos suaves y más renovables: el año más calmo desde la pandemia.'],
-    ['2025', 3.5, 11, 12.1, 'Antes de la crisis de Ormuz: Asia paga casi 4 veces lo que vale el gas en EE.UU.'],
+    ['2021', 3.9, 16.1, 18.6, 'Rebote: la industria vuelve con los depósitos vacíos.'],
+    ['2022', 6.4, 40.3, 34, 'Guerra en Ucrania: Europa se queda sin gas ruso y paga lo que sea. Por primera vez paga más que Asia. El pico diario pasó los US$ 70.'],
+    ['2023', 2.5, 13.1, 13.8, 'Los precios bajan, pero Europa ya no vuelve al gas ruso barato.'],
+    ['2024', 2.2, 11, 11.9, 'Inviernos suaves y más renovables: el año más calmo desde la pandemia. En EE.UU., el gas más barato en décadas.'],
+    ['2025', 3.5, 12, 12.2, 'Antes de la crisis de Ormuz: Europa y Asia pagan más de 3 veces lo que vale el gas en EE.UU.'],
   ];
   function precios() {
     const per = $('#gx-per'); if (!per) return;

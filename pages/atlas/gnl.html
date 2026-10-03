@@ -35,7 +35,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../../css/styles.css?v=15" />
-  <link rel="stylesheet" href="../../css/atlas.css?v=5" />
+  <link rel="stylesheet" href="../../css/atlas.css?v=6" />
 </head>
 <body>
   <header class="site-header">
@@ -119,15 +119,19 @@
       <div class="ax-wrap">
         <p class="ax-eyebrow">02 · El barco</p>
         <h2 class="ax-h2">Un termo del tamaño de <em>un rascacielos</em>.</h2>
-        <p class="ax-lead">Un metanero estándar mide casi tres canchas de fútbol y lleva 174.000 m³ de gas líquido. Todo a escala:</p>
-        <div class="gx-escala" id="gx-escala">
-          <div><span class="n">Prelude<small>planta flotante, no navega</small></span><span class="b" data-m="488">488 m</span></div>
-          <div class="yo"><span class="n">Q-Max<small>el metanero más grande</small></span><span class="b" data-m="345">345 m</span></div>
-          <div><span class="n">Torre Eiffel<small>acostada</small></span><span class="b" data-m="330">330 m</span></div>
-          <div class="yo"><span class="n">Metanero estándar<small>174.000 m³</small></span><span class="b" data-m="295">295 m</span></div>
-          <div><span class="n">Titanic<small>1912</small></span><span class="b" data-m="269">269 m</span></div>
-          <div><span class="n">Cancha de fútbol</span><span class="b" data-m="105">105 m</span></div>
-          <div><span class="n">Obelisco<small>Buenos Aires</small></span><span class="b" data-m="67.5">67,5 m</span></div>
+        <p class="ax-lead">Un metanero estándar mide casi tres canchas de fútbol y lleva 174.000 m³ de gas líquido. Acá están parados sobre la popa, al lado de cosas que conocés. Todo a escala: tocá cada uno.</p>
+        <div class="gx-sil" id="gx-sil">
+          <div class="gx-sil-svg"><svg id="gx-sil-svg" viewBox="-14 -545 524 585" role="img" aria-label="Comparación de tamaños a escala: Obelisco, cancha de fútbol, Edificio Kavanagh, Alvear Tower, Titanic, metanero estándar, Q-Max y Prelude"></svg></div>
+          <div class="gx-sil-lado">
+            <p class="gx-sil-num" id="gx-sil-num">488 m</p>
+            <p class="gx-sil-cap" id="gx-sil-cap">Prelude, el barco más grande del mundo</p>
+            <p class="gx-sil-txt" id="gx-sil-txt">No navega: es una planta de licuefacción flotante.</p>
+            <div class="ax-chips" id="gx-sil-chips" role="group" aria-label="Elegí qué comparar"></div>
+          </div>
+          <ul class="sr-only">
+            <li>Obelisco de Buenos Aires: 67,5 m</li><li>Cancha de fútbol: 105 m</li><li>Edificio Kavanagh: 120 m</li><li>Alvear Tower: 235 m</li>
+            <li>Titanic: 269 m</li><li>Metanero estándar: 295 m</li><li>Q-Max, el metanero más grande: 345 m</li><li>Prelude, planta flotante: 488 m</li>
+          </ul>
         </div>
         <div class="gx-barco">
           <div>
@@ -278,12 +282,12 @@
           <div class="gx-per" id="gx-per" role="group" aria-label="Período"></div>
           <div class="gx-cols" id="gx-per-cols">
             <div class="gx-col"><span class="v"><span class="n">US$ 3,5</span><small>por MMBtu</small></span><span class="c" style="background:#fb923c"></span></div>
-            <div class="gx-col"><span class="v"><span class="n">US$ 11</span><small>por MMBtu</small></span><span class="c" style="background:#60a5fa"></span></div>
-            <div class="gx-col"><span class="v"><span class="n">US$ 12,1</span><small>por MMBtu</small></span><span class="c" style="background:#22d3ee"></span></div>
+            <div class="gx-col"><span class="v"><span class="n">US$ 12</span><small>por MMBtu</small></span><span class="c" style="background:#60a5fa"></span></div>
+            <div class="gx-col"><span class="v"><span class="n">US$ 12,2</span><small>por MMBtu</small></span><span class="c" style="background:#22d3ee"></span></div>
           </div>
           <div class="gx-cols-et" id="gx-per-et">
             <div>EE.UU.<small>Henry Hub</small><b>un barco: US$ 13 M</b></div>
-            <div>Europa<small>TTF</small><b>un barco: US$ 42 M</b></div>
+            <div>Europa<small>TTF</small><b>un barco: US$ 46 M</b></div>
             <div>Asia<small>JKM</small><b>un barco: US$ 46 M</b></div>
           </div>
           <p class="gx-det" id="gx-per-t"></p>
@@ -292,7 +296,7 @@
           <div><b>≈ US$ 105 M</b><span>valía un barco vendido en Asia en septiembre de 2026, con Ormuz en crisis: más del doble que un año antes.</span></div>
           <div><b>≈ US$ 266 M</b><span>llegó a valer en el pico de 2022, cuando Europa se quedó sin gas ruso: 20 veces lo que vale ese gas en EE.UU.</span></div>
         </div>
-        <p class="ax-nota">Promedios aproximados por período (EIA, FMI, IGU, GECF). Un cargamento estándar ≈ 3,8 millones de MMBtu. Si Asia paga 3 o 4 dólares más que Europa, los barcos del Atlántico se dan vuelta y van al Pacífico.</p>
+        <p class="ax-nota">Promedios anuales del Banco Mundial (Pink Sheet) y la EIA para EE.UU. y Europa. Asia: precio spot JKM (S&amp;P Global Platts) desde 2020; antes, precio de importación de GNL en Japón. 2025, aproximado. Un cargamento estándar ≈ 3,8 millones de MMBtu. Si Asia paga 3 o 4 dólares más que Europa, los barcos del Atlántico se dan vuelta y van al Pacífico.</p>
       </div>
     </section>
 
@@ -467,7 +471,7 @@
           <li>Howarth, R. (2024), <em>The greenhouse gas footprint of liquefied natural gas (LNG) exported from the United States</em>, Energy Science &amp; Engineering. IPCC AR6 (potencial de calentamiento del metano).</li>
           <li>Econnect Energy (con datos de PwC): reparto del costo de la cadena.</li>
         </ul>
-        <p class="ax-nota">Esta página nació de un trabajo de Geografía Económica Mundial (UADE, 2026). Los porcentajes y montos son aproximados y pueden variar según la fuente y el año. Última revisión: octubre de 2026.</p>
+        <p class="ax-nota">Esta página nació de un trabajo de Geografía Económica Mundial (UADE, 2026) de Bruno Behr, Fernando Gonzalez y Lautaro Labatte. Los porcentajes y montos son aproximados y pueden variar según la fuente y el año. Última revisión: octubre de 2026.</p>
       </div>
     </section>
 
@@ -486,6 +490,6 @@
   <script src="../../js/main.js?v=35"></script>
   <script src="../../js/vendor/atlas-geo.min.js" defer></script>
   <script src="../../js/atlas-globo.js?v=4" defer></script>
-  <script src="../../js/atlas-gnl.js?v=2" defer></script>
+  <script src="../../js/atlas-gnl.js?v=3" defer></script>
 </body>
 </html>
