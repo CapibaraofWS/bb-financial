@@ -286,3 +286,143 @@ a.ax-cap:hover { transform: translateY(-4px); border-color: rgba(74,222,154,0.35
   .ax-scroll::after { animation: none; }
   .ax-paso-card, .ax-barras .b i { transition: none; }
 }
+
+/* =====================================================================
+   Capítulo GNL (prefijo gx-)
+   ===================================================================== */
+.gx { --gx-gas: #fb923c; --gx-liq: #22d3ee; --gx-ruta: #60a5fa; }
+.gx .ax-hero::before { background: radial-gradient(60% 50% at 50% 35%, rgba(34,211,238,0.10), transparent 70%); }
+
+/* Enfriar el gas */
+.gx-frio-vis { position: relative; aspect-ratio: 1; max-width: 400px; width: 100%; margin: 0 auto; }
+.gx-frio-vis svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.gx-frio-vis .bola { transform-box: fill-box; transform-origin: center; transition: transform 1s cubic-bezier(.16,1,.3,1), fill .6s, stroke .6s; }
+.gx-temp { font-family: var(--font-display); font-size: clamp(2.6rem, 7vw, 4.2rem); line-height: 1; }
+.gx-estado { display: inline-block; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 999px; background: rgba(251,146,60,0.14); color: var(--gx-gas); transition: all .4s; }
+.gx-estado.liq { background: rgba(34,211,238,0.14); color: var(--gx-liq); }
+
+/* Barras a escala */
+.gx-escala { display: grid; gap: 0.6rem; margin-top: 2.5rem; }
+.gx-escala > div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.8rem; align-items: center; }
+.gx-escala .n { font-size: 0.9rem; line-height: 1.25; }
+.gx-escala .n small { display: block; color: var(--text-subtle); font-size: 0.74rem; }
+.gx-escala .b { height: 26px; border-radius: 6px; background: rgba(255,255,255,0.1); width: 0; min-width: 3.4rem; transition: width 1.2s cubic-bezier(.16,1,.3,1); display: flex; align-items: center; justify-content: flex-end; padding-right: 0.5rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text); white-space: nowrap; }
+.gx-escala .yo .b { background: linear-gradient(90deg, rgba(34,211,238,0.35), var(--gx-liq)); color: #04161a; font-weight: 500; }
+.gx-barco { margin-top: 3rem; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2rem; align-items: center; }
+.gx-barco svg { width: 100%; display: block; }
+.gx-barco .hs { cursor: pointer; }
+
+/* Cuánto dura un barco */
+.gx-dura { margin-top: 2.5rem; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: center; }
+.gx-anillo { position: relative; max-width: 340px; width: 100%; margin: 0 auto; aspect-ratio: 1; }
+.gx-anillo svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gx-anillo .in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 18%; }
+.gx-anillo .in b { font-family: var(--font-display); font-weight: 400; font-size: clamp(3rem, 9vw, 4.4rem); line-height: 1; }
+.gx-anillo .in span { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.35rem; line-height: 1.35; }
+.gx-anillo .in small { color: var(--gx-liq); font-family: var(--font-mono); font-size: 0.72rem; margin-top: 0.5rem; min-height: 1.2em; }
+.gx-paises { display: grid; gap: 0.4rem; }
+.gx-paises button { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.7rem 0.95rem; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font: inherit; cursor: pointer; transition: all var(--transition); }
+.gx-paises button small { display: block; color: var(--text-subtle); font-size: 0.76rem; }
+.gx-paises button em { font-style: normal; font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); white-space: nowrap; }
+.gx-paises button.on { border-color: rgba(34,211,238,0.5); background: rgba(34,211,238,0.07); }
+
+/* Cadena: ícono del paso y reparto del costo */
+.gx-icono { display: grid; justify-items: center; gap: 0.6rem; text-align: center; }
+.gx-icono .ax-proc-vis { position: relative; width: 120px; height: 120px; }
+.gx-icono .ax-proc-vis svg { position: absolute; inset: 0; width: 120px; height: 120px; max-width: none; fill: none; stroke: var(--gx-liq); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.gx-costo { margin-top: 2rem; }
+.gx-icono > b { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, 6vw, 3rem); line-height: 1; }
+.gx-icono > span { color: var(--text-muted); font-size: 0.9rem; max-width: 22ch; line-height: 1.4; }
+.gx-est { display: inline-block; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; background: rgba(251,146,60,0.14); color: var(--gx-gas); margin-bottom: 0.6rem; }
+.gx-est.liq { background: rgba(34,211,238,0.14); color: var(--gx-liq); }
+
+/* Precios */
+.gx-caja { margin-top: 2.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, 2rem); }
+.gx-per { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.gx-per::-webkit-scrollbar { display: none; }
+.gx-per button { flex: 0 0 auto; }
+.gx-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: end; height: 260px; margin-top: 1.5rem; border-bottom: 1px solid var(--border); }
+.gx-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.gx-col .v { font-family: var(--font-display); font-size: clamp(1.4rem, 4vw, 2rem); line-height: 1.1; text-align: center; }
+.gx-col .v small { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-subtle); display: block; }
+.gx-col .c { width: min(100%, 110px); border-radius: 10px 10px 0 0; margin-top: 0.5rem; height: 0; transition: height .9s cubic-bezier(.16,1,.3,1); }
+.gx-cols-et { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; margin-top: 0.6rem; font-size: 0.86rem; }
+.gx-cols-et small { display: block; color: var(--text-subtle); font-size: 0.74rem; }
+.gx-cols-et b { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.8rem; color: var(--accent); margin-top: 0.3rem; }
+
+/* Ormuz */
+.gx-ormuz { margin-top: 2.5rem; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 2rem; align-items: start; }
+.gx-tl { display: grid; gap: 0.35rem; }
+.gx-tl button { display: grid; grid-template-columns: 4.6rem 1fr; gap: 0.7rem; text-align: left; padding: 0.7rem 0.85rem; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); font: inherit; font-size: 0.9rem; line-height: 1.45; cursor: pointer; transition: all var(--transition); }
+.gx-tl button b { font-family: var(--font-mono); font-weight: 400; font-size: 0.76rem; color: var(--text-subtle); padding-top: 0.1rem; }
+.gx-tl button.on { border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.07); color: var(--text); }
+.gx-tl button.on b { color: #ffb4b4; }
+.gx-flete { position: sticky; top: 130px; padding: 1.5rem; border-radius: var(--radius-lg); background: var(--bg-card); border: 1px solid var(--border); }
+.gx-flete small { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-subtle); }
+.gx-flete b { display: block; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1.05; margin: 0.4rem 0 0.2rem; color: #ffb4b4; }
+.gx-flete span { color: var(--text-muted); font-size: 0.88rem; }
+.gx-paso-bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.07); margin-top: 1.2rem; overflow: hidden; }
+.gx-paso-bar i { display: block; height: 100%; background: var(--gx-liq); border-radius: 4px; transition: width .8s cubic-bezier(.16,1,.3,1); }
+.gx-paso-et { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; }
+
+/* Barras horizontales (paradoja, márgenes, emisiones) */
+.gx-hbar { display: grid; gap: 0.55rem; margin-top: 1.5rem; }
+.gx-hbar > * { display: grid; grid-template-columns: 9rem 1fr; gap: 0.8rem; align-items: center; background: none; border: 0; color: var(--text); font: inherit; text-align: left; padding: 0; width: 100%; }
+.gx-hbar button { cursor: pointer; border-radius: 10px; padding: 0.25rem 0.4rem; margin: 0 -0.4rem; width: calc(100% + 0.8rem); transition: background var(--transition); }
+.gx-hbar button:hover, .gx-hbar button.on { background: rgba(255,255,255,0.05); }
+.gx-hbar .n { font-size: 0.9rem; line-height: 1.25; }
+.gx-hbar .n small { display: block; color: var(--text-subtle); font-size: 0.74rem; }
+.gx-hbar .t { height: 28px; border-radius: 6px; background: rgba(255,255,255,0.04); position: relative; }
+.gx-hbar .t i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; width: 0; transition: width 1s cubic-bezier(.16,1,.3,1), background .4s; }
+.gx-hbar .t span { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: 0.74rem; white-space: nowrap; text-shadow: 0 0 6px #0a0c0f, 0 0 6px #0a0c0f; }
+.gx-hbar .t i.var { background: repeating-linear-gradient(135deg, rgba(167,139,250,0.55) 0 6px, rgba(167,139,250,0.2) 6px 12px) !important; }
+.gx-det { margin-top: 1rem; padding: 0.9rem 1rem; border-radius: 12px; background: rgba(255,255,255,0.03); font-size: 0.92rem; line-height: 1.6; color: var(--text-muted); min-height: 4.5em; }
+.gx-det b { color: var(--text); }
+.gx-det a { color: var(--accent); }
+
+/* Argentina */
+.gx-arg { margin-top: 2.5rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
+.gx-arg .ax-globo { aspect-ratio: 1; height: auto; max-height: none; }
+.gx-hitos { display: grid; gap: 0.5rem; }
+.gx-hitos div { display: grid; grid-template-columns: 5.2rem 1fr; gap: 0.8rem; padding: 0.75rem 0.9rem; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); font-size: 0.92rem; line-height: 1.5; color: var(--text-muted); }
+.gx-hitos b { font-family: var(--font-mono); font-weight: 400; font-size: 0.76rem; color: var(--accent); padding-top: 0.15rem; }
+.gx-hitos strong { color: var(--text); font-weight: 500; }
+.gx-tabla { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: 0.9rem; }
+.gx-tabla th, .gx-tabla td { text-align: left; padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+.gx-tabla th { font-family: var(--font-mono); font-weight: 400; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+.gx-tabla td:first-child { color: var(--text-subtle); font-size: 0.82rem; }
+.gx-tabla td b { color: var(--text); font-weight: 500; }
+
+/* Clima */
+.gx-fuga { margin-top: 1.5rem; display: grid; gap: 0.4rem; }
+.gx-fuga label { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); }
+.gx-fuga label b { color: var(--text); font-family: var(--font-mono); font-weight: 400; }
+
+/* Alto reservado para lo que arma el JS */
+#gx-lista { min-height: 420px; }
+.ax-flujos button.paso { grid-template-columns: 1fr; padding: 0.65rem 0.7rem; }
+.ax-flujos button.paso .v b { color: #ffb4b4; font-weight: 400; font-size: 0.9rem; }
+.ax-flujos button.paso.on { border-color: rgba(255,107,107,0.45); background: rgba(255,107,107,0.07); }
+#gx-per-cols { min-height: 260px; }
+
+@media (max-width: 899px) {
+  .gx-barco, .gx-dura, .gx-ormuz, .gx-arg { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .gx-escala > div { grid-template-columns: 6.6rem 1fr; gap: 0.6rem; }
+  .gx-escala .n { font-size: 0.82rem; }
+  .gx-hbar > * { grid-template-columns: 6.8rem 1fr; gap: 0.6rem; }
+  .gx-hbar .n { font-size: 0.82rem; }
+  .gx-hbar .t span { font-size: 0.68rem; left: 0.4rem; }
+  /* En el celular el precio del flete queda pegado arriba mientras se recorre la cronología */
+  .gx-flete { position: sticky; top: 108px; z-index: 3; order: -1; padding: 0.9rem 1.1rem; box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+  .gx-flete b { font-size: 2.2rem; margin: 0.2rem 0 0; }
+  .gx-paso-bar { margin-top: 0.7rem; }
+  .gx .ax-precio { grid-template-columns: minmax(0, 1fr); }
+  .gx-cols { height: 210px; gap: 0.5rem; }
+  #gx-per-cols { min-height: 210px; }
+  .gx-cols-et { gap: 0.5rem; font-size: 0.8rem; }
+  .gx-anillo { max-width: 260px; }
+  .gx-arg .ax-globo { max-width: 400px; margin: 0 auto; width: 100%; }
+  .gx-tabla { font-size: 0.82rem; }
+  .gx-tabla th, .gx-tabla td { padding: 0.55rem 0.35rem; }
+  .gx-hitos div { grid-template-columns: 4.4rem 1fr; gap: 0.6rem; }
+}

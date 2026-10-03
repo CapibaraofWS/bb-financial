@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="Chips, gas y más: cadenas globales explicadas con mapas para jugar." />
   <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"CollectionPage","name":"Atlas: cómo se hace el mundo","description":"Cadenas globales de valor explicadas con mapas y gráficos interactivos.","url":"https://bb-financial.vercel.app/pages/atlas/index.html","inLanguage":"es-AR","hasPart":[{"@type":"Article","headline":"El viaje de un chip","url":"https://bb-financial.vercel.app/pages/atlas/semiconductores.html"}],"publisher":{"@type":"Organization","name":"BB Financial","url":"https://bb-financial.vercel.app"}}
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"Atlas: cómo se hace el mundo","description":"Cadenas globales de valor explicadas con mapas y gráficos interactivos.","url":"https://bb-financial.vercel.app/pages/atlas/index.html","inLanguage":"es-AR","hasPart":[{"@type":"Article","headline":"El viaje de un chip","url":"https://bb-financial.vercel.app/pages/atlas/semiconductores.html"},{"@type":"Article","headline":"GNL: el gas que viaja en barco","url":"https://bb-financial.vercel.app/pages/atlas/gnl.html"}],"publisher":{"@type":"Organization","name":"BB Financial","url":"https://bb-financial.vercel.app"}}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Atlas","item":"https://bb-financial.vercel.app/pages/atlas/index.html"}]}
@@ -34,7 +34,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../../css/styles.css?v=15" />
-  <link rel="stylesheet" href="../../css/atlas.css?v=3" />
+  <link rel="stylesheet" href="../../css/atlas.css?v=5" />
 </head>
 <body>
   <header class="site-header">
@@ -70,13 +70,13 @@
             <p>El viaje de un chip: quién lo diseña, quién hace las máquinas, quién lo fabrica y qué pasa si un país se apaga.</p>
             <span class="ir">8 interactivos · 15 min →</span>
           </a>
-          <div class="ax-cap pronto">
+          <a class="ax-cap" href="gnl.html">
             <div class="arte" aria-hidden="true"><svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="a2" cx="75%" cy="20%" r="70%"><stop offset="0" stop-color="#60a5fa" stop-opacity=".22"/><stop offset="1" stop-color="#60a5fa" stop-opacity="0"/></radialGradient></defs><rect width="400" height="360" fill="url(#a2)"/><g fill="none" stroke="#60a5fa" stroke-opacity=".4" stroke-width="1.5"><path d="M0 170c40-14 80-14 120 0s80 14 120 0 80-14 120 0 40 14 60 7"/><path d="M0 195c40-14 80-14 120 0s80 14 120 0 80-14 120 0 40 14 60 7" stroke-opacity=".2"/><path d="M230 140h120l-14 24H246z"/><circle cx="270" cy="128" r="10"/><circle cx="300" cy="128" r="10"/><circle cx="330" cy="128" r="10"/></g></svg></div>
-            <span class="num">Capítulo 02 · Próximamente</span>
+            <span class="num">Capítulo 02 · Nuevo</span>
             <h2>GNL</h2>
-            <p>El gas que viaja en barco: por qué hay que enfriarlo a −162 °C, quién lo vende, quién lo compra y dónde entra Argentina.</p>
-            <span class="ir">En preparación</span>
-          </div>
+            <p>El gas que viaja en barco: por qué hay que enfriarlo a −162 °C, quién lo vende, qué pasó en Ormuz y dónde entra Argentina.</p>
+            <span class="ir" style="color:#60a5fa">12 interactivos · 15 min →</span>
+          </a>
           <div class="ax-cap pronto">
             <div class="arte" aria-hidden="true"><svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice"><g fill="#e8c97a" fill-opacity=".35"><circle cx="300" cy="70" r="3"/><circle cx="330" cy="100" r="3"/><circle cx="270" cy="110" r="3"/><circle cx="350" cy="60" r="3"/><circle cx="310" cy="140" r="3"/></g><g stroke="#e8c97a" stroke-opacity=".25" fill="none"><path d="M300 70l30 30-60 10 40 30M350 60l-50 10"/></g></svg></div>
             <span class="num">Capítulo 03 · Próximamente</span>
@@ -106,7 +106,7 @@
   <script src="../../js/sanitize.js?v=1"></script>
   <script src="../../js/main.js?v=35"></script>
   <script src="../../js/vendor/atlas-geo.min.js" defer></script>
-  <script src="../../js/atlas-globo.js?v=3" defer></script>
+  <script src="../../js/atlas-globo.js?v=4" defer></script>
   <script>
   // Portada: globo que gira solo con las rutas de los chips
   addEventListener('DOMContentLoaded', function () {

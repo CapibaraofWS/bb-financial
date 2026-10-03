@@ -313,6 +313,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://bb-financial.vercel.app/pages/atlas/gnl.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bb-financial.vercel.app/pages/blog/gnl-gas-natural-licuado-guia-facil.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bb-financial.vercel.app/pages/blog/semiconductores-guia-facil.html</loc>
     <lastmod>2026-10-02</lastmod>
     <changefreq>monthly</changefreq>

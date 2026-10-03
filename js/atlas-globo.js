@@ -20,9 +20,25 @@
     '356': ['India', 79, 22],            '484': ['México', -102, 23.6],
     '076': ['Brasil', -51, -10],         '032': ['Argentina', -65, -35],
     '804': ['Ucrania', 31, 49],          '643': ['Rusia', 90, 61],
+    // Energía
+    '634': ['Qatar', 51.2, 25.3],        '036': ['Australia', 134, -25],
+    '360': ['Indonesia', 113, -1],       '566': ['Nigeria', 8, 9.5],
+    '512': ['Omán', 57, 21],             '012': ['Argelia', 2.6, 28],
+    '780': ['Trinidad y Tobago', -61.3, 10.5], '598': ['Papúa Nueva Guinea', 144, -6.5],
+    '784': ['Emiratos Árabes', 54, 24],  '024': ['Angola', 17.5, -12],
+    '096': ['Brunéi', 114.7, 4.5],       '604': ['Perú', -75, -10],
+    '508': ['Mozambique', 35, -18],      '578': ['Noruega', 9, 61],
+    '124': ['Canadá', -106, 57],         '818': ['Egipto', 30, 27],
+    '250': ['Francia', 2.5, 46.5],       '724': ['España', -3.5, 40],
+    '380': ['Italia', 12.5, 42.8],       '792': ['Turquía', 35, 39],
+    '764': ['Tailandia', 101, 15],       '056': ['Bélgica', 4.6, 50.6],
+    '050': ['Bangladés', 90, 24],        '414': ['Kuwait', 47.6, 29.3],
+    '586': ['Pakistán', 69, 30],         '616': ['Polonia', 19, 52],
+    '364': ['Irán', 54, 32],             '795': ['Turkmenistán', 59, 39],
   };
   window.AtlasPaises = P;
-  const coord = iso => (P[iso] ? [P[iso][1], P[iso][2]] : null);
+  // Acepta un país (código) o un punto [lon, lat]
+  const coord = iso => (Array.isArray(iso) ? iso : P[iso] ? [P[iso][1], P[iso][2]] : null);
 
   let mundoP = null;
   function cargarMundo(base) {
@@ -50,7 +66,7 @@
 
     let rot = op.foco ? [-op.foco[0], -op.foco[1], 0] : [60, -20, 0];
     let dest = null, auto = !!op.auto && !REDUCIR, pausaHasta = 0;
-    let resaltes = {}, arcos = [], etiquetas = [], hover = null, datos = null;
+    let resaltes = {}, arcos = [], etiquetas = [], rutas = [], puntos = [], hover = null, datos = null;
     let dpr = 1, W = 0, H = 0, R = 0, cx = 0, cy = 0;
     let visible = false, raf = 0, ult = 0, arrastre = null;
 
@@ -149,6 +165,36 @@
         }
       }
 
+      // Rutas marítimas: siguen puntos de paso, pegadas a la superficie
+      for (const r of rutas) {
+        ctx.beginPath();
+        let abierto = false;
+        for (const p of r.xy) {
+          const v = xyz(p);
+          if (v[2] <= 0) { abierto = false; continue; }
+          const x = cx + R * v[0], y = cy - R * v[1];
+          if (abierto) ctx.lineTo(x, y); else { ctx.moveTo(x, y); abierto = true; }
+        }
+        ctx.strokeStyle = r.c; ctx.lineWidth = r.w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.setLineDash(r.corte ? [3, 5] : []);
+        ctx.globalAlpha = r.apagado ? 0.16 : r.corte ? 0.7 : 0.9; ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+        if (!REDUCIR && !r.apagado && !r.corte) {
+          const v = xyz(r.xy[Math.floor((((t / r.ms) + r.fase) % 1) * (r.xy.length - 1))]);
+          if (v[2] > 0) { ctx.beginPath(); ctx.arc(cx + R * v[0], cy - R * v[1], 2.4, 0, 2 * Math.PI); ctx.fillStyle = '#fff'; ctx.fill(); }
+        }
+      }
+      for (const q of puntos) {
+        const v = xyz(q.p); if (v[2] <= 0.05) continue;
+        const x = cx + R * v[0], y = cy - R * v[1], rr = q.r || 4;
+        if (q.pulso && !REDUCIR) {
+          const k = (t / 1600) % 1;
+          ctx.beginPath(); ctx.arc(x, y, rr + k * 12, 0, 2 * Math.PI); ctx.strokeStyle = q.c; ctx.lineWidth = 1.5; ctx.globalAlpha = 1 - k; ctx.stroke(); ctx.globalAlpha = 1;
+        }
+        ctx.beginPath(); ctx.arc(x, y, rr, 0, 2 * Math.PI); ctx.fillStyle = q.c; ctx.fill();
+        ctx.strokeStyle = 'rgba(10,12,15,0.8)'; ctx.lineWidth = 1; ctx.stroke();
+        if (q.t) pill(x, y - 2, q.t, q.c);
+      }
+
       for (const iso of etiquetas) {
         const c = coord(iso); if (!c) continue;
         const v = xyz(c); if (v[2] < 0.15) continue;
@@ -157,7 +203,7 @@
     }
 
     function animando() {
-      return dest || arrastre || (auto && !REDUCIR) || (!REDUCIR && arcos.length);
+      return dest || arrastre || (auto && !REDUCIR) || (!REDUCIR && (arcos.length || rutas.length || puntos.some(q => q.pulso)));
     }
     function tick(t) {
       raf = 0;
@@ -190,6 +236,19 @@
           return { c: a.c || '#4ade9a', w: a.w || 1.6, apagado: !!a.apagado, i: d3.geoInterpolate(A, B), d: d3.geoDistance(A, B), t0: o.sinAnim ? 0 : t0 + i * 120, fase: (i * 0.17) % 1 };
         });
       }
+      if (o.rutas) {
+        rutas = o.rutas.map((r, i) => {
+          // Cada tramo se interpola por el círculo máximo, con más puntos cuanto más largo
+          const xy = [];
+          for (let j = 0; j < r.pts.length - 1; j++) {
+            const it = d3.geoInterpolate(r.pts[j], r.pts[j + 1]);
+            const n = Math.max(2, Math.ceil(d3.geoDistance(r.pts[j], r.pts[j + 1]) * 40));
+            for (let k = j ? 1 : 0; k <= n; k++) xy.push(it(k / n));
+          }
+          return { xy, c: r.c || '#60a5fa', w: r.w || 1.6, corte: !!r.corte, apagado: !!r.apagado, ms: 3000 + xy.length * 90, fase: (i * 0.23) % 1 };
+        });
+      }
+      if (o.puntos) puntos = o.puntos;
       if (o.foco) girarA(o.foco, o.ms);
       if ('auto' in o) auto = !!o.auto && !REDUCIR;
       pedir();
@@ -236,8 +295,11 @@
     const soltar = e => {
       if (!arrastre) return;
       const a = arrastre; arrastre = null;
-      if (e.type === 'pointerup' && a.mov < 6 && op.onPais) {
+      if (e.type === 'pointerup' && a.mov < 6 && (op.onPais || op.onPunto)) {
         const x = e.clientX - a.r.left, y = e.clientY - a.r.top;
+        const q = op.onPunto && puntos.find(q => { const v = xyz(q.p); return q.id && v[2] > 0 && Math.hypot(cx + R * v[0] - x, cy - R * v[1] - y) < 16; });
+        if (q) { op.onPunto(q.id, [x, y]); pedir(); return; }
+        if (!op.onPais) { pedir(); return; }
         const iso = paisEn(x, y);
         hover = iso;
         op.onPais(iso, iso ? nombre(iso) : '', [x, y]);
