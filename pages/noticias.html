@@ -23,12 +23,12 @@
   <meta property="og:title" content="Noticias de economía y finanzas de Argentina — BB Finanzas" />
   <meta property="og:description" content="Últimas noticias de economía y finanzas de Argentina y el mundo. Mercados en tiempo real." />
   <meta property="og:url" content="https://bb-financial.vercel.app/pages/noticias.html" />
-  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-finanzas-web.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Noticias de economía y finanzas de Argentina — BB Finanzas" />
   <meta name="twitter:description" content="Últimas noticias de economía y finanzas de Argentina y el mundo. Mercados en tiempo real." />
-  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-finanzas-web.jpg" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://bb-financial.vercel.app/"},{"@type":"ListItem","position":2,"name":"Noticias","item":"https://bb-financial.vercel.app/pages/noticias.html"}]}
   </script>
@@ -479,12 +479,12 @@
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
 
-      const PLACEHOLDER = '../img/imagen-para-noticias.jpg';
+      const PLACEHOLDER = '../img/imagen-para-noticias-web.webp';
       const img = document.createElement('img');
       img.className = 'news-card-img';
       img.src = safeUrl(item.img) || PLACEHOLDER;
       img.alt = ''; img.loading = 'lazy';
-      img.onerror = () => { if (!img.src.endsWith('imagen-para-noticias.jpg')) img.src = PLACEHOLDER; };
+      img.onerror = () => { if (!img.src.endsWith('imagen-para-noticias-web.webp')) img.src = PLACEHOLDER; };
       a.appendChild(img);
 
       const body = document.createElement('div');

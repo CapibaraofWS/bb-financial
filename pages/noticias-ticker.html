@@ -24,12 +24,12 @@
   <meta property="og:title" content="Noticias por Ticker — Análisis fundamental — BB Finanzas" />
   <meta property="og:description" content="Buscá las últimas noticias de cualquier acción por símbolo. AAPL, TSLA, GGAL, YPF y miles más. Hasta 2 semanas de historial." />
   <meta property="og:url" content="https://bb-financial.vercel.app/pages/noticias-ticker.html" />
-  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta property="og:image" content="https://bb-financial.vercel.app/img/banner-bb-finanzas-web.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Noticias por Ticker — Análisis fundamental — BB Finanzas" />
   <meta name="twitter:description" content="Buscá las últimas noticias de cualquier acción por símbolo. AAPL, TSLA, GGAL, YPF y miles más. Hasta 2 semanas de historial." />
-  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-financial.jpg" />
+  <meta name="twitter:image" content="https://bb-financial.vercel.app/img/banner-bb-finanzas-web.jpg" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Noticias","item":"https://bb-financial.vercel.app/pages/noticias.html"},{"@type":"ListItem","position":2,"name":"Por Ticker","item":"https://bb-financial.vercel.app/pages/noticias-ticker.html"}]}
   </script>
@@ -322,13 +322,13 @@
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
 
-        const PLACEHOLDER = '../img/imagen-para-noticias.jpg';
+        const PLACEHOLDER = '../img/imagen-para-noticias-web.webp';
         const img = document.createElement('img');
         img.className = 'news-img';
         img.src = safeUrl(n.image) || PLACEHOLDER;
         img.alt = '';
         img.loading = 'lazy';
-        img.onerror = () => { if (!img.src.endsWith('imagen-para-noticias.jpg')) img.src = PLACEHOLDER; };
+        img.onerror = () => { if (!img.src.endsWith('imagen-para-noticias-web.webp')) img.src = PLACEHOLDER; };
         card.appendChild(img);
 
         const body = document.createElement('div');
