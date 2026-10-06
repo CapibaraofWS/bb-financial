@@ -532,7 +532,7 @@
         $('#quiz-otra').onclick = () => { i = 0; pts = 0; pintar(); };
         $('#quiz-comp').onclick = async () => {
           const url = location.origin + location.pathname;
-          const txt = 'Saqué ' + pts + '/' + QUIZ.length + ' en el quiz de GNL del Atlas de BB Financial. ¿Sabés cuánto le dura un barco de gas a la Argentina?';
+          const txt = 'Saqué ' + pts + '/' + QUIZ.length + ' en el quiz de GNL del Atlas de BB Finanzas. ¿Sabés cuánto le dura un barco de gas a la Argentina?';
           try {
             if (navigator.share) await navigator.share({ title: 'El gas que viaja en barco', text: txt, url });
             else { await navigator.clipboard.writeText(txt + ' ' + url); $('#quiz-msg').textContent = 'Copiado. Pegalo donde quieras.'; }

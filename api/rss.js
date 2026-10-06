@@ -111,7 +111,7 @@ export default async function handler(req, res) {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(9000),
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; BBFinancialBot/1.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; BBFinanzasBot/1.0)',
         'Accept': 'application/rss+xml, application/xml, text/xml, */*',
       },
     });

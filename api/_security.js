@@ -2,6 +2,8 @@
 // Bloquea curl directo / otros sites que intenten usar nuestra quota.
 
 const PROD_HOSTS = [
+  'bbfinanzas.com.ar',
+  'www.bbfinanzas.com.ar',
   'bb-financial.vercel.app',
   'bb-financial-capibaraofws-projects.vercel.app',
   'bb-financial-capibaraofws-capibaraofws-projects.vercel.app',

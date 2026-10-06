@@ -531,7 +531,7 @@
         $('#quiz-otra').onclick = () => { i = 0; pts = 0; pintar(); };
         $('#quiz-comp').onclick = async () => {
           const url = location.origin + location.pathname;
-          const txt = 'Saqué ' + pts + '/4 en el quiz de semiconductores del Atlas de BB Financial. ¿Cuánto sabés de dónde sale tu celular?';
+          const txt = 'Saqué ' + pts + '/4 en el quiz de semiconductores del Atlas de BB Finanzas. ¿Cuánto sabés de dónde sale tu celular?';
           try {
             if (navigator.share) await navigator.share({ title: 'El viaje de un chip', text: txt, url });
             else { await navigator.clipboard.writeText(txt + ' ' + url); $('#quiz-msg').textContent = 'Copiado. Pegalo donde quieras.'; }

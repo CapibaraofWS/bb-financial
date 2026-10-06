@@ -395,7 +395,7 @@ window.BB_GLOSARIO = {
   div.className = 'footer-contact';
   div.innerHTML = `
     <span class="footer-contact-label">El proyecto</span>
-    <a href="${root}pages/sobre-el-proyecto.html">👤 Quién está detrás de BB Financial</a>
+    <a href="${root}pages/sobre-el-proyecto.html">👤 Quién está detrás de BB Finanzas</a>
         <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
     <a href="https://www.linkedin.com/in/bruno-behr-9647b6217/" target="_blank" rel="noopener noreferrer">💼 LinkedIn — Bruno Behr</a>

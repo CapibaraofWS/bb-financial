@@ -6,7 +6,7 @@
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
 
-const UA = 'Mozilla/5.0 (compatible; BBFinancialBot/1.0)';
+const UA = 'Mozilla/5.0 (compatible; BBFinanzasBot/1.0)';
 const TIMEOUT = 9000;
 
 // ============================================================

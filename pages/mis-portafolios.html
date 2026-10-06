@@ -15,7 +15,7 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Mis Portafolios — BB Financial</title>
+  <title>Mis Portafolios — BB Finanzas</title>
   <meta name="description" content="Gestioná tus portafolios de inversión. Creá carteras, seguí el rendimiento de cada activo y visualizá tu diversificación." />
   <meta name="robots" content="noindex" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -172,7 +172,7 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../index.html" class="logo" aria-label="BB Financial - Inicio"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
+      <a href="../index.html" class="logo" aria-label="BB Finanzas - Inicio"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
             <nav class="main-nav">
         <a href="../index.html" class="nav-link">Inicio</a>
         <a href="calculadoras.html" class="nav-link">Calculadoras</a>
@@ -295,7 +295,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Financial" class="logo-img" width="148" height="38" /></a>
+        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
         <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
       </div>
       <nav class="footer-nav">
@@ -308,7 +308,7 @@
         </ul>
       </nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Financial.</p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas.</p></div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
@@ -505,7 +505,7 @@
       };
     }
 
-    // Schema validation: el archivo debe coincidir EXACTAMENTE con el formato exportado por BB Financial.
+    // Schema validation: el archivo debe coincidir EXACTAMENTE con el formato exportado por BB Finanzas.
     // Versiones soportadas: 1. Si exportás desde una versión nueva con schema distinto, agregalo acá.
     const SUPPORTED_VERSIONS = new Set([1]);
 
@@ -514,7 +514,7 @@
       if (Array.isArray(parsed)) return { ok: true, portfolios: parsed, warn: 'Formato legado sin versión. Migrando a v1.' };
       // Caso 2: objeto export oficial
       if (!parsed || typeof parsed !== 'object') return { ok: false, error: 'El archivo no es un objeto JSON válido.' };
-      if (parsed.app !== 'bb-financial') return { ok: false, error: 'Este archivo no fue exportado desde BB Financial. (faltó campo "app":"bb-financial")' };
+      if (parsed.app !== 'bb-financial') return { ok: false, error: 'Este archivo no fue exportado desde BB Finanzas. (faltó campo "app":"bb-financial")' };
       if (!Number.isInteger(parsed.version) || !SUPPORTED_VERSIONS.has(parsed.version)) {
         return { ok: false, error: `Versión de archivo no soportada: ${parsed.version}. Soportadas: ${[...SUPPORTED_VERSIONS].join(', ')}.` };
       }

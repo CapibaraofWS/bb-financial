@@ -1,4 +1,4 @@
-# BB Financial
+# BB Finanzas
 
 # Sin Disallow a proposito. Un Disallow impide que Google TRAIGA la URL, y 19
 # paginas del sitio arman su contenido pidiendo datos a /api/: bloquearlo hacia

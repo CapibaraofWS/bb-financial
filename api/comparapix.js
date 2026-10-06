@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   try {
     const r = await fetch('https://api.comparapix.ar/quotes', {
       signal: AbortSignal.timeout(8000),
-      headers: { 'User-Agent': 'BBFinancial/1.0 (proxy)' },
+      headers: { 'User-Agent': 'BBFinanzas/1.0 (proxy)' },
     });
     if (!r.ok) return res.status(r.status).json({ error: 'Error desde ComparaPix' });
     const data = await r.json();
