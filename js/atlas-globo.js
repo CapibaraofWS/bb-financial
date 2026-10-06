@@ -37,6 +37,37 @@
     '364': ['Irán', 54, 32],             '795': ['Turkmenistán', 59, 39],
   };
   window.AtlasPaises = P;
+
+  // Nombres en español del resto de los países del mapa (el archivo los trae en inglés)
+  const NOMBRES = {
+    '238': 'Islas Malvinas',
+    '004': 'Afganistán', '008': 'Albania', '010': 'Antártida', '031': 'Azerbaiyán', '040': 'Austria', '044': 'Bahamas', '051': 'Armenia',
+    '064': 'Bután', '068': 'Bolivia', '070': 'Bosnia y Herzegovina', '072': 'Botsuana', '084': 'Belice', '090': 'Islas Salomón',
+    '100': 'Bulgaria', '104': 'Myanmar', '108': 'Burundi', '112': 'Bielorrusia', '116': 'Camboya', '120': 'Camerún', '140': 'República Centroafricana',
+    '144': 'Sri Lanka', '148': 'Chad', '152': 'Chile', '170': 'Colombia', '178': 'Congo', '180': 'República Democrática del Congo', '188': 'Costa Rica',
+    '191': 'Croacia', '192': 'Cuba', '196': 'Chipre', '203': 'Chequia', '204': 'Benín', '208': 'Dinamarca', '214': 'República Dominicana',
+    '218': 'Ecuador', '222': 'El Salvador', '226': 'Guinea Ecuatorial', '231': 'Etiopía', '232': 'Eritrea', '233': 'Estonia', '242': 'Fiyi',
+    '246': 'Finlandia', '260': 'Tierras Australes Francesas', '262': 'Yibuti', '266': 'Gabón', '268': 'Georgia', '270': 'Gambia', '275': 'Palestina',
+    '288': 'Ghana', '300': 'Grecia', '304': 'Groenlandia', '320': 'Guatemala', '324': 'Guinea', '328': 'Guyana', '332': 'Haití', '340': 'Honduras',
+    '348': 'Hungría', '352': 'Islandia', '368': 'Irak', '372': 'Irlanda', '376': 'Israel', '384': 'Costa de Marfil', '388': 'Jamaica',
+    '398': 'Kazajistán', '400': 'Jordania', '404': 'Kenia', '408': 'Corea del Norte', '417': 'Kirguistán', '418': 'Laos', '422': 'Líbano',
+    '426': 'Lesoto', '428': 'Letonia', '430': 'Liberia', '434': 'Libia', '440': 'Lituania', '442': 'Luxemburgo', '450': 'Madagascar', '454': 'Malaui',
+    '466': 'Malí', '478': 'Mauritania', '496': 'Mongolia', '498': 'Moldavia', '499': 'Montenegro', '504': 'Marruecos', '516': 'Namibia', '524': 'Nepal',
+    '540': 'Nueva Caledonia', '548': 'Vanuatu', '554': 'Nueva Zelanda', '558': 'Nicaragua', '562': 'Níger', '591': 'Panamá', '600': 'Paraguay',
+    '608': 'Filipinas', '620': 'Portugal', '624': 'Guinea-Bisáu', '626': 'Timor Oriental', '630': 'Puerto Rico', '642': 'Rumania', '646': 'Ruanda',
+    '682': 'Arabia Saudita', '686': 'Senegal', '688': 'Serbia', '694': 'Sierra Leona', '703': 'Eslovaquia', '705': 'Eslovenia', '706': 'Somalia',
+    '710': 'Sudáfrica', '716': 'Zimbabue', '728': 'Sudán del Sur', '729': 'Sudán', '732': 'Sahara Occidental', '740': 'Surinam', '748': 'Esuatini',
+    '752': 'Suecia', '756': 'Suiza', '760': 'Siria', '762': 'Tayikistán', '768': 'Togo', '788': 'Túnez', '800': 'Uganda', '807': 'Macedonia del Norte',
+    '834': 'Tanzania', '854': 'Burkina Faso', '858': 'Uruguay', '860': 'Uzbekistán', '862': 'Venezuela', '887': 'Yemen', '894': 'Zambia',
+  };
+  // Las Islas Malvinas son territorio argentino: se pintan junto con la Argentina
+  const PARTE_DE = { '238': '032' };
+  window.AtlasTerritorio = { '238': 'Territorio argentino.' };
+  // Título de la ficha de un país: el nombre y, para la Argentina y las Malvinas, la bandera
+  window.AtlasTitulo = function (iso, nombre) {
+    const t = String(nombre).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    return t + (iso === '032' || iso === '238' ? ' <i class="ax-bandera-ar" role="img" aria-label="Bandera argentina"></i>' : '');
+  };
   // Acepta un país (código) o un punto [lon, lat]
   const coord = iso => (Array.isArray(iso) ? iso : P[iso] ? [P[iso][1], P[iso][2]] : null);
 
@@ -117,7 +148,7 @@
       if (datos) {
         ctx.beginPath(); path(datos.tierra); ctx.fillStyle = '#2a3240'; ctx.fill();
         for (const f of datos.paises) {
-          const r = resaltes[f.id] || (hover === f.id ? ['#e8edf5', 0.18] : null);
+          const r = resaltes[f.id] || resaltes[PARTE_DE[f.id]] || (hover === f.id ? ['#e8edf5', 0.18] : null);
           if (!r) continue;
           ctx.beginPath(); path(f); ctx.globalAlpha = r[1]; ctx.fillStyle = r[0]; ctx.fill(); ctx.globalAlpha = 1;
         }
@@ -267,7 +298,7 @@
       const f = datos.paises.find(p => d3.geoContains(p, ll));
       return f ? f.id : null;
     }
-    const nombre = iso => (P[iso] ? P[iso][0] : (datos?.paises.find(p => p.id === iso)?.properties.name || ''));
+    const nombre = iso => (P[iso] ? P[iso][0] : NOMBRES[iso] || (datos?.paises.find(p => p.id === iso)?.properties.name || ''));
 
     canvas.style.touchAction = 'pan-y';
     canvas.addEventListener('pointerdown', e => {

@@ -271,10 +271,10 @@
     tip.className = 'ax-tip'; tip.setAttribute('role', 'status');
     wrap.appendChild(tip);
     let t = 0;
-    return (titulo, texto, xy) => {
+    return (titulo, texto, xy, iso) => {
       clearTimeout(t);
       if (!titulo) { tip.classList.remove('on'); return; }
-      tip.innerHTML = '<b>' + esc(titulo) + '</b>' + esc(texto);
+      tip.innerHTML = '<b>' + (iso ? window.AtlasTitulo(iso, titulo) : esc(titulo)) + '</b>' + esc(texto);
       tip.style.left = Math.max(6, Math.min(wrap.clientWidth - 256, xy[0] - 125)) + 'px';
       tip.style.top = Math.max(6, xy[1] + 16) + 'px';
       tip.classList.add('on');
@@ -298,7 +298,7 @@
     let modo = 'e', sel = null;
     const g = AtlasGlobo(canvas, {
       base: BASE, foco: [60, 25],
-      onPais: (iso, nom, xy) => { if (!iso) return tip(null); tip(window.AtlasPaises[iso] ? nombre(iso) : nom, fichaPais(iso), xy); track('atlas_gnl_pais', { pais: nom }); },
+      onPais: (iso, nom, xy) => { if (!iso) return tip(null); tip(window.AtlasPaises[iso] ? nombre(iso) : nom, window.AtlasTerritorio[iso] || fichaPais(iso), xy, iso); track('atlas_gnl_pais', { pais: nom }); },
       onPunto: id => elegir(id),
     });
     const COL = { e: '#fb923c', i: '#22d3ee' };

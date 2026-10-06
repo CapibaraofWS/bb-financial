@@ -40,7 +40,7 @@
     return (iso, nombre, xy) => {
       clearTimeout(t);
       if (!iso) { tip.classList.remove('on'); return; }
-      tip.innerHTML = '<b>' + esc(nombre) + '</b>' + esc(ROLES[iso] || 'No tiene un rol central en esta cadena.');
+      tip.innerHTML = '<b>' + window.AtlasTitulo(iso, nombre) + '</b>' + esc(window.AtlasTerritorio[iso] || ROLES[iso] || 'No tiene un rol central en esta cadena.');
       const w = wrap.clientWidth;
       tip.style.left = Math.max(6, Math.min(w - 256, xy[0] - 125)) + 'px';
       tip.style.top = Math.max(6, xy[1] + 16) + 'px';
