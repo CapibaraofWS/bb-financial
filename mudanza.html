@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Nos mudamos — BB Finanzas</title>
+  <style>body{background:#0a0c0f;color:#e8edf5;font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:1.5rem}a{color:#4ade9a}</style>
+</head>
+<body>
+  <p>Llevando tus datos guardados a <a href="https://www.bbfinanzas.com.ar/">bbfinanzas.com.ar</a>…</p>
+  <script>
+  // Los portafolios y la lista de seguimiento viven en el navegador, atados a cada dirección.
+  // Esta página solo funciona en la dirección vieja: los lee y los pasa a la nueva.
+  (function () {
+    var NUEVO = 'https://www.bbfinanzas.com.ar', CLAVES = ['bb_portfolios', 'bb_watchlist', 'bb_chart_tipo'];
+    var destino = /a=watchlist/.test(location.search) ? '/pages/watchlist.html' : '/pages/mis-portafolios.html';
+    if (location.hostname !== 'bb-financial.vercel.app') { location.replace(NUEVO + destino); return; }
+    var datos = {};
+    try { CLAVES.forEach(function (k) { var x = localStorage.getItem(k); if (x != null) datos[k] = x; }); } catch (e) {}
+    var carga = Object.keys(datos).length ? btoa(unescape(encodeURIComponent(JSON.stringify(datos)))) : 'vacio';
+    location.replace(NUEVO + destino + '#bbm=' + encodeURIComponent(carga));
+  })();
+  </script>
+</body>
+</html>

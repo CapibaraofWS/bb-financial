@@ -807,3 +807,43 @@ bbTrasCarga(function revelar() {
     window.bbTrack('select_content', { content_type: a.className.split(' ')[0], item_id: a.getAttribute('href'), pagina: pagina });
   });
 })();
+
+// ============================================================
+// MUDANZA DE DOMINIO — los portafolios y la lista de seguimiento se guardan en el
+// navegador, atados a la direccion. Quien los tenia en bb-financial.vercel.app
+// los puede traer: /mudanza.html (en la direccion vieja) los lee y vuelve aca
+// con los datos en el # de la URL. Solo se aceptan si se viene de esa direccion.
+// ============================================================
+(function mudanza() {
+  const VIEJA = 'https://bb-financial.vercel.app';
+  const CLAVES = ['bb_portfolios', 'bb_watchlist', 'bb_chart_tipo'];
+  const VACIO = ['[]', '{}', '', null];
+  try {
+    if (location.hash.startsWith('#bbm=')) {
+      const carga = decodeURIComponent(location.hash.slice(5));
+      if (document.referrer.startsWith(VIEJA) && carga !== 'vacio') {
+        const datos = JSON.parse(decodeURIComponent(escape(atob(carga))));
+        CLAVES.forEach(k => {
+          const v = datos[k];
+          // No se pisa lo que ya haya guardado en la direccion nueva
+          if (typeof v !== 'string' || !VACIO.includes(localStorage.getItem(k))) return;
+          if (k === 'bb_chart_tipo') { if (!/^[a-z]{1,12}$/.test(v)) return; }
+          else JSON.parse(v); // si no es JSON valido corta todo (lo ataja el catch)
+          localStorage.setItem(k, v);
+        });
+      }
+      localStorage.setItem('bb_mudanza', '1');
+      location.replace(location.pathname + location.search); // recarga sin el #, ya con los datos
+      return;
+    }
+    // Aviso en las dos paginas que usan datos guardados, mientras esten vacias
+    const pag = location.pathname.split('/').pop();
+    const clave = pag === 'mis-portafolios.html' ? 'bb_portfolios' : pag === 'watchlist.html' ? 'bb_watchlist' : null;
+    if (!clave || localStorage.getItem('bb_mudanza') || !VACIO.includes(localStorage.getItem(clave))) return;
+    const donde = document.querySelector('main') || document.body;
+    const aviso = document.createElement('p');
+    aviso.style.cssText = 'max-width:880px;margin:1rem auto;padding:0.8rem 1rem;border:1px solid rgba(74,222,154,0.3);border-radius:10px;background:rgba(74,222,154,0.06);color:var(--text-muted);font-size:0.9rem;line-height:1.5';
+    aviso.innerHTML = 'Nos mudamos a <strong>bbfinanzas.com.ar</strong>. Si tenías ' + (clave === 'bb_portfolios' ? 'portafolios' : 'una lista de seguimiento') + ' en la dirección anterior, <a href="' + VIEJA + '/mudanza.html?a=' + (clave === 'bb_portfolios' ? 'portafolios' : 'watchlist') + '" style="color:var(--accent)">traelos acá</a>.';
+    donde.insertBefore(aviso, donde.firstChild);
+  } catch (e) { /* almacenamiento bloqueado o datos invalidos: no se hace nada */ }
+})();

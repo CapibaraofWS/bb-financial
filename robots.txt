@@ -9,4 +9,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bb-financial.vercel.app/sitemap.xml
+Sitemap: https://www.bbfinanzas.com.ar/sitemap.xml

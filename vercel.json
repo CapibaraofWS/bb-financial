@@ -52,9 +52,29 @@
           "value": "noindex"
         }
       ]
+    },
+    {
+      "source": "/mudanza.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "redirects": [
+    {
+      "source": "/((?!mudanza\\.html$).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "bb-financial.vercel.app"
+        }
+      ],
+      "destination": "https://www.bbfinanzas.com.ar/$1",
+      "permanent": true
+    },
     {
       "source": "/pages/portafolio.html",
       "destination": "/pages/markowitz.html",
