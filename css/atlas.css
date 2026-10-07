@@ -440,3 +440,182 @@ a.ax-cap:hover { transform: translateY(-4px); border-color: rgba(74,222,154,0.35
   .gx-tabla th, .gx-tabla td { padding: 0.55rem 0.35rem; }
   .gx-hitos div { grid-template-columns: 4.4rem 1fr; gap: 0.6rem; }
 }
+
+/* =====================================================================
+   Capítulo Computación cuántica (prefijo qx-). Reutiliza cajas y barras del de GNL.
+   ===================================================================== */
+.qx { --qx: #a78bfa; --qx-0: #60a5fa; --qx-1: #f472b6; --gx-gas: #fb923c; --gx-liq: #22d3ee; }
+.qx .ax-hero::before { background: radial-gradient(60% 50% at 50% 35%, rgba(167,139,250,0.13), transparent 70%); }
+.qx .gx-caja { margin-top: 2.5rem; }
+.ax-cap.ancho { grid-column: 1 / -1; min-height: 0; }
+.ax-cap.ancho h2 { margin-top: 1.2rem; }
+
+/* El qubit */
+.qx-qubit-vis { aspect-ratio: 1; max-width: 380px; width: 100%; margin: 0 auto; }
+.qx-qubit-vis svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#qx-aguja { transform-origin: 200px 200px; transition: transform .55s cubic-bezier(.16,1,.3,1); }
+.qx-bit { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-muted); padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.qx-bit button { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(96,165,250,0.45); background: rgba(96,165,250,0.1); color: var(--qx-0); font-family: var(--font-mono); font-size: 1.2rem; cursor: pointer; transition: all var(--transition); }
+.qx-bit button.uno { border-color: rgba(244,114,182,0.45); background: rgba(244,114,182,0.1); color: var(--qx-1); }
+.qx-bit small { color: var(--text-subtle); font-size: 0.8rem; }
+.qx-res { font-family: var(--font-display); font-size: clamp(3rem, 9vw, 4.6rem); line-height: 1; color: var(--qx); min-height: 1em; }
+.qx-res.v0 { color: var(--qx-0); }
+.qx-res.v1 { color: var(--qx-1); }
+.qx .gx-hbar .n { font-size: 0.86rem; }
+
+/* Dos qubits */
+.qx-par { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.8fr) minmax(0, 1.05fr); gap: 2rem; align-items: center; }
+.qx-par .ax-eyebrow { margin-bottom: 0.6rem; }
+.qx-par-txt { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 0.9rem; }
+.qx-par-vis { display: flex; align-items: center; justify-content: center; }
+.qx-par-q { display: grid; justify-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-subtle); }
+.qx-par-q b { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 400; font-size: 2.2rem; border: 2px solid var(--qx); color: var(--qx); background: rgba(167,139,250,0.08); transition: all .3s; }
+.qx-par-q b.v0 { border-color: var(--qx-0); color: var(--qx-0); background: rgba(96,165,250,0.1); }
+.qx-par-q b.v1 { border-color: var(--qx-1); color: var(--qx-1); background: rgba(244,114,182,0.1); }
+#qx-par-lazo { width: 46px; height: 0; border-top: 2px dashed rgba(255,255,255,0.12); margin: 0 0.3rem 1.3rem; transition: border-color .4s; }
+#qx-par-lazo.on { border-top: 2px solid var(--qx); box-shadow: 0 0 12px var(--qx); }
+
+/* Cada qubit duplica */
+.qx-crece-top { display: grid; grid-template-columns: 0.5fr 1.3fr 1fr; gap: 1.2rem; align-items: end; }
+.qx-crece-top small { display: block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); line-height: 1.4; }
+.qx-crece-top b { display: block; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 4.6vw, 2.8rem); line-height: 1.15; margin-top: 0.3rem; white-space: nowrap; }
+.qx-crece-top div:first-child b { color: var(--qx); }
+.qx-crece-top sup { font-size: 0.55em; }
+.qx-hitos, .qx-termo { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; gap: 0.3rem; }
+.qx-hitos li, .qx-termo li { display: grid; grid-template-columns: 3.2rem 1fr; gap: 0.8rem; align-items: baseline; padding: 0.5rem 0.75rem; border-radius: 10px; font-size: 0.9rem; line-height: 1.45; color: var(--text-subtle); opacity: 0.55; transition: all .35s; }
+.qx-hitos b, .qx-termo b { font-family: var(--font-mono); font-weight: 400; font-size: 0.78rem; }
+.qx-hitos li.on { opacity: 1; color: var(--text); background: rgba(167,139,250,0.08); }
+.qx-hitos li.on b { color: var(--qx); }
+.qx-termo li { grid-template-columns: 5.6rem 1fr; padding: 0.32rem 0.6rem; font-size: 0.84rem; }
+.qx-termo li.on { opacity: 1; color: var(--text); }
+.qx-termo li.on b { color: var(--gx-liq); }
+.qx-termo li:last-child.on { background: rgba(167,139,250,0.12); }
+.qx-termo li:last-child.on b { color: var(--qx); }
+
+/* Buscar la llave */
+.qx-grover { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 1.25rem; align-items: start; }
+.qx-cajas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; max-width: 360px; margin: 1.3rem auto 1.1rem; }
+.qx-cajas > * { aspect-ratio: 1; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-family: var(--font-mono); font-size: 1.1rem; position: relative; overflow: hidden; }
+.qx-cajas button { cursor: pointer; transition: all var(--transition); }
+.qx-cajas button:hover:not(:disabled) { border-color: rgba(255,255,255,0.25); color: var(--text); }
+.qx-cajas button.no { opacity: 0.4; }
+.qx-cajas button.ok { border-color: var(--accent); background: var(--accent-dim); opacity: 1; }
+.qx-cajas div i { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(154,165,184,0.45); transition: height .7s cubic-bezier(.16,1,.3,1), background .4s; }
+.qx-cajas div span { position: absolute; left: 0; right: 0; top: 6px; text-align: center; font-size: 0.66rem; color: var(--text); text-shadow: 0 0 5px #0a0c0f, 0 0 5px #0a0c0f; }
+.qx-cajas div.ok { border-color: rgba(167,139,250,0.6); }
+.qx-cajas div.ok i { background: var(--qx); }
+.qx-cajas div.med { box-shadow: 0 0 0 2px #facc15; }
+#qx-gro-btn { justify-content: center; min-height: 2.5rem; }
+#qx-gro-btn button:disabled { opacity: 0.4; cursor: default; }
+
+/* El refrigerador */
+.qx-frio-vis { max-width: 340px; width: 100%; margin: 0 auto; }
+.qx-frio-vis svg { width: 100%; display: block; overflow: visible; }
+.qx-frio-vis .pl { cursor: pointer; outline: none; }
+.qx-frio-vis .pl rect { fill: #e8c97a; fill-opacity: 0.22; stroke: #e8c97a; stroke-opacity: 0.5; transition: all .4s; }
+.qx-frio-vis .pl text { fill: var(--text-subtle); transition: fill .4s; }
+.qx-frio-vis .pl.pas rect { fill-opacity: 0.45; }
+.qx-frio-vis .pl.on rect { fill-opacity: 1; stroke-opacity: 1; filter: drop-shadow(0 0 8px rgba(232,201,122,0.8)); }
+.qx-frio-vis .pl.on text { fill: #e8c97a; }
+.qx-frio-vis .pl:focus-visible rect { stroke: #fff; stroke-opacity: 1; }
+#qx-chip { transition: filter .5s; }
+#qx-chip.on { filter: drop-shadow(0 0 10px #a78bfa); }
+.qx-frio .ax-zoom-txt { min-height: 6.5em; }
+
+/* Tipos de qubit */
+.qx .gx-icono .ax-proc-vis svg { stroke: var(--qx); }
+.qx-est { background: rgba(167,139,250,0.14) !important; color: var(--qx) !important; }
+.qx #tipos .ax-proc-txt { min-height: 20rem; }
+
+/* Corrección de errores */
+.qx-sc { margin-top: 2.5rem; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: center; }
+.qx-sc-vis { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.6rem; max-width: 440px; width: 100%; margin: 0 auto; }
+.qx-sc-vis svg { width: 100%; aspect-ratio: 1; display: block; }
+.qx-sc-vis .det { fill: rgba(255,255,255,0.045); transition: fill .3s; }
+.qx-sc-vis .det.a { fill: rgba(167,139,250,0.28); }
+.qx-sc-vis .det.a.on { fill: #facc15; }
+.qx-sc-vis .qb { cursor: pointer; outline: none; }
+.qx-sc-vis .qb .p { fill: #e8edf5; stroke: #0a0c0f; stroke-width: 2; transition: fill .25s; }
+.qx-sc-vis .qb.err .p { fill: #ff6b6b; }
+.qx-sc-vis .qb:focus-visible .p { stroke: #4ade9a; stroke-width: 3; }
+.qx-sc-datos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1.3rem; }
+.qx-sc-datos b { display: block; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.1; }
+.qx-sc-datos span { display: block; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-top: 0.25rem; }
+.qx-sc .gx-det { min-height: 7.2em; }
+.qx-sc-ley, .qx-rsa-ley { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted); }
+.qx-sc-ley i, .qx-rsa-ley i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; }
+.qx-sc-ley i.c { border-radius: 3px; }
+
+/* La carrera */
+#qx-lista { min-height: 420px; }
+#qx-lista:has(button.q) { grid-template-columns: 1fr 1fr; align-content: start; }
+.qx #mapa .ax-rutas { align-items: start; }
+@media (min-width: 900px) { .qx #mapa .ax-globo { position: sticky; top: 120px; } }
+.qx #qx-mapa-det { min-height: 6.4em; margin: 1rem 0 0.4rem; padding: 0.85rem 1rem; border-radius: 12px; background: rgba(255,255,255,0.03); }
+.qx #qx-mapa-det b { color: var(--text); }
+.ax-flujos button.q { grid-template-columns: 1fr; padding: 0.55rem 0.7rem; }
+.ax-flujos button.q .r i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 0.5rem; }
+.ax-flujos button.q .v { padding-left: 1.05rem; }
+.ax-flujos button.q .v b { color: var(--c); font-weight: 400; }
+.ax-flujos button.q.on { border-color: color-mix(in srgb, var(--c) 55%, transparent); background: color-mix(in srgb, var(--c) 8%, transparent); }
+
+/* El candado */
+.qx-rsa-ley { margin: 0 0 0.8rem; }
+#qx-rsa { width: 100%; display: block; min-height: 250px; }
+#qx-rsa .ej { font-family: var(--font-mono); font-size: 11px; fill: var(--text-subtle); }
+#qx-rsa .pt { cursor: pointer; outline: none; }
+#qx-rsa .pt.on .p, #qx-rsa .pt:focus-visible .p { stroke: #fff; }
+.qx-mosca { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; align-items: start; }
+.qx-mosca .ax-chips .ax-btn { padding: 0.4rem 0.8rem; font-size: 0.82rem; }
+.qx-mosca-ctl label { display: flex; justify-content: space-between; gap: 0.8rem; font-size: 0.88rem; color: var(--text-muted); line-height: 1.35; }
+.qx-mosca-ctl label b { color: var(--text); font-family: var(--font-mono); font-weight: 400; white-space: nowrap; }
+.qx-mosca-ctl .ax-rango { margin: 0.1rem 0 0.9rem; }
+.qx-mosca .gx-hbar { margin-top: 0; }
+.qx-mosca .gx-hbar > * { grid-template-columns: 1fr; gap: 0.25rem; }
+.qx-mosca .gx-det { min-height: 8.5em; }
+
+/* Mito o verdad */
+.qx-mitos { min-height: 370px; }
+.qx-mv { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.qx-mv button { padding: 0.95rem 1rem; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: 1.05rem; cursor: pointer; transition: all var(--transition); }
+.qx-mv button:hover:not(:disabled) { border-color: rgba(255,255,255,0.25); }
+.qx-mv button.ok { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.qx-mv button.mal { border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.08); color: #ffb4b4; }
+.qx-mitos .ax-quiz-exp b { color: var(--text); }
+
+/* Línea de tiempo */
+.qx-hito { display: grid; grid-template-columns: auto 1fr; gap: 1.8rem; align-items: center; margin-top: 1.6rem; min-height: 9.5rem; --k: #4ade9a; }
+.qx-hito[data-k="i"] { --k: #a78bfa; }
+.qx-hito[data-k="p"] { --k: #facc15; }
+.qx-hito[data-k="z"] { --k: #ff6b6b; }
+.qx-hito > b { font-family: var(--font-display); font-weight: 400; font-size: clamp(3rem, 10vw, 5.5rem); line-height: 1; color: var(--k); white-space: nowrap; transition: color .3s; }
+.qx-hito small { display: inline-block; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; color: var(--k); background: color-mix(in srgb, var(--k) 14%, transparent); }
+.qx-hito p { margin-top: 0.6rem; color: var(--text-read, #a8b2c4); line-height: 1.65; }
+.qx .ax-proc-nav button:disabled { opacity: 0.35; cursor: default; }
+
+@media (max-width: 899px) {
+  .qx-par, .qx-grover, .qx-sc, .qx-mosca { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .qx-qubit-vis { max-width: 250px; }
+  .qx-frio-vis { max-width: 240px; }
+  .qx-crece-top { grid-template-columns: 0.6fr 1.4fr; gap: 0.9rem; }
+  .qx-crece-top div:last-child { grid-column: 1 / -1; }
+  .qx-hitos li { grid-template-columns: 2.6rem 1fr; gap: 0.6rem; padding: 0.45rem 0.6rem; font-size: 0.86rem; }
+  .qx-cajas { max-width: 300px; }
+  .qx-sc-datos { gap: 0.5rem; }
+  .qx-sc-datos span { font-size: 0.74rem; }
+  .qx-sc .gx-det { min-height: 8.6em; }
+  .qx #tipos .ax-proc-txt { min-height: 24rem; }
+  .qx-hito { grid-template-columns: minmax(0, 1fr); gap: 0.7rem; min-height: 15.5rem; align-items: start; }
+  .qx-hito > b { font-size: 3.2rem; }
+  .qx-mosca .gx-det { min-height: 10.6em; }
+  .qx-mitos { min-height: 430px; }
+  #qx-lista { min-height: 0; }
+  .qx #qx-lista button.q .v { display: none; }
+  .qx #qx-lista button.q { padding: 0.6rem 0.6rem; border-color: var(--border); }
+  .qx #qx-lista button.q .r { font-size: 0.82rem; }
+  .qx #qx-mapa-det { min-height: 9.6em; }
+  .qx-par-q b { width: 64px; height: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #qx-aguja, .qx-cajas div i { transition: none; }
+}

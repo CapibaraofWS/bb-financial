@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1SF925SGNN');addEventListener('load',function(){setTimeout(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN';document.head.appendChild(s)},1500)});</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
+  <title>Computación cuántica, para tocar: qubits, frío y claves — Atlas BB Finanzas</title>
+  <meta name="description" content="Qué es un qubit, por qué una computadora cuántica necesita estar más fría que el espacio, quién la está construyendo y cuándo podría romper las claves de internet. Con juegos, un globo y datos de 2026." />
+  <meta name="keywords" content="computación cuántica, computadora cuántica, qubit, que es un qubit, superposición, entrelazamiento, corrección de errores cuánticos, Willow Google, IBM quantum, algoritmo de Shor, Q-Day, criptografía poscuántica, bitcoin cuántica, helio-3" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica.html" />
+  <meta property="og:title" content="Más frío que el espacio — Atlas BB Finanzas" />
+  <meta property="og:description" content="Medí un qubit, enfriá un chip a −273 °C y calculá si tus secretos sobreviven a la computadora cuántica." />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica.html" />
+  <meta property="og:site_name" content="BB Finanzas" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="article:published_time" content="2026-10-07" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Más frío que el espacio — Atlas BB Finanzas" />
+  <meta name="twitter:description" content="La computación cuántica, para tocar: qubits, frío extremo, errores y la carrera entre países." />
+  <meta name="twitter:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Computación cuántica: más frío que el espacio","description":"Qué es un qubit, por qué hay que enfriarlo a −273 °C, quién construye estas máquinas y cuándo podrían romper las claves de internet, con juegos y mapas interactivos.","image":"https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg","datePublished":"2026-10-07","dateModified":"2026-10-07","inLanguage":"es-AR","author":{"@type":"Organization","name":"BB Finanzas","url":"https://www.bbfinanzas.com.ar"},"publisher":{"@type":"Organization","name":"BB Finanzas","logo":{"@type":"ImageObject","url":"https://www.bbfinanzas.com.ar/assets/favicon-512.png","width":512,"height":512}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica.html"},"isPartOf":{"@type":"CollectionPage","name":"Atlas","url":"https://www.bbfinanzas.com.ar/pages/atlas/index.html"},"articleSection":"Atlas · Tecnología"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Atlas","item":"https://www.bbfinanzas.com.ar/pages/atlas/index.html"},{"@type":"ListItem","position":3,"name":"Computación cuántica","item":"https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica.html"}]}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../../css/styles.css?v=15" />
+  <link rel="stylesheet" href="../../css/atlas.css?v=8" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="logo"><img src="../../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav"></nav>
+      <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="ax qx">
+
+    <section class="ax-hero">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">Atlas · Capítulo 03 · Computación cuántica</p>
+        <h1>Más frío que<br>el <em>espacio</em>.</h1>
+        <p class="ax-lead">Una computadora cuántica no es una compu más rápida: es otra clase de máquina. Para que funcione hay que llevarla a una temperatura 180 veces más baja que la del espacio exterior, y aun así se equivoca todo el tiempo. Acá podés jugar con cada una de sus piezas.</p>
+        <div class="ax-hero-stats">
+          <div class="ax-stat"><b>−273,14 °C</b><span>la temperatura del chip: una centésima de grado sobre el cero absoluto</span></div>
+          <div class="ax-stat"><b>105</b><span>qubits tiene Willow, el chip de Google que en 2024 logró corregir sus propios errores</span></div>
+          <div class="ax-stat"><b>300</b><span>qubits alcanzan para describir más estados que átomos hay en el universo</span></div>
+          <div class="ax-stat"><b>21</b><span>es el número más grande que se factorizó de verdad con el algoritmo que asusta a los bancos</span></div>
+        </div>
+        <p class="ax-scroll">Bajá para empezar</p>
+      </div>
+    </section>
+
+    <nav class="ax-indice" aria-label="Secciones">
+      <ul>
+        <li><a href="#qubit">El qubit</a></li>
+        <li><a href="#crece">Por qué importa</a></li>
+        <li><a href="#buscar">El truco</a></li>
+        <li><a href="#frio">El frío</a></li>
+        <li><a href="#tipos">Cinco caminos</a></li>
+        <li><a href="#errores">Los errores</a></li>
+        <li><a href="#mapa">La carrera</a></li>
+        <li><a href="#candado">El candado</a></li>
+        <li><a href="#mitos">Mito o verdad</a></li>
+        <li><a href="#cuando">Cuándo</a></li>
+        <li><a href="#argentina">Argentina</a></li>
+        <li><a href="#quiz-sec">Quiz</a></li>
+      </ul>
+      <span class="ax-progreso"></span>
+    </nav>
+
+    <!-- 1. EL QUBIT -->
+    <section class="ax-sec" id="qubit">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">01 · El qubit</p>
+        <h2 class="ax-h2">Ni 0 ni 1: <em>las dos cosas</em>, hasta que mirás.</h2>
+        <p class="ax-lead">Tu celular guarda todo en bits: llaves de luz que están prendidas (1) o apagadas (0). Un qubit es una aguja que puede apuntar a cualquier lugar entre el 0 y el 1. Pero cuando la medís, elige uno solo. Probalo.</p>
+        <div class="ax-zoom">
+          <div class="qx-qubit-vis">
+            <svg viewBox="0 0 400 400" role="img" aria-label="Un qubit dibujado como una aguja que apunta entre el 0, arriba, y el 1, abajo">
+              <defs><radialGradient id="qx-g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#a78bfa" stop-opacity=".22"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient></defs>
+              <circle cx="200" cy="200" r="150" fill="url(#qx-g)"/>
+              <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,0.14)" stroke-dasharray="3 6"/>
+              <text x="200" y="36" text-anchor="middle" font-family="DM Mono, monospace" font-size="24" fill="#60a5fa">0</text>
+              <text x="200" y="386" text-anchor="middle" font-family="DM Mono, monospace" font-size="24" fill="#f472b6">1</text>
+              <g id="qx-aguja" style="transform:rotate(90deg)"><line x1="200" y1="200" x2="200" y2="70" stroke="#a78bfa" stroke-width="5" stroke-linecap="round"/><circle cx="200" cy="62" r="12" fill="#a78bfa"/></g>
+              <circle cx="200" cy="200" r="7" fill="#e8edf5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="qx-bit"><span>Un bit de tu celular</span><button type="button" id="qx-bit" aria-label="Cambiar el bit">0</button><small>siempre es 0 o 1. Tocalo.</small></div>
+            <p class="qx-res" id="qx-res" aria-live="polite">?</p>
+            <div class="gx-hbar" id="qx-prob" style="margin-top:0.8rem">
+              <div><span class="n">Chance de 0</span><span class="t"><i style="background:#60a5fa"></i><span></span></span></div>
+              <div><span class="n">Chance de 1</span><span class="t"><i style="background:#f472b6"></i><span></span></span></div>
+            </div>
+            <label class="sr-only" for="qx-theta">Cómo preparar el qubit</label>
+            <input type="range" class="ax-rango" id="qx-theta" min="0" max="180" step="1" value="90" />
+            <div class="ax-rango-et"><span>Más cerca del 0</span><span>Más cerca del 1</span></div>
+            <div class="ax-chips" style="margin-top:1rem">
+              <button type="button" class="ax-btn primario" id="qx-medir">Medir</button>
+              <button type="button" class="ax-btn" id="qx-medir100">Medir 100 veces</button>
+              <button type="button" class="ax-btn" id="qx-prep">↺ Preparar de nuevo</button>
+            </div>
+            <p class="gx-det" id="qx-qubit-t">Mové la barra para preparar el qubit y después medilo.</p>
+          </div>
+        </div>
+
+        <div class="gx-caja qx-par">
+          <div>
+            <p class="ax-eyebrow">El segundo truco: entrelazamiento</p>
+            <p class="qx-par-txt">Dos qubits se pueden "atar": si medís uno, ya sabés qué va a dar el otro, aunque cada resultado sea al azar. Einstein lo llamó "acción fantasmal a distancia".</p>
+            <div class="ax-chips" role="group" aria-label="Cómo están los dos qubits">
+              <button type="button" class="ax-btn on" data-par="0" aria-pressed="true">Sueltos</button>
+              <button type="button" class="ax-btn" data-par="1" aria-pressed="false">Entrelazados</button>
+            </div>
+          </div>
+          <div class="qx-par-vis">
+            <div class="qx-par-q"><b id="qx-par-a">?</b><span>Qubit A</span></div>
+            <i id="qx-par-lazo" aria-hidden="true"></i>
+            <div class="qx-par-q"><b id="qx-par-b">?</b><span>Qubit B</span></div>
+          </div>
+          <div>
+            <div class="ax-chips"><button type="button" class="ax-btn primario" id="qx-par-medir">Medir los dos</button><button type="button" class="ax-btn" id="qx-par-10">Medir 10 veces</button></div>
+            <p class="gx-det" id="qx-par-t" style="min-height:3.2em">Medí varias veces y fijate cuántas coinciden.</p>
+          </div>
+        </div>
+
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">Truco 1</span><h3>Superposición</h3><p>Antes de medirlo, un qubit es una mezcla de 0 y 1. No es que "no sabemos" cuál es: de verdad es las dos cosas.</p></div>
+          <div class="ax-card"><span class="tag">Truco 2</span><h3>Entrelazamiento</h3><p>Varios qubits atados se comportan como una sola cosa. Así la máquina trabaja con todas las combinaciones juntas.</p></div>
+          <div class="ax-card"><span class="tag">Truco 3</span><h3>Interferencia</h3><p>Las mezclas se suman y se cancelan, como las olas. El programa hace que lo incorrecto se cancele. <a href="#buscar" style="color:var(--accent)">Miralo más abajo →</a></p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. POR QUÉ IMPORTA -->
+    <section class="ax-sec alt" id="crece">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">02 · Por qué importa</p>
+        <h2 class="ax-h2">Cada qubit que sumás <em>duplica</em> todo.</h2>
+        <p class="ax-lead">Para describir 1 qubit hacen falta 2 números. Para 2 qubits, 4. Para 3, 8. Una compu normal que quiera imitar a una cuántica necesita el doble de memoria por cada qubit extra. Mové la barra y mirá hasta dónde llega.</p>
+        <div class="gx-caja">
+          <div class="qx-crece-top">
+            <div><small>Qubits</small><b id="qx-n">10</b></div>
+            <div><small>Combinaciones a la vez</small><b id="qx-estados">1.024</b></div>
+            <div><small>Memoria para imitarlo con bits</small><b id="qx-mem">16 KB</b></div>
+          </div>
+          <label class="sr-only" for="qx-n-r">Cantidad de qubits</label>
+          <input type="range" class="ax-rango" id="qx-n-r" min="1" max="300" step="1" value="10" />
+          <div class="ax-rango-et"><span>1 qubit</span><span>300 qubits</span></div>
+          <ul class="qx-hitos" id="qx-hitos"></ul>
+        </div>
+        <p class="ax-nota">Cálculo propio: 2ⁿ combinaciones, 16 bytes por cada una. Ojo: describir no es lo mismo que leer. Al medir 300 qubits obtenés solo 300 bits. Para sacarle provecho hace falta el tercer truco.</p>
+      </div>
+    </section>
+
+    <!-- 3. EL TRUCO -->
+    <section class="ax-sec" id="buscar">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">03 · El truco: interferencia</p>
+        <h2 class="ax-h2">No prueba todo a la vez. <em>Cancela</em> lo que está mal.</h2>
+        <p class="ax-lead">Hay 16 cajas y una sola tiene la llave. Primero buscala como una compu normal. Después probá el método cuántico: cada paso le suma chance a la caja correcta y le resta a las demás.</p>
+        <div class="qx-grover">
+          <div class="gx-caja">
+            <div class="ax-chips" role="group" aria-label="Quién busca">
+              <button type="button" class="ax-btn on" data-gro="c" aria-pressed="true">Compu normal</button>
+              <button type="button" class="ax-btn" data-gro="q" aria-pressed="false">Compu cuántica</button>
+            </div>
+            <div class="qx-cajas" id="qx-cajas"></div>
+            <div class="ax-chips" id="qx-gro-btn"></div>
+            <p class="gx-det" id="qx-gro-t"></p>
+          </div>
+          <div class="gx-caja">
+            <p class="ax-eyebrow" style="margin-bottom:0.7rem">¿Y si hay más cajas?</p>
+            <div class="ax-chips" role="group" aria-label="Cantidad de cajas">
+              <button type="button" class="ax-btn on" data-gron="16" aria-pressed="true">16</button>
+              <button type="button" class="ax-btn" data-gron="1000000" aria-pressed="false">1 millón</button>
+              <button type="button" class="ax-btn" data-gron="1000000000000" aria-pressed="false">1 billón</button>
+            </div>
+            <div class="gx-hbar" id="qx-gro-cmp">
+              <div><span class="n">Compu normal<small>en promedio</small></span><span class="t"><i style="background:#757f96"></i><span></span></span></div>
+              <div><span class="n">Cuántica<small>método de Grover</small></span><span class="t"><i style="background:#a78bfa"></i><span></span></span></div>
+            </div>
+            <p class="gx-det" id="qx-gro-n"></p>
+          </div>
+        </div>
+        <p class="ax-nota">El juego usa las cuentas reales del algoritmo de Grover (1996) para 16 opciones. En una máquina de verdad las barras no se ven: solo aparece una caja al medir. Por eso los programas cuánticos se corren muchas veces.</p>
+      </div>
+    </section>
+
+    <!-- 4. EL FRÍO -->
+    <section class="ax-sec alt" id="frio">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">04 · El frío</p>
+        <h2 class="ax-h2">Una lámpara dorada que enfría <em>más que el universo</em>.</h2>
+        <p class="ax-lead">El calor es movimiento, y cualquier movimiento le borra la memoria a un qubit. Por eso el chip cuelga al fondo de un refrigerador de dilución: seis placas, cada una más fría que la anterior. Bajá de a una.</p>
+        <div class="ax-zoom qx-frio">
+          <div class="qx-frio-vis">
+            <svg viewBox="0 0 320 470" role="img" aria-label="Refrigerador de dilución: seis placas, de 300 kelvin arriba a 0,015 kelvin abajo, donde cuelga el chip">
+              <rect x="14" y="20" width="246" height="436" rx="24" fill="none" stroke="rgba(255,255,255,0.1)" stroke-dasharray="4 7"/>
+              <g stroke="#e8c97a" stroke-opacity=".45" stroke-width="2" fill="none">
+                <path d="M70 56v63M210 56v63M82 131v63M198 131v63M94 206v58M186 206v58M104 276v53M176 276v53M112 341v48M168 341v48"/>
+                <path d="M140 56v40c0 10-14 6-14 16s14 6 14 16v67c0 10 12 6 12 16s-12 6-12 16v53c0 9-10 5-10 14s10 5 10 14v61" stroke-opacity=".3"/>
+              </g>
+              <g id="qx-placas" font-family="DM Mono, monospace" font-size="12">
+                <g class="pl" data-i="0" tabindex="0" role="button" aria-label="Placa de 300 kelvin"><rect x="30" y="44" width="220" height="12" rx="6"/><text x="272" y="54">300 K</text></g>
+                <g class="pl" data-i="1" tabindex="0" role="button" aria-label="Placa de 50 kelvin"><rect x="45" y="119" width="190" height="12" rx="6"/><text x="272" y="129">50 K</text></g>
+                <g class="pl" data-i="2" tabindex="0" role="button" aria-label="Placa de 4 kelvin"><rect x="60" y="194" width="160" height="12" rx="6"/><text x="272" y="204">4 K</text></g>
+                <g class="pl" data-i="3" tabindex="0" role="button" aria-label="Placa de 0,8 kelvin"><rect x="76" y="264" width="128" height="12" rx="6"/><text x="272" y="274">0,8 K</text></g>
+                <g class="pl" data-i="4" tabindex="0" role="button" aria-label="Placa de 0,1 kelvin"><rect x="90" y="329" width="100" height="12" rx="6"/><text x="272" y="339">0,1 K</text></g>
+                <g class="pl" data-i="5" tabindex="0" role="button" aria-label="Placa de 0,015 kelvin, con el chip"><rect x="102" y="389" width="76" height="12" rx="6"/><text x="266" y="399">0,015 K</text></g>
+              </g>
+              <g id="qx-chip"><path d="M140 401v12" stroke="#e8c97a" stroke-width="2"/><rect x="126" y="413" width="28" height="28" rx="4" fill="#a78bfa" fill-opacity=".25" stroke="#a78bfa" stroke-width="2"/><rect x="134" y="421" width="12" height="12" rx="2" fill="#a78bfa"/></g>
+            </svg>
+          </div>
+          <div>
+            <p class="gx-temp" id="qx-t">300 K</p>
+            <span class="gx-estado" id="qx-tc">27 °C</span>
+            <p class="ax-zoom-nombre" id="qx-frio-n" style="font-size:1.6rem;margin-top:1rem">Temperatura ambiente</p>
+            <p class="ax-zoom-txt" id="qx-frio-t">Arriba de todo entran los cables que llevan las órdenes desde la electrónica normal.</p>
+            <label class="sr-only" for="qx-frio-r">Placa del refrigerador</label>
+            <input type="range" class="ax-rango" id="qx-frio-r" min="0" max="5" step="1" value="0" />
+            <div class="ax-rango-et"><span>Arriba · 300 K</span><span>Abajo · 0,015 K</span></div>
+            <div class="ax-chips" style="margin-top:1rem"><button type="button" class="ax-btn primario" id="qx-bajar">❄ Bajar una placa</button></div>
+            <ul class="qx-termo" id="qx-termo"></ul>
+          </div>
+        </div>
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">El ingrediente raro</span><h3>Helio-3</h3><p>Para llegar al fondo se mezclan dos tipos de helio. El helio-3 casi no existe en la naturaleza: sale del tritio de las armas y los reactores nucleares. Cuesta unos US$ 2.000 a 2.600 el litro, y un equipo grande lleva unos 40.</p></div>
+          <div class="ax-card"><span class="tag">Quién los fabrica</span><h3>Finlandia</h3><p>La finlandesa Bluefors domina el mercado. Cada refrigerador cuesta entre US$ 0,7 y 2,5 millones. En 2025 firmó para comprar, desde 2028, helio-3 que una empresa quiere extraer de la Luna.</p></div>
+          <div class="ax-card"><span class="tag">El otro frío del Atlas</span><h3>−162 °C no es nada</h3><p>El gas natural licuado viaja a −162 °C. Un chip cuántico trabaja 111 grados más abajo, pegado al cero absoluto. <a href="gnl.html#que-es" style="color:var(--accent)">Mirá el capítulo de GNL →</a></p></div>
+        </div>
+        <p class="ax-nota">Temperaturas típicas de un refrigerador de dilución (Bluefors, IBM). Precios del helio-3 y de los equipos: estimaciones de PostQuantum y prensa especializada, 2026. Solo los qubits superconductores y topológicos necesitan tanto frío.</p>
+      </div>
+    </section>
+
+    <!-- 5. CINCO CAMINOS -->
+    <section class="ax-sec" id="tipos">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">05 · Cómo se fabrica un qubit</p>
+        <h2 class="ax-h2">Cinco caminos. <em>Ninguno</em> ganó todavía.</h2>
+        <p class="ax-lead">Nadie sabe aún cuál es la mejor manera de construir un qubit. Cada empresa apuesta a una distinta, como cuando convivían el VHS y el Betamax.</p>
+        <div class="ax-proc-tabs" role="tablist" aria-label="Tipos de qubit">
+          <button type="button" class="ax-btn" role="tab"><b>1</b> Superconductores</button>
+          <button type="button" class="ax-btn" role="tab"><b>2</b> Iones atrapados</button>
+          <button type="button" class="ax-btn" role="tab"><b>3</b> Átomos neutros</button>
+          <button type="button" class="ax-btn" role="tab"><b>4</b> Fotones</button>
+          <button type="button" class="ax-btn" role="tab"><b>5</b> Topológicos</button>
+        </div>
+        <div class="ax-proc">
+          <div class="gx-icono qx-icono">
+            <div class="ax-proc-vis" aria-hidden="true">
+              <svg data-s="0" viewBox="0 0 48 48"><rect x="10" y="10" width="28" height="28" rx="4"/><path d="M18 24h4l2-6 2 12 2-6h4"/><path d="M16 10V5M24 10V5M32 10V5M16 43v-5M24 43v-5M32 43v-5"/></svg>
+              <svg data-s="1" viewBox="0 0 48 48"><path d="M4 16h40M4 32h40"/><circle cx="14" cy="24" r="3"/><circle cx="24" cy="24" r="3"/><circle cx="34" cy="24" r="3"/><path d="M24 4v10M24 34v10" stroke-dasharray="2 3"/></svg>
+              <svg data-s="2" viewBox="0 0 48 48"><circle cx="12" cy="12" r="2.5"/><circle cx="24" cy="12" r="2.5"/><circle cx="36" cy="12" r="2.5"/><circle cx="12" cy="24" r="2.5"/><circle cx="24" cy="24" r="2.5"/><circle cx="36" cy="24" r="2.5"/><circle cx="12" cy="36" r="2.5"/><circle cx="24" cy="36" r="2.5"/><circle cx="36" cy="36" r="2.5"/><path d="M24 2v6M24 40v6" stroke-dasharray="2 3"/></svg>
+              <svg data-s="3" viewBox="0 0 48 48"><path d="M4 16h14l12 16h14M4 32h14l12-16h14"/><circle cx="24" cy="24" r="2.5"/></svg>
+              <svg data-s="4" viewBox="0 0 48 48"><path d="M10 34c0-12 6-20 14-20s14 8 14 20"/><path d="M16 34c0-8 3-13 8-13s8 5 8 13" stroke-dasharray="2 3"/><circle cx="10" cy="34" r="3"/><circle cx="38" cy="34" r="3"/></svg>
+            </div>
+            <b id="qx-tip-n">15 mK</b>
+            <span id="qx-tip-c">temperatura a la que trabajan</span>
+          </div>
+          <div>
+            <div class="ax-proc-txt" data-num="15 mK" data-cap="temperatura a la que trabajan">
+              <span class="gx-est qx-est">IBM · Google · Rigetti · IQM</span>
+              <h3>1 · Superconductores</h3>
+              <p>Circuitos de metal que, bien fríos, conducen sin resistencia y se comportan como un átomo artificial. Se fabrican con las mismas técnicas que los chips comunes. Son los más rápidos, pero cada qubit sale un poco distinto y necesitan el refrigerador gigante.</p>
+              <p class="ax-proc-dato">El Nobel de Física 2025 premió a Clarke, Devoret y Martinis por descubrir este efecto en los años 80.</p>
+            </div>
+            <div class="ax-proc-txt" data-num="98" data-cap="qubits tiene Helios, de Quantinuum (2025)">
+              <span class="gx-est qx-est">Quantinuum · IonQ</span>
+              <h3>2 · Iones atrapados</h3>
+              <p>Átomos con carga eléctrica que flotan en el vacío, sostenidos por campos eléctricos y manejados con láseres. Son los más precisos y aguantan mucho sin perder la memoria. La contra: cada operación es miles de veces más lenta.</p>
+              <p class="ax-proc-dato">Quantinuum salió a la bolsa en junio de 2026 y juntó US$ 1.680 millones.</p>
+            </div>
+            <div class="ax-proc-txt" data-num="6.100" data-cap="átomos atrapó Caltech en 2025: el récord">
+              <span class="gx-est qx-est">QuEra · Pasqal · Atom Computing</span>
+              <h3>3 · Átomos neutros</h3>
+              <p>Átomos sueltos, atrapados de a uno con "pinzas" de luz láser y acomodados como en un tablero. Son todos idénticos por naturaleza y es el camino que más fácil suma qubits. Todavía son lentos y pierden átomos por el camino.</p>
+              <p class="ax-proc-dato">El récord de Caltech es de tamaño: esa grilla todavía no hace cuentas completas.</p>
+            </div>
+            <div class="ax-proc-txt" data-num="20 °C" data-cap="viaja la luz: a temperatura ambiente">
+              <span class="gx-est qx-est">PsiQuantum · Xanadu</span>
+              <h3>4 · Fotones</h3>
+              <p>El qubit es una partícula de luz que viaja por un chip de vidrio y silicio. Se fabrica en plantas de chips normales y se conecta por fibra óptica. El problema: los fotones se pierden, y es difícil hacer que dos interactúen.</p>
+              <p class="ax-proc-dato">Solo los detectores necesitan frío. PsiQuantum fabrica sus chips en una planta de GlobalFoundries, en Nueva York.</p>
+            </div>
+            <div class="ax-proc-txt" data-num="0" data-cap="qubits topológicos confirmados por otros laboratorios">
+              <span class="gx-est qx-est">Microsoft</span>
+              <h3>5 · Topológicos</h3>
+              <p>La apuesta más arriesgada: un qubit protegido de los errores por su propia forma, como un nudo que no se desata aunque lo sacudas. En 2025 Microsoft presentó el chip Majorana 1. Muchos físicos dicen que todavía no demostró que funcione.</p>
+              <p class="ax-proc-dato">En 2018 Microsoft ya había anunciado algo parecido y tuvo que retirar el estudio.</p>
+            </div>
+            <div class="ax-proc-nav"><button type="button" class="ax-btn" id="qx-tip-ant">← Anterior</button><button type="button" class="ax-btn primario" id="qx-tip-sig">Siguiente →</button></div>
+          </div>
+        </div>
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">La misma fábrica</span><h3>Chips de siempre</h3><p>Varios de estos qubits se hacen con las máquinas y los materiales de la industria de los semiconductores. <a href="semiconductores.html" style="color:var(--accent)">Mirá el viaje de un chip →</a></p></div>
+          <div class="ax-card"><span class="tag">Otros caminos</span><h3>Silicio y diamante</h3><p>Intel, Diraq y Quantum Motion prueban qubits hechos con un solo electrón dentro de un transistor. Son diminutos, pero van más atrás.</p></div>
+          <div class="ax-card"><span class="tag">No confundir</span><h3>D-Wave</h3><p>Sus máquinas tienen miles de qubits, pero son de otro tipo ("recocido cuántico"): sirven para ciertos problemas de optimización y no pueden correr cualquier programa.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. LOS ERRORES -->
+    <section class="ax-sec alt" id="errores">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">06 · El gran problema</p>
+        <h2 class="ax-h2">Se equivoca <em>una vez cada mil</em>.</h2>
+        <p class="ax-lead">Un chip común falla una vez cada billones de operaciones. Un qubit de hoy, una vez cada mil. La solución es juntar muchos qubits malos para armar uno bueno, con "detectores" en el medio que avisan cuando algo cambió. Rompé uno y mirá.</p>
+        <div class="qx-sc">
+          <div class="qx-sc-vis"><svg id="qx-sc-svg" viewBox="0 0 400 400" role="img" aria-label="Grilla de qubits con detectores de errores entre ellos"></svg></div>
+          <div>
+            <div class="ax-chips" role="group" aria-label="Tamaño de la grilla">
+              <button type="button" class="ax-btn on" data-d="3" aria-pressed="true">Grilla 3×3</button>
+              <button type="button" class="ax-btn" data-d="5" aria-pressed="false">5×5</button>
+              <button type="button" class="ax-btn" data-d="7" aria-pressed="false">7×7</button>
+            </div>
+            <div class="qx-sc-datos">
+              <div><b id="qx-sc-f">17</b><span>qubits físicos para guardar 1 solo qubit confiable</span></div>
+              <div><b id="qx-sc-a">1</b><span id="qx-sc-al">error aguanta a la vez</span></div>
+              <div><b id="qx-sc-e">0,65%</b><span>de las veces falla en cada ronda (chip Willow)</span></div>
+            </div>
+            <p class="gx-det" id="qx-sc-t"></p>
+            <div class="ax-chips" style="margin-top:0.9rem"><button type="button" class="ax-btn primario" id="qx-sc-azar">⚡ Tirar un error</button><button type="button" class="ax-btn" id="qx-sc-limpiar">Corregir todo</button></div>
+            <div class="qx-sc-ley"><span><i style="background:#e8edf5"></i>Qubit con el dato</span><span><i style="background:#ff6b6b"></i>Qubit con error</span><span><i style="background:#a78bfa" class="c"></i>Detector</span><span><i style="background:#facc15" class="c"></i>Detector avisando</span></div>
+          </div>
+        </div>
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">Diciembre de 2024</span><h3>Willow</h3><p>Durante 30 años, sumar qubits empeoraba las cosas. El chip Willow de Google fue el primero en mostrar lo contrario: cada vez que agrandó la grilla, el error bajó a la mitad.</p></div>
+          <div class="ax-card"><span class="tag">La cuenta que duele</span><h3>1.000 por 1</h3><p>Con este método, cada qubit confiable ("lógico") cuesta entre cientos y miles de qubits físicos. IBM apuesta a otro código que promete usar unas 10 veces menos.</p></div>
+          <div class="ax-card"><span class="tag">La IA ayuda</span><h3>Leer los detectores</h3><p>Decidir qué se rompió a partir de los avisos hay que hacerlo un millón de veces por segundo. Google DeepMind entrenó una IA (AlphaQubit) para eso, y Nvidia conecta sus placas a estas máquinas.</p></div>
+        </div>
+        <p class="ax-nota">Esquema simplificado del "código de superficie": muestra un solo tipo de error y la mitad de los detectores (en gris, los del otro tipo). Tasas de Willow aproximadas (Google Quantum AI, <em>Nature</em>, 2024).</p>
+      </div>
+    </section>
+
+    <!-- 7. LA CARRERA -->
+    <section class="ax-sec" id="mapa">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">07 · La carrera</p>
+        <h2 class="ax-h2" id="qx-mapa-t" style="max-width:20ch">China y Estados Unidos corren adelante.</h2>
+        <p class="ax-lead">Quien tenga primero una máquina grande va a poder leer los secretos de los demás. Por eso los gobiernos ponen miles de millones. Cambiá entre quién pone la plata, quién construye y de dónde salen las piezas.</p>
+        <div class="ax-rutas">
+          <div class="ax-globo"><canvas id="globo-q" role="img" aria-label="Globo con los países que invierten en computación cuántica, las empresas que construyen las máquinas y sus proveedores"></canvas><span class="ax-globo-hint">Arrastrá para girar · tocá un país o un punto</span></div>
+          <div>
+            <div class="ax-chips" role="group" aria-label="Qué ver">
+              <button type="button" class="ax-btn on" data-qmapa="p" aria-pressed="true">Quién pone plata</button>
+              <button type="button" class="ax-btn" data-qmapa="q" aria-pressed="false">Quién construye</button>
+              <button type="button" class="ax-btn" data-qmapa="c" aria-pressed="false">La cadena fría</button>
+            </div>
+            <p class="ax-flujo-det" id="qx-mapa-det"></p>
+            <ul class="ax-flujos" id="qx-lista"></ul>
+          </div>
+        </div>
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">Septiembre de 2024</span><h3>Prohibido exportar</h3><p>Estados Unidos y sus aliados pusieron bajo licencia la venta de computadoras cuánticas de 34 qubits o más, y también de sus refrigeradores. A China, en la práctica, no se le vende.</p></div>
+          <div class="ax-card"><span class="tag">2025</span><h3>US$ 12.600 millones</h3><p>Es lo que recibieron las empresas cuánticas en un año, seis veces más que en 2024 (McKinsey). Casi todo fue plata privada.</p></div>
+          <div class="ax-card"><span class="tag">2026</span><h3>El Estado, socio</h3><p>En mayo, el gobierno de Estados Unidos anunció unos US$ 2.000 millones para nueve empresas cuánticas, a cambio de quedarse con una parte de cada una.</p></div>
+        </div>
+        <p class="ax-nota">Fondos públicos: anuncios acumulados de cada gobierno, en dólares aproximados (Qureca 2026, McKinsey, comunicados oficiales). No son comparables al centavo: cubren plazos distintos, y la cifra de China es una estimación sin confirmación oficial. Ubicaciones aproximadas.</p>
+      </div>
+    </section>
+
+    <!-- 8. EL CANDADO -->
+    <section class="ax-sec alt" id="candado">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">08 · El candado</p>
+        <h2 class="ax-h2">La cuenta que protege <em>tu home banking</em>.</h2>
+        <p class="ax-lead">Multiplicar dos números enormes es fácil. Hacer el camino inverso lleva más que la edad del universo, y en eso se apoyan las claves de internet. En 1994, Peter Shor mostró que una computadora cuántica grande lo haría en horas. ¿Cuánto falta? Tocá los puntos.</p>
+        <div class="gx-caja">
+          <div class="qx-rsa-ley"><span><i style="background:#ff6b6b"></i>Qubits que harían falta para romper una clave RSA</span><span><i style="background:#a78bfa"></i>Qubits de la máquina más grande</span></div>
+          <svg id="qx-rsa" role="img" aria-label="Gráfico: los qubits necesarios para romper una clave RSA bajaron de mil millones en 2012 a menos de un millón en 2025, mientras las máquinas pasaron de 5 a 6.100 qubits"></svg>
+          <p class="gx-det" id="qx-rsa-d"></p>
+        </div>
+        <p class="ax-nota">Estimaciones para una clave RSA de 2.048 bits: Fowler y otros (2012), Gidney y Ekerå (2019), Gidney (2025), y dos borradores de 2026 sin revisión de pares. Las curvas no miden lo mismo: para romper una clave hacen falta qubits casi perfectos, y los de hoy no lo son.</p>
+
+        <div class="gx-caja qx-mosca">
+          <div>
+            <p class="ax-eyebrow">Robar hoy, descifrar mañana</p>
+            <p class="qx-par-txt">Alguien puede copiar hoy tus datos cifrados y guardarlos hasta tener la máquina. Entonces la pregunta no es cuándo llega: es si tu secreto va a seguir importando ese día.</p>
+            <div class="ax-chips" id="qx-mosca-pre" role="group" aria-label="Ejemplos"></div>
+          </div>
+          <div class="qx-mosca-ctl">
+            <label for="qx-mx"><span>¿Cuántos años tiene que seguir secreto?</span><b id="qx-mx-v">10</b></label>
+            <input type="range" class="ax-rango" id="qx-mx" min="1" max="50" value="10" />
+            <label for="qx-my"><span>¿Cuántos años lleva cambiar el sistema?</span><b id="qx-my-v">5</b></label>
+            <input type="range" class="ax-rango" id="qx-my" min="1" max="15" value="5" />
+            <label for="qx-mz"><span>¿En cuántos años llega la máquina?</span><b id="qx-mz-v">9</b></label>
+            <input type="range" class="ax-rango" id="qx-mz" min="3" max="30" value="9" />
+          </div>
+          <div>
+            <div class="gx-hbar" id="qx-mosca-b">
+              <div><span class="n">Lo que necesitás<small>cambiar + secreto</small></span><span class="t"><i style="background:#f472b6"></i><span></span></span></div>
+              <div><span class="n">Lo que tenés<small>hasta la máquina</small></span><span class="t"><i style="background:#4ade9a"></i><span></span></span></div>
+            </div>
+            <p class="gx-det" id="qx-mosca-t"></p>
+          </div>
+        </div>
+
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">La defensa ya existe</span><h3>Claves nuevas</h3><p>En agosto de 2024, Estados Unidos aprobó tres sistemas de cifrado que una compu cuántica no rompe. Chrome, Signal y iMessage ya los usan, y más de la mitad del tráfico web humano ya viaja protegido (Cloudflare, fines de 2025).</p></div>
+          <div class="ax-card"><span class="tag">Los plazos</span><h3>2030 y 2035</h3><p>El organismo de normas de EE.UU. propone dejar de recomendar las claves actuales en 2030 y prohibirlas en 2035. Desde 2027, lo que compre su área de defensa ya debe venir con el cifrado nuevo.</p></div>
+          <div class="ax-card"><span class="tag">¿Y Bitcoin?</span><h3>Las firmas, no la minería</h3><p>En marzo de 2026, Google estimó que romper la firma de Bitcoin pediría menos de 500.000 qubits. Hoy no existe nada parecido. Las más expuestas son las billeteras viejas, y ya hay propuestas para cambiar las direcciones.</p></div>
+        </div>
+        <p class="ax-nota">La calculadora usa la regla de Michele Mosca (Universidad de Waterloo). Nadie sabe cuándo va a existir una máquina capaz de romper claves: las encuestas a expertos suelen ubicarla entre 2030 y la década de 2040.</p>
+      </div>
+    </section>
+
+    <!-- 9. MITO O VERDAD -->
+    <section class="ax-sec ax-centro" id="mitos">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">09 · Para qué sirve y para qué no</p>
+        <h2 class="ax-h2">¿Mito o <em>verdad</em>?</h2>
+        <p class="ax-lead">Se dice de todo sobre estas máquinas. Siete frases: decidí cuáles son ciertas.</p>
+        <div class="ax-quiz qx-mitos" id="qx-mitos"><p>Activá JavaScript para jugar.</p></div>
+      </div>
+    </section>
+
+    <!-- 10. CUÁNDO -->
+    <section class="ax-sec alt" id="cuando">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">10 · ¿Cuándo?</p>
+        <h2 class="ax-h2">Cuarenta años de <em>"falta poco"</em>.</h2>
+        <p class="ax-lead">La idea es de 1981. La primera máquina útil de verdad todavía no existe. Recorré lo que ya pasó y lo que se prometió.</p>
+        <div class="gx-caja">
+          <div class="gx-per" id="qx-tl" role="group" aria-label="Año"></div>
+          <div class="qx-hito" id="qx-hito">
+            <b id="qx-hito-a">2024</b>
+            <div><small id="qx-hito-k">Hecho</small><p id="qx-hito-x" aria-live="polite"></p></div>
+          </div>
+          <div class="ax-proc-nav"><button type="button" class="ax-btn" id="qx-hito-ant">← Antes</button><button type="button" class="ax-btn primario" id="qx-hito-sig">Después →</button></div>
+        </div>
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">El que duda</span><h3>Gil Kalai</h3><p>Este matemático israelí sostiene hace años que nunca va a funcionar: cree que, al agrandar la máquina, los errores van a aparecer de a muchos juntos y ningún código los va a poder tapar. Es minoría, pero no está solo.</p></div>
+          <div class="ax-card"><span class="tag">El que promete</span><h3>IBM, 2029</h3><p>IBM dice que en 2029 va a tener Starling: 200 qubits confiables capaces de hacer 100 millones de operaciones seguidas. En junio de 2026 comprometió más de US$ 10.000 millones para lograrlo.</p></div>
+          <div class="ax-card"><span class="tag">Lo que hay hoy</span><h3>Ventaja, pero sin uso</h3><p>En octubre de 2025, Google hizo en 2 horas un cálculo de física que a una supercomputadora le llevaría 3 años, y que otra máquina cuántica puede verificar. Todavía no resuelve ningún problema comercial.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. ARGENTINA -->
+    <section class="ax-sec" id="argentina">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">11 · Argentina</p>
+        <h2 class="ax-h2">Tres qubits en Hurlingham. Y <em>uno propio</em> en camino.</h2>
+        <p class="ax-lead">El país no corre la carrera de los miles de millones, pero tiene físicos formados acá trabajando en el tema, y cualquiera puede probar una máquina de verdad desde su casa.</p>
+        <div class="ax-cards">
+          <div class="ax-card"><span class="tag">Diciembre de 2025</span><h3>La primera en una universidad</h3><p>La Universidad Nacional de Hurlingham recibió una computadora cuántica educativa de 3 qubits, que funciona a temperatura ambiente. Costó unos US$ 50.000 y sirve para enseñar. Según la universidad, es la segunda en una universidad de América Latina.</p></div>
+          <div class="ax-card"><span class="tag">Bariloche</span><h3>El qubit argentino</h3><p>En el Centro Atómico Bariloche (CNEA), un grupo trabaja en los primeros prototipos de qubits superconductores hechos en el país. El objetivo es un procesador propio al que se pueda acceder por internet. Todavía es experimental.</p></div>
+          <div class="ax-card"><span class="tag">Desde tu casa</span><h3>Gratis, 10 minutos por mes</h3><p>IBM presta tiempo en máquinas de más de 100 qubits a cualquiera que se registre. Se programan en Python, con una herramienta abierta llamada Qiskit. <a href="https://quantum.cloud.ibm.com/" rel="noopener" target="_blank" style="color:var(--accent)">Ir a IBM Quantum →</a></p></div>
+        </div>
+        <p class="ax-nota">Fuentes: Universidad Nacional de Hurlingham, CNEA, Infobae, IBM. Condiciones del plan gratuito de IBM a 2026; pueden cambiar.</p>
+      </div>
+    </section>
+
+    <!-- 12. QUIZ -->
+    <section class="ax-sec alt ax-centro" id="quiz-sec">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">12 · ¿Cuánto entendiste?</p>
+        <h2 class="ax-h2">Cinco preguntas.</h2>
+        <div class="ax-quiz" id="quiz"><p>Activá JavaScript para jugar.</p></div>
+      </div>
+    </section>
+
+    <!-- CIERRE -->
+    <section class="ax-sec ax-centro">
+      <div class="ax-wrap">
+        <p class="ax-eyebrow">Seguí</p>
+        <h2 class="ax-h2">Todavía no sirve. <em>Igual</em> ya cambió las reglas.</h2>
+        <div class="ax-sigue" style="text-align:left">
+          <a href="../blog/computacion-cuantica-guia-facil.html"><small>Blog · 10 min</small><b>Computación cuántica, explicada fácil</b><span>Qué es, para qué sirve, qué tiene que ver con la IA y si puede romper Bitcoin.</span></a>
+          <a href="semiconductores.html"><small>Atlas · Capítulo 01</small><b>El viaje de un chip</b><span>Los chips de hoy, los que entrenan a la IA y con los que se fabrican muchos qubits.</span></a>
+          <a href="gnl.html"><small>Atlas · Capítulo 02</small><b>GNL: el gas que viaja en barco</b><span>El otro frío extremo: −162 °C para cruzar un océano.</span></a>
+        </div>
+        <div class="ax-tickers">
+          <a class="ax-btn" href="../ticker.html?symbol=IBM">IBM</a>
+          <a class="ax-btn" href="../ticker.html?symbol=GOOGL">GOOGL</a>
+          <a class="ax-btn" href="../ticker.html?symbol=MSFT">MSFT</a>
+          <a class="ax-btn" href="../ticker.html?symbol=NVDA">NVDA</a>
+          <a class="ax-btn" href="../ticker.html?symbol=IONQ">IONQ</a>
+          <a class="ax-btn" href="../ticker.html?symbol=RGTI">RGTI</a>
+          <a class="ax-btn" href="../ticker.html?symbol=QBTS">QBTS</a>
+          <a class="ax-btn" href="../ticker.html?symbol=HON">HON</a>
+        </div>
+        <p class="ax-nota">Los links a acciones son para mirar los datos, no son una recomendación de inversión. Las empresas cuánticas puras casi no tienen ingresos y sus precios se mueven muchísimo.</p>
+      </div>
+    </section>
+
+    <section class="ax-sec" style="padding-top:0">
+      <div class="ax-wrap ax-fuentes">
+        <h2>Fuentes</h2>
+        <ul>
+          <li>Google Quantum AI, <em>Quantum error correction below the surface code threshold</em>, Nature (2024), y <em>Observation of constructive interference at the edge of quantum ergodicity</em>, Nature (2025).</li>
+          <li>Manetsch y otros (Caltech), <em>A tweezer array with 6100 highly coherent atomic qubits</em>, Nature (2025). IBM, Quantinuum, PsiQuantum, Microsoft: anuncios y hojas de ruta.</li>
+          <li>Claves: Gidney y Ekerå (2019); <a href="https://arxiv.org/abs/2505.15917" rel="noopener" target="_blank">Gidney (2025)</a>; <a href="https://www.sciencenews.org/article/quantum-bits-crack-internet-encryption" rel="noopener" target="_blank">Science News (2026)</a>; <a href="https://thequantuminsider.com/2026/03/31/q-day-just-got-closer-three-papers-in-three-months-are-rewriting-the-quantum-threat-timeline/" rel="noopener" target="_blank">The Quantum Insider (2026)</a>. NIST (FIPS 203, 204 y 205; IR 8547), NSA (CNSA 2.0), Cloudflare Radar.</li>
+          <li>Inversión: <a href="https://www.qureca.com/quantum-initiatives-worldwide/" rel="noopener" target="_blank">Qureca, Quantum Initiatives Worldwide 2026</a>; McKinsey, <em>Quantum Technology Monitor 2026</em>; Oficina de Industria y Seguridad de EE.UU. (controles de exportación, 2024).</li>
+          <li>Frío y helio-3: Bluefors, Interlune, PostQuantum, Foro Económico Mundial.</li>
+          <li>Críticas: Gil Kalai (Universidad Hebrea de Jerusalén); <a href="https://www.sciencenews.org/article/microsoft-topological-quantum-majorana" rel="noopener" target="_blank">Science News sobre Majorana 1</a>.</li>
+          <li>Argentina: <a href="https://www.infobae.com/salud/ciencia/2025/12/22/instalan-la-primera-computadora-cuantica-en-una-universidad-argentina/" rel="noopener" target="_blank">Infobae</a>, <a href="https://www.argentina.gob.ar/noticias/cientificos-del-centro-atomico-bariloche-buscan-crear-un-procesador-cuantico-con-circuitos" rel="noopener" target="_blank">CNEA</a>, Universidad Nacional de Hurlingham.</li>
+        </ul>
+        <p class="ax-nota">Los juegos de esta página son simplificaciones para entender la idea, no simuladores de laboratorio. Las cifras son aproximadas, varían según la fuente y cambian rápido. Última revisión: octubre de 2026.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../../index.html" class="logo"><img src="../../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500;font-size:0.82rem"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Sitio <strong>educativo</strong>. Esta información NO constituye asesoramiento financiero, tributario, legal, ni recomendación de inversión. Es una guía orientativa — <strong>cada persona es un caso particular</strong>. Las normativas vigentes pueden cambiar. Consultá un contador y/o un asesor matriculado en CNV antes de decisiones financieras importantes.</p><p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.5rem">© 2026 BB Finanzas · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a></p></div>
+  </footer>
+
+  <script src="../../js/sanitize.js?v=1"></script>
+  <script src="../../js/main.js?v=36"></script>
+  <script src="../../js/vendor/atlas-geo.min.js" defer></script>
+  <script src="../../js/atlas-globo.js?v=6" defer></script>
+  <script src="../../js/atlas-cuantica.js?v=1" defer></script>
+</body>
+</html>
