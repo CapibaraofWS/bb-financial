@@ -303,7 +303,7 @@
     canvas.style.touchAction = 'pan-y';
     canvas.addEventListener('pointerdown', e => {
       const r = canvas.getBoundingClientRect();
-      arrastre = { x: e.clientX, y: e.clientY, rot: rot.slice(), mov: 0, toque: e.pointerType === 'touch', r };
+      arrastre = { x: e.clientX, y: e.clientY, rot: rot.slice(), mov: 0, toque: e.pointerType === 'touch', r, t0: performance.now(), libre: null };
       dest = null; pausaHasta = performance.now() + 4000;
       canvas.setPointerCapture?.(e.pointerId);
       pedir();
@@ -315,7 +315,7 @@
         arrastre.mov = Math.max(arrastre.mov, Math.hypot(dx, dy));
         const k = 75 / R;
         rot[0] = arrastre.rot[0] + dx * k;
-        if (!arrastre.toque) rot[1] = Math.max(-60, Math.min(60, arrastre.rot[1] - dy * k));
+        if (!arrastre.toque || arrastre.libre) rot[1] =Math.max(-60, Math.min(60, arrastre.rot[1] - dy * k));
         pausaHasta = performance.now() + 4000;
         pedir();
       } else if (e.pointerType === 'mouse' && op.onPais) {
@@ -323,6 +323,17 @@
         if (iso !== hover) { hover = iso; canvas.style.cursor = iso ? 'pointer' : 'grab'; pedir(); if (!animando()) dibujar(performance.now()); }
       }
     });
+    // Con el dedo: un deslizamiento vertical rapido mueve la pagina. Si el gesto arranca de
+    // costado, en diagonal o con el dedo apoyado un instante, el globo se queda con el gesto
+    // y gira en cualquier direccion. Se decide en el primer movimiento (despues ya no se puede).
+    canvas.addEventListener('touchmove', e => {
+      if (!arrastre || e.touches.length !== 1) return;
+      if (arrastre.libre === null) {
+        const t = e.touches[0], dx = Math.abs(t.clientX - arrastre.x), dy = Math.abs(t.clientY - arrastre.y);
+        arrastre.libre = dy < dx * 1.7 || performance.now() - arrastre.t0 > 220;
+      }
+      if (arrastre.libre && e.cancelable) e.preventDefault();
+    }, { passive: false });
     const soltar = e => {
       if (!arrastre) return;
       const a = arrastre; arrastre = null;
