@@ -235,6 +235,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/privacidad</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://www.bbfinanzas.com.ar/pages/test-inversor</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>

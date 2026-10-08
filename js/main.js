@@ -396,6 +396,7 @@ window.BB_GLOSARIO = {
   div.innerHTML = `
     <span class="footer-contact-label">El proyecto</span>
     <a href="${root}pages/sobre-el-proyecto">👤 Quién está detrás de BB Finanzas</a>
+    <a href="${root}pages/privacidad">🔒 Política de privacidad</a>
         <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
     <a href="https://www.linkedin.com/in/bruno-behr-9647b6217/" target="_blank" rel="noopener noreferrer">💼 LinkedIn — Bruno Behr</a>
@@ -460,7 +461,7 @@ document.addEventListener('toggle', (e) => {
       <div class="donation-text">
         <p class="donation-eyebrow">¿Te sirvió esta herramienta?</p>
         <h3>Sé mi <em>inversionista ángel</em> 👼📈</h3>
-        <p class="donation-sub">El sitio es y va a seguir siendo gratis y sin publicidad. Si te sirvió, sumate con el valor de un café — me ayudás a mantenerlo vivo y a sumar más herramientas.</p>
+        <p class="donation-sub">El sitio es gratis y no pide registro. Para que siga así puede mostrar algunos anuncios. Si te sirvió, sumate con el valor de un café — me ayudás a mantenerlo vivo y a sumar más herramientas.</p>
       </div>
       <div class="donation-buttons">
         <a href="https://cafecito.app/bb-financial" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">
