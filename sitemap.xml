@@ -337,6 +337,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/atlas/tierras-raras</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/blog/tierras-raras-guia-facil</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.bbfinanzas.com.ar/pages/blog/semiconductores-guia-facil</loc>
     <lastmod>2026-10-02</lastmod>
     <changefreq>monthly</changefreq>
