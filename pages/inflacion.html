@@ -49,7 +49,7 @@
   ]}
   </script>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Dataset","name":"Índice de precios al consumidor de Argentina, serie mensual 1943-2026 (base diciembre 2016 = 100)","description":"Serie mensual del IPC de Argentina en dos versiones. La oficial usa el IPC Nacional del INDEC desde diciembre de 2016 y encadena hacia atrás las variaciones mensuales históricas. La combinada es idéntica desde diciembre de 2016 y reemplaza el tramo 2000-2016, que incluye la intervención del INDEC entre 2007 y 2015, por un promedio de los IPC provinciales de San Luis, CABA y Córdoba enlazados con el INDEC.","url":"https://www.bbfinanzas.com.ar/pages/inflacion.html","keywords":["inflación","IPC","Argentina","INDEC","índice de precios al consumidor"],"inLanguage":"es-AR","isAccessibleForFree":true,"temporalCoverage":"1943-03/2026-07","spatialCoverage":{"@type":"Place","name":"Argentina"},"variableMeasured":"Índice de precios al consumidor, base diciembre 2016 = 100","isBasedOn":["https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26","https://github.com/matuteiglesias/IPC-Argentina"],"creator":{"@type":"Organization","name":"BB Finanzas","url":"https://www.bbfinanzas.com.ar/"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://www.bbfinanzas.com.ar/data/ipc-argentina.json"}]}
+  {"@context":"https://schema.org","@type":"Dataset","name":"Índice de precios al consumidor de Argentina, serie mensual 1943-2026 (base diciembre 2016 = 100)","description":"Serie mensual del IPC de Argentina en dos versiones. La oficial usa el IPC Nacional del INDEC desde diciembre de 2016 y encadena hacia atrás las variaciones mensuales históricas. La combinada es idéntica desde diciembre de 2016 y reemplaza el tramo 2000-2016, que incluye la intervención del INDEC entre 2007 y 2015, por un promedio de los IPC provinciales de San Luis, CABA y Córdoba enlazados con el INDEC.","url":"https://www.bbfinanzas.com.ar/pages/inflacion.html","keywords":["inflación","IPC","Argentina","INDEC","índice de precios al consumidor"],"inLanguage":"es-AR","isAccessibleForFree":true,"license":"https://www.bbfinanzas.com.ar/pages/inflacion.html#licencia","temporalCoverage":"1943-03/2026-07","spatialCoverage":{"@type":"Place","name":"Argentina"},"variableMeasured":"Índice de precios al consumidor, base diciembre 2016 = 100","isBasedOn":["https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26","https://github.com/matuteiglesias/IPC-Argentina"],"creator":{"@type":"Organization","name":"BB Finanzas","url":"https://www.bbfinanzas.com.ar/"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://www.bbfinanzas.com.ar/data/ipc-argentina.json"}]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -571,6 +571,17 @@
             Los índices se guardan con nueve cifras significativas. Aun así, encadenar cientos de meses
             arrastra un error de redondeo del orden de centésimas de punto por año. Para períodos largos,
             leé los últimos dígitos como aproximados.
+          </dd>
+          <dt id="licencia">Cómo podés usar estos datos</dt>
+          <dd>
+            El <a href="../data/ipc-argentina.json">archivo con las dos series</a> se puede descargar y
+            usar libremente, citando a BB Finanzas como fuente y enlazando a esta página.
+            <br /><br />
+            Los datos de origen conservan las condiciones de quien los publica. Los del INDEC vienen del
+            portal de datos abiertos del Estado, bajo licencia
+            <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="noopener noreferrer">Creative Commons Atribución 4.0</a>.
+            El tramo 2000–2016 de la serie combinada sale del proyecto IPC-Argentina, de M. Iglesias:
+            si lo usás, citalo también.
           </dd>
         </dl>
       </section>
