@@ -12,12 +12,12 @@
   <title>Ranking semanal — Acciones y CEDEARs más subas/bajas — BB Finanzas</title>
   <meta name="description" content="Top acciones y CEDEARs argentinos con mayores subas y bajas de la semana. Actualizado con datos de Yahoo Finance." />
   <meta name="keywords" content="ranking acciones, top subas CEDEARs, top bajas, acciones argentinas, mercado semanal" />
-  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/ranking-semanal.html" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/ranking-semanal" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
   <meta property="og:title" content="Ranking semanal — Acciones y CEDEARs más subas/bajas — BB Finanzas" />
   <meta property="og:description" content="Top acciones y CEDEARs argentinos con mayores subas y bajas de la semana. Actualizado con datos de Yahoo Finance." />
-  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/ranking-semanal.html" />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/ranking-semanal" />
   <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -25,7 +25,7 @@
   <meta name="twitter:description" content="Top acciones y CEDEARs argentinos con mayores subas y bajas de la semana. Actualizado con datos de Yahoo Finance." />
   <meta name="twitter:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Ranking semanal","item":"https://www.bbfinanzas.com.ar/pages/ranking-semanal.html"}]}
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Ranking semanal","item":"https://www.bbfinanzas.com.ar/pages/ranking-semanal"}]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -79,7 +79,7 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
       <nav class="main-nav"></nav>
       <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     </div>
@@ -132,7 +132,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
         <p>Ranking actualizado con datos de Yahoo Finance. No constituye recomendación de inversión.</p>
       </div>
     </div>
@@ -140,7 +140,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=36"></script>
+  <script src="../js/main.js?v=37"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
   // ============================================================
@@ -215,7 +215,7 @@
       const name = BBSanitize.escHtml((q.shortName || q.longName || q.symbol).slice(0, 28));
       const pct = q.weeklyChangePercent;
       const posClass = idx <= 2 ? ' gold' : '';
-      return `<a class="rank-row" href="ticker.html?symbol=${encodeURIComponent(q.symbol)}">
+      return `<a class="rank-row" href="ticker?symbol=${encodeURIComponent(q.symbol)}">
         <span class="rank-pos${posClass}">#${idx + 1}</span>
         <div class="rank-sym">${sym}<small>${name}</small></div>
         <div class="rank-price">${fmtPrice(q.regularMarketPrice, q.currency)}</div>
@@ -245,7 +245,7 @@
           const wkCls = wkPct > 0 ? 'up' : wkPct < 0 ? 'down' : '';
           return `<tr>
             <td>${i + 1}</td>
-            <td><a href="ticker.html?symbol=${encodeURIComponent(q.symbol)}" class="vol-sym" style="color:var(--text);text-decoration:none">${BBSanitize.escHtml(q.symbol)}</a></td>
+            <td><a href="ticker?symbol=${encodeURIComponent(q.symbol)}" class="vol-sym" style="color:var(--text);text-decoration:none">${BBSanitize.escHtml(q.symbol)}</a></td>
             <td>${fmtPrice(q.regularMarketPrice, q.currency)}</td>
             <td>${fmtVol(q.regularMarketVolume)}</td>
             <td><span class="rank-pct ${dayCls}">${fmtPct(dayPct)}</span></td>

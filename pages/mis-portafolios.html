@@ -173,21 +173,21 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../index.html" class="logo" aria-label="BB Finanzas - Inicio"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <a href="../" class="logo" aria-label="BB Finanzas - Inicio"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
             <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Inicio</a>
-        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
-        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
-        <a href="conceptos.html" class="nav-link">Conceptos</a>
-        <a href="ticker.html" class="nav-link">Acciones</a>
-        <a href="mercado.html" class="nav-link">Mercado</a>
-        <a href="calendario.html" class="nav-link">Calendario</a>
-        <a href="mis-portafolios.html" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
-        <a href="noticias.html" class="nav-link">Noticias</a>
-        <a href="datos.html" class="nav-link">Datos</a>
-        <a href="brokers.html" class="nav-link">Brokers</a>
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos" class="nav-link">Conceptos</a>
+        <a href="ticker" class="nav-link">Acciones</a>
+        <a href="mercado" class="nav-link">Mercado</a>
+        <a href="calendario" class="nav-link">Calendario</a>
+        <a href="mis-portafolios" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias" class="nav-link">Noticias</a>
+        <a href="datos" class="nav-link">Datos</a>
+        <a href="brokers" class="nav-link">Brokers</a>
         <span class="nav-sep" aria-hidden="true"></span>
-        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+        <a href="proyectos" class="nav-link nav-proyectos">Proyectos</a>
       </nav>
       <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -196,7 +196,7 @@
   <main>
     <section class="page-hero">
       <div class="container">
-        <p class="page-breadcrumb"><a href="../index.html">Inicio</a><span>/</span>Mis Portafolios</p>
+        <p class="page-breadcrumb"><a href="../">Inicio</a><span>/</span>Mis Portafolios</p>
         <h1 class="page-title">Mis Portafolios <span class="beta-badge" style="font-size:0.7rem;vertical-align:middle">Beta</span></h1>
         <p class="page-subtitle">Creá carteras, seguí el precio de cada activo manualmente y visualizá cómo está distribuida tu inversión. Los datos se guardan en tu navegador.</p>
       </div>
@@ -296,16 +296,16 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
         <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
       </div>
       <nav class="footer-nav">
         <h3>Secciones</h3>
         <ul>
-          <li><a href="mis-portafolios.html">Mis Portafolios (Beta)</a></li>
-          <li><a href="portafolio.html">Simulador de Portafolio</a></li>
-          <li><a href="proyectos.html">Proyectos</a></li>
-          <li><a href="meta-financiera.html">Meta Financiera</a></li>
+          <li><a href="mis-portafolios">Mis Portafolios (Beta)</a></li>
+          <li><a href="portafolio">Simulador de Portafolio</a></li>
+          <li><a href="proyectos">Proyectos</a></li>
+          <li><a href="meta-financiera">Meta Financiera</a></li>
         </ul>
       </nav>
     </div>
@@ -315,7 +315,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=36"></script>
+  <script src="../js/main.js?v=37"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     // ---- LocalStorage data model ----
@@ -420,7 +420,7 @@
     }
 
     function openPortfolio(id) {
-      window.location.href = `portfolio-detalle.html?id=${id}`;
+      window.location.href = `portfolio-detalle?id=${id}`;
     }
 
     // Close modal on overlay click

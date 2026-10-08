@@ -432,7 +432,7 @@
       }
       const s = SONRISA[sel];
       det.innerHTML = '<b>' + esc(s.e) + ' · ' + esc(s.emp) + '</b> — margen bruto ' + (modo === 'real' ? '<b>' + s.r + '</b>' : 'aprox. ' + s.r) + ' (2023-2024). ' + esc(s.d) +
-        ' <a href="' + BASE + 'pages/ticker.html?symbol=' + encodeURIComponent(s.tk) + '">Ver la acción →</a>';
+        ' <a href="' + BASE + 'pages/ticker?symbol=' + encodeURIComponent(s.tk) + '">Ver la acción →</a>';
     }
     function animarA(obj) {
       cancelAnimationFrame(anim);

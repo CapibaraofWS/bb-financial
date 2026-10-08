@@ -14,7 +14,7 @@
   // Esta página solo funciona en la dirección vieja: los lee y los pasa a la nueva.
   (function () {
     var NUEVO = 'https://www.bbfinanzas.com.ar', CLAVES = ['bb_portfolios', 'bb_watchlist', 'bb_chart_tipo'];
-    var destino = /a=watchlist/.test(location.search) ? '/pages/watchlist.html' : '/pages/mis-portafolios.html';
+    var destino = /a=watchlist/.test(location.search) ? '/pages/watchlist' : '/pages/mis-portafolios';
     if (location.hostname !== 'bb-financial.vercel.app') { location.replace(NUEVO + destino); return; }
     var datos = {};
     try { CLAVES.forEach(function (k) { var x = localStorage.getItem(k); if (x != null) datos[k] = x; }); } catch (e) {}

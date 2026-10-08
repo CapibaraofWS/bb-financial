@@ -78,7 +78,7 @@ var BB_GLIFO_DE = {
 };
 
 function bbGlifo(href) {
-  var m = String(href || '').match(/([a-z0-9-]+)\.html/);
+  var m = String(href || '').match(/([a-z0-9-]+)(?:\.html)?(?:[?#].*)?$/);
   var g = m && BB_GLIFO_DE[m[1]];
   if (!g) return '';
   return '<span class="bb-glifo" style="--g:' + g[1] + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + BB_TRAZOS[g[0]] + '</svg></span>';
@@ -250,7 +250,7 @@ window.BB_GLOSARIO = {
   const groups = [
     {
       kind: 'link',
-      href: root + 'index.html',
+      href: root || './',
       label: 'Inicio',
     },
     {
@@ -258,79 +258,79 @@ window.BB_GLOSARIO = {
       title: 'Nuevos Inversores',
       highlight: true,
       items: [
-        { href: pagesBase + 'empezar-a-invertir.html', label: 'Empezar a Invertir', icon: '🚀' },
-        { href: pagesBase + 'conceptos.html',          label: 'Conceptos básicos',  icon: '📖' },
-        { href: pagesBase + 'brokers.html',            label: 'Brokers Argentina',  icon: '🏦' },
-        { href: pagesBase + 'renta-fija.html',         label: 'Renta Fija',          icon: '📜' },
-        { href: pagesBase + 'etfs-fci.html',           label: 'ETFs y FCI',          icon: '💎' },
-        { href: pagesBase + 'comparador-plazos-fijos.html', label: 'Calculadora de plazo fijo', icon: '💰' },
-        { href: pagesBase + 'cuentas-remuneradas.html',label: 'Cuentas remuneradas', icon: '💳' },
-        { href: pagesBase + 'comparador-dolares.html', label: 'Tipos de dólar',           icon: '💵' },
+        { href: pagesBase + 'empezar-a-invertir', label: 'Empezar a Invertir', icon: '🚀' },
+        { href: pagesBase + 'conceptos',          label: 'Conceptos básicos',  icon: '📖' },
+        { href: pagesBase + 'brokers',            label: 'Brokers Argentina',  icon: '🏦' },
+        { href: pagesBase + 'renta-fija',         label: 'Renta Fija',          icon: '📜' },
+        { href: pagesBase + 'etfs-fci',           label: 'ETFs y FCI',          icon: '💎' },
+        { href: pagesBase + 'comparador-plazos-fijos', label: 'Calculadora de plazo fijo', icon: '💰' },
+        { href: pagesBase + 'cuentas-remuneradas',label: 'Cuentas remuneradas', icon: '💳' },
+        { href: pagesBase + 'comparador-dolares', label: 'Tipos de dólar',           icon: '💵' },
       ],
     },
     {
       kind: 'dropdown',
       title: 'Herramientas',
       items: [
-        { href: pagesBase + 'calculadoras.html',      label: 'Todas las calculadoras', icon: '🧮' },
-        { href: pagesBase + 'interes-compuesto.html', label: 'Interés Compuesto',      icon: '📈' },
-        { href: pagesBase + 'interes-simple.html',    label: 'Interés Simple',         icon: '📊' },
-        { href: pagesBase + 'meta-financiera.html',   label: 'Meta Financiera',        icon: '🎯' },
-        { href: pagesBase + 'prestamo.html',          label: 'Préstamo',                icon: '💰' },
-        { href: pagesBase + 'inflacion.html',         label: 'Inflación',               icon: '📉' },
-        { href: pagesBase + 'salario.html',           label: 'Salario',                 icon: '💵' },
-        { href: pagesBase + 'conversion-tasas.html',  label: 'Conversión de Tasas',    icon: '🔄' },
-        { href: pagesBase + 'roi.html',               label: 'ROI',                     icon: '📊' },
-        { href: pagesBase + 'fire.html',              label: 'FIRE',                    icon: '🔥' },
-        { href: pagesBase + 'vpn.html',               label: 'VPN',                     icon: '💎' },
-        { href: pagesBase + 'caucion.html',           label: 'Caución',                 icon: '⚡' },
+        { href: pagesBase + 'calculadoras',      label: 'Todas las calculadoras', icon: '🧮' },
+        { href: pagesBase + 'interes-compuesto', label: 'Interés Compuesto',      icon: '📈' },
+        { href: pagesBase + 'interes-simple',    label: 'Interés Simple',         icon: '📊' },
+        { href: pagesBase + 'meta-financiera',   label: 'Meta Financiera',        icon: '🎯' },
+        { href: pagesBase + 'prestamo',          label: 'Préstamo',                icon: '💰' },
+        { href: pagesBase + 'inflacion',         label: 'Inflación',               icon: '📉' },
+        { href: pagesBase + 'salario',           label: 'Salario',                 icon: '💵' },
+        { href: pagesBase + 'conversion-tasas',  label: 'Conversión de Tasas',    icon: '🔄' },
+        { href: pagesBase + 'roi',               label: 'ROI',                     icon: '📊' },
+        { href: pagesBase + 'fire',              label: 'FIRE',                    icon: '🔥' },
+        { href: pagesBase + 'vpn',               label: 'VPN',                     icon: '💎' },
+        { href: pagesBase + 'caucion',           label: 'Caución',                 icon: '⚡' },
       ],
     },
     {
       kind: 'dropdown',
       title: 'Comparadores',
       items: [
-        { href: pagesBase + 'comparador-tasas.html',  label: 'Comparador de Tasas',  icon: '📊' },
-        { href: pagesBase + 'comparador-pix.html',    label: 'Comparador PIX 🇧🇷',  icon: '💸' },
-        { href: pagesBase + 'contado-vs-cuotas.html', label: 'Contado vs cuotas',    icon: '🛒' },
+        { href: pagesBase + 'comparador-tasas',  label: 'Comparador de Tasas',  icon: '📊' },
+        { href: pagesBase + 'comparador-pix',    label: 'Comparador PIX 🇧🇷',  icon: '💸' },
+        { href: pagesBase + 'contado-vs-cuotas', label: 'Contado vs cuotas',    icon: '🛒' },
       ],
     },
     {
       kind: 'dropdown',
       title: 'Mercado',
       items: [
-        { href: pagesBase + 'agenda-ar.html',  label: 'Agenda AR 🇦🇷', icon: '📅' },
-        { href: pagesBase + 'ranking-semanal.html', label: 'Ranking semanal 🔥', icon: '📊' },
-        { href: pagesBase + 'ticker.html',     label: 'Acciones',     icon: '📈' },
-        { href: pagesBase + 'mercado.html',    label: 'Mercado',      icon: '🌐' },
-        { href: pagesBase + 'visor-bonos.html',label: 'Visor de Bonos USA', icon: '💵' },
-        { href: pagesBase + 'visor-bonos-ar.html', label: 'Visor de Bonos AR 🇦🇷', icon: '🇦🇷' },
-        { href: pagesBase + 'calendario.html', label: 'Calendario',   icon: '📅' },
-        { href: pagesBase + 'noticias.html',   label: 'Noticias',     icon: '📰' },
-        { href: pagesBase + 'datos.html',      label: 'Datos macro',  icon: '📊' },
-        { href: pagesBase + 'dividendos.html', label: 'Dividendos',   icon: '💸' },
+        { href: pagesBase + 'agenda-ar',  label: 'Agenda AR 🇦🇷', icon: '📅' },
+        { href: pagesBase + 'ranking-semanal', label: 'Ranking semanal 🔥', icon: '📊' },
+        { href: pagesBase + 'ticker',     label: 'Acciones',     icon: '📈' },
+        { href: pagesBase + 'mercado',    label: 'Mercado',      icon: '🌐' },
+        { href: pagesBase + 'visor-bonos',label: 'Visor de Bonos USA', icon: '💵' },
+        { href: pagesBase + 'visor-bonos-ar', label: 'Visor de Bonos AR 🇦🇷', icon: '🇦🇷' },
+        { href: pagesBase + 'calendario', label: 'Calendario',   icon: '📅' },
+        { href: pagesBase + 'noticias',   label: 'Noticias',     icon: '📰' },
+        { href: pagesBase + 'datos',      label: 'Datos macro',  icon: '📊' },
+        { href: pagesBase + 'dividendos', label: 'Dividendos',   icon: '💸' },
       ],
     },
     {
       kind: 'dropdown',
       title: 'Avanzado',
       items: [
-        { href: pagesBase + 'guia-multiplos.html', label: 'Guía de Múltiplos', icon: '📘' },
-        { href: pagesBase + 'multiplos.html',      label: 'Múltiplos',          icon: '🔢' },
-        { href: pagesBase + 'ddm.html',            label: 'DDM',                icon: '📐' },
-        { href: pagesBase + 'wacc.html',           label: 'WACC',               icon: '⚖️' },
-        { href: pagesBase + 'markowitz.html',      label: 'Markowitz',          icon: '🎲' },
-        { href: pagesBase + 'mis-portafolios.html',label: 'Portafolio',         icon: '💼', beta: true },
+        { href: pagesBase + 'guia-multiplos', label: 'Guía de Múltiplos', icon: '📘' },
+        { href: pagesBase + 'multiplos',      label: 'Múltiplos',          icon: '🔢' },
+        { href: pagesBase + 'ddm',            label: 'DDM',                icon: '📐' },
+        { href: pagesBase + 'wacc',           label: 'WACC',               icon: '⚖️' },
+        { href: pagesBase + 'markowitz',      label: 'Markowitz',          icon: '🎲' },
+        { href: pagesBase + 'mis-portafolios',label: 'Portafolio',         icon: '💼', beta: true },
       ],
     },
     {
       kind: 'link',
-      href: pagesBase + 'blog/index.html',
+      href: pagesBase + 'blog',
       label: 'Blog',
     },
     {
       kind: 'link',
-      href: pagesBase + 'atlas/index.html',
+      href: pagesBase + 'atlas',
       label: 'Atlas',
     },
     // "Proyectos" queda fuera del menu hasta que haya modelos publicados: hoy
@@ -343,15 +343,15 @@ window.BB_GLOSARIO = {
     // },
     {
       kind: 'link',
-      href: pagesBase + 'sobre-el-proyecto.html',
+      href: pagesBase + 'sobre-el-proyecto',
       label: 'Sobre el proyecto',
       extraClass: 'nav-proyectos',
     },
   ];
 
 
-  // Se compara la ruta completa: blog/index.html y atlas/index.html no son el inicio
-  const ruta = p => (p.endsWith('/') ? p + 'index.html' : p);
+  // Se compara la ruta completa (sin .html, /index ni barra final): /pages/blog y /pages/atlas no son el inicio
+  const ruta = p => p.replace(/(?:\/index)?(?:\.html)?$/, '').replace(/\/$/, '') || '/';
   const isActive = (href) => ruta(new URL(href, location.href).pathname) === ruta(location.pathname);
 
   const html = groups.map(g => {
@@ -395,7 +395,7 @@ window.BB_GLOSARIO = {
   div.className = 'footer-contact';
   div.innerHTML = `
     <span class="footer-contact-label">El proyecto</span>
-    <a href="${root}pages/sobre-el-proyecto.html">👤 Quién está detrás de BB Finanzas</a>
+    <a href="${root}pages/sobre-el-proyecto">👤 Quién está detrás de BB Finanzas</a>
         <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
     <a href="https://www.linkedin.com/in/bruno-behr-9647b6217/" target="_blank" rel="noopener noreferrer">💼 LinkedIn — Bruno Behr</a>
@@ -837,13 +837,13 @@ bbTrasCarga(function revelar() {
       return;
     }
     // Aviso en las dos paginas que usan datos guardados, mientras esten vacias
-    const pag = location.pathname.split('/').pop();
-    const clave = pag === 'mis-portafolios.html' ? 'bb_portfolios' : pag === 'watchlist.html' ? 'bb_watchlist' : null;
+    const pag = location.pathname.split('/').pop().replace('.html', '');
+    const clave = pag === 'mis-portafolios' ? 'bb_portfolios' : pag === 'watchlist' ? 'bb_watchlist' : null;
     if (!clave || localStorage.getItem('bb_mudanza') || !VACIO.includes(localStorage.getItem(clave))) return;
     const donde = document.querySelector('main') || document.body;
     const aviso = document.createElement('p');
     aviso.style.cssText = 'max-width:880px;margin:1rem auto;padding:0.8rem 1rem;border:1px solid rgba(74,222,154,0.3);border-radius:10px;background:rgba(74,222,154,0.06);color:var(--text-muted);font-size:0.9rem;line-height:1.5';
-    aviso.innerHTML = 'Nos mudamos a <strong>bbfinanzas.com.ar</strong>. Si tenías ' + (clave === 'bb_portfolios' ? 'portafolios' : 'una lista de seguimiento') + ' en la dirección anterior, <a href="' + VIEJA + '/mudanza.html?a=' + (clave === 'bb_portfolios' ? 'portafolios' : 'watchlist') + '" style="color:var(--accent)">traelos acá</a>.';
+    aviso.innerHTML = 'Nos mudamos a <strong>bbfinanzas.com.ar</strong>. Si tenías ' + (clave === 'bb_portfolios' ? 'portafolios' : 'una lista de seguimiento') + ' en la dirección anterior, <a href="' + VIEJA + '/mudanza?a=' + (clave === 'bb_portfolios' ? 'portafolios' : 'watchlist') + '" style="color:var(--accent)">traelos acá</a>.';
     donde.insertBefore(aviso, donde.firstChild);
   } catch (e) { /* almacenamiento bloqueado o datos invalidos: no se hace nada */ }
 })();

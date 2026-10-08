@@ -114,21 +114,21 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="../index.html" class="logo" aria-label="BB Finanzas - Inicio"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <a href="../" class="logo" aria-label="BB Finanzas - Inicio"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
             <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Inicio</a>
-        <a href="calculadoras.html" class="nav-link">Calculadoras</a>
-        <a href="guia-multiplos.html" class="nav-link">Guía de Múltiplos</a>
-        <a href="conceptos.html" class="nav-link">Conceptos</a>
-        <a href="ticker.html" class="nav-link">Acciones</a>
-        <a href="mercado.html" class="nav-link">Mercado</a>
-        <a href="calendario.html" class="nav-link">Calendario</a>
-        <a href="mis-portafolios.html" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
-        <a href="noticias.html" class="nav-link">Noticias</a>
-        <a href="datos.html" class="nav-link">Datos</a>
-        <a href="brokers.html" class="nav-link">Brokers</a>
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="guia-multiplos" class="nav-link">Guía de Múltiplos</a>
+        <a href="conceptos" class="nav-link">Conceptos</a>
+        <a href="ticker" class="nav-link">Acciones</a>
+        <a href="mercado" class="nav-link">Mercado</a>
+        <a href="calendario" class="nav-link">Calendario</a>
+        <a href="mis-portafolios" class="nav-link active" style="color:#60a5fa">Portafolio <span class="beta-badge">Beta</span></a>
+        <a href="noticias" class="nav-link">Noticias</a>
+        <a href="datos" class="nav-link">Datos</a>
+        <a href="brokers" class="nav-link">Brokers</a>
         <span class="nav-sep" aria-hidden="true"></span>
-        <a href="proyectos.html" class="nav-link nav-proyectos">Proyectos</a>
+        <a href="proyectos" class="nav-link nav-proyectos">Proyectos</a>
       </nav>
       <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -137,7 +137,7 @@
   <main>
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div class="portfolio-breadcrumb">
-        <a href="mis-portafolios.html">← Mis Portafolios</a>
+        <a href="mis-portafolios">← Mis Portafolios</a>
         <span>/</span>
         <span id="breadcrumb-name">Cargando...</span>
       </div>
@@ -330,14 +330,14 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="../index.html" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
         <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
       </div>
       <nav class="footer-nav">
         <h3>Portafolio</h3>
         <ul>
-          <li><a href="mis-portafolios.html">Mis Portafolios</a></li>
-          <li><a href="markowitz.html">Armá tu cartera</a></li>
+          <li><a href="mis-portafolios">Mis Portafolios</a></li>
+          <li><a href="markowitz">Armá tu cartera</a></li>
         </ul>
       </nav>
     </div>
@@ -347,7 +347,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=36"></script>
+  <script src="../js/main.js?v=37"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     let donutActivos = null, donutClases = null;
@@ -389,7 +389,7 @@
 
     function renderAll() {
       const p = getPortfolio();
-      if (!p) { window.location.href = 'mis-portafolios.html'; return; }
+      if (!p) { window.location.href = 'mis-portafolios'; return; }
 
       document.title = p.nombre + ' — BB Finanzas';
       document.getElementById('breadcrumb-name').textContent = p.nombre;
@@ -671,7 +671,7 @@
     // Enter key shortcuts
     document.getElementById('nuevo-precio').addEventListener('keydown', e => { if (e.key === 'Enter') actualizarPrecio(); });
 
-    if (!portfolioId) { window.location.href = 'mis-portafolios.html'; }
+    if (!portfolioId) { window.location.href = 'mis-portafolios'; }
     else { renderAll(); }
   </script>
 </body>

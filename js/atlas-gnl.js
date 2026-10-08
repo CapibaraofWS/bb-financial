@@ -452,7 +452,7 @@
     function ir(i) {
       $$('button', box).forEach((b, j) => b.classList.toggle('on', j === i));
       const x = GANA[i];
-      det.innerHTML = '<b>' + esc(x.n) + ' · ' + esc(x.e) + '.</b> ' + esc(x.d) + ' <a href="' + BASE + 'pages/ticker.html?symbol=' + encodeURIComponent(x.tk) + '">Ver la acción →</a>';
+      det.innerHTML = '<b>' + esc(x.n) + ' · ' + esc(x.e) + '.</b> ' + esc(x.d) + ' <a href="' + BASE + 'pages/ticker?symbol=' + encodeURIComponent(x.tk) + '">Ver la acción →</a>';
     }
     box.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { ir(+b.dataset.i); track('atlas_gnl_gana', { i: +b.dataset.i }); } });
     const io = new IntersectionObserver(es => {

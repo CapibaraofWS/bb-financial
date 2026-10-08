@@ -51,7 +51,7 @@
           { k: 'Plazo fijo, mejor tasa', v: num(mejor.tna * 100, 1) + '%', nota: nombreBanco, destacado: true },
           tamar ? { k: 'TAMAR (referencia mayorista)', v: num(tamar.ultValorInformado, 2) + '%', nota: tamar.ultFechaInformada } : null,
         ].filter(Boolean),
-        cta: { texto: 'Comparar todas las tasas', href: base + 'pages/comparador-tasas.html' },
+        cta: { texto: 'Comparar todas las tasas', href: base + 'pages/comparador-tasas' },
       };
     },
 
@@ -70,7 +70,7 @@
           mep  ? { k: 'MEP', v: '$' + num(mep.venta), nota: 'el que se compra en el broker' } : null,
           brecha != null ? { k: 'Brecha oficial-blue', v: num(brecha, 1) + '%' } : null,
         ].filter(Boolean),
-        cta: { texto: 'Ver todos los tipos de dólar', href: base + 'pages/comparador-dolares.html' },
+        cta: { texto: 'Ver todos los tipos de dólar', href: base + 'pages/comparador-dolares' },
       };
     },
 
@@ -85,7 +85,7 @@
           anual   ? { k: 'Últimos 12 meses', v: num(anual.ultValorInformado, 1) + '%' } : null,
           rem     ? { k: 'Esperada a 12 meses (REM)', v: num(rem.ultValorInformado, 1) + '%', nota: 'lo que proyectan los economistas' } : null,
         ].filter(Boolean),
-        cta: { texto: 'Calcular cuánto perdiste', href: base + 'pages/inflacion.html' },
+        cta: { texto: 'Calcular cuánto perdiste', href: base + 'pages/inflacion' },
       };
     },
   };
