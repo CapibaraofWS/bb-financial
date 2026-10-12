@@ -1,0 +1,55 @@
+# BB Finanzas
+
+> BB Finanzas (antes BB Financial) es un sitio argentino, gratuito y sin registro, de herramientas financieras y educación económica explicada fácil: calculadoras, comparadores de tasas y de dólar con datos en vivo, visores de bonos, un blog y el Atlas, una serie de guías interactivas sobre cómo funciona la economía mundial.
+
+Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UADE (Buenos Aires, Argentina). No es un banco ni una entidad financiera, y no pertenece ni está asociado a ningún banco, broker, calificadora de riesgo ni empresa del sector. El nombre "BB" son las iniciales de su creador. El contenido es educativo y no constituye asesoramiento financiero ni recomendación de inversión.
+
+- Sitio: https://www.bbfinanzas.com.ar/
+- Idioma: español (Argentina)
+- Contacto: bb.financial10@gmail.com
+- Creador: Bruno Behr — https://www.linkedin.com/in/bruno-behr-9647b6217/ — https://x.com/brunox_nft
+
+## Sobre el proyecto
+
+- [Quién está detrás de BB Finanzas](https://www.bbfinanzas.com.ar/pages/sobre-el-proyecto): qué es, quién lo hace, de dónde salen los datos y con qué criterio se calcula.
+- [Política de privacidad](https://www.bbfinanzas.com.ar/pages/privacidad): qué datos usa el sitio y cuáles no.
+
+## Calculadoras y comparadores
+
+- [Todas las calculadoras](https://www.bbfinanzas.com.ar/pages/calculadoras)
+- [Calculadora de inflación de Argentina](https://www.bbfinanzas.com.ar/pages/inflacion): cuánto valen hoy los pesos de otro año, con el IPC del INDEC desde 1992. Incluye la serie descargable.
+- [Calculadora de plazo fijo por banco](https://www.bbfinanzas.com.ar/pages/comparador-plazos-fijos): con las tasas que publica el BCRA.
+- [Dólar hoy](https://www.bbfinanzas.com.ar/pages/comparador-dolares): oficial, blue, MEP, CCL y tarjeta.
+- [¿Dónde conviene poner la plata hoy?](https://www.bbfinanzas.com.ar/pages/comparador-tasas): tasas en vivo.
+- [Interés compuesto](https://www.bbfinanzas.com.ar/pages/interes-compuesto)
+- [¿Conviene comprar en cuotas?](https://www.bbfinanzas.com.ar/pages/contado-vs-cuotas)
+- [¿Tu aumento le ganó a la inflación?](https://www.bbfinanzas.com.ar/pages/salario)
+- [Calculadora FIRE](https://www.bbfinanzas.com.ar/pages/fire)
+- [Comparador de brokers en Argentina](https://www.bbfinanzas.com.ar/pages/brokers)
+
+## Mercado y datos
+
+- [Datos Macro](https://www.bbfinanzas.com.ar/pages/datos): variables del BCRA, INDEC y Estados Unidos.
+- [Visor de bonos de Estados Unidos](https://www.bbfinanzas.com.ar/pages/visor-bonos): curva de rendimientos, TIPS y breakeven.
+- [Visor de bonos argentinos](https://www.bbfinanzas.com.ar/pages/visor-bonos-ar)
+- [Mercado](https://www.bbfinanzas.com.ar/pages/mercado)
+
+## Atlas: guías interactivas
+
+- [Atlas](https://www.bbfinanzas.com.ar/pages/atlas): portada de la serie.
+- [Semiconductores: el viaje de un chip](https://www.bbfinanzas.com.ar/pages/atlas/semiconductores)
+- [GNL: el gas que viaja en barco](https://www.bbfinanzas.com.ar/pages/atlas/gnl)
+- [Computación cuántica](https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica)
+- [Tierras raras](https://www.bbfinanzas.com.ar/pages/atlas/tierras-raras)
+
+## Blog
+
+- [Todas las notas](https://www.bbfinanzas.com.ar/pages/blog)
+- [¿Qué es la inflación?](https://www.bbfinanzas.com.ar/pages/blog/que-es-la-inflacion)
+- [Tipo de cambio real: qué significa que el dólar esté atrasado](https://www.bbfinanzas.com.ar/pages/blog/tipo-de-cambio-real-dolar-atrasado)
+- [Inflación en Estados Unidos: IPC, PCE, PPI y breakeven](https://www.bbfinanzas.com.ar/pages/blog/inflacion-estados-unidos-guia-facil)
+- [Cómo empezar a invertir en Argentina desde cero](https://www.bbfinanzas.com.ar/pages/empezar-a-invertir)
+
+## Fuentes de los datos
+
+BCRA, INDEC, Secretaría de Finanzas, ArgentinaDatos y FRED (Reserva Federal de St. Louis). Los precios de mercado son diferidos.
