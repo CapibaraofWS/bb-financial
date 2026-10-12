@@ -566,6 +566,13 @@
       });
     });
 
+    // Enlace directo a una pestaña (por ejemplo, #tips)
+    document.addEventListener('DOMContentLoaded', () => {
+      const h = location.hash.slice(1);
+      const b = /^[a-z]+$/.test(h) && document.querySelector('.tab-btn[data-tab="' + h + '"]');
+      if (b) b.click();
+    });
+
     // ===== ACCORDION =====
     document.querySelectorAll('.acc-head').forEach(h => {
       h.addEventListener('click', () => h.parentElement.classList.toggle('open'));

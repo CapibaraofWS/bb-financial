@@ -80,6 +80,11 @@
       "permanent": false
     },
     {
+      "source": "/x/inflacion-usa",
+      "destination": "/pages/blog/inflacion-estados-unidos-guia-facil?utm_source=x&utm_medium=social&utm_campaign=inflacion_usa",
+      "permanent": false
+    },
+    {
       "source": "/x/atlas",
       "destination": "/pages/atlas?utm_source=x&utm_medium=social&utm_campaign=atlas",
       "permanent": false

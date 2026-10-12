@@ -15,7 +15,7 @@ const ALLOWED_SERIES = new Set([
   // Spreads
   'T10Y2Y', 'T10Y3M',
   // Inflation
-  'CPIAUCSL', 'CPILFESL', 'PCEPI', 'PCEPILFE',
+  'CPIAUCSL', 'CPILFESL', 'PCEPI', 'PCEPILFE', 'PPIFIS',
   // Empleo / actividad
   'UNRATE', 'ICSA', 'PAYEMS', 'INDPRO', 'UMCSENT', 'RSAFS',
   // Vivienda / hipotecas

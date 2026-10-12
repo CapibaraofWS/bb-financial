@@ -643,6 +643,13 @@
     });
   });
 
+  // Enlace directo a una pestaña (por ejemplo, #eeuu)
+  document.addEventListener('DOMContentLoaded', () => {
+    const h = location.hash.slice(1);
+    const b = /^[a-z]+$/.test(h) && document.querySelector('.dtab-btn[data-tab="' + h + '"]');
+    if (b) b.click();
+  });
+
   /* ── Helpers ── */
   function fmtNum(n, dec = 2) {
     if (n == null || isNaN(n)) return '—';
