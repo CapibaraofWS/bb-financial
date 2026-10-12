@@ -16,40 +16,36 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 
 ## Calculadoras y comparadores
 
-- [Todas las calculadoras](https://www.bbfinanzas.com.ar/pages/calculadoras)
+- [Todas las calculadoras](https://www.bbfinanzas.com.ar/pages/calculadoras): el índice de las más de 20 calculadoras, ordenadas por categoría: inversiones, préstamos, tasas y finanzas personales.
 - [Calculadora de inflación de Argentina](https://www.bbfinanzas.com.ar/pages/inflacion): cuánto valen hoy los pesos de otro año, con el IPC del INDEC desde 1992. Incluye la serie descargable.
 - [Calculadora de plazo fijo por banco](https://www.bbfinanzas.com.ar/pages/comparador-plazos-fijos): con las tasas que publica el BCRA.
 - [Dólar hoy](https://www.bbfinanzas.com.ar/pages/comparador-dolares): oficial, blue, MEP, CCL y tarjeta.
 - [¿Dónde conviene poner la plata hoy?](https://www.bbfinanzas.com.ar/pages/comparador-tasas): tasas en vivo.
-- [Interés compuesto](https://www.bbfinanzas.com.ar/pages/interes-compuesto)
-- [¿Conviene comprar en cuotas?](https://www.bbfinanzas.com.ar/pages/contado-vs-cuotas)
-- [¿Tu aumento le ganó a la inflación?](https://www.bbfinanzas.com.ar/pages/salario)
-- [Calculadora FIRE](https://www.bbfinanzas.com.ar/pages/fire)
-- [Comparador de brokers en Argentina](https://www.bbfinanzas.com.ar/pages/brokers)
-
+- [Interés compuesto](https://www.bbfinanzas.com.ar/pages/interes-compuesto): cuánto crece un capital con aportes mensuales y un rendimiento dado, año por año y con gráfico.
+- [¿Conviene comprar en cuotas?](https://www.bbfinanzas.com.ar/pages/contado-vs-cuotas): compara pagar de contado con descuento contra cuotas sin interés, teniendo en cuenta la inflación argentina.
+- [¿Tu aumento le ganó a la inflación?](https://www.bbfinanzas.com.ar/pages/salario): compara un aumento de sueldo con la inflación del período para saber si el salario real subió o bajó.
+- [Calculadora FIRE](https://www.bbfinanzas.com.ar/pages/fire): cuánto capital hace falta para vivir de rentas, según la regla del 4%.
+- [Comparador de brokers en Argentina](https://www.bbfinanzas.com.ar/pages/brokers): comisiones, montos mínimos y servicios de los principales brokers del país, y cómo verificar que estén registrados en la CNV.
 ## Mercado y datos
 
 - [Datos Macro](https://www.bbfinanzas.com.ar/pages/datos): variables del BCRA, INDEC y Estados Unidos.
 - [Visor de bonos de Estados Unidos](https://www.bbfinanzas.com.ar/pages/visor-bonos): curva de rendimientos, TIPS y breakeven.
-- [Visor de bonos argentinos](https://www.bbfinanzas.com.ar/pages/visor-bonos-ar)
-- [Mercado](https://www.bbfinanzas.com.ar/pages/mercado)
-
+- [Visor de bonos argentinos](https://www.bbfinanzas.com.ar/pages/visor-bonos-ar): curva de bonos argentinos en dólares (Bonares, Globales, BOPREAL) con TIR y duration calculadas desde precios de mercado.
+- [Mercado](https://www.bbfinanzas.com.ar/pages/mercado): mapas de calor de sectores y del S&P 500, criptomonedas, acciones que más se mueven e indicadores como el VIX.
 ## Atlas: guías interactivas
 
 - [Atlas](https://www.bbfinanzas.com.ar/pages/atlas): portada de la serie.
-- [Semiconductores: el viaje de un chip](https://www.bbfinanzas.com.ar/pages/atlas/semiconductores)
-- [GNL: el gas que viaja en barco](https://www.bbfinanzas.com.ar/pages/atlas/gnl)
-- [Computación cuántica](https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica)
-- [Tierras raras](https://www.bbfinanzas.com.ar/pages/atlas/tierras-raras)
-
+- [Semiconductores: el viaje de un chip](https://www.bbfinanzas.com.ar/pages/atlas/semiconductores): quién diseña, fabrica y equipa la producción de chips, con un globo de rutas comerciales y un simulador para "apagar" países.
+- [GNL: el gas que viaja en barco](https://www.bbfinanzas.com.ar/pages/atlas/gnl): cómo funciona el mercado mundial del gas natural licuado, qué pasó en el Estrecho de Ormuz y dónde entra la Argentina con Vaca Muerta.
+- [Computación cuántica](https://www.bbfinanzas.com.ar/pages/atlas/computacion-cuantica): qué es un qubit, por qué hay que enfriarlo casi al cero absoluto, quién construye estas máquinas y cuándo podrían romper las claves actuales.
+- [Tierras raras](https://www.bbfinanzas.com.ar/pages/atlas/tierras-raras): qué son los 17 elementos, para qué sirven, por qué China concentra el refinado y dónde los llevan un auto eléctrico y un avión de combate, con modelos 3D.
 ## Blog
 
-- [Todas las notas](https://www.bbfinanzas.com.ar/pages/blog)
-- [¿Qué es la inflación?](https://www.bbfinanzas.com.ar/pages/blog/que-es-la-inflacion)
-- [Tipo de cambio real: qué significa que el dólar esté atrasado](https://www.bbfinanzas.com.ar/pages/blog/tipo-de-cambio-real-dolar-atrasado)
-- [Inflación en Estados Unidos: IPC, PCE, PPI y breakeven](https://www.bbfinanzas.com.ar/pages/blog/inflacion-estados-unidos-guia-facil)
-- [Cómo empezar a invertir en Argentina desde cero](https://www.bbfinanzas.com.ar/pages/empezar-a-invertir)
-
+- [Todas las notas](https://www.bbfinanzas.com.ar/pages/blog): el índice de las notas, sobre finanzas personales, economía argentina y temas globales.
+- [¿Qué es la inflación?](https://www.bbfinanzas.com.ar/pages/blog/que-es-la-inflacion): guía desde cero con ejemplos argentinos: qué es, cómo se mide y cómo cuidar los pesos.
+- [Tipo de cambio real: qué significa que el dólar esté atrasado](https://www.bbfinanzas.com.ar/pages/blog/tipo-de-cambio-real-dolar-atrasado): diferencia entre tipo de cambio nominal, real y multilateral, qué hace el Banco Central cuando compra dólares y los argumentos de cada lado del debate, con calculadora.
+- [Inflación en Estados Unidos: IPC, PCE, PPI y breakeven](https://www.bbfinanzas.com.ar/pages/blog/inflacion-estados-unidos-guia-facil): qué mide cada índice, cuál mira la Reserva Federal, la relación con el petróleo y las diferencias con la inflación argentina, con datos en vivo.
+- [Cómo empezar a invertir en Argentina desde cero](https://www.bbfinanzas.com.ar/pages/empezar-a-invertir): guía paso a paso: elegir broker, evitar estafas, entender renta fija y variable, y qué impuestos se pagan.
 ## Fuentes de los datos
 
 BCRA, INDEC, Secretaría de Finanzas, ArgentinaDatos y FRED (Reserva Federal de St. Louis). Los precios de mercado son diferidos.
