@@ -80,6 +80,11 @@
       "permanent": false
     },
     {
+      "source": "/x/dolar-atrasado",
+      "destination": "/pages/blog/tipo-de-cambio-real-dolar-atrasado?utm_source=x&utm_medium=social&utm_campaign=dolar_atrasado",
+      "permanent": false
+    },
+    {
       "source": "/x/inflacion-usa",
       "destination": "/pages/blog/inflacion-estados-unidos-guia-facil?utm_source=x&utm_medium=social&utm_campaign=inflacion_usa",
       "permanent": false
