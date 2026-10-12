@@ -33,6 +33,86 @@
       "source": "/pages/cuanto-perdi",
       "destination": "/pages/inflacion",
       "permanent": true
+    },
+    {
+      "source": "/x/inflacion",
+      "destination": "/pages/inflacion?utm_source=x&utm_medium=social&utm_campaign=inflacion",
+      "permanent": false
+    },
+    {
+      "source": "/x/plazo-fijo",
+      "destination": "/pages/comparador-plazos-fijos?utm_source=x&utm_medium=social&utm_campaign=plazo_fijo",
+      "permanent": false
+    },
+    {
+      "source": "/x/interes-compuesto",
+      "destination": "/pages/interes-compuesto?utm_source=x&utm_medium=social&utm_campaign=interes_compuesto",
+      "permanent": false
+    },
+    {
+      "source": "/x/cuotas",
+      "destination": "/pages/contado-vs-cuotas?utm_source=x&utm_medium=social&utm_campaign=cuotas",
+      "permanent": false
+    },
+    {
+      "source": "/x/sueldo",
+      "destination": "/pages/salario?utm_source=x&utm_medium=social&utm_campaign=sueldo",
+      "permanent": false
+    },
+    {
+      "source": "/x/fire",
+      "destination": "/pages/fire?utm_source=x&utm_medium=social&utm_campaign=fire",
+      "permanent": false
+    },
+    {
+      "source": "/x/dolar",
+      "destination": "/pages/comparador-dolares?utm_source=x&utm_medium=social&utm_campaign=dolar",
+      "permanent": false
+    },
+    {
+      "source": "/x/test",
+      "destination": "/pages/test-inversor?utm_source=x&utm_medium=social&utm_campaign=test",
+      "permanent": false
+    },
+    {
+      "source": "/x/calculadoras",
+      "destination": "/pages/calculadoras?utm_source=x&utm_medium=social&utm_campaign=calculadoras",
+      "permanent": false
+    },
+    {
+      "source": "/x/atlas",
+      "destination": "/pages/atlas?utm_source=x&utm_medium=social&utm_campaign=atlas",
+      "permanent": false
+    },
+    {
+      "source": "/x/chips",
+      "destination": "/pages/atlas/semiconductores?utm_source=x&utm_medium=social&utm_campaign=chips",
+      "permanent": false
+    },
+    {
+      "source": "/x/gnl",
+      "destination": "/pages/atlas/gnl?utm_source=x&utm_medium=social&utm_campaign=gnl",
+      "permanent": false
+    },
+    {
+      "source": "/x/cuantica",
+      "destination": "/pages/atlas/computacion-cuantica?utm_source=x&utm_medium=social&utm_campaign=cuantica",
+      "permanent": false
+    },
+    {
+      "source": "/x/tierras-raras",
+      "destination": "/pages/atlas/tierras-raras?utm_source=x&utm_medium=social&utm_campaign=tierras_raras",
+      "permanent": false
+    },
+    {
+      "source": "/x/:pagina",
+      "destination": "/pages/:pagina?utm_source=x&utm_medium=social&utm_campaign=:pagina",
+      "permanent": false
+    },
+    {
+      "source": "/x",
+      "destination": "/?utm_source=x&utm_medium=social&utm_campaign=inicio",
+      "permanent": false
     }
   ],
   "headers": [
