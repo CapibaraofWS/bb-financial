@@ -39,6 +39,12 @@ function buildUrl(q) {
     return p.toString() ? `${base}?${p}` : base;
   }
 
+  // Serie diaria de una variable: ?endpoint=Monetarias&idVariable=78&desde=YYYY-MM-DD
+  if (q.idVariable && /^\d{1,5}$/.test(String(q.idVariable)) && ISO_DATE.test(String(q.desde || ''))) {
+    const p = new URLSearchParams({ desde: q.desde, limit: '1000' });
+    return `https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/${q.idVariable}?${p}`;
+  }
+
   // Monetarias v4. limit 2000 cubre los ~1600 indicadores (incluye TIM id 1197,
   // bandas cambiarias 1187-1188 y la categoría "Informe Monetario Diario").
   const p = new URLSearchParams({ limit: '2000' });
@@ -69,6 +75,11 @@ export default async function handler(req, res) {
         .map(x => Object.fromEntries(campos.map(c => [c, x[c] ?? null])));
       res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
       return res.status(200).json({ results });
+    }
+    // La API a veces responde 200 con la serie vacía: eso no se guarda en caché
+    if (data.results?.[0]?.detalle && !data.results[0].detalle.length) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(503).json({ error: 'BCRA devolvió la serie vacía' });
     }
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=900');
     return res.status(200).json(data);

@@ -203,6 +203,7 @@
             <div class="b-stat loading"><p class="lbl">Nasdaq 100</p><p class="val"><span class="brief-loading-skel"></span></p></div>
             <div class="b-stat loading"><p class="lbl">Bitcoin</p><p class="val"><span class="brief-loading-skel"></span></p></div>
             <div class="b-stat loading"><p class="lbl">Treasury 10Y</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Compras BCRA</p><p class="val"><span class="brief-loading-skel"></span></p></div>
           </div>
           <p class="brief-disclaimer">
             <strong style="color:var(--text-muted)">Datos en vivo</strong> servidos desde nuestro backend (fuentes públicas de mercado). Pueden tener retrasos de 10-15 min según mercado. <strong>No es recomendación de inversión.</strong>
@@ -734,7 +735,7 @@
       }
     }
 
-    // Layout: 0 Oficial · 1 Blue · 2 MEP · 3 Riesgo País · 4 S&P 500 · 5 Nasdaq · 6 BTC · 7 Treasury 10Y
+    // Layout: 0 Oficial · 1 Blue · 2 MEP · 3 Riesgo País · 4 S&P 500 · 5 Nasdaq · 6 BTC · 7 Treasury 10Y · 8 Compras BCRA
     async function loadDolares() {
       try {
         const r = await fetch('/api/dolar', { signal: AbortSignal.timeout(8000) });
@@ -809,6 +810,26 @@
       } catch {}
     }
 
+    // Compra de divisas del BCRA (variable 78, millones de USD por día). La API
+    // la publica con unos días de demora y a veces responde vacía: un reintento.
+    async function loadCompras() {
+      const url = '/api/bcra?endpoint=Monetarias&idVariable=78&desde=' + new Date().getFullYear() + '-01-01';
+      for (let intento = 0; intento < 2; intento++) {
+        try {
+          const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
+          if (!r.ok) continue;
+          const d = (await r.json()).results?.[0]?.detalle || [];
+          if (!d.length) continue;
+          const ult = d[0];   // viene de la mas nueva a la mas vieja
+          const anio = d.reduce((s, x) => s + x.valor, 0);
+          const [, m, dd] = ult.fecha.split('-');
+          setStat(8, 'Compras BCRA', 'USD ' + Math.round(ult.valor).toLocaleString('es-AR') + ' M', ult.valor,
+            Number(dd) + '/' + Number(m) + ' · en el año USD ' + Math.round(anio).toLocaleString('es-AR') + ' M');
+          return;
+        } catch {}
+      }
+    }
+
     // Título dinámico según hora ARG
     const hour = new Date().getHours();
     const titleEl = $('brief-title');
@@ -825,7 +846,7 @@
     }
 
     // Lanzar todos en paralelo — cada uno se renderiza independiente
-    bbTrasCarga(() => { loadDolares(); loadRiesgo(); loadIndices(); loadCrypto(); loadTreasury(); });
+    bbTrasCarga(() => { loadDolares(); loadRiesgo(); loadIndices(); loadCrypto(); loadTreasury(); loadCompras(); });
   })();
   </script>
   <script>

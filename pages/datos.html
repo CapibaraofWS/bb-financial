@@ -788,8 +788,9 @@
 
     // Variables BCRA — IDs verificados contra v4.0/Monetarias
     const VARS = [
-      { id: 15,  name: 'Base Monetaria',                    fmt: v => '$ ' + fmtBig(v * 1e6),       cls: 'blue-card' },
-      { id: 1,   name: 'Reservas Internacionales BCRA',     fmt: v => 'USD ' + fmtBig(v * 1e6),     cls: 'green-card' },
+      // Vienen en millones: "49.32 M" se leía como 49 millones cuando son 49 mil millones
+      { id: 15,  name: 'Base Monetaria',                    fmt: v => '$ ' + fmtNum(v / 1e6, 2) + ' billones', cls: 'blue-card' },
+      { id: 1,   name: 'Reservas Internacionales BCRA',     fmt: v => 'USD ' + fmtNum(v, 0) + ' M', cls: 'green-card' },
       { id: 27,  name: 'Inflación mensual',                 fmt: v => fmtNum(v, 2) + '%' },
       { id: 28,  name: 'Inflación interanual',              fmt: v => fmtNum(v, 1) + '%' },
       { id: 29,  name: 'Inflación esperada (REM) — 12m',    fmt: v => fmtNum(v, 1) + '%' },
@@ -805,6 +806,22 @@
       { id: 1188,name: 'Banda Cambiaria — Límite Superior', fmt: v => '$ ' + fmtNum(v, 2) },
       { id: 1197,name: 'Tasa de Intereses Moratorios (TIM)',fmt: v => fmtNum(v, 2) },
     ];
+
+    // Compra de divisas (variable 78, millones de USD por día): se pide aparte
+    // porque la tarjeta muestra lo acumulado del mes y del año. La API a veces
+    // responde vacía, así que hay un reintento.
+    const compras = (async () => {
+      const url = '/api/bcra?endpoint=Monetarias&idVariable=78&desde=' + new Date().getFullYear() + '-01-01';
+      for (let intento = 0; intento < 2; intento++) {
+        try {
+          const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
+          if (!r.ok) continue;
+          const d = (await r.json()).results?.[0]?.detalle || [];
+          if (d.length) return d;
+        } catch {}
+      }
+      return null;
+    })();
 
     try {
       const r = await fetch('/api/bcra?endpoint=Monetarias', { signal: AbortSignal.timeout(10000) });
@@ -827,6 +844,22 @@
         }));
       }
     } catch {}
+
+    const d = await compras;
+    if (d) {
+      const ult = d[0];   // viene de la más nueva a la más vieja
+      const suma = pref => d.filter(x => x.fecha.startsWith(pref)).reduce((s, x) => s + x.valor, 0);
+      const mesNombre = new Date(ult.fecha.slice(0, 7) + '-15').toLocaleDateString('es-AR', { month: 'long' });
+      cards.splice(Math.min(2, cards.length), 0, datoCard({
+        cat: 'BCRA',
+        name: 'Compra de dólares del BCRA (último día)',
+        value: 'USD ' + fmtNum(ult.valor, 0) + ' M',
+        sub: 'En ' + mesNombre + ': USD ' + fmtNum(suma(ult.fecha.slice(0, 7)), 0) + ' M · en el año: USD ' + fmtNum(suma(ult.fecha.slice(0, 4)), 0) + ' M',
+        period: ult.fecha,
+        source: 'BCRA v4',
+        cls: 'green-card'
+      }));
+    }
 
     if (!cards.length) cards.push(errorCard('BCRA', 'No se pudo conectar con la API del BCRA. Intentá en unos minutos.'));
     grid.innerHTML = cards.join('');
