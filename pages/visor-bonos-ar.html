@@ -774,6 +774,11 @@
     }));
 
     load();
+
+    // Enlace directo a una pestaña (por ejemplo, #pesos)
+    const h = location.hash.slice(1);
+    const tb = /^[a-z]+$/.test(h) && document.querySelector('.vb-tab[data-tab="' + h + '"]');
+    if (tb) tb.click();
   })();
   </script>
 </body>
