@@ -357,6 +357,8 @@
         <div class="conv-presets" id="presets"></div>
 
         <div class="conv-compartir">
+          <button type="button" id="wpp">💬 Mandar por WhatsApp</button>
+          <button type="button" id="imagen">🖼️ Compartir como imagen</button>
           <button type="button" id="copiar">🔗 Copiar el enlace de este cálculo</button>
           <span class="conv-nota" id="copiado" hidden>Copiado</span>
         </div>
@@ -705,8 +707,9 @@
       presets: $('presets'), swap: $('swap'), copiar: $('copiar'), copiado: $('copiado'),
       mal: $('mal-texto'), bien: $('bien-texto'), tituloGrafico: $('titulo-grafico'),
       perdida: $('perdida'), notaPerdida: $('nota-perdida'), aviso: $('aviso-intervencion'),
-      fuente: $('fuente'), otra: $('otra-fuente'),
+      fuente: $('fuente'), otra: $('otra-fuente'), wpp: $('wpp'), imagen: $('imagen'),
     };
+    let actual = null;      // el ultimo calculo valido, para compartirlo
 
     // Anios en que el INDEC estuvo intervenido: la serie oficial de ese tramo
     // subestima fuerte la inflacion real y arrastra todo calculo que lo cruce.
@@ -780,6 +783,7 @@
       const monto = parseFloat(el.monto.value);
 
       if (!iD || !iH || !Number.isFinite(monto)) {
+        actual = null;
         el.resultado.value = '—';
         el.frase.textContent = 'Elegí un importe y dos meses con dato disponible.';
         return;
@@ -787,6 +791,7 @@
 
       const factor = iH / iD;
       el.resultado.value = fmt(monto * factor);
+      actual = { monto, factor, desde, hasta };
 
       if (desde === hasta) {
         el.frase.innerHTML = 'Es el mismo mes, así que el importe no cambia.';
@@ -933,6 +938,95 @@
       history.replaceState(null, '', location.pathname + '?' + p);
     }
 
+    // ---- compartir ----
+    // El enlace lleva la marca de campania para ver en Analytics cuanta gente
+    // llega desde lo que otros comparten.
+    function enlaceCompartido(medio) {
+      const p = new URLSearchParams(location.search);
+      p.set('utm_source', medio); p.set('utm_medium', 'social'); p.set('utm_campaign', 'compartir-inflacion');
+      return location.origin + location.pathname + '?' + p;
+    }
+
+    function textoCompartido(a) {
+      const t = '$' + fmt(a.monto, 0) + ' de ' + nombreMes(a.desde) + ' equivalen a $' +
+        fmt(a.monto * a.factor, 0) + ' de ' + nombreMes(a.hasta) + '.';
+      if (a.desde === a.hasta) return t;
+      return t + ' Los precios ' + (a.factor > 1 ? 'subieron ' : 'bajaron ') + comoVariacion(a.factor) + '.';
+    }
+
+    function avisarAnalytics(metodo) {
+      if (typeof gtag === 'function') gtag('event', 'share', { method: metodo, content_type: 'calculadora_inflacion' });
+    }
+
+    // Escribe una linea achicando la letra hasta que entre en el ancho
+    function linea(ctx, txt, x, y, peso, tam, familia, color, ancho) {
+      do { ctx.font = peso + ' ' + tam + 'px ' + familia; tam -= 2; } while (ctx.measureText(txt).width > ancho && tam > 20);
+      ctx.fillStyle = color;
+      ctx.fillText(txt, x, y);
+    }
+
+    // Tarjeta de 1080 x 1350 (el formato vertical que WhatsApp, X e Instagram
+    // muestran sin recortar) con los colores del sitio.
+    async function dibujarTarjeta(a) {
+      const W = 1080, H = 1350, M = 90, ANCHO = W - 2 * M;
+      const SERIF = '"DM Serif Display", Georgia, serif', SANS = 'Outfit, Arial, sans-serif', MONO = '"DM Mono", monospace';
+      try { await Promise.all(['64px "DM Serif Display"', '500 40px Outfit', '400 30px "DM Mono"'].map(f => document.fonts.load(f))); } catch { /* sigue con las de respaldo */ }
+
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#0a0c0f'; ctx.fillRect(0, 0, W, H);
+      const brillo = ctx.createRadialGradient(W * 0.8, H * 0.15, 0, W * 0.8, H * 0.15, W * 0.9);
+      brillo.addColorStop(0, 'rgba(74,222,154,0.16)'); brillo.addColorStop(1, 'rgba(74,222,154,0)');
+      ctx.fillStyle = brillo; ctx.fillRect(0, 0, W, H);
+      ctx.textBaseline = 'alphabetic';
+
+      linea(ctx, 'BB Finanzas', M, 150, '400', 56, SERIF, '#e8edf5', ANCHO);
+      linea(ctx, 'CALCULADORA DE INFLACIÓN · ARGENTINA', M, 205, '400', 26, MONO, '#4ade9a', ANCHO);
+
+      linea(ctx, '$' + fmt(a.monto, 0), M, 420, '400', 120, SERIF, '#e8edf5', ANCHO);
+      linea(ctx, 'en ' + nombreMes(a.desde), M, 485, '400', 42, SANS, '#9aa5b8', ANCHO);
+      linea(ctx, 'equivalen a', M, 600, '500', 40, SANS, '#e8edf5', ANCHO);
+      linea(ctx, '$' + fmt(a.monto * a.factor, 0), M, 760, '400', 140, SERIF, '#4ade9a', ANCHO);
+      linea(ctx, 'en ' + nombreMes(a.hasta), M, 830, '400', 42, SANS, '#9aa5b8', ANCHO);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(M, 910, ANCHO, 2);
+      if (a.desde !== a.hasta) {
+        linea(ctx, 'Los precios ' + (a.factor > 1 ? 'subieron ' : 'bajaron ') + comoVariacion(a.factor), M, 990, '500', 44, SANS, '#e8edf5', ANCHO);
+        if (a.factor > 1) {
+          linea(ctx, 'La inflación se llevó el ' + fmt((1 - 1 / a.factor) * 100, 1) + '% del poder de compra', M, 1050, '400', 36, SANS, '#9aa5b8', ANCHO);
+        }
+      }
+
+      linea(ctx, 'Calculá el tuyo en bbfinanzas.com.ar/pages/inflacion', M, 1220, '500', 34, SANS, '#4ade9a', ANCHO);
+      linea(ctx, 'Fuente: IPC del INDEC' + (el.fuente.value === 'combinada' ? ' + índices provinciales' : ''), M, 1270, '400', 24, MONO, '#9aa5b8', ANCHO);
+
+      return new Promise(ok => c.toBlob(ok, 'image/png'));
+    }
+
+    async function compartirImagen() {
+      if (!actual) return;
+      const a = actual;
+      const blob = await dibujarTarjeta(a);
+      if (!blob) return;
+      const archivo = new File([blob], 'inflacion-bb-finanzas.png', { type: 'image/png' });
+      // En el celular abre el menu del sistema (WhatsApp, X, Instagram...);
+      // donde no se puede, la imagen se descarga.
+      if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+        try {
+          await navigator.share({ files: [archivo], text: textoCompartido(a) + ' ' + enlaceCompartido('imagen') });
+          avisarAnalytics('imagen');
+        } catch { /* la persona cerro el menu */ }
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = archivo.name;
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      avisarAnalytics('imagen_descarga');
+    }
+
     function leerUrl() {
       const monto = parseFloat(PARAMS.get('monto'));
       if (Number.isFinite(monto) && monto >= 0) el.monto.value = monto;
@@ -1058,6 +1152,14 @@
           setTimeout(() => { el.copiado.hidden = true; }, 2000);
         } catch { /* sin permiso de portapapeles: la URL ya esta en la barra */ }
       });
+
+      el.wpp.addEventListener('click', () => {
+        if (!actual) return;
+        const texto = textoCompartido(actual) + '\nCalculá el tuyo: ' + enlaceCompartido('whatsapp');
+        window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+        avisarAnalytics('whatsapp');
+      });
+      el.imagen.addEventListener('click', compartirImagen);
     }
 
     arrancar();
