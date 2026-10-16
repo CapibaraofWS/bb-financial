@@ -929,10 +929,17 @@
     const semestre = f => Number(f.slice(5, 7)) === 7 ? '1.er sem. ' + f.slice(0, 4) : '2.º sem. ' + (Number(f.slice(0, 4)) - 1);
     const trimestre = f => Math.ceil(Number(f.slice(5, 7)) / 3) + '.º trim. ' + f.slice(0, 4);
 
-    /* Canasta básica alimentaria y total — por adulto equivalente */
+    /* Canasta básica alimentaria y total — por adulto equivalente.
+       Primero el archivo del INDEC (llega el día del informe); si falla, el portal de datos abiertos. */
+    let canastaIndec = null;
+    try {
+      const r = await fetch('/api/canasta', { signal: AbortSignal.timeout(12000) });
+      if (r.ok) { const j = await r.json(); if (j.serie?.length >= 2) canastaIndec = j.serie; }
+    } catch {}
     for (const [id, name] of [['150.1_CSTA_BARIA_0_D_26', 'Canasta Básica Alimentaria'], ['150.1_CSTA_BATAL_0_D_20', 'Canasta Básica Total']]) {
       try {
-        const rows = await pre[id];
+        const campo = name.endsWith('Total') ? 'cbt' : 'cba';
+        const rows = canastaIndec ? canastaIndec.map(x => [x.fecha + '-01', x[campo]]) : await pre[id];
         if (rows?.length >= 2) {
           const last = rows.at(-1), prev = rows.at(-2);
           cards.push(datoCard({
