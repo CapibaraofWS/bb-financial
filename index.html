@@ -46,6 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="css/styles.css?v=15" />
+  <link rel="stylesheet" href="css/panel.css?v=1" />
 
   <style>
     /* Contact section on homepage */
@@ -113,6 +114,7 @@
         <a href="pages/agenda-ar" class="nav-link">Agenda AR</a>
         <a href="pages/visor-bonos-ar" class="nav-link">Bonos AR</a>
         <a href="pages/datos" class="nav-link">Datos macro</a>
+        <a href="pages/panel-argentina" class="nav-link">Panel Argentina</a>
         <a href="pages/blog" class="nav-link">Blog</a>
         <a href="pages/atlas" class="nav-link">Atlas</a>
         <a href="pages/sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
@@ -205,6 +207,16 @@
           <p class="brief-disclaimer">
             <strong style="color:var(--text-muted)">Datos en vivo</strong> servidos desde nuestro backend (fuentes públicas de mercado). Pueden tener retrasos de 10-15 min según mercado. <strong>No es recomendación de inversión.</strong>
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PANEL ARGENTINA: últimos datos y lo que viene ===== -->
+    <section data-seccion="panel" style="padding:1.25rem 0 0">
+      <div class="container">
+        <div class="pa-franja" data-franja>
+          <div class="pa-franja-cab"><h2>🇦🇷 Últimos datos y lo que viene</h2><a href="pages/panel-argentina">Panel Argentina →</a></div>
+          <div class="pa-linea" id="home-franja"><p style="color:var(--text-subtle);font-size:0.85rem">Cargando el calendario del INDEC…</p></div>
         </div>
       </div>
     </section>
@@ -548,7 +560,9 @@
   </footer>
 
   <script src="js/sanitize.js?v=1"></script>
-  <script src="js/main.js?v=40"></script>
+  <script src="js/main.js?v=41"></script>
+  <script src="js/panel.js?v=1"></script>
+  <script>addEventListener('load', function () { if (window.BBPanel) BBPanel.franja(document.getElementById('home-franja'), { pasados: 4, proximos: 5 }); });</script>
   <script src="js/esqueletos.js?v=2" defer></script>
   <script src="js/desde-tu-visita.js?v=1" defer></script>
   <script src="js/ticker.js?v=6"></script>

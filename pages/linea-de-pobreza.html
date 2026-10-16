@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-adsense-account" content="ca-pub-4539395552565638">
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
+  <title>¿Mi hogar es pobre? Calculadora de línea de pobreza — BB Finanzas</title>
+  <meta name="description" content="Calculá si el ingreso de tu hogar está por encima de la línea de pobreza y de indigencia, con la canasta básica del INDEC de este mes y su tabla oficial de adultos equivalentes. Gratis y sin registro." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/linea-de-pobreza" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Finanzas" />
+  <meta property="og:title" content="¿Tu hogar está por encima de la línea de pobreza?" />
+  <meta property="og:description" content="Con la canasta básica del INDEC de este mes y su tabla oficial de equivalencias por edad y sexo." />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/linea-de-pobreza" />
+  <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Calculadora de línea de pobreza","url":"https://www.bbfinanzas.com.ar/pages/linea-de-pobreza","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"es-AR","offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"publisher":{"@id":"https://www.bbfinanzas.com.ar/#organizacion"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Calculadoras","item":"https://www.bbfinanzas.com.ar/pages/calculadoras"},{"@type":"ListItem","position":3,"name":"Línea de pobreza","item":"https://www.bbfinanzas.com.ar/pages/linea-de-pobreza"}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"¿Qué es un adulto equivalente?","acceptedAnswer":{"@type":"Answer","text":"Es la unidad que usa el INDEC para comparar hogares distintos: las necesidades de un varón de entre 30 y 60 años valen 1, y las de cada persona se expresan en relación con esa, según su sexo y su edad. Una mujer de entre 30 y 45 años equivale a 0,77 y un chico de 6 años, a 0,64."}},
+    {"@type":"Question","name":"¿Qué ingreso hay que poner?","acceptedAnswer":{"@type":"Answer","text":"Todo lo que entra al hogar en un mes: sueldos de bolsillo, jubilaciones y pensiones, asignaciones y planes, changas, alquileres que se cobran y cualquier otro ingreso de todos los integrantes."}},
+    {"@type":"Question","name":"¿Por qué el resultado no es el dato oficial?","acceptedAnswer":{"@type":"Answer","text":"Porque el INDEC clasifica a los hogares con su encuesta, con las canastas de cada región y el ingreso que declara cada hogar en ese período. La calculadora hace la misma cuenta con tus datos, como referencia."}}
+  ]}
+  </script>
+  <style>
+    .lp-fila { display: grid; grid-template-columns: minmax(0, 1fr) 96px 54px 44px; gap: 0.5rem; align-items: center; padding: 0.45rem 0; border-bottom: 1px solid var(--border); }
+    .lp-fila select, .lp-fila input { width: 100%; min-height: 44px; padding: 0.5rem 0.6rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; }
+    .lp-fila input { font-family: var(--font-mono); }
+    .lp-fila .uae { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-subtle); text-align: right; }
+    .lp-fila button { min-height: 44px; border-radius: 10px; border: 1px solid var(--border); color: var(--text-subtle); font-size: 1rem; }
+    .lp-fila button:hover { color: #ff9f7a; border-color: rgba(255,159,122,0.4); }
+    .lp-cab { display: grid; grid-template-columns: minmax(0, 1fr) 96px 54px 44px; gap: 0.5rem; font-size: 0.72rem; color: var(--text-subtle); letter-spacing: 0.02em; }
+    .lp-cab span:nth-child(3) { text-align: right; }
+    .lp-mas { margin-top: 0.7rem; min-height: 42px; padding: 0.45rem 0.9rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--text-muted); font-size: 0.86rem; }
+    .lp-mas:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+    .lp-pre { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 1.1rem; }
+    .lp-pre button { font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 0.45rem 0.8rem; min-height: 38px; }
+    .lp-pre button:hover, .lp-pre button.on { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+    .pf { min-width: 0; }
+    .lp-region { width: 100%; min-width: 0; max-width: 100%; min-height: 44px; padding: 0.5rem 0.7rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; margin-bottom: 1.1rem; }
+    .lp-res { margin-top: 1.25rem; }
+    .lp-estado { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .lp-estado.bien { color: var(--accent); } .lp-estado.pobre { color: #ff9f7a; } .lp-estado.indig { color: #ff6b6b; }
+    .lp-num { font-family: var(--font-display); font-size: clamp(2.2rem, 8vw, 3rem); line-height: 1.05; margin: 0.3rem 0 0.4rem; }
+    .lp-txt { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .lp-barra { position: relative; height: 16px; border-radius: 8px; background: rgba(255,255,255,0.05); margin: 2.4rem 0 2.2rem; }
+    .lp-barra .zona { position: absolute; top: 0; bottom: 0; border-radius: 8px; }
+    .lp-barra .marca { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--text-muted); }
+    .lp-barra .marca span { position: absolute; top: 22px; transform: translateX(-50%); white-space: nowrap; font-size: 0.7rem; color: var(--text-subtle); font-family: var(--font-mono); }
+    .lp-barra .tu { position: absolute; top: -8px; width: 4px; height: 32px; border-radius: 2px; background: var(--text); transform: translateX(-2px); }
+    .lp-barra .tu span { position: absolute; bottom: 36px; transform: translateX(-50%); white-space: nowrap; font-size: 0.74rem; color: var(--text); font-family: var(--font-mono); }
+    .lp-detalle { list-style: none; padding: 0; margin: 0; }
+    .lp-detalle li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
+    .lp-detalle li span:last-child { font-family: var(--font-mono); white-space: nowrap; }
+    @media (max-width: 480px) { .lp-fila, .lp-cab { grid-template-columns: minmax(0, 1fr) 78px 46px 44px; } }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/styles.css?v=15" />
+  <link rel="stylesheet" href="../css/panel.css?v=1" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav">
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="empezar-a-invertir" class="nav-link">Empezar a invertir</a>
+        <a href="inflacion" class="nav-link">Inflación</a>
+        <a href="comparador-plazos-fijos" class="nav-link">Plazo fijo</a>
+        <a href="comparador-tasas" class="nav-link">Tasas</a>
+        <a href="comparador-dolares" class="nav-link">Dólar</a>
+        <a href="agenda-ar" class="nav-link">Agenda AR</a>
+        <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
+        <a href="datos" class="nav-link">Datos macro</a>
+        <a href="panel-argentina" class="nav-link">Panel Argentina</a>
+        <a href="blog" class="nav-link">Blog</a>
+        <a href="atlas" class="nav-link">Atlas</a>
+        <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
+        <a href="contacto" class="nav-link">Contacto</a>
+      </nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+    <div class="pf">
+      <div class="pf-hero" style="padding:0 1rem">
+        <p class="pa-eyebrow" style="text-align:center">🇦🇷 Panel Argentina · Calculadora</p>
+        <h1>¿Tu hogar está por encima de la línea de pobreza?</h1>
+        <p>Con la canasta básica del INDEC de este mes y su tabla oficial de equivalencias.</p>
+      </div>
+
+      <section class="pf-card" aria-label="Datos del hogar">
+        <span class="pf-label">Quiénes viven en el hogar</span>
+        <div class="lp-pre" id="lp-pre">
+          <button type="button" data-p="V35">Vivo solo/a</button>
+          <button type="button" data-p="V35,M33">Pareja</button>
+          <button type="button" data-p="V35,M31,V6,M8" class="on">Pareja con 2 hijos</button>
+          <button type="button" data-p="M35,V18,M61">Mamá, hijo y abuela</button>
+          <button type="button" data-p="V30,M30,V1,V3,V5">Pareja con 3 hijos chicos</button>
+          <button type="button" data-p="M70">Jubilada sola</button>
+        </div>
+        <div class="lp-cab" aria-hidden="true"><span>Sexo</span><span>Edad</span><span>Equiv.</span><span></span></div>
+        <div id="lp-personas"></div>
+        <button type="button" class="lp-mas" id="lp-mas">+ Agregar persona</button>
+
+        <label class="pf-label" for="lp-region" style="margin-top:1.4rem">Región</label>
+        <select id="lp-region" class="lp-region">
+          <option value="Gran Buenos Aires">Gran Buenos Aires (CABA y conurbano)</option>
+        </select>
+
+        <label class="pf-label" for="lp-ingreso">Ingreso total del hogar en el mes</label>
+        <div class="pf-monto"><span aria-hidden="true">$</span><input id="lp-ingreso" type="text" inputmode="numeric" autocomplete="off" value="2.000.000" /></div>
+        <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.5rem;line-height:1.5">Todo lo que entra al hogar: sueldos de bolsillo, jubilaciones, asignaciones, changas y otros ingresos de todos los integrantes.</p>
+      </section>
+
+      <section class="pf-card lp-res" aria-live="polite" id="lp-res">
+        <p class="lp-estado" id="lp-estado">Calculando…</p>
+        <p class="lp-num" id="lp-num">—</p>
+        <p class="lp-txt" id="lp-txt"></p>
+        <div class="lp-barra" id="lp-barra" aria-hidden="true"></div>
+        <ul class="lp-detalle" id="lp-detalle"></ul>
+        <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.6" id="lp-fuente">Fuente: INDEC.</p>
+      </section>
+
+      <p style="font-size:0.78rem;color:var(--text-subtle);text-align:center;margin-top:1rem;line-height:1.6;padding:0 1rem">La cuenta se hace en tu navegador: el ingreso que cargás no se envía a ningún lado.</p>
+    </div>
+    </div>
+
+    <section class="container bb-faq" aria-labelledby="lp-como-t">
+      <h2 id="lp-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
+      <p>Es la misma cuenta que hace el INDEC. Primero, cada persona del hogar se convierte en <strong>adultos equivalentes</strong> según su sexo y su edad, con la tabla oficial: un varón de entre 30 y 60 años vale 1; una mujer de entre 30 y 45, 0,77; un chico de 6 años, 0,64. Después, la suma se multiplica por el valor de la canasta de un adulto. Así salen la <strong>línea de indigencia</strong> (canasta alimentaria) y la <strong>línea de pobreza</strong> (canasta básica total) de tu hogar.</p>
+      <p>Por ejemplo, con la canasta de septiembre de 2026: una pareja de 35 y 31 años con dos hijos de 6 y 8 suma 1 + 0,77 + 0,64 + 0,68 = <strong>3,09 adultos equivalentes</strong>. Su línea de pobreza es 3,09 × $528.318,67 = <strong>$1.632.505</strong>, y la de indigencia, 3,09 × $239.058,22 = $738.690. Son los mismos valores que publica el INDEC para ese hogar.</p>
+      <details><summary>¿Y si vivo fuera del Gran Buenos Aires?</summary><p>El INDEC valoriza todos los meses la canasta del Gran Buenos Aires. Para las otras cinco regiones publica la canasta de cada mes junto con el informe de pobreza, que sale por semestre. Para tu región, la calculadora toma la relación entre esa canasta y la del Gran Buenos Aires en el último mes publicado y la aplica a la canasta de este mes. Es una estimación: el valor oficial de cada región se conoce con el informe semestral.</p></details>
+      <details><summary>¿Qué ingreso hay que poner?</summary><p>Todo lo que entra al hogar en el mes, de todos los integrantes: sueldos de bolsillo (después de descuentos), jubilaciones y pensiones, asignaciones como la AUH, planes, changas, alquileres que se cobren y cualquier otro ingreso regular. Es lo que el INDEC llama ingreso total familiar.</p></details>
+      <details><summary>¿Por qué el resultado no es una clasificación oficial?</summary><p>Porque el INDEC mide la pobreza con su encuesta, que releva ingresos de un semestre entero en 31 ciudades. La calculadora aplica la misma regla a tus datos de un mes, como referencia para entender dónde está tu hogar respecto de las líneas, no para reemplazar la medición oficial.</p></details>
+      <details><summary>¿Qué incluye la canasta básica total?</summary><p>La canasta alimentaria (pan, carne, leche, verduras, frutas y otros alimentos en las cantidades que necesita un adulto en un mes) más los bienes y servicios no alimentarios: vestimenta, transporte, educación, salud, vivienda y otros gastos. La parte no alimentaria no es una lista de productos: sale de cuánto gastan en total, respecto de lo que gastan en comida, los hogares que el INDEC toma de referencia (el coeficiente de Engel).</p></details>
+      <details><summary>¿Cada cuánto se actualiza?</summary><p>La canasta se actualiza sola el día que la publica el INDEC, a mediados de cada mes. Los datos de pobreza del país, cuando sale cada informe semestral. Todo eso está en el <a href="panel-pobreza">panel de pobreza</a>.</p></details>
+    </section>
+
+    <aside class="related-reads">
+      <h2>Seguí leyendo</h2>
+      <ul>
+      <li>
+        <a href="panel-pobreza">Pobreza e indigencia en la Argentina</a>
+        <p>El último dato oficial, la estimación mensual, la evolución desde 2016, por edad y por región.</p>
+      </li>
+      <li>
+        <a href="salario">¿Tu aumento le ganó a la inflación?</a>
+        <p>Del sueldo bruto al neto y cuánto cambió tu poder de compra.</p>
+      </li>
+      <li>
+        <a href="blog/que-es-la-inflacion">¿Qué es la inflación? Guía con ejemplos argentinos</a>
+        <p>Por qué la canasta sube todos los meses y cómo se mide.</p>
+      </li>
+      </ul>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <p>Datos del INDEC, el Banco Central y otras fuentes oficiales.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Finanzas · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a> · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=41"></script>
+  <script src="../js/panel.js?v=1"></script>
+  <script>
+  (function () {
+    const P = BBPanel, $ = id => document.getElementById(id), num = P.num, pesos = P.pesos;
+
+    // Respaldo por si la API no responde: tabla del INDEC (cuadro 4 del informe de canastas) y canasta de septiembre de 2026
+    let tabla = [['Menor de 1 año', 0.35, 0.35], ['1 año', 0.37, 0.37], ['2 años', 0.46, 0.46], ['3 años', 0.51, 0.51], ['4 años', 0.55, 0.55], ['5 años', 0.60, 0.60],
+      ['6 años', 0.64, 0.64], ['7 años', 0.66, 0.66], ['8 años', 0.68, 0.68], ['9 años', 0.69, 0.69], ['10 años', 0.70, 0.79], ['11 años', 0.72, 0.82], ['12 años', 0.74, 0.85],
+      ['13 años', 0.76, 0.90], ['14 años', 0.76, 0.96], ['15 años', 0.77, 1.00], ['16 años', 0.77, 1.03], ['17 años', 0.77, 1.04], ['18 a 29 años', 0.76, 1.02],
+      ['30 a 45 años', 0.77, 1.00], ['46 a 60 años', 0.76, 1.00], ['61 a 75 años', 0.67, 0.83], ['Más de 75 años', 0.63, 0.74]];
+    let canasta = { fecha: '2026-09', cba: 239058.22, cbt: 528318.67 };
+    let regiones = null;   // { Cuyo: { cba: factor, cbt: factor, mes }, ... } respecto del Gran Buenos Aires
+
+    // "18 a 29 años" → [18, 29]; "Menor de 1 año" → [0, 0]; "Más de 75 años" → [76, 130]
+    const rango = t => {
+      const s = String(t).toLowerCase();
+      if (/menor de 1/.test(s)) return [0, 0];
+      let m = s.match(/más de (\d+)/); if (m) return [+m[1] + 1, 130];
+      m = s.match(/(\d+)\s*a\s*(\d+)/); if (m) return [+m[1], +m[2]];
+      m = s.match(/^(\d+)/); if (m) return [+m[1], +m[1]];
+      return null;
+    };
+    const coef = (sexo, edad) => {
+      const e = Math.floor(edad);
+      const f = tabla.find(r => { const g = rango(r[0]); return g && e >= g[0] && e <= g[1]; });
+      return f ? (sexo === 'M' ? f[1] : f[2]) : null;
+    };
+
+    // ---- Personas
+    let personas = [];
+    const lista = $('lp-personas');
+    function pintarPersonas() {
+      lista.innerHTML = personas.map((p, i) =>
+        '<div class="lp-fila" data-i="' + i + '">' +
+        '<select aria-label="Sexo de la persona ' + (i + 1) + '"><option value="V"' + (p.s === 'V' ? ' selected' : '') + '>Varón</option><option value="M"' + (p.s === 'M' ? ' selected' : '') + '>Mujer</option></select>' +
+        '<input type="number" min="0" max="110" step="1" inputmode="numeric" value="' + p.e + '" aria-label="Edad de la persona ' + (i + 1) + '" />' +
+        '<span class="uae">' + (coef(p.s, p.e) != null ? num(coef(p.s, p.e), 2) : '—') + '</span>' +
+        '<button type="button" aria-label="Quitar a la persona ' + (i + 1) + '"' + (personas.length === 1 ? ' disabled' : '') + '>✕</button></div>').join('');
+    }
+    lista.addEventListener('input', e => {
+      const f = e.target.closest('.lp-fila'); if (!f) return;
+      const p = personas[+f.dataset.i];
+      if (e.target.tagName === 'SELECT') p.s = e.target.value;
+      else p.e = Math.min(110, Math.max(0, parseInt(e.target.value, 10) || 0));
+      f.querySelector('.uae').textContent = coef(p.s, p.e) != null ? num(coef(p.s, p.e), 2) : '—';
+      quitarPreset(); calcular();
+    });
+    lista.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b || personas.length === 1) return;
+      personas.splice(+b.closest('.lp-fila').dataset.i, 1); quitarPreset(); pintarPersonas(); calcular();
+    });
+    $('lp-mas').addEventListener('click', () => { if (personas.length < 15) { personas.push({ s: 'M', e: 10 }); quitarPreset(); pintarPersonas(); calcular(); } });
+    const pre = $('lp-pre');
+    const quitarPreset = () => pre.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+    function usarPreset(b) {
+      personas = b.dataset.p.split(',').map(x => ({ s: x[0], e: +x.slice(1) }));
+      pre.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+      pintarPersonas(); calcular();
+    }
+    pre.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { usarPreset(b); if (window.bbTrack) window.bbTrack('linea_pobreza_hogar', { hogar: b.textContent }); } });
+
+    // ---- Ingreso con separador de miles
+    const ing = $('lp-ingreso');
+    const leerIngreso = () => parseInt(ing.value.replace(/\D/g, ''), 10) || 0;
+    ing.addEventListener('input', () => { const v = leerIngreso(); ing.value = v ? v.toLocaleString('es-AR') : ''; calcular(); });
+    $('lp-region').addEventListener('change', calcular);
+
+    // ---- Cálculo
+    let pobrezaPais = null;
+    function calcular() {
+      const uae = personas.reduce((a, p) => a + (coef(p.s, p.e) || 0), 0);
+      const reg = $('lp-region').value, fr = regiones && regiones[reg];
+      const cba = canasta.cba * (fr ? fr.cba : 1) * uae, cbt = canasta.cbt * (fr ? fr.cbt : 1) * uae;
+      const y = leerIngreso();
+      const est = $('lp-estado'), n = $('lp-num'), t = $('lp-txt');
+      if (!uae || !y) { est.textContent = 'Cargá el ingreso del hogar'; est.className = 'lp-estado'; n.textContent = '—'; t.textContent = ''; $('lp-barra').innerHTML = ''; $('lp-detalle').innerHTML = ''; return; }
+      if (y >= cbt) {
+        est.textContent = 'Por encima de la línea de pobreza'; est.className = 'lp-estado bien';
+        n.textContent = '+' + pesos(y - cbt);
+        t.textContent = 'El ingreso del hogar supera la canasta básica total en ' + num((y / cbt - 1) * 100) + '%. Cubre ' + num(y / cbt, 2) + ' veces la línea de pobreza.';
+      } else if (y >= cba) {
+        est.textContent = 'Bajo la línea de pobreza'; est.className = 'lp-estado pobre';
+        n.textContent = '−' + pesos(cbt - y);
+        t.textContent = 'Faltan ' + pesos(cbt - y) + ' por mes para llegar a la canasta básica total (' + num((1 - y / cbt) * 100) + '% menos). Cubre la canasta de alimentos, así que no está bajo la línea de indigencia.';
+      } else {
+        est.textContent = 'Bajo la línea de indigencia'; est.className = 'lp-estado indig';
+        n.textContent = '−' + pesos(cba - y);
+        t.textContent = 'El ingreso no alcanza a cubrir la canasta de alimentos: faltan ' + pesos(cba - y) + ' por mes. Para la canasta básica total faltan ' + pesos(cbt - y) + '.';
+      }
+      if (pobrezaPais) t.textContent += ' En el país, el ' + num(pobrezaPais.v) + '% de las personas estaba bajo la línea de pobreza en el ' + pobrezaPais.s + '.';
+
+      // Barra: de 0 a un poco más que el mayor de los tres valores
+      const top = Math.max(y, cbt) * 1.2, pct = v => Math.min(100, v / top * 100).toFixed(2) + '%';
+      $('lp-barra').innerHTML =
+        '<div class="zona" style="left:0;width:' + pct(cba) + ';background:rgba(255,107,107,0.35)"></div>' +
+        '<div class="zona" style="left:' + pct(cba) + ';width:calc(' + pct(cbt) + ' - ' + pct(cba) + ');background:rgba(255,159,122,0.3)"></div>' +
+        '<div class="zona" style="left:' + pct(cbt) + ';right:0;background:rgba(74,222,154,0.22)"></div>' +
+        '<div class="marca" style="left:' + pct(cba) + '"><span>Indigencia</span></div>' +
+        '<div class="marca" style="left:' + pct(cbt) + '"><span>Pobreza</span></div>' +
+        '<div class="tu" style="left:' + pct(y) + '"><span>Tu hogar</span></div>';
+      $('lp-detalle').innerHTML = [
+        ['Adultos equivalentes del hogar', num(uae, 2)],
+        ['Línea de indigencia del hogar', pesos(cba)],
+        ['Línea de pobreza del hogar', pesos(cbt)],
+        ['Ingreso por adulto equivalente', pesos(y / uae)],
+      ].map(r => '<li><span>' + r[0] + '</span><span>' + r[1] + '</span></li>').join('');
+      $('lp-fuente').textContent = 'Canasta de ' + P.mesLargo(canasta.fecha) + ' del INDEC' +
+        (fr ? ', llevada a la región ' + reg + ' con la relación entre canastas de ' + fr.mes + ' (estimación).' : ' (Gran Buenos Aires).') +
+        ' Tabla de equivalencias: INDEC.';
+      if (window.bbTrack) { clearTimeout(calcular.t); calcular.t = setTimeout(() => window.bbTrack('linea_pobreza_calculo', { personas: personas.length, region: reg }), 1500); }
+    }
+
+    usarPreset(pre.querySelector('button.on'));
+
+    // ---- Datos en vivo
+    P.API.canasta().then(c => {
+      if (c && c.serie && c.serie.length) {
+        canasta = c.serie.at(-1);
+        if (Array.isArray(c.equivalencias) && c.equivalencias.length >= 20 && c.equivalencias.every(r => rango(r.edad))) tabla = c.equivalencias.map(r => [r.edad, r.mujer, r.varon]);
+        pintarPersonas(); calcular();
+      }
+    });
+    P.API.pobreza().then(p => {
+      if (!p) return;
+      if (p.serie && p.serie.length) { const u = p.serie.at(-1); pobrezaPais = { v: u.pobrezaPersonas, s: P.semCorto(u.semestre) }; }
+      const cr = p.canastasRegionales;
+      if (cr && cr.cbt && cr.cba && cr.cbt['Gran Buenos Aires']) {
+        const gba = cr.cbt['Gran Buenos Aires'], gbaA = cr.cba['Gran Buenos Aires'];
+        let i = gba.length - 1; while (i > 0 && !(gba[i] > 0)) i--;
+        const mes = (cr.meses[i] || '').toLowerCase() + (cr.anio ? ' de ' + cr.anio : '');
+        regiones = {};
+        const sel = $('lp-region');
+        const NOMBRES = { 'Cuyo': 'Cuyo (Mendoza, San Juan, San Luis)', 'Noreste': 'Noreste (Chaco, Corrientes, Formosa, Misiones)', 'Noroeste': 'Noroeste (Catamarca, Jujuy, La Rioja, Salta, Santiago del Estero, Tucumán)', 'Pampeana': 'Pampeana (resto de Buenos Aires, Córdoba, Entre Ríos, La Pampa, Santa Fe)', 'Patagonia': 'Patagonia (Chubut, Neuquén, Río Negro, Santa Cruz, Tierra del Fuego)' };
+        for (const r of Object.keys(cr.cbt)) {
+          if (r === 'Gran Buenos Aires' || !NOMBRES[r]) continue;
+          const t = cr.cbt[r][i], a = cr.cba[r] && cr.cba[r][i];
+          if (!(t > 0 && a > 0)) continue;
+          regiones[r] = { cbt: t / gba[i], cba: a / gbaA[i], mes };
+          const o = document.createElement('option'); o.value = r; o.textContent = NOMBRES[r]; sel.appendChild(o);
+        }
+      }
+      calcular();
+    });
+  })();
+  </script>
+</body>
+</html>

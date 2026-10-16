@@ -40,6 +40,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=15" />
+  <link rel="stylesheet" href="../css/panel.css?v=1" />
 
   <style>
     /* ---- BETA BADGE (shared) ---- */
@@ -378,6 +379,7 @@
         <a href="agenda-ar" class="nav-link">Agenda AR</a>
         <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
         <a href="datos" class="nav-link">Datos macro</a>
+        <a href="panel-argentina" class="nav-link">Panel Argentina</a>
         <a href="blog" class="nav-link">Blog</a>
         <a href="atlas" class="nav-link">Atlas</a>
         <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
@@ -390,6 +392,7 @@
   </header>
 
   <main>
+    <div class="container" style="padding-top:1.25rem"><nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina">🇦🇷 Resumen</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos" aria-current="page">Datos macro</a></nav></div>
 
     <!-- HERO -->
     <section class="page-hero" aria-labelledby="datos-title">
@@ -614,7 +617,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=40"></script>
+  <script src="../js/main.js?v=41"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/ticker.js?v=6"></script>
   <script>
@@ -920,7 +923,6 @@
       ['143.3_ICE_SER_VM_2004_A_34', 1],
       ['4.2_OGP_2004_T_17', 5],
       ['453.1_SERIE_ORIGNAL_0_0_14_46', 13],
-      ['64.2_POBLACION_NUA_0_0_34_74', 2],
     ].map(([id, n]) => [id, serieGobAr(id, n).catch(() => null)]));
     const pct100 = v => v * 100;
     // La serie de pobreza fecha cada semestre con el día en que termina: 2025-07-01
@@ -1015,17 +1017,17 @@
       }
     } catch {}
 
-    /* Pobreza — personas bajo la línea de pobreza, total 31 aglomerados, semestral */
+    /* Pobreza — personas bajo la línea de pobreza, 31 aglomerados, semestral. Del informe del INDEC:
+       la serie del portal de datos abiertos dejó de actualizarse. */
     try {
-      const rows = await pre['64.2_POBLACION_NUA_0_0_34_74'];
-      if (rows?.length >= 1) {
-        const last = rows.at(-1), prev = rows.at(-2);
+      const pj = await fetch('/api/indec?pobreza=1', { signal: AbortSignal.timeout(15000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+      if (pj && pj.serie && pj.serie.length >= 2) {
+        const u = pj.serie.at(-1), p = pj.serie.at(-2);
         cards.push(datoCard({
           cat:'INDEC', name:'Pobreza (personas)',
-          value: fmtNum(last[1] > 1 ? last[1] : pct100(last[1]),1)+'%',
-          changeAbs: prev ? (last[1] > 1 ? last[1]-prev[1] : pct100(last[1]-prev[1])) : null,
-          sub: 'Personas con ingresos bajo la línea de pobreza',
-          period: semestre(last[0]), source:'INDEC · EPH', cls:'red-card'
+          value: fmtNum(u.pobrezaPersonas,1)+'%',
+          sub: (u.pobrezaPersonas >= p.pobrezaPersonas ? '+' : '−') + fmtNum(Math.abs(u.pobrezaPersonas - p.pobrezaPersonas),1) + ' p.p. vs. el semestre anterior · Indigencia: ' + fmtNum(u.indigenciaPersonas,1) + '% · <a href="panel-pobreza" style="color:var(--accent)">Panel de pobreza →</a>',
+          period: String(u.semestre).replace(/[^A-Za-zÀ-ÿ0-9 .º]/g,''), source:'INDEC · EPH', cls:'red-card'
         }));
       }
     } catch {}

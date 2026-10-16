@@ -75,6 +75,8 @@ var BB_GLIFO_DE = {
   'brokers': ['banco', '#8e8e93'],               'etfs-fci': ['torta', '#0a84ff'],
   'mis-portafolios': ['maletin', '#0a84ff'],     'watchlist': ['estrella', '#ffb340'],
   'calculadoras': ['calculadora', '#8e8e93'],
+  'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
+  'panel-pobreza': ['barras', '#ff9f7a'],
 };
 
 function bbGlifo(href) {
@@ -278,6 +280,7 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'meta-financiera',   label: 'Meta Financiera',        icon: '🎯' },
         { href: pagesBase + 'prestamo',          label: 'Préstamo',                icon: '💰' },
         { href: pagesBase + 'inflacion',         label: 'Inflación',               icon: '📉' },
+        { href: pagesBase + 'linea-de-pobreza',  label: 'Línea de pobreza',        icon: '🏠' },
         { href: pagesBase + 'salario',           label: 'Salario',                 icon: '💵' },
         { href: pagesBase + 'conversion-tasas',  label: 'Conversión de Tasas',    icon: '🔄' },
         { href: pagesBase + 'roi',               label: 'ROI',                     icon: '📊' },
@@ -322,6 +325,11 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'markowitz',      label: 'Markowitz',          icon: '🎲' },
         { href: pagesBase + 'mis-portafolios',label: 'Portafolio',         icon: '💼', beta: true },
       ],
+    },
+    {
+      kind: 'link',
+      href: pagesBase + 'panel-argentina',
+      label: '🇦🇷 Panel',
     },
     {
       kind: 'link',
