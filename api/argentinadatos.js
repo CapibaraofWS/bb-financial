@@ -31,7 +31,16 @@ const ALLOWED_PATHS = [
   'finanzas/cuentas-remuneradas-usd',
   // Letras del Tesoro
   'finanzas/letras',
+  // Historial de cotizaciones (Panel Argentina): se recortan con ?dias=N
+  'cotizaciones/dolares/oficial',
+  'cotizaciones/dolares/blue',
+  'cotizaciones/dolares/bolsa',
+  'cotizaciones/dolares/contadoconliqui',
+  'cotizaciones/dolares/mayorista',
 ];
+// Series largas que se pueden recortar a los últimos N días para no mandar años de datos
+const RECORTABLES = new Set(['finanzas/indices/riesgo-pais', 'cotizaciones/dolares/oficial', 'cotizaciones/dolares/blue',
+  'cotizaciones/dolares/bolsa', 'cotizaciones/dolares/contadoconliqui', 'cotizaciones/dolares/mayorista']);
 
 // Meses que el INDEC ya publicó y ArgentinaDatos todavía no cargó (suele tardar uno o dos días).
 // Solo se agregan si la fuente no los trae; cuando los trae, manda la fuente.
@@ -52,7 +61,12 @@ export default async function handler(req, res) {
     const url = `https://api.argentinadatos.com/v1/${path}`;
     const response = await fetch(url, { signal: AbortSignal.timeout(9000) });
     if (!response.ok) return res.status(response.status).json({ error: 'Error desde ArgentinaDatos' });
-    const data = await response.json();
+    let data = await response.json();
+    const dias = Math.min(Math.max(parseInt(req.query.dias, 10) || 0, 0), 2000);
+    if (dias && RECORTABLES.has(path) && Array.isArray(data)) {
+      const desde = new Date(Date.now() - dias * 864e5).toISOString().slice(0, 10);
+      data = data.filter(x => String(x.fecha) >= desde);
+    }
     if (path === 'finanzas/indices/inflacion' && Array.isArray(data) && data.length) {
       for (const mes of INFLACION_ADELANTO) {
         if (mes.fecha > String(data[data.length - 1].fecha)) data.push(mes);

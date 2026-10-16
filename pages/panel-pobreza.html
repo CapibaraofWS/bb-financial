@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=15" />
-  <link rel="stylesheet" href="../css/panel.css?v=1" />
+  <link rel="stylesheet" href="../css/panel.css?v=3" />
 </head>
 <body>
   <header class="site-header">
@@ -75,13 +75,14 @@
 
   <main>
     <section class="container pa-hero">
-      <p class="pa-eyebrow">🇦🇷 Panel Argentina · Pobreza</p>
+      <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
+      <p class="pa-eyebrow" data-bandera>Panel Argentina · Pobreza</p>
       <h1>Pobreza e indigencia en la Argentina</h1>
       <p class="sub">El último dato oficial del INDEC, la estimación mensual de la Universidad Torcuato Di Tella y cuánto hace falta para no ser pobre. Se actualiza solo cuando las fuentes publican.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina">🇦🇷 Resumen</a><a href="panel-pobreza" aria-current="page">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-pobreza" aria-current="page">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
 
       <div class="pa-grid" id="kpis">
         <article class="pa-card"><p class="que">Pobreza · personas</p><p class="grande">32,3%</p><p class="contexto">Primer semestre de 2026. INDEC, 31 aglomerados urbanos.</p></article>
@@ -169,10 +170,10 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=41"></script>
+  <script src="../js/main.js?v=42"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=1"></script>
+  <script src="../js/panel.js?v=3"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), esc = P.esc, num = P.num;
@@ -194,6 +195,7 @@
         lin ? ['Línea de pobreza · por adulto', P.pesos(lin.cbt), P.mesAnio(lin.fecha) + ', Gran Buenos Aires. Un hogar de cuatro personas necesita ' + P.pesos(lin.cbt * 3.09) + '.'] : null,
       ].filter(Boolean);
       $('kpis').innerHTML = k.map(x => '<article class="pa-card"><p class="que">' + x[0] + '</p><p class="grande">' + x[1] + '</p><p class="contexto">' + x[2] + '</p></article>').join('');
+      P.brillo('#kpis .pa-card');
 
       // ---- Serie
       if (ok) {

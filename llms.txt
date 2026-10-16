@@ -30,6 +30,10 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 ## Mercado y datos
 
 - [Panel Argentina](https://www.bbfinanzas.com.ar/pages/panel-argentina): inflación, pobreza, dólar, reservas y tasas de la Argentina con el calendario de publicaciones del INDEC, actualizados desde fuentes oficiales.
+- [Inflación en la Argentina](https://www.bbfinanzas.com.ar/pages/panel-precios): IPC del INDEC con núcleo, regulados, estacionales, rubros, regiones y un mapa de calor mensual desde 2017.
+- [Dólar y reservas](https://www.bbfinanzas.com.ar/pages/panel-dolar): dólar mayorista dentro de las bandas cambiarias, oficial, MEP, contado con liquidación y blue, brecha, reservas y compras del Banco Central.
+- [Tasas de interés](https://www.bbfinanzas.com.ar/pages/panel-tasas): TAMAR, BADLAR, plazo fijo, préstamos, tasa real contra la inflación mes a mes y riesgo país.
+- [Actividad económica](https://www.bbfinanzas.com.ar/pages/panel-actividad): EMAE, producción industrial (IPI) y construcción (ISAC) del INDEC.
 - [Pobreza en la Argentina](https://www.bbfinanzas.com.ar/pages/panel-pobreza): pobreza e indigencia oficiales del INDEC, estimación mensual de la UTDT, evolución desde 2016, por edad, región y aglomerado, y canastas básicas.
 - [Calculadora de línea de pobreza](https://www.bbfinanzas.com.ar/pages/linea-de-pobreza): si el ingreso de un hogar supera la línea de pobreza y de indigencia, con la canasta del INDEC del mes y su tabla de adultos equivalentes.
 - [Datos Macro](https://www.bbfinanzas.com.ar/pages/datos): variables del BCRA, INDEC y Estados Unidos.

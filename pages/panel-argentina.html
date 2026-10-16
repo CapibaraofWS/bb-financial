@@ -39,7 +39,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=15" />
-  <link rel="stylesheet" href="../css/panel.css?v=1" />
+  <link rel="stylesheet" href="../css/panel.css?v=3" />
 </head>
 <body>
   <header class="site-header">
@@ -68,13 +68,13 @@
 
   <main>
     <section class="container pa-hero">
-      <p class="pa-eyebrow">🇦🇷 Panel Argentina</p>
+      <p class="pa-eyebrow" data-bandera>Panel Argentina</p>
       <h1>La economía argentina, en un solo lugar</h1>
       <p class="sub">Inflación, pobreza, dólar, tasas y el calendario de cada dato, actualizados solos desde el INDEC, el Banco Central y otras fuentes oficiales. Cada número tiene su fuente y una herramienta para usarlo.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina" aria-current="page">🇦🇷 Resumen</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
 
       <section class="pa-franja" data-franja aria-labelledby="fr-t">
         <div class="pa-franja-cab"><h2 id="fr-t">Últimos datos y lo que viene</h2><a href="agenda-ar">Agenda completa →</a></div>
@@ -82,12 +82,12 @@
       </section>
 
       <div class="pa-grid">
-        <article class="pa-card" id="t-inflacion">
+        <article class="pa-card ancha" id="t-inflacion">
           <h3>📈 Inflación</h3>
           <p class="que">Índice de precios al consumidor · variación mensual</p>
           <p class="grande">1,9%</p>
           <p class="contexto">Septiembre de 2026. En los últimos 12 meses, 33,4%; en lo que va de 2026, 23,6%.</p>
-          <div class="pie"><span>Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank" rel="noopener">INDEC ↗</a></span><a class="ir" href="inflacion">Calculadora de inflación →</a></div>
+          <div class="pie"><span>Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank" rel="noopener">INDEC ↗</a></span><a class="ir" href="panel-precios">Panel de precios →</a></div>
         </article>
         <article class="pa-card" id="t-pobreza">
           <h3>🏠 Pobreza</h3>
@@ -101,14 +101,21 @@
           <p class="que">Dólar mayorista de referencia (Comunicación A 3500)</p>
           <p class="grande">$1.514</p>
           <p class="contexto">Valor de mediados de octubre de 2026. Las reservas del Banco Central rondan los US$49.800 millones.</p>
-          <div class="pie"><span>Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA ↗</a></span><a class="ir" href="comparador-dolares">Dólar hoy →</a></div>
+          <div class="pie"><span>Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA ↗</a></span><a class="ir" href="panel-dolar">Panel del dólar →</a></div>
         </article>
         <article class="pa-card" id="t-tasas">
           <h3>🏦 Tasas</h3>
           <p class="que">TAMAR de bancos privados · tasa nominal anual</p>
           <p class="grande">23,8%</p>
           <p class="contexto">Es la tasa de los plazos fijos de más de $1.000 millones y la referencia de los bonos TAMAR.</p>
-          <div class="pie"><span>Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA ↗</a></span><a class="ir" href="comparador-plazos-fijos">Calculadora de plazo fijo →</a></div>
+          <div class="pie"><span>Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA ↗</a></span><a class="ir" href="panel-tasas">Panel de tasas →</a></div>
+        </article>
+        <article class="pa-card" id="t-actividad">
+          <h3>🏭 Actividad</h3>
+          <p class="que">Estimador mensual de actividad (EMAE) · contra el mes anterior</p>
+          <p class="grande">−2,9%</p>
+          <p class="contexto">Julio de 2026, sin estacionalidad. Contra julio de 2025, −1,4%.</p>
+          <div class="pie"><span>Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-9-48" target="_blank" rel="noopener">INDEC ↗</a></span><a class="ir" href="panel-actividad">Panel de actividad →</a></div>
         </article>
       </div>
 
@@ -151,19 +158,23 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=41"></script>
+  <script src="../js/main.js?v=42"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=1"></script>
+  <script src="../js/panel.js?v=3"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), esc = P.esc, num = P.num;
     P.franja($('franja'), { pasados: 5, proximos: 8 });
     const hace = d => new Date(Date.now() - d * 864e5).toISOString().slice(0, 10);
     const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
-    const [inf, b, pob, can, dol, s5, s44] = await Promise.all([
-      P.API.inflacion(), P.API.bcra(), P.API.pobreza(), P.API.canasta(), P.API.dolar(), P.API.serieBcra(5, hace(120)), P.API.serieBcra(44, hace(150)),
+    const [infAD, b, pob, can, dol, s5, s44, ipcI, em] = await Promise.all([
+      P.API.inflacion(), P.API.bcra(), P.API.pobreza(), P.API.canasta(), P.API.dolar(), P.API.serieBcra(5, hace(120)), P.API.serieBcra(44, hace(150)), P.API.ipc(),
+      P.API.emae(),
     ]);
+    // El CSV del INDEC manda; si no responde, la serie de ArgentinaDatos
+    const inf = ipcI && ipcI.general && ipcI.general.length > 13 ? ipcI.general.map(x => ({ fecha: x.p, valor: x.m })) : infAD;
+    const escala = [0.5, 1, 1.5, 2, 3, 5, 8, 13], nivel = v => { let i = 0; while (i < escala.length && v >= escala[i]) i++; return i; };
 
     // Arma una tarjeta. Los textos son propios; lo que viene de una fuente pasa por esc().
     function tarjeta(id, t) {
@@ -185,14 +196,15 @@
         titulo: '📈 Inflación', que: 'Índice de precios al consumidor · variación mensual',
         grande: num(u.valor) + '%', clase: u.valor < p.valor ? 'mejor' : u.valor > p.valor ? 'peor' : '',
         contexto: P.mesAnio(mes) + ' · ' + pp(u.valor - p.valor, true) + ' vs. ' + P.mesAnio(String(p.fecha).slice(0, 7)),
-        spark: P.sparkline(inf.slice(-24).map(x => x.valor), { color: '#e8c97a' }),
+        spark: P.sparkline(inf.slice(-24).map(x => x.valor), { color: '#e8c97a' }) +
+          '<div class="pa-tira" aria-hidden="true">' + inf.slice(-12).map(x => '<span class="n' + nivel(x.valor) + '" title="' + P.mesAnio(String(x.fecha).slice(0, 7)) + ': ' + num(x.valor) + '%"></span>').join('') + '</div><div class="pa-tira-ley"><span>' + P.mesAnio(String(inf.at(-12).fecha).slice(0, 7)) + '</span><span>últimos 12 meses</span><span>' + P.mesAnio(mes) + '</span></div>',
         filas: [
           ia ? ['Últimos 12 meses', P.mesAnio(ia.ultFechaInformada.slice(0, 7)), num(ia.ultValorInformado) + '%'] : null,
           rem ? ['Esperada próximos 12 meses', 'Encuesta REM del Banco Central', num(rem.ultValorInformado) + '%'] : null,
           cbt !== null ? ['Canasta básica total', 'Variación de ' + P.mesAnio(can.serie.at(-1).fecha), P.signo(cbt) + '%'] : null,
         ].filter(Boolean),
         fuentes: 'Fuentes: ' + link('https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31', 'INDEC') + ' · ' + link('https://www.bcra.gob.ar/estadisticas-indicadores/', 'BCRA'),
-        ir: '<a class="ir" href="inflacion">Calculadora de inflación →</a>',
+        ir: '<a class="ir" href="panel-precios">Panel de precios →</a>',
       });
 
       // Gráfico: 24 meses y promedio móvil de 3
@@ -251,7 +263,7 @@
           res ? ['Reservas brutas', P.fechaCorta(res.ultFechaInformada), 'US$' + Math.round(res.ultValorInformado).toLocaleString('es-AR') + ' M'] : null,
         ].filter(Boolean),
         fuentes: 'Fuentes: ' + link('https://www.bcra.gob.ar/estadisticas-indicadores/', 'BCRA') + ' · DolarAPI',
-        ir: '<a class="ir" href="comparador-dolares">Dólar hoy →</a>',
+        ir: '<a class="ir" href="panel-dolar">Panel del dólar →</a>',
       });
     }
 
@@ -274,9 +286,25 @@
           real !== null ? ['Plazo fijo contra la inflación', 'Un mes de plazo fijo vs. el último IPC', P.signo(real, 2) + '%', real > 0 ? 'mejor' : 'peor'] : null,
         ].filter(Boolean),
         fuentes: 'Fuente: ' + link('https://www.bcra.gob.ar/estadisticas-indicadores/', 'BCRA'),
-        ir: '<a class="ir" href="comparador-plazos-fijos">Plazo fijo →</a>',
+        ir: '<a class="ir" href="panel-tasas">Panel de tasas →</a>',
       });
     }
+
+    // ---- Actividad
+    const es = (em && em.serie) || [], mm = es.filter(x => Number.isFinite(x.mm)).map(x => ({ fecha: x.fecha, valor: x.mm })), ia = es.filter(x => Number.isFinite(x.ia)).map(x => ({ fecha: x.fecha, valor: x.ia }));
+    if (mm.length > 1) {
+      const u = mm.at(-1), a = mm.at(-2), c = v => v > 0.05 ? 'mejor' : v < -0.05 ? 'peor' : '';
+      tarjeta('t-actividad', {
+        titulo: '🏭 Actividad', que: 'Estimador mensual de actividad (EMAE) · contra el mes anterior',
+        grande: P.signo(u.valor) + '%', clase: c(u.valor),
+        contexto: P.mesAnio(u.fecha) + ', sin estacionalidad · el mes anterior: ' + P.signo(a.valor) + '%',
+        spark: P.sparkline(mm.slice(-24).map(x => x.valor), { color: '#60a5fa' }),
+        filas: [ia.length ? ['Contra un año atrás', P.mesAnio(ia.at(-1).fecha), P.signo(ia.at(-1).valor) + '%', c(ia.at(-1).valor)] : null].filter(Boolean),
+        fuentes: 'Fuente: ' + link('https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-9-48', 'INDEC'),
+        ir: '<a class="ir" href="panel-actividad">Panel de actividad →</a>',
+      });
+    }
+    P.brillo('.pa-grid .pa-card');
   })();
   </script>
 </body>

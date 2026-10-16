@@ -76,7 +76,17 @@ var BB_GLIFO_DE = {
   'mis-portafolios': ['maletin', '#0a84ff'],     'watchlist': ['estrella', '#ffb340'],
   'calculadoras': ['calculadora', '#8e8e93'],
   'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
-  'panel-pobreza': ['barras', '#ff9f7a'],
+  'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
+  'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
+  'panel-actividad': ['subida', '#60a5fa'],
+  'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
+  'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
+  'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
+  'panel-actividad': ['subida', '#60a5fa'],
+  'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
+  'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
+  'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
+  'panel-actividad': ['subida', '#60a5fa'],
 };
 
 function bbGlifo(href) {
@@ -85,6 +95,24 @@ function bbGlifo(href) {
   if (!g) return '';
   return '<span class="bb-glifo" style="--g:' + g[1] + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + BB_TRAZOS[g[0]] + '</svg></span>';
 }
+
+// Windows no dibuja los emojis de banderas: muestra las letras "AR" o "BR". Ahí se reemplazan por la bandera en SVG.
+document.addEventListener('DOMContentLoaded', function () {
+  if (!/Windows/.test(navigator.userAgent)) return;
+  var SVG = {
+    '🇦🇷': '<rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/>',
+    '🇧🇷': '<rect width="30" height="20" rx="2.5" fill="#009c3b"/><path d="M15 2.5 27 10 15 17.5 3 10z" fill="#ffdf00"/><circle cx="15" cy="10" r="4.2" fill="#002776"/>',
+  };
+  var re = /🇦🇷|🇧🇷/g;
+  var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), nodos = [], n;
+  while ((n = w.nextNode())) { re.lastIndex = 0; if (re.test(n.nodeValue)) nodos.push(n); }
+  nodos.forEach(function (t) {
+    var span = document.createElement('span');
+    span.innerHTML = t.nodeValue.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; })
+      .replace(re, function (f) { return '<svg viewBox="0 0 30 20" width="1.25em" height="0.85em" aria-hidden="true" style="vertical-align:-0.08em;border-radius:2px">' + SVG[f] + '</svg>'; });
+    t.parentNode.replaceChild(span, t);
+  });
+});
 
 // Tarjetas del HTML: el ícono de cada una sale del enlace que la contiene
 document.addEventListener('DOMContentLoaded', function () {
@@ -294,7 +322,7 @@ window.BB_GLOSARIO = {
       title: 'Comparadores',
       items: [
         { href: pagesBase + 'comparador-tasas',  label: 'Comparador de Tasas',  icon: '📊' },
-        { href: pagesBase + 'comparador-pix',    label: 'Comparador PIX 🇧🇷',  icon: '💸' },
+        { href: pagesBase + 'comparador-pix',    label: 'Comparador PIX (Brasil)',  icon: '💸' },
         { href: pagesBase + 'contado-vs-cuotas', label: 'Contado vs cuotas',    icon: '🛒' },
       ],
     },
@@ -302,12 +330,12 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Mercado',
       items: [
-        { href: pagesBase + 'agenda-ar',  label: 'Agenda AR 🇦🇷', icon: '📅' },
+        { href: pagesBase + 'agenda-ar',  label: 'Agenda AR', icon: '📅' },
         { href: pagesBase + 'ranking-semanal', label: 'Ranking semanal 🔥', icon: '📊' },
         { href: pagesBase + 'ticker',     label: 'Acciones',     icon: '📈' },
         { href: pagesBase + 'mercado',    label: 'Mercado',      icon: '🌐' },
         { href: pagesBase + 'visor-bonos',label: 'Visor de Bonos USA', icon: '💵' },
-        { href: pagesBase + 'visor-bonos-ar', label: 'Visor de Bonos AR 🇦🇷', icon: '🇦🇷' },
+        { href: pagesBase + 'visor-bonos-ar', label: 'Visor de Bonos AR', icon: '📊' },
         { href: pagesBase + 'calendario', label: 'Calendario',   icon: '📅' },
         { href: pagesBase + 'noticias',   label: 'Noticias',     icon: '📰' },
         { href: pagesBase + 'datos',      label: 'Datos macro',  icon: '📊' },
@@ -329,7 +357,17 @@ window.BB_GLOSARIO = {
     {
       kind: 'link',
       href: pagesBase + 'panel-argentina',
-      label: '🇦🇷 Panel',
+      label: '<svg viewBox="0 0 30 20" width="18" height="12" aria-hidden="true" style="vertical-align:-1px;margin-right:5px;border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel',
+    },
+    {
+      kind: 'link',
+      href: pagesBase + 'panel-argentina',
+      label: '<svg viewBox="0 0 30 20" width="18" height="12" aria-hidden="true" style="vertical-align:-1px;margin-right:5px;border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel',
+    },
+    {
+      kind: 'link',
+      href: pagesBase + 'panel-argentina',
+      label: '<svg viewBox="0 0 30 20" width="18" height="12" aria-hidden="true" style="vertical-align:-1px;margin-right:5px;border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel',
     },
     {
       kind: 'link',

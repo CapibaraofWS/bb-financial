@@ -30,7 +30,16 @@ window.BBPanel = (function () {
     bcra: () => json('/api/bcra?endpoint=Monetarias&categoria=Principales%20Variables'),
     serieBcra: (id, desde) => json('/api/bcra?endpoint=Monetarias&idVariable=' + id + '&desde=' + desde),
     dolar: () => json('/api/dolar'),
+    ipc: () => json('/api/indec?ipc=1'),
+    emae: () => json('/api/indec?emae=1'),
+    cotiz: (casa, dias) => json('/api/argentinadatos?path=cotizaciones/dolares/' + casa + '&dias=' + dias),
+    riesgo: dias => json('/api/argentinadatos?path=finanzas/indices/riesgo-pais&dias=' + dias),
+    gob: (ids, n) => json('/api/indec?series=' + ids + '&limit=' + n + '&sort=desc'),
   };
+  // Series del BCRA (vienen de la más nueva a la más vieja) → [{fecha, valor}] en orden
+  const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
+  // Series del portal de datos abiertos (ordenadas desc) → por columna, en orden
+  const gobCols = (r, k) => ((r && r.data) || []).filter(f => f[k + 1] != null).map(f => ({ fecha: f[0].slice(0, 7), valor: f[k + 1] })).reverse();
   const variable = (b, id) => { const L = b && (b.results || b); const x = Array.isArray(L) && L.find(y => y.idVariable === id); return x && Number.isFinite(x.ultValorInformado) ? x : null; };
 
   // ---- Minigráfico (SVG en línea, sin librerías)
@@ -94,8 +103,14 @@ window.BBPanel = (function () {
     return v;
   }
 
+  // Calendario en "días": cada fecha es una columna con sus publicaciones (en el celular, una línea de tiempo vertical)
+  const TEMAS = { precios: 'Precios', pobreza: 'Pobreza', actividad: 'Actividad', empleo: 'Empleo', comercio: 'Comercio', dolar: 'Banco Central', otro: 'INDEC' };
+  const DSEM = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  const diasEntre = (a, b) => Math.round((Date.UTC(...b.split('-').map((x, i) => i === 1 ? x - 1 : +x)) - Date.UTC(...a.split('-').map((x, i) => i === 1 ? x - 1 : +x))) / 864e5);
   async function franja(el, { pasados = 4, proximos = 5 } = {}) {
     if (!el) return;
+    // En el celular la línea es vertical: con menos eventos no se hace eterna
+    if (matchMedia('(max-width: 640px)').matches) { pasados = Math.min(pasados, 3); proximos = Math.min(proximos, 4); }
     const [cal, vals] = await Promise.all([API.calendario(), valoresConocidos()]);
     const hoy = hoyISO();
     const items = [];
@@ -107,24 +122,98 @@ window.BBPanel = (function () {
       const antes = salieron.filter(e => e.nivel === 1).slice(-pasados);
       if (antes.length < pasados) antes.push(...salieron.filter(e => e.nivel === 2).slice(-(pasados - antes.length)));
       const despues = ev.filter(e => !yaSalio(e)).slice(0, proximos);
-      const pasado = antes.map(e => {
+      for (const e of antes) {
         const dato = /Inflación/.test(e.nombre) ? vals.ipc : /Canastas básicas/.test(e.nombre) ? vals.canasta : null;
-        return { orden: e.fecha + e.hora, cuando: fechaCorta(e.fecha) + ' · ' + e.hora, nombre: e.nombre, valor: dato && dato.valor, clase: dato && dato.clase, nota: dato ? dato.nota : e.periodo, url: e.informe, estado: 'paso' };
-      });
-      if (vals.reservas) pasado.push({ orden: vals.reservas.fecha + '99', cuando: fechaCorta(vals.reservas.fecha), nombre: 'Reservas del Banco Central', valor: vals.reservas.valor, nota: 'Dato diario', url: 'https://www.bcra.gob.ar/estadisticas-indicadores/', estado: 'paso' });
-      if (vals.mayorista) pasado.push({ orden: vals.mayorista.fecha + '99', cuando: fechaCorta(vals.mayorista.fecha), nombre: 'Dólar mayorista', valor: vals.mayorista.valor, nota: 'Dato diario', url: 'https://www.bcra.gob.ar/estadisticas-indicadores/', estado: 'paso' });
-      items.push(...pasado.sort((a, b) => (a.orden < b.orden ? -1 : 1)));
-      for (const e of despues) items.push({ cuando: (e.fecha === hoy ? 'Hoy' : fechaCorta(e.fecha)) + ' · ' + e.hora, nombre: e.nombre, nota: e.periodo, url: cal.url, estado: e.fecha === hoy ? 'hoy' : 'viene' });
+        items.push({ fecha: e.fecha, orden: e.hora, hora: e.hora, tema: e.tema, nombre: e.nombre, valor: dato && dato.valor, clase: dato && dato.clase, nota: dato ? dato.nota : e.periodo, url: e.informe });
+      }
+      if (vals.reservas) items.push({ fecha: vals.reservas.fecha, orden: '99', tema: 'dolar', nombre: 'Reservas', valor: vals.reservas.valor, nota: 'Dato diario', url: 'https://www.bcra.gob.ar/estadisticas-indicadores/' });
+      if (vals.mayorista) items.push({ fecha: vals.mayorista.fecha, orden: '99', tema: 'dolar', nombre: 'Dólar mayorista', valor: vals.mayorista.valor, nota: 'Dato diario', url: 'https://www.bcra.gob.ar/estadisticas-indicadores/' });
+      for (const e of despues) items.push({ fecha: e.fecha, orden: e.hora, hora: e.hora, tema: e.tema, nombre: e.nombre, nota: e.periodo, url: cal.url, viene: true });
     }
     if (!items.length) { el.closest('[data-franja]')?.setAttribute('hidden', ''); return; }
-    el.innerHTML = items.map(i => '<a class="pa-hito ' + i.estado + '" href="' + esc(i.url || '#') + '" target="_blank" rel="noopener">' +
-      '<span class="cuando">' + esc(i.cuando) + '</span><span class="punto" aria-hidden="true"></span>' +
-      '<span class="nombre">' + esc(i.nombre) + '</span>' +
-      (i.valor ? '<span class="valor ' + esc(i.clase || '') + '">' + esc(i.valor) + '</span>' : '<span class="valor tenue">' + (i.estado === 'paso' ? 'Ver informe ↗' : 'INDEC') + '</span>') +
-      '<span class="nota">' + esc(i.nota || '') + '</span></a>').join('');
+    // Agrupar por día
+    const dias = [];
+    for (const i of items.sort((a, b) => (a.fecha + a.orden < b.fecha + b.orden ? -1 : 1))) {
+      let d = dias.find(x => x.fecha === i.fecha);
+      if (!d) dias.push(d = { fecha: i.fecha, items: [] });
+      d.items.push(i);
+    }
+    el.classList.add('pa-agenda');
+    el.innerHTML = dias.map(d => {
+      const [y, m, dd] = d.fecha.split('-').map(Number), dif = diasEntre(hoy, d.fecha);
+      const estado = d.fecha === hoy ? 'hoy' : d.items.every(i => i.viene) ? 'viene' : 'paso';
+      const falta = estado === 'hoy' ? 'Hoy' : dif === 1 ? 'Mañana' : dif > 1 ? 'En ' + dif + ' días' : dif === -1 ? 'Ayer' : 'Hace ' + (-dif) + ' días';
+      return '<div class="pa-dia ' + estado + '"><div class="fecha" aria-label="' + dd + ' de ' + MESES[m - 1] + '"><span class="dsem">' + DSEM[new Date(y, m - 1, dd).getDay()] + '</span><b>' + dd + '</b><span class="mes">' + MES[m - 1] + '</span><span class="falta">' + falta + '</span></div><div class="eventos">' +
+        d.items.map(i => '<a class="pa-ev t-' + esc(i.tema) + '" href="' + esc(i.url || '#') + '" target="_blank" rel="noopener">' +
+          '<span class="chip">' + esc(TEMAS[i.tema] || 'INDEC') + (i.hora ? ' · ' + esc(i.hora) : '') + '</span>' +
+          '<span class="nombre">' + esc(i.nombre) + '</span>' +
+          (i.valor ? '<span class="valor ' + esc(i.clase || '') + '">' + esc(i.valor) + '</span>' : '') +
+          '<span class="nota">' + esc(i.nota || '') + (i.viene || i.valor ? '' : ' · informe ↗') + '</span></a>').join('') +
+        '</div></div>';
+    }).join('');
     // Que arranque mostrando el último dato publicado
-    const ult = el.querySelectorAll('.pa-hito.paso');
-    if (ult.length > 2) el.scrollLeft = Math.max(0, ult[ult.length - 3].offsetLeft - 8);
+    const ult = el.querySelectorAll('.pa-dia.paso');
+    if (ult.length > 1 && el.scrollWidth > el.clientWidth) el.scrollLeft = Math.max(0, ult[ult.length - 2].offsetLeft - 8);
+  }
+
+  // ---- Bandera argentina en SVG (en Windows el emoji de bandera se ve como "AR")
+  const BANDERA = '<svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>';
+  document.querySelectorAll('[data-bandera]').forEach(e => e.insertAdjacentHTML('afterbegin', BANDERA));
+
+  // ---- Volver: si se llegó desde el sitio, vuelve a la página anterior; si no, va al panel
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-volver]'); if (!a) return;
+    if (document.referrer.startsWith(location.origin) && history.length > 1) { e.preventDefault(); history.back(); }
+  });
+
+  // ---- Brillo e inclinación suave de las tarjetas al pasar el mouse (solo con mouse y sin "reducir movimiento")
+  function brillo(sel) {
+    if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll(sel).forEach(c => {
+      c.classList.add('pa-brilla');
+      c.addEventListener('pointermove', e => {
+        const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--mx', (x * 100).toFixed(1) + '%'); c.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        c.style.setProperty('--rx', ((0.5 - y) * 4).toFixed(2) + 'deg'); c.style.setProperty('--ry', ((x - 0.5) * 5).toFixed(2) + 'deg');
+      });
+      c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+  }
+
+  // ---- Tarjeta de indicador. Los textos son propios; lo que viene de una fuente se pasa ya escapado.
+  // t = { titulo, que, grande, clase, contexto, extra (html), filas: [[nombre, detalle, valor, clase]], fuentes, ir }
+  function tarjeta(el, t) {
+    if (typeof el === 'string') el = document.getElementById(el);
+    if (!el) return;
+    el.innerHTML = (t.titulo ? '<h3>' + t.titulo + '</h3>' : '') + '<p class="que">' + t.que + '</p>' +
+      '<p class="grande ' + (t.clase || '') + '">' + t.grande + '</p><p class="contexto">' + (t.contexto || '') + '</p>' + (t.extra || '') +
+      (t.filas && t.filas.length ? '<ul class="pa-filas">' + t.filas.filter(Boolean).map(f => '<li><span class="n">' + f[0] + (f[1] ? '<small>' + f[1] + '</small>' : '') + '</span><span class="v ' + (f[3] || '') + '">' + f[2] + '</span></li>').join('') + '</ul>' : '') +
+      (t.fuentes || t.ir ? '<div class="pie"><span>' + (t.fuentes || '') + '</span><span>' + (t.ir || '') + '</span></div>' : '');
+  }
+  // Diferencia en puntos, coloreada según si subir es bueno o malo
+  const pp = (d, mejorSiBaja = true, u = ' p.p.') => '<b class="' + (Math.abs(d) < 0.05 ? '' : (d < 0) === mejorSiBaja ? 'mejor' : 'peor') + '">' + signo(d, u.trim() === 'pb' ? 0 : 1) + u + '</b>';
+  const fuente = (u, t) => '<a href="' + u + '" target="_blank" rel="noopener">' + t + ' ↗</a>';
+  // Opciones comunes de Chart.js para los gráficos del panel
+  const ejes = (fmtY, extra = {}) => Object.assign({
+    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } } },
+    scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }, grid: { display: false } },
+              y: { ticks: { color: '#9aa5b8', callback: fmtY }, grid: { color: 'rgba(255,255,255,0.05)' } } },
+  }, extra);
+
+  // ---- Mapa de calor: un año por fila, un mes por columna
+  function mapaCalor(el, serie, { escala = [0.5, 1, 1.5, 2, 3, 5, 8, 13], unidad = '%' } = {}) {
+    if (!el || !serie || !serie.length) return;
+    const nivel = v => { let k = 0; while (k < escala.length && v >= escala[k]) k++; return k; };
+    const anios = [...new Set(serie.map(x => x.p.slice(0, 4)))];
+    const por = Object.fromEntries(serie.map(x => [x.p, x.m]));
+    el.innerHTML = '<div class="pa-calor" role="img" aria-label="Inflación de cada mes desde ' + anios[0] + '">' +
+      '<span></span>' + MES.map(m => '<span class="cab">' + m + '</span>').join('') +
+      anios.map(a => '<span class="anio">' + a + '</span>' + MES.map((m, i) => {
+        const k = a + '-' + String(i + 1).padStart(2, '0'), v = por[k];
+        return v == null ? '<span class="c vacia"></span>' : '<span class="c n' + nivel(v) + '" title="' + m + ' ' + a + ': ' + num(v) + unidad + '">' + num(v) + '</span>';
+      }).join('')).join('') + '</div>' +
+      '<div class="pa-calor-ley"><span>Menos</span>' + escala.concat([Infinity]).map((_, k) => '<i class="n' + k + '"></i>').join('') + '<span>Más</span></div>';
   }
 
   // ---- Descargar un gráfico como imagen, con título, fuente y marca
@@ -158,5 +247,5 @@ window.BBPanel = (function () {
     exportar(cv, { titulo: b.dataset.titulo, fuente: b.dataset.fuente, nombre: b.dataset.exportar });
   });
 
-  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO };
+  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes };
 })();

@@ -153,9 +153,74 @@ async function calendario(req, res) {
   }
 }
 
+// ?ipc=1: inflación desde el CSV del INDEC (nivel general, categorías, bienes y servicios, rubros y regiones).
+// Se actualiza el mismo día del informe; el portal de datos abiertos tarda semanas.
+async function ipc(req, res) {
+  try {
+    const r = await fetch(INDEC + '/ftp/cuadros/economia/serie_ipc_divisiones.csv', { signal: AbortSignal.timeout(15000), headers: UA });
+    if (!r.ok) throw new Error();
+    const t = new TextDecoder('latin1').decode(await r.arrayBuffer());
+    const n = v => { const x = parseFloat(String(v).replace(',', '.')); return Number.isFinite(x) ? x : null; };
+    const general = [], cat = { 'Núcleo': [], Regulados: [], Estacional: [] }, bys = { Bienes: [], Servicios: [] }, div = {}, reg = {};
+    for (const linea of t.split(/\r?\n/)) {
+      const c = linea.split(';');
+      if (c.length < 8 || !/^\d{6}$/.test(c[3])) continue;
+      const p = c[3].slice(0, 4) + '-' + c[3].slice(4), fila = { p, m: n(c[5]), a: n(c[6]) };
+      const region = c[7].trim();
+      if (c[0] === '0' && region !== 'Nacional') { if (!reg[region] || reg[region].p < p) reg[region] = Object.assign({ region }, fila); continue; }
+      if (region !== 'Nacional') continue;
+      if (c[0] === '0') general.push(Object.assign({ i: n(c[4]) }, fila));
+      else if (c[2] === 'Categorias') { const k = c[0] === 'Estacional' ? 'Estacional' : c[0] === 'Regulados' ? 'Regulados' : 'Núcleo'; cat[k].push(fila); }
+      else if (c[2] === 'Bienes y servicios') (c[0] === 'B' ? bys.Bienes : bys.Servicios).push(fila);
+      else if (/^\d{2}$/.test(c[0])) div[c[0]] = Object.assign({ codigo: c[0], nombre: c[1].trim() }, fila.p >= (div[c[0]]?.p || '') ? fila : div[c[0]]);
+    }
+    general.sort((a, b) => (a.p < b.p ? -1 : 1));
+    const u = general.at(-1);
+    if (!u || general.length < 60 || !(u.m > -5 && u.m < 50)) throw new Error('rango');
+    const ult = arr => arr.sort((a, b) => (a.p < b.p ? -1 : 1)).slice(-37);
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({
+      fuente: 'INDEC, Índice de precios al consumidor (cobertura nacional)', url: INDEC + '/ftp/cuadros/economia/serie_ipc_divisiones.csv',
+      general: general.filter(x => x.p >= '2017-01'), categorias: Object.fromEntries(Object.entries(cat).map(([k, v]) => [k, ult(v)])),
+      bienesServicios: Object.fromEntries(Object.entries(bys).map(([k, v]) => [k, ult(v)])),
+      divisiones: Object.values(div).filter(d => d.p === u.p).sort((a, b) => (a.codigo < b.codigo ? -1 : 1)),
+      regiones: Object.values(reg).filter(x => x.p === u.p),
+    });
+  } catch {
+    return res.status(502).json({ error: 'No se pudo leer el IPC del INDEC' });
+  }
+}
+
+// ?emae=1: estimador mensual de actividad desde el archivo del INDEC (el portal de datos abiertos a veces lo devuelve vacío)
+async function emae(req, res) {
+  try {
+    const r = await fetch(INDEC + '/ftp/cuadros/economia/sh_emae_mensual_base2004.xls', { signal: AbortSignal.timeout(15000), headers: UA });
+    if (!r.ok) throw new Error();
+    const filas = leerXls(Buffer.from(await r.arrayBuffer()))[0]?.filas || [];
+    const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const serie = [];
+    let anio = null;
+    for (const f of filas) {
+      if (!f) continue;
+      if (Number.isFinite(f[0]) && f[0] > 2000) anio = f[0];
+      const m = MESES.indexOf(String(f[1] || '').trim().toLowerCase());
+      if (!anio || m < 0 || !Number.isFinite(f[2])) continue;
+      serie.push({ fecha: anio + '-' + String(m + 1).padStart(2, '0'), original: f[2], ia: num(f[3]), desest: num(f[4]), mm: num(f[5]) });
+    }
+    const u = serie.at(-1);
+    if (serie.length < 100 || !u || !(u.desest > 50 && u.desest < 400)) throw new Error('rango');
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ fuente: 'INDEC, Estimador mensual de actividad económica (base 2004)', url: INDEC + '/ftp/cuadros/economia/sh_emae_mensual_base2004.xls', serie: serie.slice(-60) });
+  } catch {
+    return res.status(502).json({ error: 'No se pudo leer el EMAE del INDEC' });
+  }
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
+  if (req.query.ipc) return ipc(req, res);
+  if (req.query.emae) return emae(req, res);
   if (req.query.canasta) return canasta(req, res);
   if (req.query.pobreza) return pobreza(req, res);
   if (req.query.calendario) return calendario(req, res);
