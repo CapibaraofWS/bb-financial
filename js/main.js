@@ -79,14 +79,6 @@ var BB_GLIFO_DE = {
   'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
   'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
   'panel-actividad': ['subida', '#60a5fa'],
-  'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
-  'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
-  'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
-  'panel-actividad': ['subida', '#60a5fa'],
-  'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
-  'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
-  'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
-  'panel-actividad': ['subida', '#60a5fa'],
 };
 
 function bbGlifo(href) {
@@ -353,16 +345,6 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'markowitz',      label: 'Markowitz',          icon: '🎲' },
         { href: pagesBase + 'mis-portafolios',label: 'Portafolio',         icon: '💼', beta: true },
       ],
-    },
-    {
-      kind: 'link',
-      href: pagesBase + 'panel-argentina',
-      label: '<svg viewBox="0 0 30 20" width="18" height="12" aria-hidden="true" style="vertical-align:-1px;margin-right:5px;border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel',
-    },
-    {
-      kind: 'link',
-      href: pagesBase + 'panel-argentina',
-      label: '<svg viewBox="0 0 30 20" width="18" height="12" aria-hidden="true" style="vertical-align:-1px;margin-right:5px;border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel',
     },
     {
       kind: 'link',
