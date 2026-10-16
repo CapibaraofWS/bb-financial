@@ -208,3 +208,34 @@
 .pa-mas-prov { width: 100%; min-height: 42px; margin-top: 0.4rem; border: 1px dashed var(--border); border-radius: 999px; color: var(--text-muted); font-size: 0.84rem; }
 .pa-mas-prov:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
 @media (max-width: 640px) { .pa-seg button { padding: 0.3rem 0.65rem; } }
+
+/* ---- Separador en el submenú (secciones, calculadoras y otras páginas) */
+.pa-sub .sep { flex: 0 0 1px; align-self: stretch; background: var(--border); margin: 0.45rem 0.2rem; }
+
+/* ---- Chips para filtrar */
+.pa-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.pa-chips button { min-height: 36px; padding: 0.35rem 0.8rem; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+.pa-chips button:hover { color: var(--text); }
+.pa-chips button[aria-pressed="true"] { color: var(--accent); border-color: rgba(74,222,154,0.4); background: var(--accent-dim); }
+
+/* ---- Calendario completo del INDEC (Agenda AR) */
+.ic-filtros { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-bottom: 1rem; }
+.ic-filtros .pa-seg { margin: 0; }
+.ic-lista { display: flex; flex-direction: column; gap: 0.6rem; }
+.ic-dia { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 0.9rem; padding: 0.8rem; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); }
+.ic-dia.hoy { border-color: rgba(74,222,154,0.45); }
+.ic-fecha { display: flex; flex-direction: column; align-items: center; border-radius: 10px; background: var(--bg); border: 1px solid var(--border); padding: 0.4rem 0; height: max-content; }
+.ic-fecha b { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; line-height: 1.1; }
+.ic-fecha .dsem, .ic-fecha .mes { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+.ic-evs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.5rem; align-content: start; min-width: 0; }
+.ic-falta { grid-column: 1 / -1; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-subtle); }
+.ic-dia.hoy .ic-falta { color: var(--accent); }
+.ic-ev { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; padding: 0.55rem 0.7rem; border-radius: 10px; border: 1px solid var(--border); border-left: 3px solid var(--t, var(--text-muted)); background: var(--bg); color: inherit; text-decoration: none; }
+a.ic-ev:hover { border-color: var(--t, var(--text-muted)); }
+.ic-ev .chip { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--t, var(--text-muted)); }
+.ic-ev .nombre { font-size: 0.86rem; color: var(--text); line-height: 1.35; }
+.ic-ev .nota { font-size: 0.72rem; color: var(--text-subtle); }
+.ic-mas { align-self: center; min-height: 42px; padding: 0.45rem 1.2rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--text-muted); font-size: 0.84rem; }
+.ic-mas:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+@media (max-width: 640px) { .ic-dia { grid-template-columns: 52px minmax(0, 1fr); gap: 0.6rem; padding: 0.6rem; } .ic-evs { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 900px) { .pa-sub { flex-wrap: wrap; overflow: visible; } .pa-sub .sep { align-self: auto; height: 26px; } }

@@ -2,6 +2,7 @@
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
 import { leerXls, fechaExcel } from './_xls.js';
+import { leerXlsx } from './_xlsx.js';
 
 // ?canasta=1: canastas básicas (líneas de indigencia y pobreza) leídas del archivo del INDEC,
 // que se actualiza el mismo día del informe. El portal de datos abiertos tarda semanas en cargarlas.
@@ -323,9 +324,158 @@ async function empleo(req, res) {
   return res.status(200).json(out);
 }
 
+// ?comercio=1: intercambio comercial argentino del INDEC (balanza mensual, exportaciones por rubro,
+// importaciones por uso y socios). Los nombres de tres archivos cambian con el año: se buscan en la página del tema.
+const MES_RE = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)/i;
+async function comercio(req, res) {
+  const tema = await fetch(INDEC + '/Nivel4/Tema/3/2/40', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : '')).catch(() => '');
+  const ruta = re => (tema.match(re) || [])[0];
+  const xls = async r => {
+    if (!r) throw new Error('sin archivo');
+    const x = await fetch(INDEC + r, { signal: AbortSignal.timeout(15000), headers: UA });
+    if (!x.ok) throw new Error('archivo');
+    return leerXls(Buffer.from(await x.arrayBuffer()))[0]?.filas || [];
+  };
+  const [rBal, rRub, rUso, rPai] = await Promise.allSettled([
+    xls('/ftp/cuadros/economia/balanmensual.xls'),
+    xls(ruta(/\/ftp\/cuadros\/economia\/expo_grandes_rubros_\d{4}_\d{4}\.xls/)),
+    xls(ruta(/\/ftp\/cuadros\/economia\/impo_uso_economico_\d{4}_\d{4}\.xls/)),
+    xls(ruta(/\/ftp\/cuadros\/economia\/balan_continentes_paises_\d{4}_\d{4}\.xls/)),
+  ]);
+  const txt = v => String(v ?? '').replace(/\s+/g, ' ').trim();
+  const informe = ruta(/\/uploads\/informesdeprensa\/ica_\d{2}_\d{2}[A-Za-z0-9]*\.pdf/);
+  const out = { fuente: 'INDEC, Intercambio comercial argentino', url: INDEC + '/Nivel4/Tema/3/2/40', informe: informe ? INDEC + informe : null };
+
+  // Balanza mensual desde 1990 (millones de dólares): el año figura solo en enero
+  if (rBal.status === 'fulfilled') {
+    const f = rBal.value, cab = f.find(r => r && r.some(v => txt(v) === 'Exportaciones') && r.some(v => txt(v) === 'Saldo')) || [];
+    const ce = cab.findIndex(v => txt(v) === 'Exportaciones'), ci = cab.findIndex(v => txt(v) === 'Importaciones'), cs = cab.findIndex(v => txt(v) === 'Saldo');
+    const serie = [];
+    let anio = null;
+    for (const r of f) {
+      if (!r || ce < 0) continue;
+      const a = txt(r[0]).match(/^(\d{4})/); if (a) anio = +a[1];
+      const m = txt(r[1]).match(MES_RE);
+      if (!anio || !m || !Number.isFinite(r[ce]) || !Number.isFinite(r[ci])) continue;
+      const mes = MESES_ES.indexOf(m[1].toLowerCase().replace('setiembre', 'septiembre')) + 1;
+      serie.push({ p: anio + '-' + String(mes).padStart(2, '0'), expo: r[ce], impo: r[ci], saldo: Number.isFinite(r[cs]) ? r[cs] : r[ce] - r[ci] });
+    }
+    const u = serie.at(-1);
+    if (serie.length > 200 && u && u.expo > 1000 && u.expo < 50000) out.mensual = serie.filter(x => x.p >= '2016-01');
+  }
+
+  // Acumulado del año por categoría: exportaciones por grandes rubros e importaciones por uso económico
+  const porCategoria = f => {
+    const cab = f.find(r => r && r.some(v => txt(v) === 'Total') && r.filter(v => typeof v === 'string' && /\(|Resto/.test(v)).length >= 3);
+    const acum = f.find(r => r && r.some(v => /^Total acumulado/i.test(txt(v))));
+    const anios = f.find(r => r && r.some(v => /^Año \d{4}/.test(txt(v))));
+    if (!cab || !acum || !anios) return null;
+    const categorias = cab.map((v, i) => [i, txt(v)]).filter(([, v]) => v.length > 3 && !/^Per[ií]odo/.test(v))
+      .map(([i, nombre]) => ({ nombre, actual: num(acum[i]), anterior: num(acum[i + 1]) })).filter(c => c.actual != null && c.anterior != null);
+    const hasta = (txt(acum.find(v => /^Total acumulado/i.test(txt(v)))).match(/(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i) || [])[1];
+    const anio = +(txt(anios.find(v => /^Año \d{4}/.test(txt(v)))).match(/\d{4}/) || [])[0];
+    return categorias.length >= 4 && hasta && anio ? { anio, hasta: hasta.toLowerCase(), categorias } : null;
+  };
+  if (rRub.status === 'fulfilled') out.rubros = porCategoria(rRub.value);
+  if (rUso.status === 'fulfilled') out.usos = porCategoria(rUso.value);
+
+  // Socios comerciales: acumulado del año por país (miles de dólares → millones)
+  if (rPai.status === 'fulfilled') {
+    const f = rPai.value, cab = f.find(r => r && r.some(v => txt(v) === 'Exportaciones') && r.some(v => txt(v) === 'Importaciones'));
+    if (cab) {
+      const ce = cab.findIndex(v => txt(v) === 'Exportaciones'), ci = cab.findIndex(v => txt(v) === 'Importaciones');
+      const periodo = txt((f[f.indexOf(cab) + 1] || [])[ce]).replace(/[e*]+$/, '');
+      const mill = v => (Number.isFinite(v) ? Math.round(v / 100) / 10 : 0);
+      const filas = f.filter(r => r && typeof r[0] === 'string' && txt(r[0]) && (Number.isFinite(r[ce]) || Number.isFinite(r[ci])));
+      const fila = r => ({ nombre: txt(r[0]).replace(/^Total de /, ''), expo: mill(r[ce]), expoAnt: mill(r[ce + 1]), impo: mill(r[ci]), impoAnt: mill(r[ci + 1]) });
+      // Las filas con sangría son aperturas de la fila de arriba (por ejemplo, China sin Hong Kong ni Macao)
+      const paises = filas.filter(r => !/^\s/.test(r[0]) && !/^Total|^Los demás|^Resto/i.test(txt(r[0]))).map(fila).sort((a, b) => b.expo + b.impo - a.expo - a.impo).slice(0, 12);
+      const continentes = filas.filter(r => /^Total de /.test(txt(r[0]))).map(fila);
+      if (paises.length >= 8) out.socios = { periodo, paises, continentes };
+    }
+  }
+  if (!out.mensual) return res.status(502).json({ error: 'No se pudo leer el intercambio comercial del INDEC' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
+// ?fiscal=1: ingresos, gastos y resultado del Sector Público Nacional no financiero (base caja, Secretaría de Hacienda)
+// y la recaudación tributaria. La serie sale del IMIG del portal de datos abiertos; si Hacienda ya publicó un mes más
+// nuevo en su planilla oficial (el comunicado mensual), se suma ese mes con los totales de la planilla.
+const ARG = 'https://www.argentina.gob.ar';
+async function planillaHacienda() {
+  const pag = await fetch(ARG + '/economia/sechacienda', { signal: AbortSignal.timeout(8000), headers: UA }).then(r => (r.ok ? r.text() : ''));
+  const notas = [...new Set([...pag.matchAll(/href="(\/noticias\/en-(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)-el-sector-publico-nacional[a-z0-9-]{0,160})"/g)].map(m => m[1]))].slice(0, 3);
+  const planillas = (await Promise.all(notas.map(n => fetch(ARG + n, { signal: AbortSignal.timeout(8000), headers: UA }).then(r => (r.ok ? r.text() : '')).catch(() => ''))))
+    .flatMap(t => [...t.matchAll(/https:\/\/www\.argentina\.gob\.ar\/sites\/default\/files\/(\d{4})\/(\d{2})\/([a-z]+)_(\d{2})(?:_\d)?\.xlsx/g)])
+    .map(m => ({ url: m[0], mes: MESES_ES.indexOf(m[3]) + 1, anio: 2000 + +m[4] })).filter(x => x.mes > 0)
+    .sort((a, b) => b.anio * 12 + b.mes - (a.anio * 12 + a.mes));
+  if (!planillas.length) return null;
+  const r = await fetch(planillas[0].url, { signal: AbortSignal.timeout(10000), headers: UA });
+  if (!r.ok || +(r.headers.get('content-length') || 0) > 5e6) return null;
+  const filas = leerXlsx(Buffer.from(await r.arrayBuffer()))[0]?.filas || [];
+  const t = v => String(v ?? '').replace(/\s+/g, ' ').trim();
+  const titulo = filas.flat().find(v => typeof v === 'string' && /BASE CAJA - /.test(v)) || '';
+  const tm = titulo.match(/BASE CAJA - ([A-ZÁÉÍÓÚ]+) (\d{4})/);
+  const p = { anio: planillas[0].anio, mes: planillas[0].mes };
+  if (!tm || MESES_ES.indexOf(tm[1].toLowerCase()) + 1 !== p.mes || +tm[2] !== p.anio) return null;   // la planilla tiene que ser del mes que dice el nombre
+  const cab = filas.find(f => f && f.some(v => /^T\s*O\s*T\s*A\s*L$/.test(t(v))));
+  const col = cab ? cab.findLastIndex(v => /^T\s*O\s*T\s*A\s*L$/.test(t(v))) : -1;
+  const fila = re => { const f = filas.find(x => x && re.test(t(x[1]))); return f && Number.isFinite(f[col]) ? f[col] : null; };
+  const ingresos = fila(/^INGRESOS ANTES DE FIGURAT/), primario = fila(/^RESULTADO PRIMARIO/), financiero = fila(/^RESULTADO FINANCIERO/), intereses = fila(/^\. Intereses Netos/);
+  if ([ingresos, primario, financiero, intereses].some(v => v == null) || Math.abs(primario - intereses - financiero) > 5) return null;
+  return { p: p.anio + '-' + String(p.mes).padStart(2, '0'), ingresos, gastos: ingresos - primario, primario, intereses, financiero, planilla: planillas[0].url };
+}
+// Columnas del IMIG agrupadas para leerlas más fácil
+const IMIG_ING = { iva: ['iva_neto_reintegros'], ganancias: ['ganancias'], segSocial: ['aportes_contribuciones_seguridad_social'], cheque: ['debitos_creditos'], exportaciones: ['derechos_exportacion'], importaciones: ['derechos_importacion'],
+  otrosImpuestos: ['bienes_personales', 'impuestos_internos', 'combustibles', 'resto_tributarios'], rentas: ['fgs_cobradas_sector_privado_sector_publico_financiero', 'resto_rentas_propiedad'], otros: ['ingresos_no_tributarios', 'transferencias_corrientes', 'resto_ingresos_corrientes', 'ingresos_capital'] };
+const IMIG_GAS = { jubilaciones: ['jubilaciones_pensiones_contributivas'], asignaciones: ['asignacion_familiares_hijo'], pensionesNC: ['pensiones_no_contributivas'], pami: ['prestaciones_inssjp'], otrosProgramas: ['otros_programas'],
+  energia: ['energia'], transporte: ['transporte'], otrosSubsidios: ['otras_funciones'], salarios: ['salarios'], funcionamiento: ['otros_gastos_funcionamiento'],
+  provincias: ['transferencias_corrientes_provincias_educacion', 'transferencias_corrientes_provincias_seguridad_social', 'transferencias_corrientes_provincias_desarrollo_social', 'transferencias_corrientes_provincias_salud', 'transferencias_corrientes_provincias_otras'],
+  universidades: ['otros_corrientes_transferencias_universidades'], empresas: ['otros_corrientes_deficit_operativo_empresas_publicas'], otrosCorrientes: ['otros_corrientes_resto'], capital: ['capital_', 'fondo_federal_solidario'] };
+async function fiscal(req, res) {
+  const [rImig, rRec, rOf] = await Promise.allSettled([
+    csvGob('452/distribution/452.3/download/imig-mensual.csv'),
+    csvGob('172/distribution/172.3/download/recaudacion-tributaria-datos-mensuales.csv'),
+    planillaHacienda(),
+  ]);
+  const out = { fuente: 'Secretaría de Hacienda (base caja del Sector Público Nacional no financiero y recaudación tributaria)' };
+  if (rImig.status === 'fulfilled') {
+    const d = rImig.value, idx = c => d.cab.indexOf(c);
+    const suma = (f, grupo) => Object.fromEntries(Object.entries(grupo).map(([k, cols]) => [k, Math.round(d.cab.reduce((a, c, i) => a + (cols.some(x => (x.endsWith('_') ? c.startsWith(x) : c === x)) && Number.isFinite(f[i]) ? f[i] : 0), 0))]));
+    const [iRP, iInt, iRF] = [idx('resultado_primario'), idx('intereses_netos'), idx('resultado_financiero')];
+    if (iRP > 0 && iInt > 0 && iRF > 0) {
+      const serie = d.filas.filter(f => f[0] >= '2017-01' && Number.isFinite(f[iRP])).map(f => {
+        const ing = suma(f, IMIG_ING), gas = suma(f, IMIG_GAS), ingresos = Object.values(ing).reduce((a, b) => a + b, 0);
+        return { p: f[0], ingresos, gastos: Object.values(gas).reduce((a, b) => a + b, 0), primario: Math.round(f[iRP]), intereses: Math.round(f[iInt]), financiero: Math.round(f[iRF]), ing, gas };
+      });
+      // Control: ingresos menos gastos tiene que dar el resultado primario publicado
+      if (serie.length > 24 && serie.every(x => Math.abs(x.ingresos - x.gastos - x.primario) < 50)) out.mensual = serie;
+    }
+  }
+  if (rOf.status === 'fulfilled' && rOf.value && out.mensual) {
+    const o = rOf.value, u = out.mensual.at(-1);
+    if (o.p > u.p) out.mensual.push({ p: o.p, ingresos: Math.round(o.ingresos), gastos: Math.round(o.gastos), primario: Math.round(o.primario), intereses: Math.round(o.intereses), financiero: Math.round(o.financiero), planilla: true });
+    out.planilla = o.planilla;
+  }
+  if (rRec.status === 'fulfilled') {
+    const d = rRec.value, K = { total: 'total_recaudacion', dgi: 'subtotal_dgi', aduana: 'subtotal_dga', segSocial: 'seguridad_social' };
+    const idx = Object.fromEntries(Object.entries(K).map(([k, c]) => [k, d.cab.indexOf(c)]));
+    if (Object.values(idx).every(i => i > 0)) {
+      const s = d.filas.filter(f => f[0] >= '2016-01' && f[idx.total] > 0).map(f => Object.assign({ p: f[0] }, Object.fromEntries(Object.entries(idx).map(([k, i]) => [k, Math.round(f[i])]))));
+      if (s.length > 24) out.recaudacion = s;
+    }
+  }
+  if (!out.mensual && !out.recaudacion) return res.status(502).json({ error: 'No se pudieron leer las cuentas fiscales' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
+  if (req.query.comercio) return comercio(req, res);
+  if (req.query.fiscal) return fiscal(req, res);
   if (req.query.salarios) return salarios(req, res);
   if (req.query.empleo) return empleo(req, res);
   if (req.query.ipc) return ipc(req, res);

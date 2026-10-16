@@ -80,6 +80,7 @@ var BB_GLIFO_DE = {
   'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
   'panel-actividad': ['subida', '#60a5fa'],
   'panel-empleo': ['maletin', '#a78bfa'],      'sueldo-vs-promedio': ['balanza', '#a78bfa'],
+  'panel-comercio': ['globo', '#4ade9a'],      'panel-fiscal': ['balanza', '#e8c97a'],
 };
 
 function bbGlifo(href) {
@@ -881,3 +882,11 @@ bbTrasCarga(function revelar() {
     donde.insertBefore(aviso, donde.firstChild);
   } catch (e) { /* almacenamiento bloqueado o datos invalidos: no se hace nada */ }
 })();
+
+// Submenú del Panel Argentina: en el celular la lista se desliza de costado; que arranque mostrando la sección actual
+document.addEventListener('DOMContentLoaded', function () {
+  var a = document.querySelector('.pa-sub [aria-current="page"]');
+  if (!a) return;
+  var n = a.parentElement;
+  if (n.scrollWidth > n.clientWidth) n.scrollLeft += a.getBoundingClientRect().left - n.getBoundingClientRect().left - (n.clientWidth - a.offsetWidth) / 2;
+});

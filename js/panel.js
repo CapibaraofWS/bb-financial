@@ -38,6 +38,8 @@ window.BBPanel = (function () {
     salarios: () => json('/api/indec?salarios=1'),
     empleo: () => json('/api/indec?empleo=1'),
     geo: () => json('/data/provincias-ar.json'),
+    comercio: () => json('/api/indec?comercio=1'),
+    fiscal: () => json('/api/indec?fiscal=1'),
   };
   // Series del BCRA (vienen de la más nueva a la más vieja) → [{fecha, valor}] en orden
   const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
@@ -81,10 +83,16 @@ window.BBPanel = (function () {
     [/servicios públicos/i, 'Servicios públicos (ISSP)', 'actividad', 2],
     [/turismo internacional/i, 'Turismo internacional', 'actividad', 2],
   ];
+  // El resto de las publicaciones (solo para el calendario completo de la Agenda): tema según el título
+  const TEMA_RESTO = [[/IPI|tendencia de negocios|supermercados|autoservicios|centros de compras|electrodomésticos|patentamientos|maquinaria agrícola|farmacéutica|sector energético|productos industriales/i, 'actividad'],
+    [/distribución del ingreso|condiciones de vida/i, 'pobreza'], [/Dotación de personal|generación del ingreso|microdatos de la Encuesta Permanente/i, 'empleo'], [/comercio exterior/i, 'comercio']];
   function corto(titulo) {
     const c = CORTOS.find(([re]) => re.test(titulo));
     const periodo = (titulo.match(/\.\s*([^.]*\d{4})\s*$/) || [])[1] || '';
-    return { nombre: c ? c[1] : titulo.split(/[.(]/)[0].trim().slice(0, 48), tema: c ? c[2] : 'otro', nivel: c ? c[3] : 3, periodo: periodo.replace(/^./, x => x.toUpperCase()) };
+    const resto = !c && TEMA_RESTO.find(([re]) => re.test(titulo));
+    // Sin nombre corto: el título sin el período ni las siglas (así "Encuesta de tendencia de negocios. Industria manufacturera" no se confunde con la de supermercados)
+    const largo = titulo.replace(/\.\s*[^.]*\d{4}\s*$/, '').replace(/\s*\([^)]*\)/g, '').trim();
+    return { nombre: c ? c[1] : largo.length > 80 ? largo.slice(0, 78).replace(/\s+\S*$/, '') + '…' : largo, tema: c ? c[2] : resto ? resto[1] : 'otro', nivel: c ? c[3] : 3, periodo: periodo.replace(/^./, x => x.toUpperCase()) };
   }
 
   // ---- "Últimos datos y lo que viene"
@@ -250,6 +258,14 @@ window.BBPanel = (function () {
     exportar(cv, { titulo: b.dataset.titulo, fuente: b.dataset.fuente, nombre: b.dataset.exportar });
   });
 
+  // ---- Nombres largos en los ejes: en el celular se parten en renglones para que las barras tengan lugar
+  function corte(t, max = 16) {
+    if (!matchMedia('(max-width: 640px)').matches || t.length <= max) return t;
+    const r = [];
+    for (const p of t.split(' ')) { if (r.length && (r[r.length - 1] + ' ' + p).length <= max) r[r.length - 1] += ' ' + p; else r.push(p); }
+    return r;
+  }
+
   // ---- Botonera de opciones: <div class="pa-seg" data-seg><button data-v="12" aria-pressed="true">…</button>…</div>
   function seg(el, alCambiar) {
     if (typeof el === 'string') el = document.getElementById(el);
@@ -314,5 +330,5 @@ window.BBPanel = (function () {
     elegir(nombre[el.dataset.sel] ? el.dataset.sel : orden.includes('06') ? '06' : orden[0]);
   }
 
-  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, mapaProvincias };
+  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, TEMAS, MES, MESES, DSEM, diasEntre };
 })();

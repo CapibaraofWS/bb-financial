@@ -41,7 +41,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=16" />
-  <link rel="stylesheet" href="../css/panel.css?v=4" />
+  <link rel="stylesheet" href="../css/panel.css?v=5" />
 
   <style>
     .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
@@ -194,14 +194,14 @@
   </header>
 
   <main>
-    <div class="container" style="padding-top:1.25rem"><nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><a href="agenda-ar" aria-current="page">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav></div>
+    <div class="container" style="padding-top:1.25rem"><nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar" aria-current="page">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav></div>
 
     <section class="agenda-hero">
       <div class="container">
         <span class="live-pill">En vivo</span>
         <p class="agenda-hero-eyebrow">Agenda del mercado argentino</p>
         <h1>¿Qué pasa hoy <em>y esta semana?</em></h1>
-        <p>Próximas licitaciones del Tesoro, calendario de informes del BCRA y últimas noticias de la Secretaría de Finanzas. Datos oficiales, actualizados en vivo. Sin tener que abrir 5 pestañas.</p>
+        <p>Próximas licitaciones del Tesoro, informes del BCRA, el calendario completo del INDEC y las últimas noticias de la Secretaría de Finanzas. Datos oficiales, actualizados en vivo. Sin tener que abrir 5 pestañas.</p>
       </div>
     </section>
 
@@ -271,6 +271,24 @@
       </div>
     </section>
 
+    <!-- ============== CALENDARIO DEL INDEC ============== -->
+    <section class="agenda-section" id="indec" style="padding-top:0;scroll-margin-top:80px">
+      <div class="container">
+        <div class="agenda-section-head">
+          <div>
+            <h2>Calendario del INDEC</h2>
+            <p>Todas sus publicaciones, de un mes atrás a dos meses adelante: inflación, actividad, empleo, pobreza, comercio exterior y más.</p>
+          </div>
+          <a class="source-link" href="https://www.indec.gob.ar/indec/web/Calendario-Fecha-0" target="_blank" rel="noopener">Fuente oficial →</a>
+        </div>
+        <div class="ic-filtros">
+          <div class="pa-seg" id="ic-cuando" role="group" aria-label="Qué publicaciones mostrar"><button type="button" data-v="viene" aria-pressed="true">Próximas</button><button type="button" data-v="paso" aria-pressed="false">Ya publicadas</button></div>
+          <div class="pa-chips" id="ic-temas" role="group" aria-label="Filtrar por tema"></div>
+        </div>
+        <div class="ic-lista" id="ic-lista" aria-live="polite"><p class="news-loading">Cargando el calendario del INDEC…</p></div>
+      </div>
+    </section>
+
     <!-- ============== NOTICIAS FINANZAS ============== -->
     <section class="agenda-section">
       <div class="container">
@@ -305,7 +323,7 @@
 
     <section class="container bb-faq" id="guia-agenda" aria-labelledby="guia-agenda-t">
       <h2 id="guia-agenda-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo usar la agenda</h2>
-      <p>La agenda junta en una pantalla las fechas que mueven el mercado argentino en pesos. Arriba está el <strong>riesgo país</strong>; después, los próximos eventos; el <strong>cronograma del Tesoro</strong> con sus llamados, licitaciones y liquidaciones; el <strong>calendario del Banco Central</strong> con sus informes; las noticias oficiales de la Secretaría de Finanzas y videos de canales financieros.</p>
+      <p>La agenda junta en una pantalla las fechas que mueven el mercado argentino en pesos. Arriba está el <strong>riesgo país</strong>; después, los próximos eventos; el <strong>cronograma del Tesoro</strong> con sus llamados, licitaciones y liquidaciones; el <strong>calendario del Banco Central</strong> con sus informes; el <strong>calendario del INDEC</strong>, con todo lo que publica y filtros por tema; las noticias oficiales de la Secretaría de Finanzas y videos de canales financieros.</p>
       <p>Sirve para anticiparse. Una licitación del Tesoro puede mover las tasas de las letras y, detrás, las de plazos fijos y billeteras. El REM muestra qué inflación y qué dólar esperan las consultoras. Y el día que se publica la inflación cambian los cálculos de casi todo lo que ajusta por precios.</p>
       <details><summary>¿Qué es el riesgo país?</summary><p>Es la tasa extra que piden los inversores por prestarle a la Argentina en dólares, comparada con lo que rinden los bonos del Tesoro de Estados Unidos. Se mide en puntos básicos: 100 puntos son un punto porcentual. El índice oficial lo calcula JP Morgan al cierre del día; la estimación del día se arma con los precios de los bonos argentinos en dólares.</p></details>
       <details><summary>¿Qué es una licitación del Tesoro?</summary><p>Es la subasta en la que el Tesoro coloca letras y bonos en pesos para pagar los que vencen. Hay, en general, dos por mes. Cómo se leen sus resultados, qué es el rollover y qué instrumentos se ofrecen está en <a href="blog/licitacion-del-tesoro-como-leer-resultados">Licitación del Tesoro: cómo leer los resultados</a>.</p></details>
@@ -349,9 +367,59 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=44"></script>
+  <script src="../js/main.js?v=45"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/ticker.js?v=6"></script>
+  <script src="../js/panel.js?v=5"></script>
+  <script>
+  /* ============== CALENDARIO DEL INDEC ============== */
+  (async function () {
+    const P = window.BBPanel, lista = document.getElementById('ic-lista');
+    if (!P || !lista) return;
+    const cal = await P.API.calendario();
+    if (!cal || !Array.isArray(cal.eventos) || !cal.eventos.length) {
+      lista.innerHTML = '<p class="news-error">No pudimos cargar el calendario del INDEC. <a href="https://www.indec.gob.ar/indec/web/Calendario-Fecha-0" target="_blank" rel="noopener" style="color:var(--accent)">Fuente oficial →</a></p>';
+      return;
+    }
+    const hoy = P.hoyISO(), hora = new Date().toTimeString().slice(0, 5);
+    const yaSalio = e => e.fecha < hoy || (e.fecha === hoy && hora >= e.hora);
+    const ev = cal.eventos.map(e => Object.assign({}, e, P.corto(e.titulo)));
+    const TEMAS = [['todos', 'Todos'], ['precios', 'Precios'], ['actividad', 'Actividad'], ['empleo', 'Empleo'], ['pobreza', 'Pobreza'], ['comercio', 'Comercio'], ['otro', 'Otros']];
+    let cuando = 'viene', tema = 'todos', todo = false;
+    const chips = document.getElementById('ic-temas');
+    chips.innerHTML = TEMAS.map(([k, t]) => '<button type="button" data-t="' + k + '" aria-pressed="' + (k === 'todos') + '">' + t + '</button>').join('');
+    chips.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      tema = b.dataset.t; todo = false;
+      chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      pintar();
+    });
+    P.seg('ic-cuando', v => { cuando = v; todo = false; pintar(); });
+    const LIMITE = 8;   // días que se ven de entrada; el resto, con "Ver más"
+    function pintar() {
+      let s = ev.filter(e => (cuando === 'viene' ? !yaSalio(e) : yaSalio(e)) && (tema === 'todos' || e.tema === tema));
+      if (cuando === 'paso') s = s.reverse();
+      const dias = [];
+      for (const e of s) { let d = dias[dias.length - 1]; if (!d || d.fecha !== e.fecha) dias.push(d = { fecha: e.fecha, items: [] }); d.items.push(e); }
+      const ver = todo ? dias : dias.slice(0, LIMITE);
+      if (!ver.length) { lista.innerHTML = '<p class="news-error">No hay publicaciones de este tema en el período.</p>'; return; }
+      lista.innerHTML = ver.map(d => {
+        const [y, m, dd] = d.fecha.split('-').map(Number), dif = P.diasEntre(hoy, d.fecha);
+        const falta = dif === 0 ? 'Hoy' : dif === 1 ? 'Mañana' : dif === -1 ? 'Ayer' : dif > 1 ? 'En ' + dif + ' días' : 'Hace ' + (-dif) + ' días';
+        return '<div class="ic-dia' + (dif === 0 ? ' hoy' : '') + '"><div class="ic-fecha" aria-label="' + dd + ' de ' + P.MESES[m - 1] + '"><span class="dsem">' + P.DSEM[new Date(y, m - 1, dd).getDay()] + '</span><b>' + dd + '</b><span class="mes">' + P.MES[m - 1] + '</span></div>' +
+          '<div class="ic-evs"><span class="ic-falta">' + falta + '</span>' + d.items.map(e => {
+            const link = e.informe && yaSalio(e), tag = link ? 'a' : 'div';
+            return '<' + tag + ' class="ic-ev t-' + P.esc(e.tema) + '"' + (link ? ' href="' + P.esc(e.informe) + '" target="_blank" rel="noopener"' : '') + ' title="' + P.esc(e.titulo) + '">' +
+              '<span class="chip">' + P.esc(P.TEMAS[e.tema] || 'INDEC') + ' · ' + P.esc(e.hora) + ' h</span><span class="nombre">' + P.esc(e.nombre) + '</span>' +
+              (e.periodo || link ? '<span class="nota">' + P.esc(e.periodo) + (link ? (e.periodo ? ' · ' : '') + 'informe ↗' : '') + '</span>' : '') + '</' + tag + '>';
+          }).join('') + '</div></div>';
+      }).join('') + (dias.length > ver.length ? '<button type="button" class="ic-mas">Ver ' + (dias.length - ver.length) + ' días más</button>' : '');
+      const mas = lista.querySelector('.ic-mas');
+      if (mas) mas.addEventListener('click', () => { todo = true; pintar(); });
+    }
+    pintar();
+  })();
+  </script>
   <script>
   /* ============== AGENDA AR ============== */
   (function() {
@@ -376,9 +444,10 @@
     // === COUNTDOWN HERO ===
     async function loadCountdowns() {
       const grid = document.getElementById('countdown-grid');
-      const [cron, bcra] = await Promise.allSettled([
+      const [cron, bcra, indec] = await Promise.allSettled([
         fetch('/api/agenda?source=finanzas-cronograma').then(r => r.ok ? r.json() : null),
         fetch('/api/agenda?source=bcra-calendario').then(r => r.ok ? r.json() : null),
+        fetch('/api/indec?calendario=1').then(r => r.ok ? r.json() : null),
       ]);
       const c = cron.status === 'fulfilled' ? cron.value : null;
       const b = bcra.status === 'fulfilled' ? bcra.value : null;
@@ -395,7 +464,18 @@
           isKey: true,
         });
       }
-      // 2. Próximo REM
+      // 2. Próximo dato de inflación (INDEC)
+      const ic = indec.status === 'fulfilled' ? indec.value : null;
+      const hoyIso = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+      const ipcEv = ic && Array.isArray(ic.eventos) && ic.eventos.find(e => /^Índice de precios al consumidor/.test(e.titulo) && e.fecha >= hoyIso);
+      if (ipcEv) {
+        cards.push({
+          eyebrow: 'Próxima inflación',
+          name: 'Índice de precios al consumidor (INDEC)',
+          iso: ipcEv.fecha,
+        });
+      }
+      // 3. Próximo REM
       if (b && b.nextREM) {
         cards.push({
           eyebrow: 'Próximo REM',
@@ -425,6 +505,7 @@
         return;
       }
 
+      cards.sort((a, b) => (a.iso < b.iso ? -1 : 1));
       cards.slice(0, 4).forEach((card, idx) => {
         const days = daysFromNow(card.iso);
         const div = document.createElement('div');

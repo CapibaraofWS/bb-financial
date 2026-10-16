@@ -36,6 +36,8 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 - [Actividad económica](https://www.bbfinanzas.com.ar/pages/panel-actividad): EMAE, producción industrial (IPI) y construcción (ISAC) del INDEC.
 - [Empleo y salarios](https://www.bbfinanzas.com.ar/pages/panel-empleo): sueldos registrados contra la inflación (INDEC), sueldo promedio (RIPTE), salario mínimo, desocupación, trabajadores registrados y un mapa del empleo privado por provincia.
 - [Sueldo vs. promedio](https://www.bbfinanzas.com.ar/pages/sueldo-vs-promedio): compara un sueldo con el RIPTE, el salario mínimo y la línea de pobreza del hogar, con los datos oficiales del mes.
+- [Comercio exterior](https://www.bbfinanzas.com.ar/pages/panel-comercio): exportaciones, importaciones y saldo comercial del INDEC, mes a mes, por gran rubro, por uso económico y por país.
+- [Cuentas públicas](https://www.bbfinanzas.com.ar/pages/panel-fiscal): resultado primario y financiero del Sector Público Nacional, ingresos, gastos e intereses descontada la inflación, y recaudación tributaria (Secretaría de Hacienda).
 - [Pobreza en la Argentina](https://www.bbfinanzas.com.ar/pages/panel-pobreza): pobreza e indigencia oficiales del INDEC, estimación mensual de la UTDT, evolución desde 2016, por edad, región y aglomerado, y canastas básicas.
 - [Calculadora de línea de pobreza](https://www.bbfinanzas.com.ar/pages/linea-de-pobreza): si el ingreso de un hogar supera la línea de pobreza y de indigencia, con la canasta del INDEC del mes y su tabla de adultos equivalentes.
 - [Datos Macro](https://www.bbfinanzas.com.ar/pages/datos): variables del BCRA, INDEC y Estados Unidos.

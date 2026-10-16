@@ -39,7 +39,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=16" />
-  <link rel="stylesheet" href="../css/panel.css?v=4" />
+  <link rel="stylesheet" href="../css/panel.css?v=5" />
 </head>
 <body>
   <header class="site-header">
@@ -74,7 +74,7 @@
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
 
       <section class="pa-franja" data-franja aria-labelledby="fr-t">
         <div class="pa-franja-cab"><h2 id="fr-t">Últimos datos y lo que viene</h2><a href="agenda-ar">Agenda completa →</a></div>
@@ -133,6 +133,20 @@
             <li><a class="n" href="salario">¿Tu aumento le ganó a la inflación?<small>Del bruto al neto y tu poder de compra</small></a><span class="v">→</span></li>
           </ul>
         </article>
+        <article class="pa-card ancha" id="t-comercio">
+          <h3>🚢 Comercio exterior</h3>
+          <p class="que">Saldo comercial del mes · exportaciones menos importaciones</p>
+          <p class="grande">—</p>
+          <p class="contexto">Intercambio comercial argentino del INDEC, en dólares.</p>
+          <div class="pie"><span>Fuente: INDEC</span><a class="ir" href="panel-comercio">Panel de comercio →</a></div>
+        </article>
+        <article class="pa-card" id="t-fiscal">
+          <h3>🏛️ Cuentas públicas</h3>
+          <p class="que">Resultado primario del Sector Público Nacional</p>
+          <p class="grande">—</p>
+          <p class="contexto">Ingresos menos gastos, sin contar intereses. Base caja.</p>
+          <div class="pie"><span>Fuente: Secretaría de Hacienda</span><a class="ir" href="panel-fiscal">Cuentas públicas →</a></div>
+        </article>
       </div>
 
       <section class="pa-graf" aria-labelledby="g-ipc-t">
@@ -174,19 +188,19 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=44"></script>
+  <script src="../js/main.js?v=45"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=4"></script>
+  <script src="../js/panel.js?v=5"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), esc = P.esc, num = P.num;
     P.franja($('franja'), { pasados: 5, proximos: 8 });
     const hace = d => new Date(Date.now() - d * 864e5).toISOString().slice(0, 10);
     const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
-    const [infAD, b, pob, can, dol, s5, s44, ipcI, em, sal, emp] = await Promise.all([
+    const [infAD, b, pob, can, dol, s5, s44, ipcI, em, sal, emp, com, fis] = await Promise.all([
       P.API.inflacion(), P.API.bcra(), P.API.pobreza(), P.API.canasta(), P.API.dolar(), P.API.serieBcra(5, hace(120)), P.API.serieBcra(44, hace(150)), P.API.ipc(),
-      P.API.emae(), P.API.salarios(), P.API.empleo(),
+      P.API.emae(), P.API.salarios(), P.API.empleo(), P.API.comercio(), P.API.fiscal(),
     ]);
     // El CSV del INDEC manda; si no responde, la serie de ArgentinaDatos
     const inf = ipcI && ipcI.general && ipcI.general.length > 13 ? ipcI.general.map(x => ({ fecha: x.p, valor: x.m })) : infAD;
@@ -339,6 +353,34 @@
           sipa ? ['Trabajadores registrados', P.mesAnio(sipa.p), num(sipa.total / 1000, 2) + ' M'] : null].filter(Boolean),
         fuentes: 'Fuente: ' + link('https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-61', 'INDEC') + ' y Secretaría de Trabajo',
         ir: '<a class="ir" href="panel-empleo">Panel de empleo →</a>',
+      });
+    }
+
+    // ---- Comercio exterior (INDEC, millones de dólares)
+    const CM = (com && com.mensual) || [];
+    if (CM.length > 13) {
+      const u = CM.at(-1), a = CM.find(x => x.p === hace12(u.p)), usd = v => (v < 0 ? '−' : '') + 'US$ ' + Math.round(Math.abs(v)).toLocaleString('es-AR') + ' M';
+      const ytd = CM.filter(x => x.p.slice(0, 4) === u.p.slice(0, 4)), ytdA = CM.filter(x => x.p.slice(0, 4) === hace12(u.p).slice(0, 4) && x.p.slice(5) <= u.p.slice(5));
+      const s = (l, k) => l.reduce((t, x) => t + x[k], 0);
+      tarjeta('t-comercio', {
+        titulo: '🚢 Comercio exterior', que: 'Saldo comercial · ' + P.mesLargo(u.p), grande: usd(u.saldo),
+        contexto: (u.saldo >= 0 ? 'Superávit' : 'Déficit') + '. Exportaciones ' + usd(u.expo) + (a ? ' (' + P.signo((u.expo / a.expo - 1) * 100) + '% en un año)' : '') + ' e importaciones ' + usd(u.impo) + (a ? ' (' + P.signo((u.impo / a.impo - 1) * 100) + '%)' : ''),
+        spark: P.sparkline(CM.slice(-24).map(x => x.saldo), { color: '#4ade9a' }),
+        filas: [['Saldo acumulado del año', 'Enero a ' + P.MESES[+u.p.slice(5) - 1], usd(s(ytd, 'saldo'))], ytdA.length === ytd.length ? ['Un año antes', 'Mismo período de ' + hace12(u.p).slice(0, 4), usd(s(ytdA, 'saldo'))] : null].filter(Boolean),
+        fuentes: 'Fuente: ' + link('https://www.indec.gob.ar/Nivel4/Tema/3/2/40', 'INDEC'), ir: '<a class="ir" href="panel-comercio">Panel de comercio →</a>',
+      });
+    }
+    // ---- Cuentas públicas (Secretaría de Hacienda, millones de pesos)
+    const FM = (fis && fis.mensual) || [];
+    if (FM.length > 13) {
+      const u = FM.at(-1), bill = v => (v < 0 ? '−' : '') + '$' + num(Math.abs(v) / 1e6, 2) + ' billones';
+      const ytd = FM.filter(x => x.p.slice(0, 4) === u.p.slice(0, 4)), s = k => ytd.reduce((t, x) => t + x[k], 0);
+      tarjeta('t-fiscal', {
+        titulo: '🏛️ Cuentas públicas', que: 'Resultado primario · ' + P.mesLargo(u.p), grande: bill(u.primario),
+        contexto: (u.primario >= 0 ? 'Superávit' : 'Déficit') + ' del Sector Público Nacional, sin contar intereses',
+        spark: P.sparkline(FM.slice(-24).map(x => x.primario), { color: '#e8c97a' }),
+        filas: [['Resultado financiero', 'Después de pagar intereses', bill(u.financiero)], ['Primario acumulado del año', 'Enero a ' + P.MESES[+u.p.slice(5) - 1], bill(s('primario'))]],
+        fuentes: 'Fuente: ' + link(fis.planilla || 'https://www.argentina.gob.ar/economia/sechacienda', 'Hacienda'), ir: '<a class="ir" href="panel-fiscal">Cuentas públicas →</a>',
       });
     }
     P.brillo('.pa-grid .pa-card');

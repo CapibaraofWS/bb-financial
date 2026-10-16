@@ -139,6 +139,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/panel-comercio</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/panel-fiscal</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.bbfinanzas.com.ar/pages/panel-pobreza</loc>
     <lastmod>2026-10-16</lastmod>
     <changefreq>daily</changefreq>
