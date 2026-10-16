@@ -167,3 +167,44 @@
 .pa-cta b { font-family: var(--font-display); font-weight: 400; font-size: 1.15rem; display: block; margin-bottom: 0.2rem; }
 .pa-cta span { font-size: 0.86rem; color: var(--text-muted); }
 .pa-cta .flecha { font-family: var(--font-mono); color: var(--accent); white-space: nowrap; }
+
+/* ---- Botonera para elegir período o vista */
+.pa-seg { display: inline-flex; max-width: 100%; overflow-x: auto; scrollbar-width: none; gap: 0.2rem; padding: 0.2rem; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); margin: 0 0 0.9rem; }
+.pa-seg button { flex: 0 0 auto; white-space: nowrap; min-height: 34px; padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.8rem; color: var(--text-muted); transition: color var(--transition), background var(--transition); }
+.pa-seg button:hover { color: var(--text); }
+.pa-seg button[aria-pressed="true"] { background: var(--accent-dim); color: var(--accent); }
+
+/* ---- Mapa de provincias */
+.pa-mapa { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.pa-mapa .lamina { position: relative; }
+.pa-mapa svg { display: block; width: 100%; height: auto; }
+.pa-mapa .pv { stroke: #0a0c0f; stroke-width: 0.7; vector-effect: non-scaling-stroke; cursor: pointer; transition: opacity 0.2s ease; outline: none; }
+.pa-mapa .pv:hover, .pa-mapa .pv:focus-visible, .pa-mapa .pv.sel { stroke: #e8edf5; stroke-width: 1.4; }
+.pa-mapa .recuadro { fill: none; stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.pa-mapa .guia { stroke: var(--text-subtle); stroke-width: 0.7; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
+.pa-mapa .rotulo { font-family: var(--font-mono); font-size: 9px; fill: var(--text-subtle); }
+.pa-mapa .lado { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.pa-mapa-info { border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; background: var(--bg); }
+.pa-mapa-info .n { font-size: 0.9rem; color: var(--text); }
+.pa-mapa-info .g { font-family: var(--font-display); font-size: 2rem; line-height: 1.1; margin: 0.2rem 0; }
+.pa-mapa-info .g.mejor { color: var(--accent); } .pa-mapa-info .g.peor { color: #ff9f7a; }
+.pa-mapa-info .d { font-size: 0.78rem; color: var(--text-subtle); line-height: 1.5; }
+.pa-mapa-ley { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-subtle); }
+.pa-mapa-ley i { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(90deg, rgba(255,120,100,0.9), rgba(255,255,255,0.08) 50%, rgba(74,222,154,0.9)); }
+.pa-rank { list-style: none; margin: 0; padding: 0; max-height: 430px; overflow-y: auto; scrollbar-width: thin; }
+.pa-rank li button { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 4.2rem; gap: 0.25rem 0.8rem; align-items: center; padding: 0.45rem 0.2rem; border-top: 1px solid var(--border); font-size: 0.84rem; color: var(--text); text-align: left; border-radius: 0; }
+.pa-rank li button:hover, .pa-rank li button.sel { background: rgba(255,255,255,0.03); }
+.pa-rank .v { font-family: var(--font-mono); text-align: right; }
+.pa-rank .barra { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+.pa-rank .barra i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+@media (max-width: 760px) {
+  .pa-mapa { grid-template-columns: minmax(0, 1fr); }
+  .pa-mapa .lamina { max-width: 250px; margin: 0 auto; }
+  .pa-rank { max-height: none; }
+}
+.pa-filas a.n { text-decoration: none; } .pa-filas a.n:hover { color: var(--accent); }
+.pa-rank.corta li:nth-child(n+4):nth-last-child(n+4) { display: none; }
+.pa-rank.corta li:nth-child(3) { border-bottom: 1px dashed var(--border); margin-bottom: 0.35rem; }
+.pa-mas-prov { width: 100%; min-height: 42px; margin-top: 0.4rem; border: 1px dashed var(--border); border-radius: 999px; color: var(--text-muted); font-size: 0.84rem; }
+.pa-mas-prov:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+@media (max-width: 640px) { .pa-seg button { padding: 0.3rem 0.65rem; } }

@@ -79,6 +79,7 @@ var BB_GLIFO_DE = {
   'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
   'panel-dolar': ['dolar', '#4ade9a'],         'panel-tasas': ['porcentaje', '#60a5fa'],
   'panel-actividad': ['subida', '#60a5fa'],
+  'panel-empleo': ['maletin', '#a78bfa'],      'sueldo-vs-promedio': ['balanza', '#a78bfa'],
 };
 
 function bbGlifo(href) {
@@ -302,6 +303,7 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'inflacion',         label: 'Inflación',               icon: '📉' },
         { href: pagesBase + 'linea-de-pobreza',  label: 'Línea de pobreza',        icon: '🏠' },
         { href: pagesBase + 'salario',           label: 'Salario',                 icon: '💵' },
+        { href: pagesBase + 'sueldo-vs-promedio', label: 'Sueldo vs. promedio',    icon: '👥' },
         { href: pagesBase + 'conversion-tasas',  label: 'Conversión de Tasas',    icon: '🔄' },
         { href: pagesBase + 'roi',               label: 'ROI',                     icon: '📊' },
         { href: pagesBase + 'fire',              label: 'FIRE',                    icon: '🔥' },

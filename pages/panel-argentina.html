@@ -39,7 +39,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=16" />
-  <link rel="stylesheet" href="../css/panel.css?v=3" />
+  <link rel="stylesheet" href="../css/panel.css?v=4" />
 </head>
 <body>
   <header class="site-header">
@@ -74,7 +74,7 @@
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-pobreza">Pobreza</a><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
 
       <section class="pa-franja" data-franja aria-labelledby="fr-t">
         <div class="pa-franja-cab"><h2 id="fr-t">Últimos datos y lo que viene</h2><a href="agenda-ar">Agenda completa →</a></div>
@@ -117,6 +117,22 @@
           <p class="contexto">Julio de 2026, sin estacionalidad. Contra julio de 2025, −1,4%.</p>
           <div class="pie"><span>Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-9-48" target="_blank" rel="noopener">INDEC ↗</a></span><a class="ir" href="panel-actividad">Panel de actividad →</a></div>
         </article>
+        <article class="pa-card ancha" id="t-empleo">
+          <h3>💼 Empleo y salarios</h3>
+          <p class="que">Sueldos registrados · contra un año atrás, descontada la inflación</p>
+          <p class="grande">—</p>
+          <p class="contexto">Índice de salarios del INDEC comparado con la inflación del mismo período.</p>
+          <div class="pie"><span>Fuente: INDEC y Secretaría de Trabajo</span><a class="ir" href="panel-empleo">Panel de empleo →</a></div>
+        </article>
+        <article class="pa-card" id="t-calc">
+          <h3>🧮 Calculadoras</h3>
+          <p class="que">Con los datos oficiales de este mes, que se actualizan solos</p>
+          <ul class="pa-filas">
+            <li><a class="n" href="sueldo-vs-promedio">¿Cuánto ganás comparado con el promedio?<small>Contra el RIPTE, el salario mínimo y la línea de pobreza</small></a><span class="v">→</span></li>
+            <li><a class="n" href="linea-de-pobreza">¿Tu hogar está por encima de la línea de pobreza?<small>Con la canasta del INDEC y su tabla de equivalencias</small></a><span class="v">→</span></li>
+            <li><a class="n" href="salario">¿Tu aumento le ganó a la inflación?<small>Del bruto al neto y tu poder de compra</small></a><span class="v">→</span></li>
+          </ul>
+        </article>
       </div>
 
       <section class="pa-graf" aria-labelledby="g-ipc-t">
@@ -158,19 +174,19 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=43"></script>
+  <script src="../js/main.js?v=44"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=3"></script>
+  <script src="../js/panel.js?v=4"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), esc = P.esc, num = P.num;
     P.franja($('franja'), { pasados: 5, proximos: 8 });
     const hace = d => new Date(Date.now() - d * 864e5).toISOString().slice(0, 10);
     const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
-    const [infAD, b, pob, can, dol, s5, s44, ipcI, em] = await Promise.all([
+    const [infAD, b, pob, can, dol, s5, s44, ipcI, em, sal, emp] = await Promise.all([
       P.API.inflacion(), P.API.bcra(), P.API.pobreza(), P.API.canasta(), P.API.dolar(), P.API.serieBcra(5, hace(120)), P.API.serieBcra(44, hace(150)), P.API.ipc(),
-      P.API.emae(),
+      P.API.emae(), P.API.salarios(), P.API.empleo(),
     ]);
     // El CSV del INDEC manda; si no responde, la serie de ArgentinaDatos
     const inf = ipcI && ipcI.general && ipcI.general.length > 13 ? ipcI.general.map(x => ({ fecha: x.p, valor: x.m })) : infAD;
@@ -302,6 +318,27 @@
         filas: [ia.length ? ['Contra un año atrás', P.mesAnio(ia.at(-1).fecha), P.signo(ia.at(-1).valor) + '%', c(ia.at(-1).valor)] : null].filter(Boolean),
         fuentes: 'Fuente: ' + link('https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-9-48', 'INDEC'),
         ir: '<a class="ir" href="panel-actividad">Panel de actividad →</a>',
+      });
+    }
+
+    // ---- Empleo y salarios: sueldos registrados contra la inflación (índice de salarios / IPC, un año)
+    const IPCn = { '2016-12': 100 }; for (const x of (ipcI && ipcI.general) || []) if (x.i > 0) IPCn[x.p] = x.i;
+    const IS = (sal && sal.indice) || [], uIS = IS.filter(x => x.registrado > 0 && IPCn[x.p]).at(-1);
+    const hace12 = p => (+p.slice(0, 4) - 1) + p.slice(4);
+    const aIS = uIS && IS.find(x => x.p === hace12(uIS.p));
+    if (uIS && aIS && IPCn[aIS.p]) {
+      const r = ((uIS.registrado / aIS.registrado) / (IPCn[uIS.p] / IPCn[aIS.p]) - 1) * 100, c = v => v > 0.05 ? 'mejor' : v < -0.05 ? 'peor' : '';
+      const rip = sal.ripte && sal.ripte.at(-1), eph = emp && emp.eph && emp.eph.at(-1), sipa = emp && emp.sipa && emp.sipa.at(-1);
+      const trim = p => (Math.floor((+p.slice(5) - 1) / 3) + 1) + '.º trim. ' + p.slice(0, 4);
+      tarjeta('t-empleo', {
+        titulo: '💼 Empleo y salarios', que: 'Sueldos registrados · contra un año atrás, descontada la inflación',
+        grande: P.signo(r) + '%', clase: c(r),
+        contexto: P.mesAnio(uIS.p) + ' contra ' + P.mesAnio(aIS.p) + ': subieron ' + num((uIS.registrado / aIS.registrado - 1) * 100) + '% y los precios ' + num((IPCn[uIS.p] / IPCn[aIS.p] - 1) * 100) + '%',
+        spark: P.sparkline(IS.filter(x => x.registrado > 0 && IPCn[x.p]).slice(-25).map(x => x.registrado / IPCn[x.p]), { color: '#a78bfa' }),
+        filas: [rip ? ['Sueldo promedio (RIPTE)', P.mesAnio(rip.p) + ', bruto', P.pesos(rip.v)] : null, eph ? ['Desocupación', trim(eph.p), num(eph.desocupacion) + '%'] : null,
+          sipa ? ['Trabajadores registrados', P.mesAnio(sipa.p), num(sipa.total / 1000, 2) + ' M'] : null].filter(Boolean),
+        fuentes: 'Fuente: ' + link('https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-61', 'INDEC') + ' y Secretaría de Trabajo',
+        ir: '<a class="ir" href="panel-empleo">Panel de empleo →</a>',
       });
     }
     P.brillo('.pa-grid .pa-card');

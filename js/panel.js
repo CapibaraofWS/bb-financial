@@ -35,6 +35,9 @@ window.BBPanel = (function () {
     cotiz: (casa, dias) => json('/api/argentinadatos?path=cotizaciones/dolares/' + casa + '&dias=' + dias),
     riesgo: dias => json('/api/argentinadatos?path=finanzas/indices/riesgo-pais&dias=' + dias),
     gob: (ids, n) => json('/api/indec?series=' + ids + '&limit=' + n + '&sort=desc'),
+    salarios: () => json('/api/indec?salarios=1'),
+    empleo: () => json('/api/indec?empleo=1'),
+    geo: () => json('/data/provincias-ar.json'),
   };
   // Series del BCRA (vienen de la más nueva a la más vieja) → [{fecha, valor}] en orden
   const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
@@ -247,5 +250,69 @@ window.BBPanel = (function () {
     exportar(cv, { titulo: b.dataset.titulo, fuente: b.dataset.fuente, nombre: b.dataset.exportar });
   });
 
-  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes };
+  // ---- Botonera de opciones: <div class="pa-seg" data-seg><button data-v="12" aria-pressed="true">…</button>…</div>
+  function seg(el, alCambiar) {
+    if (typeof el === 'string') el = document.getElementById(el);
+    if (!el) return;
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b || b.getAttribute('aria-pressed') === 'true') return;
+      el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      alCambiar(b.dataset.v);
+    });
+  }
+
+  // ---- Mapa de provincias con los límites del IGN. Tierra del Fuego incluye las Islas Malvinas, territorio argentino.
+  // valores: { códigoINDEC: número }; info(cod) devuelve el detalle (html ya escapado) de la provincia elegida
+  const COLOR = (v, max) => {
+    const k = Math.min(1, Math.abs(v) / (max || 1));
+    if (Math.abs(v) < 0.05) return 'rgba(255,255,255,0.09)';
+    return v > 0 ? 'rgba(74,222,154,' + (0.18 + 0.72 * k).toFixed(2) + ')' : 'rgba(255,120,100,' + (0.18 + 0.72 * k).toFixed(2) + ')';
+  };
+  async function mapaProvincias(el, { valores, formato = v => signo(v) + '%', info, etiqueta = '' }) {
+    if (typeof el === 'string') el = document.getElementById(el);
+    const g = await API.geo();
+    if (!el || !g || !g.provincias) return;
+    // Al volver a dibujarlo (otro período) se reemplaza el contenedor para no duplicar los eventos
+    if (el.dataset.mapa) { const n = el.cloneNode(false); el.replaceWith(n); el = n; }
+    el.dataset.mapa = '1';
+    // Tope de la escala de colores: el percentil 90, para que un caso extremo no deje a todas las demás del mismo tono
+    const abs = Object.values(valores).filter(Number.isFinite).map(Math.abs).sort((a, b) => a - b);
+    const max = abs[Math.floor(abs.length * 0.9)] || abs.at(-1) || 1;
+    const nombre = Object.fromEntries(g.provincias.map(p => [p.cod, p.nombre]));
+    const corto = c => (c === '02' ? 'CABA' : c === '94' ? 'Tierra del Fuego' : nombre[c]);
+    const pv = (c, d) => '<path class="pv" data-cod="' + c + '" d="' + d + '" fill="' + COLOR(valores[c], max) + '" tabindex="0" role="button" aria-label="' + esc(corto(c) + ': ' + (Number.isFinite(valores[c]) ? formato(valores[c]) : 'sin dato')) + '"><title>' + esc(corto(c) + ': ' + (Number.isFinite(valores[c]) ? formato(valores[c]) : 'sin dato')) + '</title></path>';
+    const ca = g.caba, m = g.malvinas;
+    const orden = Object.keys(valores).filter(c => Number.isFinite(valores[c]) && nombre[c]).sort((a, b) => valores[b] - valores[a]);
+    el.innerHTML = '<div class="pa-mapa"><div class="lamina"><svg viewBox="' + g.viewBox + '" role="img" aria-label="Mapa de la Argentina por provincia' + (etiqueta ? ': ' + esc(etiqueta) : '') + '">' +
+      g.provincias.map(p => pv(p.cod, p.d)).join('') +
+      '<line class="guia" x1="' + ca.desde[0].toFixed(1) + '" y1="' + ca.desde[1].toFixed(1) + '" x2="' + ca.x + '" y2="' + (ca.y + ca.h / 2) + '"/>' +
+      '<rect class="recuadro" x="' + ca.x + '" y="' + ca.y + '" width="' + ca.w + '" height="' + ca.h + '" rx="6"/>' + pv('02', ca.d) +
+      '<text class="rotulo" x="' + (ca.x + ca.w / 2) + '" y="' + (ca.y - 5) + '" text-anchor="middle">CABA</text>' +
+      '<text class="rotulo" x="' + (m[0] + 52) + '" y="' + (m[1] + 3) + '">Islas Malvinas</text>' +
+      '</svg></div><div class="lado"><div class="pa-mapa-info" aria-live="polite"></div>' +
+      '<div class="pa-mapa-ley"><span>' + formato(-max) + ' o menos</span><i></i><span>' + formato(max) + ' o más</span></div>' +
+      '<ul class="pa-rank">' + orden.map(c => { const v = valores[c], w = Math.min(50, Math.abs(v) / max * 50).toFixed(1);
+        return '<li><button type="button" data-cod="' + c + '"><span>' + esc(corto(c)) + '</span><span class="v">' + esc(formato(v)) + '</span><span class="barra"><i style="' + (v >= 0 ? 'left:50%' : 'right:50%') + ';width:' + w + '%;background:' + COLOR(v, max) + '"></i></span></button></li>'; }).join('') +
+      '</ul></div></div>';
+    // En el celular la lista completa es muy larga: se ven las 3 que más subieron y las 3 que más bajaron
+    if (matchMedia('(max-width: 760px)').matches && orden.length > 8) {
+      const ul = el.querySelector('.pa-rank'); ul.classList.add('corta');
+      ul.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-prov">Ver las ' + orden.length + ' provincias</button>');
+      el.querySelector('.pa-mas-prov').addEventListener('click', e => { ul.classList.remove('corta'); e.currentTarget.remove(); });
+    }
+    const caja = el.querySelector('.pa-mapa-info');
+    const elegir = c => {
+      if (!nombre[c]) return;
+      el.dataset.sel = c;
+      el.querySelectorAll('[data-cod]').forEach(x => x.classList.toggle('sel', x.dataset.cod === c));
+      const v = valores[c];
+      caja.innerHTML = '<p class="n">' + esc(nombre[c]) + '</p><p class="g ' + (v > 0.05 ? 'mejor' : v < -0.05 ? 'peor' : '') + '">' + (Number.isFinite(v) ? esc(formato(v)) : '—') + '</p><p class="d">' + (info ? info(c) : '') + '</p>';
+    };
+    el.addEventListener('click', e => { const x = e.target.closest('[data-cod]'); if (x) elegir(x.dataset.cod); });
+    el.addEventListener('keydown', e => { const x = e.target.closest('path[data-cod]'); if (x && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); elegir(x.dataset.cod); } });
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) el.addEventListener('pointerover', e => { const x = e.target.closest('path[data-cod]'); if (x) elegir(x.dataset.cod); });
+    elegir(nombre[el.dataset.sel] ? el.dataset.sel : orden.includes('06') ? '06' : orden[0]);
+  }
+
+  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, mapaProvincias };
 })();

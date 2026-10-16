@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-adsense-account" content="ca-pub-4539395552565638">
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
+  <title>¿Cuánto ganás comparado con el promedio? Sueldo vs. RIPTE — BB Finanzas</title>
+  <meta name="description" content="Compará tu sueldo con el sueldo promedio de los trabajadores registrados (RIPTE), el salario mínimo y la línea de pobreza de tu hogar, con los datos oficiales de este mes. Gratis y sin registro." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/sueldo-vs-promedio" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Finanzas" />
+  <meta property="og:title" content="¿Cuánto ganás comparado con el promedio?" />
+  <meta property="og:description" content="Tu sueldo contra el RIPTE, el salario mínimo y la línea de pobreza de tu hogar, con los datos oficiales de este mes." />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/sueldo-vs-promedio" />
+  <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Comparador de sueldo con el promedio","url":"https://www.bbfinanzas.com.ar/pages/sueldo-vs-promedio","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"es-AR","offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"publisher":{"@id":"https://www.bbfinanzas.com.ar/#organizacion"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Calculadoras","item":"https://www.bbfinanzas.com.ar/pages/calculadoras"},{"@type":"ListItem","position":3,"name":"Sueldo vs. promedio","item":"https://www.bbfinanzas.com.ar/pages/sueldo-vs-promedio"}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"¿Cuál es el sueldo promedio en la Argentina?","acceptedAnswer":{"@type":"Answer","text":"La referencia oficial es el RIPTE, la remuneración imponible promedio de los trabajadores estables que publica la Secretaría de Seguridad Social todos los meses. Es un sueldo bruto, antes de descuentos, y promedia a los asalariados registrados que trabajan hace al menos 13 meses con el mismo empleador."}},
+    {"@type":"Question","name":"¿Por qué se compara el sueldo bruto?","acceptedAnswer":{"@type":"Answer","text":"Porque el RIPTE y el salario mínimo son montos brutos. Si cargás el sueldo de bolsillo, la calculadora estima el bruto sumando los aportes habituales del 17%: 11% de jubilación, 3% de PAMI y 3% de obra social."}},
+    {"@type":"Question","name":"¿Ganar menos que el promedio es ganar poco?","acceptedAnswer":{"@type":"Answer","text":"No necesariamente. Como es un promedio, los sueldos más altos lo tiran para arriba, y la mayoría de los asalariados registrados cobra menos que el RIPTE. Además, depende del sector, la provincia, la experiencia y la cantidad de horas."}}
+  ]}
+  </script>
+  <style>
+    .pf { min-width: 0; }
+    .sv-pre { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.4rem; }
+    .sv-pre button { font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 0.45rem 0.8rem; min-height: 38px; }
+    .sv-pre button:hover, .sv-pre button.on { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+    .sv-nota { font-size: 0.78rem; color: var(--text-subtle); margin-top: 0.5rem; line-height: 1.5; }
+    .sv-res { margin-top: 1.25rem; }
+    .sv-estado { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .sv-estado.arriba { color: var(--accent); } .sv-estado.abajo { color: #ff9f7a; }
+    .sv-num { font-family: var(--font-display); font-size: clamp(2.2rem, 8vw, 3rem); line-height: 1.05; margin: 0.3rem 0 0.4rem; }
+    .sv-txt { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .sv-barra { position: relative; height: 16px; border-radius: 8px; background: linear-gradient(90deg, rgba(255,159,122,0.28), rgba(232,201,122,0.22) 50%, rgba(74,222,154,0.24)); margin: 2.6rem 0.4rem 2.6rem; }
+    .sv-barra .marca { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--text-muted); }
+    .sv-barra .marca span { position: absolute; top: 24px; transform: translateX(-50%); white-space: nowrap; font-size: 0.7rem; color: var(--text-subtle); font-family: var(--font-mono); }
+    .sv-barra .marca.izq span { transform: none; left: -2px; }
+    .sv-barra .marca.arriba span { top: auto; bottom: 24px; }
+    .sv-barra .tu { position: absolute; top: -8px; width: 4px; height: 32px; border-radius: 2px; background: var(--text); transform: translateX(-2px); transition: left 0.35s ease; }
+    .sv-barra .tu span { position: absolute; bottom: 36px; transform: translateX(-50%); white-space: nowrap; font-size: 0.74rem; color: var(--text); font-family: var(--font-mono); }
+    .sv-barra .tu.der span { transform: translateX(-100%); }
+    .sv-barra .tu.izq span { transform: none; }
+    .sv-detalle { list-style: none; padding: 0; margin: 0; }
+    .sv-detalle li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
+    .sv-detalle li small { display: block; font-size: 0.74rem; color: var(--text-subtle); margin-top: 0.1rem; }
+    .sv-detalle li > span:last-child { font-family: var(--font-mono); white-space: nowrap; text-align: right; }
+    .sv-detalle .mejor { color: var(--accent); } .sv-detalle .peor { color: #ff9f7a; }
+    .sv-tend { font-size: 0.86rem; color: var(--text-muted); line-height: 1.6; margin-top: 1rem; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/styles.css?v=16" />
+  <link rel="stylesheet" href="../css/panel.css?v=4" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav">
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="empezar-a-invertir" class="nav-link">Empezar a invertir</a>
+        <a href="inflacion" class="nav-link">Inflación</a>
+        <a href="comparador-plazos-fijos" class="nav-link">Plazo fijo</a>
+        <a href="comparador-tasas" class="nav-link">Tasas</a>
+        <a href="comparador-dolares" class="nav-link">Dólar</a>
+        <a href="agenda-ar" class="nav-link">Agenda AR</a>
+        <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
+        <a href="datos" class="nav-link">Datos macro</a>
+        <a href="panel-argentina" class="nav-link">Panel Argentina</a>
+        <a href="blog" class="nav-link">Blog</a>
+        <a href="atlas" class="nav-link">Atlas</a>
+        <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
+        <a href="contacto" class="nav-link">Contacto</a>
+      </nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+    <div class="pf">
+      <div class="pf-hero" style="padding:0 1rem">
+        <div style="text-align:left"><a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a></div>
+        <p class="pa-eyebrow" style="text-align:center" data-bandera>Panel Argentina · Calculadora</p>
+        <h1>¿Cuánto ganás comparado con el promedio?</h1>
+        <p>Con el sueldo promedio de los trabajadores registrados (RIPTE), el salario mínimo y la canasta del INDEC, que se actualizan solos.</p>
+      </div>
+
+      <section class="pf-card" aria-label="Tu sueldo">
+        <label class="pf-label" for="sv-sueldo">Tu sueldo mensual</label>
+        <div class="pf-monto"><span aria-hidden="true">$</span><input id="sv-sueldo" type="text" inputmode="numeric" autocomplete="off" value="1.500.000" /></div>
+        <div class="pa-seg" id="sv-tipo" role="group" aria-label="Tipo de sueldo" style="margin-top:0.8rem">
+          <button type="button" data-v="bruto" aria-pressed="true">Bruto</button><button type="button" data-v="neto" aria-pressed="false">De bolsillo (neto)</button>
+        </div>
+
+        <span class="pf-label" style="margin-top:0.6rem">¿Cuántas personas viven de este sueldo?</span>
+        <div class="sv-pre" id="sv-hogar">
+          <button type="button" data-uae="1" class="on">Solo yo</button>
+          <button type="button" data-uae="1.77">Pareja</button>
+          <button type="button" data-uae="2.41">Pareja con 1 hijo</button>
+          <button type="button" data-uae="3.09">Pareja con 2 hijos</button>
+        </div>
+        <p class="sv-nota">Sirve para la línea de pobreza. Se usa la tabla de adultos equivalentes del INDEC: un adulto de 35 años, una pareja de 31 y chicos de 6 y 8.</p>
+      </section>
+
+      <section class="pf-card sv-res" aria-live="polite">
+        <p class="sv-estado" id="sv-estado">Calculando…</p>
+        <p class="sv-num" id="sv-num">—</p>
+        <p class="sv-txt" id="sv-txt"></p>
+        <div class="sv-barra" id="sv-barra" aria-hidden="true"></div>
+        <ul class="sv-detalle" id="sv-detalle"></ul>
+        <p class="sv-tend" id="sv-tend" hidden></p>
+        <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.6" id="sv-fuente">Fuentes: Secretaría de Seguridad Social (RIPTE), Consejo del Salario e INDEC.</p>
+      </section>
+
+      <p style="font-size:0.78rem;color:var(--text-subtle);text-align:center;margin-top:1rem;line-height:1.6;padding:0 1rem">La cuenta se hace en tu navegador: el sueldo que cargás no se envía a ningún lado.</p>
+    </div>
+    </div>
+
+    <section class="container bb-faq" aria-labelledby="sv-como-t">
+      <h2 id="sv-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
+      <p>El punto de comparación es el <strong>RIPTE</strong>, la remuneración imponible promedio de los trabajadores estables que publica la Secretaría de Seguridad Social: el sueldo bruto promedio de los asalariados registrados que trabajan hace al menos 13 meses con el mismo empleador. La calculadora divide tu sueldo bruto por ese valor.</p>
+      <p>Por ejemplo, con el RIPTE de agosto de 2026 ($1.982.518): un sueldo bruto de $1.500.000 está un 24% por debajo del promedio (1.500.000 / 1.982.518 = 0,76). Si cargás el sueldo de bolsillo, primero se estima el bruto: $1.500.000 de bolsillo son unos $1.807.229 brutos (1.500.000 / 0,83).</p>
+      <details><summary>¿Por qué se compara el bruto y no el de bolsillo?</summary><p>Porque el RIPTE y el salario mínimo son montos brutos. Para pasar de uno a otro se usan los aportes habituales de un asalariado: 11% de jubilación, 3% de PAMI y 3% de obra social, 17% en total. Es una aproximación: no incluye el impuesto a las ganancias, la cuota sindical ni el tope máximo de aportes, que cambian el resultado en sueldos altos.</p></details>
+      <details><summary>¿Ganar menos que el promedio es ganar poco?</summary><p>No necesariamente. Como es un promedio, los sueldos más altos lo tiran para arriba: la mayoría de los asalariados registrados cobra menos que el RIPTE. Además, los sueldos cambian mucho según el sector, la provincia, la experiencia y las horas trabajadas. Sirve como referencia general, no como medida de cuánto deberías ganar.</p></details>
+      <details><summary>¿Cómo se calcula la línea de pobreza de mi hogar?</summary><p>Con la canasta básica total del INDEC del último mes publicado, multiplicada por los adultos equivalentes del hogar. La compara con tu sueldo de bolsillo, porque la línea de pobreza se mide contra el ingreso que entra al hogar. Si en tu casa hay otros ingresos, la <a href="linea-de-pobreza">calculadora de línea de pobreza</a> permite cargarlos todos y elegir la región.</p></details>
+      <details><summary>¿Cada cuánto se actualiza?</summary><p>El RIPTE se actualiza solo cuando lo publica la Secretaría de Seguridad Social, una vez por mes. El salario mínimo, cuando cambia por resolución del Consejo del Salario, y la canasta, cuando la publica el INDEC. La evolución de los sueldos está en el <a href="panel-empleo">panel de empleo y salarios</a>.</p></details>
+    </section>
+
+    <aside class="related-reads">
+      <h2>Seguí leyendo</h2>
+      <ul>
+      <li><a href="panel-empleo">Empleo y salarios en la Argentina</a><p>Sueldos contra la inflación, desocupación y empleo registrado por provincia.</p></li>
+      <li><a href="salario">¿Tu aumento le ganó a la inflación?</a><p>Del sueldo bruto al neto y cuánto cambió tu poder de compra.</p></li>
+      <li><a href="linea-de-pobreza">¿Tu hogar está por encima de la línea de pobreza?</a><p>Con todos los integrantes, todos los ingresos y la región.</p></li>
+      </ul>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <p>Datos del INDEC, el Banco Central y otras fuentes oficiales.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Finanzas · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a> · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=44"></script>
+  <script src="../js/panel.js?v=4"></script>
+  <script>
+  (function () {
+    const P = BBPanel, $ = id => document.getElementById(id), num = P.num, pesos = P.pesos;
+    const APORTES = 0.17;   // 11% jubilación + 3% PAMI + 3% obra social
+    // Respaldo por si las fuentes no responden: RIPTE de agosto de 2026, salario mínimo de octubre de 2026 y canasta de septiembre de 2026
+    let ripte = { p: '2026-08', v: 1982518.19 }, minimo = { p: '2026-10', v: 391200 }, canasta = { fecha: '2026-09', cbt: 528318.67 }, tend = null;
+    let tipo = 'bruto', uae = 1;
+
+    const ent = $('sv-sueldo');
+    const leer = () => parseInt(ent.value.replace(/\D/g, ''), 10) || 0;
+    ent.addEventListener('input', () => { const v = leer(); ent.value = v ? v.toLocaleString('es-AR') : ''; calcular(); });
+    P.seg('sv-tipo', v => { tipo = v; calcular(); });
+    $('sv-hogar').addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      uae = +b.dataset.uae; $('sv-hogar').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); calcular();
+    });
+
+    function calcular() {
+      const y = leer(), est = $('sv-estado'), n = $('sv-num'), t = $('sv-txt');
+      if (!y) { est.textContent = 'Cargá tu sueldo'; est.className = 'sv-estado'; n.textContent = '—'; t.textContent = ''; $('sv-barra').innerHTML = ''; $('sv-detalle').innerHTML = ''; return; }
+      const bruto = tipo === 'bruto' ? y : y / (1 - APORTES), neto = tipo === 'bruto' ? y * (1 - APORTES) : y;
+      const dif = (bruto / ripte.v - 1) * 100, mes = P.mesLargo(ripte.p);
+      if (Math.abs(dif) < 3) { est.textContent = 'En el promedio'; est.className = 'sv-estado'; }
+      else if (dif > 0) { est.textContent = 'Por encima del promedio'; est.className = 'sv-estado arriba'; }
+      else { est.textContent = 'Por debajo del promedio'; est.className = 'sv-estado abajo'; }
+      n.textContent = P.signo(dif, 0) + '%';
+      t.textContent = 'Tu sueldo bruto' + (tipo === 'neto' ? ' (estimado)' : '') + ' de ' + pesos(bruto) + ' es ' + (Math.abs(dif) < 0.5 ? 'igual al' : num(Math.abs(dif), 0) + '% ' + (dif > 0 ? 'más alto que el' : 'más bajo que el')) +
+        ' sueldo promedio de los trabajadores registrados estables (RIPTE de ' + mes + ': ' + pesos(ripte.v) + ').';
+
+      // Escala: salario mínimo, promedio y tu sueldo
+      const top = Math.max(bruto, ripte.v) * 1.25, pct = v => Math.min(100, v / top * 100);
+      const pt = pct(bruto);
+      $('sv-barra').innerHTML =
+        '<div class="marca izq' + (pct(ripte.v) - pct(minimo.v) < 20 ? ' arriba' : '') + '" style="left:' + pct(minimo.v).toFixed(2) + '%"><span>Mínimo</span></div>' +
+        '<div class="marca" style="left:' + pct(ripte.v).toFixed(2) + '%"><span>Promedio</span></div>' +
+        '<div class="tu' + (pt > 82 ? ' der' : pt < 12 ? ' izq' : '') + '" style="left:' + pt.toFixed(2) + '%"><span>Tu sueldo</span></div>';
+
+      const lp = canasta.cbt * uae, cubre = neto / lp;
+      $('sv-detalle').innerHTML = [
+        tipo === 'bruto' ? ['De bolsillo, aproximado', 'Con el 17% de aportes, sin ganancias', pesos(neto)] : ['Bruto, aproximado', 'Sumando el 17% de aportes', pesos(bruto)],
+        ['Diferencia con el promedio', 'Por mes, en bruto', '<span class="' + (dif >= 0 ? 'mejor' : 'peor') + '">' + (bruto >= ripte.v ? '+' : '−') + pesos(Math.abs(bruto - ripte.v)) + '</span>'],
+        ['Equivale a', 'Salarios mínimos de ' + P.mesLargo(minimo.p) + ' (' + pesos(minimo.v) + ')', num(bruto / minimo.v, 1)],
+        ['Línea de pobreza de tu hogar', num(uae, 2) + ' adultos equivalentes · canasta de ' + P.mesLargo(canasta.fecha), pesos(lp)],
+        ['Cubre la línea de pobreza', cubre >= 1 ? 'Tu sueldo de bolsillo dividido por la línea' : 'Faltan ' + pesos(lp - neto) + ' por mes para llegar', '<span class="' + (cubre >= 1 ? 'mejor' : 'peor') + '">' + num(cubre, 2) + ' veces</span>'],
+      ].map(r => '<li><span>' + r[0] + '<small>' + r[1] + '</small></span><span>' + r[2] + '</span></li>').join('');
+      $('sv-fuente').textContent = 'Fuentes: RIPTE de ' + mes + ' (Secretaría de Seguridad Social), salario mínimo de ' + P.mesLargo(minimo.p) + ' (Consejo del Salario) y canasta básica total de ' + P.mesLargo(canasta.fecha) + ' (INDEC, Gran Buenos Aires).';
+      if (window.bbTrack) { clearTimeout(calcular.t); calcular.t = setTimeout(() => window.bbTrack('sueldo_promedio_calculo', { tipo, hogar: uae }), 1500); }
+    }
+    calcular();
+
+    // ---- Datos en vivo
+    const hoyM = P.hoyISO().slice(0, 7);
+    Promise.all([P.API.salarios(), P.API.ipc()]).then(([s, ipc]) => {
+      if (!s) return;
+      if (s.ripte && s.ripte.length) ripte = s.ripte.at(-1);
+      const m = (s.minimo || []).filter(x => x.p <= hoyM).at(-1); if (m) minimo = m;
+      // Cómo vino el promedio en el último año, contra la inflación
+      const R = s.ripte || [], u = R.at(-1), a = u && R.find(x => x.p === (+u.p.slice(0, 4) - 1) + u.p.slice(4));
+      const I = Object.fromEntries(((ipc && ipc.general) || []).map(x => [x.p, x.i]));
+      if (u && a && I[u.p] && I[a.p]) {
+        const sube = (u.v / a.v - 1) * 100, inf = (I[u.p] / I[a.p] - 1) * 100, r = ((u.v / a.v) / (I[u.p] / I[a.p]) - 1) * 100;
+        const e = $('sv-tend'); e.hidden = false;
+        e.innerHTML = 'Entre ' + P.mesLargo(a.p) + ' y ' + P.mesLargo(u.p) + ' el sueldo promedio subió <b>' + num(sube) + '%</b> y los precios ' + num(inf) + '%: descontada la inflación, ' + (r >= 0 ? 'mejoró' : 'perdió') + ' un ' + num(Math.abs(r)) + '%. <a href="panel-empleo" style="color:var(--accent)">Ver el panel de empleo y salarios →</a>';
+      }
+      calcular();
+    });
+    P.API.canasta().then(c => { if (c && c.serie && c.serie.length) { canasta = c.serie.at(-1); calcular(); } });
+  })();
+  </script>
+</body>
+</html>

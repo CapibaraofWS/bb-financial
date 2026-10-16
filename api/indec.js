@@ -216,9 +216,118 @@ async function emae(req, res) {
   }
 }
 
+// CSV del portal de datos abiertos → filas [fecha 'YYYY-MM', ...números]
+const GOB = 'https://infra.datos.gob.ar/catalog/sspm/dataset/';
+async function csvGob(ruta) {
+  const r = await fetch(GOB + ruta, { signal: AbortSignal.timeout(12000), headers: UA });
+  if (!r.ok) throw new Error();
+  const lineas = (await r.text()).trim().split(/\r?\n/);
+  return { cab: lineas[0].split(','), filas: lineas.slice(1).map(l => l.split(',')).filter(c => /^\d{4}-\d{2}-01$/.test(c[0]))
+    .map(c => [c[0].slice(0, 7), ...c.slice(1).map(v => (v === '' ? null : num(+v)))]) };
+}
+const MESES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+// ?salarios=1: índice de salarios del INDEC, RIPTE y salario mínimo.
+// El RIPTE sale de la página de la Secretaría de Seguridad Social, que lo publica antes que el portal de datos abiertos
+// (el portal se usa para la serie larga; donde los dos tienen el mes, vale la página oficial).
+async function salarios(req, res) {
+  const [rIs, rRip, rOf, rMin] = await Promise.allSettled([
+    fetch(INDEC + '/ftp/cuadros/sociedad/indice_salarios.csv', { signal: AbortSignal.timeout(12000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); }),
+    csvGob('158/distribution/158.1/download/remuneracion-imponible-promedio-trabajadores-estables-ripte-total-pais-pesos-serie-mensual.csv'),
+    fetch('https://www.argentina.gob.ar/trabajo/seguridadsocial/ripte', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.text(); }),
+    fetch('https://apis.datos.gob.ar/series/api/series/?ids=57.1_SMVMM_0_M_34&format=json&limit=150&sort=desc', { signal: AbortSignal.timeout(8000) }).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+  ]);
+  const out = { fuente: 'INDEC (índice de salarios), Secretaría de Seguridad Social (RIPTE) y Consejo del Salario (salario mínimo)' };
+
+  // Índice de salarios (base octubre 2016 = 100): privado registrado, público, total registrado, no registrado, total
+  if (rIs.status === 'fulfilled') {
+    const n = v => { const x = parseFloat(String(v).replace(',', '.')); return Number.isFinite(x) ? x : null; };
+    const indice = [];
+    for (const l of new TextDecoder('latin1').decode(rIs.value).split(/\r?\n/)) {
+      const c = l.split(';'), f = (c[0] || '').match(/^\d{1,2}\/(\d{1,2})\/(\d{4})$/);
+      if (!f || c.length < 6) continue;
+      indice.push({ p: f[2] + '-' + f[1].padStart(2, '0'), privado: n(c[1]), publico: n(c[2]), registrado: n(c[3]), noRegistrado: n(c[4]), total: n(c[5]) });
+    }
+    const u = indice.at(-1);
+    if (indice.length > 60 && u && u.registrado > 100) out.indice = indice;
+  }
+
+  // RIPTE en pesos: serie larga del portal + los meses de la página oficial
+  const ripte = {};
+  if (rRip.status === 'fulfilled') for (const [p, v] of rRip.value.filas) if (v > 0 && p >= '2016-01') ripte[p] = v;
+  // El portal a veces repite el valor de un mes anterior en el último mes: si pasa, ese mes no se usa
+  const ks = Object.keys(ripte).sort();
+  if (ks.length > 2 && ripte[ks.at(-1)] === ripte[ks.at(-3)]) delete ripte[ks.at(-1)];
+  if (rOf.status === 'fulfilled') {
+    const t = rOf.value.replace(/<\/t[dh]>/gi, ' | ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+    for (const m of t.matchAll(/\b(Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Setiembre|Octubre|Noviembre|Diciembre)\s*\/?\s*(20\d{2})\s*\|\s*\$\s*([\d.]+(?:,\d{1,2})?)\s*\|/gi)) {
+      const mes = MESES_ES.indexOf(m[1].toLowerCase().replace('setiembre', 'septiembre'));
+      const v = parseFloat(m[3].replace(/\./g, '').replace(',', '.'));
+      if (mes >= 0 && v > 1e5 && v < 1e9) ripte[m[2] + '-' + String(mes + 1).padStart(2, '0')] = v;
+    }
+  }
+  const serieRipte = Object.keys(ripte).sort().map(p => ({ p, v: ripte[p] }));
+  if (serieRipte.length > 24) out.ripte = serieRipte;
+
+  // Salario mínimo, vital y móvil (mensual): trae también los aumentos ya fijados para los próximos meses
+  if (rMin.status === 'fulfilled') {
+    const s = ((rMin.value && rMin.value.data) || []).filter(f => f[1] > 0).map(f => ({ p: f[0].slice(0, 7), v: f[1] })).reverse();
+    if (s.length > 12) out.minimo = s;
+  }
+  if (!out.indice && !out.ripte) return res.status(502).json({ error: 'No se pudieron leer los salarios' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
+// ?empleo=1: trabajo registrado (SIPA, Secretaría de Trabajo), asalariados privados por provincia y tasas de la EPH (INDEC)
+// Códigos de provincia del INDEC (los mismos del mapa del IGN)
+const PROVINCIAS = { buenos_aires: '06', caba: '02', catamarca: '10', chaco: '22', chubut: '26', cordoba: '14', corrientes: '18', entre_rios: '30', formosa: '34', jujuy: '38', la_pampa: '42', la_rioja: '46', mendoza: '50', misiones: '54', neuquen: '58', rio_negro: '62', salta: '66', san_juan: '70', san_luis: '74', santa_cruz: '78', santa_fe: '82', santiago_estero: '86', tierra_fuego: '94', tucuman: '90' };
+async function empleo(req, res) {
+  const [rSipa, rProv, rEph] = await Promise.allSettled([
+    csvGob('151/distribution/151.1/download/trabajadores-registrados-modalidad-ocupacional-principal-mensual-total-pais-miles-base-2012.csv'),
+    csvGob('154/distribution/154.2/download/asalariados-registrados-sector-privado-segun-provincia-datos-sin-estacionalidad.csv'),
+    csvGob('42/distribution/42.3/download/evolucion-principales-variables-ocupacionales-eph-continua-valores-trimestrales.csv'),
+  ]);
+  const out = { fuente: 'Secretaría de Trabajo (SIPA) e INDEC (EPH), vía datos.gob.ar' };
+  const col = (d, nombre) => d.cab.indexOf(nombre);
+
+  // Trabajadores registrados por modalidad, sin estacionalidad (miles)
+  if (rSipa.status === 'fulfilled') {
+    const d = rSipa.value, K = { privados: 'asalariados_priv_sin_estac', publicos: 'asalariados_pub_sin_estac', casas: 'asalariados_casas_particulares_sin_estac', autonomos: 'independientes_autonomos_sin_estac', monotributo: 'independientes_monotributo_sin_estac', monoSocial: 'independientes_monotributo_social_sin_estac', total: 'total_sin_estac' };
+    const idx = Object.fromEntries(Object.entries(K).map(([k, c]) => [k, col(d, c)]));
+    if (Object.values(idx).every(i => i > 0)) {
+      const s = d.filas.filter(f => f[0] >= '2017-01' && f[idx.total] > 0).map(f => Object.assign({ p: f[0] }, Object.fromEntries(Object.entries(idx).map(([k, i]) => [k, f[i] == null ? null : Math.round(f[i] * 10) / 10]))));
+      if (s.length > 24 && s.at(-1).total > 5000) out.sipa = s;
+    }
+  }
+  // Asalariados privados por provincia (miles, sin estacionalidad): los últimos 37 meses
+  if (rProv.status === 'fulfilled') {
+    const d = rProv.value, f = d.filas.slice(-37), valores = {};
+    for (const [k, cod] of Object.entries(PROVINCIAS)) {
+      const i = col(d, 'asalariados_priv_sin_estac_' + k);
+      if (i > 0) valores[cod] = f.map(x => x[i]);
+    }
+    if (Object.keys(valores).length === 24 && f.length === 37) out.provincias = { fechas: f.map(x => x[0]), valores };
+  }
+  // EPH: actividad, empleo, desocupación y subocupación (trimestral, en %)
+  if (rEph.status === 'fulfilled') {
+    const d = rEph.value, K = { actividad: 'eph_continua_actividad_total', empleo: 'eph_continua_empleo_total', desocupacion: 'eph_continua_desocupacion_total', subocupacion: 'eph_continua_subocupacion_total' };
+    const idx = Object.fromEntries(Object.entries(K).map(([k, c]) => [k, col(d, c)]));
+    if (Object.values(idx).every(i => i > 0)) {
+      const s = d.filas.filter(f => f[0] >= '2016-04' && f[idx.desocupacion] > 0).map(f => Object.assign({ p: f[0] }, Object.fromEntries(Object.entries(idx).map(([k, i]) => [k, f[i] == null ? null : Math.round(f[i] * 1000) / 10]))));
+      if (s.length > 8 && s.at(-1).desocupacion < 40) out.eph = s;
+    }
+  }
+  if (!out.sipa && !out.provincias && !out.eph) return res.status(502).json({ error: 'No se pudieron leer los datos de empleo' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
+  if (req.query.salarios) return salarios(req, res);
+  if (req.query.empleo) return empleo(req, res);
   if (req.query.ipc) return ipc(req, res);
   if (req.query.emae) return emae(req, res);
   if (req.query.canasta) return canasta(req, res);
