@@ -397,9 +397,11 @@ window.BB_GLOSARIO = {
     <span class="footer-contact-label">El proyecto</span>
     <a href="${root}pages/sobre-el-proyecto">👤 Quién está detrás de BB Finanzas</a>
     <a href="${root}pages/privacidad">🔒 Política de privacidad</a>
+    <a href="${root}pages/contacto">✉️ Contacto</a>
         <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
     <a href="https://www.linkedin.com/in/bruno-behr-9647b6217/" target="_blank" rel="noopener noreferrer">💼 LinkedIn — Bruno Behr</a>
+    <a href="https://x.com/BB_Finanzas" target="_blank" rel="noopener noreferrer">𝕏 @BB_Finanzas</a>
   `;
   target.appendChild(div);
 })();

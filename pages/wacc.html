@@ -251,6 +251,15 @@
       </div>
     </div>
   
+    <section class="container bb-faq" id="guia-wacc" aria-labelledby="guia-wacc-t">
+      <h2 id="guia-wacc-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Un ejemplo paso a paso</h2>
+      <p>Una empresa argentina hipotética, con números redondos, en dólares. Se financia <strong>60% con capital propio y 40% con deuda</strong>. Su deuda le cuesta 9% anual y paga 35% de impuesto a las ganancias.</p>
+      <p><strong>1. Costo del capital propio (CAPM).</strong> Con una tasa libre de riesgo de 4,3% (el bono del Tesoro de Estados Unidos a 10 años), una beta de 1,2, una prima de mercado de 5,5% y un riesgo país de 600 puntos (6%): Ke = 4,3% + 1,2 × 5,5% + 6% = <strong>16,9%</strong>.</p>
+      <p><strong>2. Costo de la deuda después de impuestos.</strong> Los intereses se descuentan del impuesto, así que el costo efectivo es 9% × (1 − 0,35) = <strong>5,85%</strong>.</p>
+      <p><strong>3. El promedio ponderado.</strong> WACC = 60% × 16,9% + 40% × 5,85% = 10,14% + 2,34% = <strong>12,5%</strong>. Esa es la tasa con la que se descontarían los flujos de esa empresa en la <a href="vpn">calculadora de VPN</a>. El riesgo país explica casi la mitad del costo del capital propio: es la razón por la que una empresa argentina vale menos que una igual en Estados Unidos.</p>
+
+    </section>
+
       <section class="faq-section" style="max-width:880px;margin:3rem auto 2rem">
         <h2>Preguntas frecuentes</h2>
 
@@ -283,11 +292,11 @@
         <li><a href="vpn">VPN / DCF</a></li>
       </ul></nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a></p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en <span data-term="CNV">CNV</span> antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a></p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=38"></script>
+  <script src="../js/main.js?v=39"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     function calcWACC() {
