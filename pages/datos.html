@@ -933,7 +933,7 @@
        Primero el archivo del INDEC (llega el día del informe); si falla, el portal de datos abiertos. */
     let canastaIndec = null;
     try {
-      const r = await fetch('/api/canasta', { signal: AbortSignal.timeout(12000) });
+      const r = await fetch('/api/indec?canasta=1', { signal: AbortSignal.timeout(12000) });
       if (r.ok) { const j = await r.json(); if (j.serie?.length >= 2) canastaIndec = j.serie; }
     } catch {}
     for (const [id, name] of [['150.1_CSTA_BARIA_0_D_26', 'Canasta Básica Alimentaria'], ['150.1_CSTA_BATAL_0_D_20', 'Canasta Básica Total']]) {
