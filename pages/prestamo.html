@@ -380,6 +380,25 @@
         </section>
       </div>
     </div>
+    <section class="container bb-faq" id="guia-prestamo" aria-labelledby="guia-prestamo-t">
+      <h2 id="guia-prestamo-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Un ejemplo con números: cómo se arma la cuota</h2>
+      <p>Un préstamo de <strong>$1.000.000</strong> a 12 meses con una TNA de 60%. La calculadora divide la TNA por 12: la tasa de cada mes es <strong>5%</strong>. En el sistema francés, la cuota sale de la fórmula de arriba: 1.000.000 × 0,05 ÷ (1 − 1,05<sup>−12</sup>) = <strong>$112.825</strong>, igual todos los meses.</p>
+      <p>Lo que cambia es cómo se reparte. Cada mes, el interés se calcula sobre lo que todavía debés; el resto de la cuota baja la deuda:</p>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin:0.5rem 0 1.25rem">
+        <thead><tr><th style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;color:var(--text-subtle);font-weight:400">Cuota</th><th style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;color:var(--text-subtle);font-weight:400">Interés</th><th style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;color:var(--text-subtle);font-weight:400">Capital</th><th style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;color:var(--text-subtle);font-weight:400">Deuda que queda</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">1</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$50.000</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$62.825</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$937.175</td></tr>
+          <tr><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">2</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$46.859</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$65.967</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$871.208</td></tr>
+          <tr><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">…</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">…</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">…</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">…</td></tr>
+          <tr><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">12</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$5.373</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$107.453</td><td style="padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--font-mono)">$0</td></tr>
+        </tbody>
+      </table></div>
+      <p>En total pagás $1.353.905: <strong>$353.905 de intereses</strong>. Con el sistema alemán, el mismo préstamo arranca con una cuota de $133.333 y termina en $87.500, y los intereses suman $325.000: pagás menos en total porque devolvés capital más rápido, a cambio de cuotas más altas al principio.</p>
+      <details><summary>¿Por qué la TEA es más alta que la TNA?</summary><p>Porque la TEA supone que los intereses de cada mes se capitalizan. Con 5% por mes, la TEA es 1,05<sup>12</sup> − 1 = 79,6%, aunque la TNA diga 60%. Para comparar préstamos entre bancos, lo que hay que mirar es el CFTEA, que además suma seguros, comisiones e impuestos. La <a href="conversion-tasas">calculadora de conversión de tasas</a> pasa de una tasa a otra.</p></details>
+      <details><summary>¿Qué conviene: francés o alemán?</summary><p>Depende de tu flujo de ingresos. El francés tiene una cuota fija, más fácil de planificar, pero paga más intereses en total. El alemán paga menos intereses, pero exige cuotas más altas al principio. En la Argentina, la mayoría de los préstamos personales e hipotecarios usan el francés; si te ofrecen elegir, la calculadora muestra los dos.</p></details>
+      <details><summary>¿Conviene adelantar cuotas?</summary><p>Adelantar capital reduce los intereses futuros, porque se calculan sobre la deuda que queda. Antes de hacerlo, conviene preguntar si el banco cobra una comisión por cancelación anticipada y comparar la tasa del préstamo con lo que rendiría esa plata en otro lado, por ejemplo en un <a href="comparador-plazos-fijos">plazo fijo</a>.</p></details>
+      <details><summary>¿Y los préstamos UVA?</summary><p>En un préstamo UVA la deuda se ajusta por inflación y la tasa es más baja. La cuota en pesos sube mes a mes con la UVA. La calculadora supone tasa fija, así que para un UVA sirve como referencia de la primera cuota; para comparar créditos hipotecarios UVA entre bancos está el <a href="comparador-creditos-uva">comparador de créditos UVA</a>.</p></details>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -401,13 +420,13 @@
         </ul>
       </nav>
     </div>
-    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a></p></div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=39"></script>
+  <script src="../js/main.js?v=40"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     let chart = null;

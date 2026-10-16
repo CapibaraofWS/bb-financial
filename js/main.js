@@ -397,6 +397,7 @@ window.BB_GLOSARIO = {
     <span class="footer-contact-label">El proyecto</span>
     <a href="${root}pages/sobre-el-proyecto">👤 Quién está detrás de BB Finanzas</a>
     <a href="${root}pages/privacidad">🔒 Política de privacidad</a>
+    <a href="${root}pages/terminos">📄 Términos y condiciones</a>
     <a href="${root}pages/contacto">✉️ Contacto</a>
         <span class="footer-contact-label">Contacto</span>
     <a href="mailto:bb.financial10@gmail.com">📧 bb.financial10@gmail.com</a>
