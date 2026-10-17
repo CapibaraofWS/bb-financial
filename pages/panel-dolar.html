@@ -123,7 +123,7 @@
             <p class="ayuda"><strong>Qué ves:</strong> las reservas brutas (línea) y cuántos dólares compró el Banco Central cada mes (barras).</p>
           </div><button type="button" class="pa-bajar" data-exportar="g-res" data-titulo="Reservas y compras de dólares del BCRA" data-fuente="BCRA">⬇ Imagen</button></div>
           <div class="lienzo" style="height:250px"><canvas id="g-res" aria-label="Reservas y compras del Banco Central"></canvas></div>
-          <p class="fuente">Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA</a>. Las compras se publican con unos días de demora.</p>
+          <p class="fuente">Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA</a>. <span id="g-res-atraso">* Las compras llegan a la API del BCRA con unos días de atraso.</span></p>
         </section>
       </div>
 
@@ -237,9 +237,23 @@
       const meses = [...new Set(res.map(x => x.fecha.slice(0, 7)))];
       const finMes = meses.map(m => res.filter(x => x.fecha.startsWith(m)).at(-1).valor);
       const compMes = meses.map(m => comp.filter(x => x.fecha.startsWith(m)).reduce((s, x) => s + x.valor, 0));
+      // Atraso de las compras en la API: ruedas (lunes a viernes) entre el último dato y hoy, sin contar hoy
+      const uc = comp.at(-1);
+      if (uc) {
+        let ruedas = 0;
+        for (let d = new Date(uc.fecha + 'T12:00:00'), hoy = P.hoyISO(); ; ) {
+          d.setDate(d.getDate() + 1);
+          const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+          if (iso >= hoy) break;
+          if (d.getDay() > 0 && d.getDay() < 6) ruedas++;
+        }
+        const enMes = comp.filter(x => x.fecha.startsWith(uc.fecha.slice(0, 7))).length;
+        $('g-res-atraso').textContent = '* Compras hasta el ' + P.fechaCorta(uc.fecha) + (ruedas > 0 ? ': la API del BCRA las publica con ' + ruedas + (ruedas === 1 ? ' rueda' : ' ruedas') + ' de atraso (sin contar feriados)' : '') +
+          '. La barra de ' + P.mesLargo(uc.fecha.slice(0, 7)) + ' suma ' + enMes + (enMes === 1 ? ' rueda.' : ' ruedas.');
+      }
       new Chart($('g-res'), { data: { labels: meses.map(P.mesAnio), datasets: [
           { type: 'line', label: 'Reservas (fin de mes)', data: finMes, borderColor: '#e8edf5', pointRadius: 2, tension: 0.2, yAxisID: 'y' },
-          { type: 'bar', label: 'Compras del mes', data: compMes, backgroundColor: 'rgba(74,222,154,0.6)', borderRadius: 3, yAxisID: 'y2' } ] },
+          { type: 'bar', label: 'Compras del mes*', data: compMes, backgroundColor: 'rgba(74,222,154,0.6)', borderRadius: 3, yAxisID: 'y2' } ] },
         options: P.ejes(v => Math.round(v / 1000) + ' mil M', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: tip(v => 'US$' + Math.round(v).toLocaleString('es-AR') + ' M') },
           scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, maxTicksLimit: 6 }, grid: { display: false } },
                     y: { position: 'left', ticks: { color: '#9aa5b8', callback: v => Math.round(v / 1000) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } },
