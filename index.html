@@ -45,7 +45,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="css/styles.css?v=16" />
+  <link rel="stylesheet" href="css/styles.css?v=17" />
   <link rel="stylesheet" href="css/panel.css?v=5" />
 
   <style>
@@ -562,7 +562,7 @@
   <script src="js/sanitize.js?v=1"></script>
   <script src="js/main.js?v=46"></script>
   <script src="js/panel.js?v=5"></script>
-  <script>addEventListener('load', function () { if (window.BBPanel) BBPanel.franja(document.getElementById('home-franja'), { pasados: 4, proximos: 5 }); });</script>
+  <script>addEventListener('load', function () { if (window.BBPanel) BBPanel.franja(document.getElementById('home-franja'), matchMedia('(max-width: 640px)').matches ? { pasados: 2, proximos: 3 } : { pasados: 4, proximos: 5 }); });</script>
   <script src="js/esqueletos.js?v=2" defer></script>
   <script src="js/desde-tu-visita.js?v=1" defer></script>
   <script src="js/ticker.js?v=6"></script>

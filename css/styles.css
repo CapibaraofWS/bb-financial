@@ -1681,6 +1681,9 @@ body .faq-body { color: var(--text-read); }
   main > [data-seccion="voces"]        { order: 9; }
   main > [data-seccion="porque"]       { order: 10; }
   main > [data-seccion="proyectos"]    { order: 11; }
+  /* Toda sección nueva necesita su lugar: sin order (0) queda arriba del hero */
+  main > [data-seccion="panel"]        { order: 5; }    /* después de las calculadoras */
+  main > #que-hay                      { order: 12; }
 
   /* El hero ocupaba 777px antes de mostrar nada útil */
   .hero-content { padding-top: 3rem; padding-bottom: 2.5rem; }
