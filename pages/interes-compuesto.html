@@ -263,7 +263,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=45"></script>
+  <script src="../js/main.js?v=46"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     let chart = null;
@@ -303,7 +303,8 @@
       document.getElementById('res-capital').textContent  = '$' + formatUSD(P);
       document.getElementById('res-aportado').textContent = '$' + formatUSD(totalAportado);
       document.getElementById('res-intereses').textContent= '$' + formatUSD(intereses);
-      document.getElementById('res-mult').textContent     = (totalFinal / (P || 1)).toFixed(2) + 'x';
+      // Contra todo lo que se puso (capital + aportes): si no, con aportes el multiplicador sale inflado
+      document.getElementById('res-mult').textContent     = (totalAportado > 0 ? totalFinal / totalAportado : 1).toFixed(2) + 'x';
 
       if (chart) chart.destroy();
       chart = new Chart(document.getElementById('compuestoChart'), {

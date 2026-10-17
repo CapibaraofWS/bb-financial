@@ -683,7 +683,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=45"></script>
+  <script src="../js/main.js?v=46"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
   // ============================================================
@@ -1083,8 +1083,24 @@
     const sig = m => { let [y, mm] = m.split('-').map(Number); mm++; if (mm > 12) { mm = 1; y++; } return y + '-' + String(mm).padStart(2, '0'); };
 
     async function extenderConDatosVivos(hasta) {
-      // El archivo es estatico; si el INDEC ya publico meses nuevos los tomamos
-      // de las variaciones mensuales y los encadenamos.
+      // El archivo es estatico. Los meses nuevos salen del indice del INDEC (el mismo indice y la misma base,
+      // sin redondeos). Si no responde, se encadenan las variaciones mensuales de ArgentinaDatos.
+      try {
+        const j = await fetch('/api/indec?ipc=1', { signal: AbortSignal.timeout(8000) }).then(x => (x.ok ? x.json() : null));
+        const niv = new Map(((j && j.general) || []).filter(x => x.i > 0).map(x => [x.p, x.i]));
+        const base = niv.get(hasta);
+        // Solo si el INDEC y el archivo coinciden en el último mes del archivo
+        if (base && series.oficial[hasta] && Math.abs(base / series.oficial[hasta] - 1) < 0.001) {
+          let ult = hasta;
+          while (niv.has(sig(ult))) {
+            const p = sig(ult);
+            series.oficial[p] = niv.get(p);
+            series.combinada[p] = series.combinada[hasta] * niv.get(p) / base;
+            ult = p;
+          }
+          if (ult !== hasta) return ult;
+        }
+      } catch { /* sigue con ArgentinaDatos */ }
       const r = await fetch('/api/argentinadatos?path=finanzas/indices/inflacion', { signal: AbortSignal.timeout(8000) });
       if (!r.ok) return hasta;
       const serie = await r.json();

@@ -609,9 +609,9 @@ document.querySelectorAll('.tool-card, .stat, .why-text').forEach(el => {
   io.observe(el);
 });
 
-// Format numbers with thousand separators (Spanish)
+// Montos con separador de miles y decimales a la argentina: 1.005.753,42 (antes salía 1,005,753.42)
 window.formatUSD = (n) =>
-  new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+  new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 
 window.formatYears = (months) => {
   const y = Math.floor(months / 12);
