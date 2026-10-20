@@ -39,7 +39,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=17" />
+  <link rel="stylesheet" href="../css/styles.css?v=18" />
   <style>
     .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
 
@@ -326,12 +326,6 @@
             <span class="cc-title">Meta Financiera</span>
             <span class="cc-desc">Ahorrando vs. invirtiendo: cuántos años te ahorrás poniendo tu dinero a trabajar.</span>
           </a>
-          <a href="markowitz" class="calc-card featured">
-            <span class="cc-icon">🎯</span>
-            <span class="cc-title">Cartera Avanzada (Markowitz)</span>
-            <span class="cc-desc">Frontera eficiente, correlación entre activos, Sharpe ratio y optimización de portafolio.</span>
-            <span class="cc-badge new">Nuevo</span>
-          </a>
         </div>
       </div>
 
@@ -424,12 +418,12 @@
       </div>
 
 
-      <!-- EQUITY RESEARCH -->
-      <div class="category-section">
+      <!-- AVANZADO: valuación de empresas y carteras (antes era un menú aparte) -->
+      <div class="category-section" id="avanzado" style="scroll-margin-top:90px">
         <div class="category-header">
           <span class="category-icon">🔬</span>
-          <h2 class="category-title">Equity Research & Valuación</h2>
-          <span class="category-desc">Herramientas de análisis profesional para inversores</span>
+          <h2 class="category-title">Avanzado</h2>
+          <span class="category-desc">Valuación de empresas y armado de carteras, para quien ya invierte</span>
         </div>
         <div class="calc-grid">
           <a href="wacc" class="calc-card featured">
@@ -460,6 +454,17 @@
             <span class="cc-title">Guía de Múltiplos</span>
             <span class="cc-desc">EPS, P/E, EV/EBITDA, FCF Yield, P/B, ROE, ROIC, Beta. Fórmulas, ejemplos reales y orden de análisis institucional.</span>
             <span class="cc-badge new">Referencia</span>
+          </a>
+          <a href="markowitz" class="calc-card featured">
+            <span class="cc-icon">🎯</span>
+            <span class="cc-title">Cartera Avanzada (Markowitz)</span>
+            <span class="cc-desc">Frontera eficiente, correlación entre activos, Sharpe ratio y optimización de portafolio.</span>
+          </a>
+          <a href="mis-portafolios" class="calc-card">
+            <span class="cc-icon">💼</span>
+            <span class="cc-title">Mis portafolios</span>
+            <span class="cc-desc">Armá tus carteras y seguí cómo rinden, guardadas en tu navegador.</span>
+            <span class="cc-badge new">Beta</span>
           </a>
         </div>
       </div>
@@ -511,7 +516,7 @@
     <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
   </footer>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=47"></script>
+  <script src="../js/main.js?v=49"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
   // Buscador de herramientas.
@@ -556,6 +561,7 @@
       'multiplos':         'per ebitda ratio comparar empresas',
       'guia-multiplos':    'per ebitda ratios guia interpretar',
       'markowitz':         'cartera portafolio diversificar frontera eficiente sharpe riesgo',
+      'mis-portafolios':   'mi cartera seguir rendimiento portafolio acciones guardar',
       'etfs-fci':          'etf fondo comun inversion cedear diversificar',
       'test-inversor':     'perfil inversor conservador agresivo que tipo de inversor soy',
       'brokers':           'broker alyc abrir cuenta comisiones cocos iol balanz bull market',

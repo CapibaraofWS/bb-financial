@@ -212,15 +212,17 @@ async function tasas() {
   const hace = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10), f = (id, desde, m) => fred(id, desde, m).catch(() => []);
   const [curva, diarias, mensuales, costo] = await Promise.all([
     Promise.all(PLAZOS.map(([id]) => f(id, hace(400)))),
-    Promise.all(['DFEDTARU', 'DFEDTARL', 'EFFR', 'SOFR', 'DFII10', 'T10YIE', 'T10Y2Y', 'T10Y3M', 'MORTGAGE30US', 'BAMLH0A0HYM2', 'BAMLC0A0CM', 'WALCL'].map(id => f(id, hace(800)))),
+    Promise.all(['DFEDTARU', 'DFEDTARL', 'EFFR', 'SOFR', 'DFII10', 'T10YIE', 'T10Y2Y', 'T10Y3M', 'MORTGAGE30US', 'BAMLH0A0HYM2', 'BAMLC0A0CM', 'WALCL'].map(id => f(id, hace(400)))),
     Promise.all([['FEDFUNDS', false], ['GS2', false], ['GS10', false], ['TB3MS', false], ['USREC', false], ['MORTGAGE30US', true], ['BAMLH0A0HYM2', true], ['BAMLC0A0CM', true], ['WALCL', true], ['DFII10', true]].map(([id, m]) => f(id, '2000-01-01', m))),
     tesoro('v2/accounting/od/avg_interest_rates', 'sort=-record_date&page[size]=200&filter=security_desc:eq:Total Marketable').catch(() => []),
   ]);
   const [techo, piso, efectiva, sofr, real10, inflacion10, d10y2, d10y3m, hipoteca, hy, ig, balance] = diarias;
   const [fedfunds, gs2, gs10, tb3, recesion, hipotecaM, hyM, igM, balanceM, realM] = mensuales;
   const corta = s => s.map(x => ({ p: x.f.slice(0, 7), v: x.v }));
+  // La curva: el último dato de cada plazo y el de hace un mes y un año (el último día hábil anterior a esa fecha)
+  const antes = (s, dias) => { if (!s.length) return null; const lim = new Date(new Date(s.at(-1).f) - dias * 864e5).toISOString().slice(0, 10); return s.filter(x => x.f <= lim).at(-1) || null; };
   return {
-    curva: PLAZOS.map(([id, n], i) => ({ id, plazo: n, s: curva[i] })),
+    curva: PLAZOS.map(([id, n], i) => ({ id, plazo: n, hoy: curva[i].at(-1) || null, mes: antes(curva[i], 30), anio: antes(curva[i], 365) })),
     diarias: { techo, piso, efectiva, sofr, real10, inflacion10, d10y2, d10y3m, hipoteca, hy, ig, balance },
     mensuales: { fedfunds: corta(fedfunds), bono2: corta(gs2), bono10: corta(gs10), letra3m: corta(tb3), recesion: corta(recesion), hipoteca: corta(hipotecaM), hy: corta(hyM), ig: corta(igM), balance: corta(balanceM), real10: corta(realM) },
     costoDeuda: costo.map(r => ({ p: r.record_date.slice(0, 7), v: num(r.avg_interest_rate_amt) })).filter(x => x.v !== null).reverse(),

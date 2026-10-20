@@ -310,6 +310,8 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'fire',              label: 'FIRE',                    icon: '🔥' },
         { href: pagesBase + 'vpn',               label: 'VPN',                     icon: '💎' },
         { href: pagesBase + 'caucion',           label: 'Caución',                 icon: '⚡' },
+        // Las de valuación y carteras (WACC, DDM, múltiplos, Markowitz, portafolio) viven en su sección de la página de calculadoras
+        { href: pagesBase + 'calculadoras#avanzado', label: 'Avanzado: valuación y carteras', icon: '🔬' },
       ],
     },
     {
@@ -335,18 +337,6 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'noticias',   label: 'Noticias',     icon: '📰' },
         { href: pagesBase + 'datos',      label: 'Datos macro',  icon: '📊' },
         { href: pagesBase + 'dividendos', label: 'Dividendos',   icon: '💸' },
-      ],
-    },
-    {
-      kind: 'dropdown',
-      title: 'Avanzado',
-      items: [
-        { href: pagesBase + 'guia-multiplos', label: 'Guía de Múltiplos', icon: '📘' },
-        { href: pagesBase + 'multiplos',      label: 'Múltiplos',          icon: '🔢' },
-        { href: pagesBase + 'ddm',            label: 'DDM',                icon: '📐' },
-        { href: pagesBase + 'wacc',           label: 'WACC',               icon: '⚖️' },
-        { href: pagesBase + 'markowitz',      label: 'Markowitz',          icon: '🎲' },
-        { href: pagesBase + 'mis-portafolios',label: 'Portafolio',         icon: '💼', beta: true },
       ],
     },
     {
