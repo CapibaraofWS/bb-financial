@@ -366,7 +366,7 @@ export async function usa(req, res) {
     res.setHeader('X-Respaldo', (await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)])) === 'OK' ? 'guardado' : 'no');
     // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza.
     // Si al renovar la fuente no contesta, Vercel sigue sirviendo la copia anterior hasta 7 días.
-    res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=604800');
+    res.setHeader('Cache-Control', modo === 'mercados' ? 's-maxage=900, stale-while-revalidate=86400' : 's-maxage=10800, stale-while-revalidate=604800');   // los precios, cada 15 minutos
     return res.status(200).json(cuerpo);
   } catch {
     const guardado = await redis(['GET', 'usa:' + modo]);

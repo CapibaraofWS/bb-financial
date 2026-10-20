@@ -242,3 +242,17 @@ a.ic-ev:hover { border-color: var(--t, var(--text-muted)); }
 .ic-mas:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
 @media (max-width: 640px) { .ic-dia { grid-template-columns: 52px minmax(0, 1fr); gap: 0.6rem; padding: 0.6rem; } .ic-evs { grid-template-columns: minmax(0, 1fr); } }
 @media (min-width: 900px) { .pa-sub { flex-wrap: wrap; overflow: visible; } .pa-sub .sep { align-self: auto; height: 26px; } }
+/* Tabla de rendimientos (Panel USA, mercados): en el celular se desliza de costado con la primera columna fija */
+.pa-tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.2rem; }
+.pa-tabla { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 640px; }
+.pa-tabla th, .pa-tabla td { padding: 0.5rem 0.55rem; border-top: 1px solid var(--border); text-align: right; white-space: nowrap; }
+.pa-tabla th:first-child, .pa-tabla td:first-child { text-align: left; position: sticky; left: 0; background: var(--bg-card); z-index: 1; }
+.pa-tabla thead th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em; color: var(--text-subtle); font-weight: 400; border-top: 0; }
+.pa-tabla td.v { font-family: var(--font-mono); font-size: 0.8rem; }
+.pa-tabla td small { display: block; font-size: 0.7rem; color: var(--text-subtle); }
+.pa-tabla tr.grupo td { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); padding-top: 1.1rem; }
+.pa-tabla .sube { color: var(--accent); } .pa-tabla .baja { color: #ff9f7a; }
+.pa-desc { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; margin-top: 0.5rem; }
+.pa-desc article { border: 1px solid var(--border); border-radius: 14px; padding: 0.85rem 1rem; background: var(--bg-card); }
+.pa-desc h4 { margin: 0 0 0.15rem; font-size: 0.95rem; } .pa-desc .tk { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-subtle); }
+.pa-desc p { margin: 0.35rem 0 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }

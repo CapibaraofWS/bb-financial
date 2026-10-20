@@ -46,6 +46,9 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 - [Actividad económica de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-actividad): PBI y aportes de cada componente, PBI por estado, consumo, ingreso y ahorro de las familias, industria, ventas minoristas, vivienda y confianza del consumidor.
 - [Tasas de interés en Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-tasas): tasa de la Fed, curva de rendimientos del Tesoro e inversión, tasa real, hipotecas, crédito corporativo, balance de la Fed y costo de la deuda del Tesoro.
 - [Déficit y deuda de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-fiscal): déficit, recaudación por impuesto, gasto por función, intereses, deuda sobre el PBI y gasto federal por estado (Tesoro, USAspending).
+- [Comercio exterior de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-comercio): exportaciones, importaciones y saldo mensual, bienes y servicios, socios (con la Argentina), tasa arancelaria efectiva y dólar.
+- [Mercados de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-mercados): S&P 500, Nasdaq 100, Dow Jones y Russell 2000, los 11 sectores contra el S&P 500, concentración, VIX y materias primas (petróleo, oro, cobre, granos), con qué hay adentro de cada índice.
+- [Agenda económica de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-agenda): fechas y horarios en hora argentina de inflación, empleo, PBI, PCE, comercio y reuniones de la Reserva Federal.
 - [Datos Macro](https://www.bbfinanzas.com.ar/pages/datos): variables del BCRA, INDEC y Estados Unidos.
 - [Visor de bonos de Estados Unidos](https://www.bbfinanzas.com.ar/pages/visor-bonos): curva de rendimientos, TIPS y breakeven.
 - [Visor de bonos argentinos](https://www.bbfinanzas.com.ar/pages/visor-bonos-ar): curva de bonos argentinos en dólares (Bonares, Globales, BOPREAL) con TIR y duration calculadas desde precios de mercado.
