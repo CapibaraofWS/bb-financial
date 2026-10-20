@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=18" />
+  <link rel="stylesheet" href="../css/styles.css?v=19" />
 
   <style>
     .beta-badge { display:inline-flex;align-items:center;background:rgba(50,130,210,0.12);color:#60a5fa;border:1px solid rgba(50,130,210,0.25);border-radius:20px;padding:0.2rem 0.65rem;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;vertical-align:middle;margin-left:0.4rem; }
@@ -49,6 +49,13 @@
     .cal-nav button { padding:0.55rem 1rem; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text-muted); font-family:var(--font-mono); font-size:0.78rem; cursor:pointer; transition:all var(--transition); }
     .cal-nav button:hover { color:var(--text); border-color:var(--border-hover); }
     .cal-title { font-family:var(--font-display); font-size:1.7rem; letter-spacing:-0.01em; text-transform:capitalize; min-width:280px; text-align:center; }
+    /* En el celular el mes va arriba y los botones abajo: con el ancho mínimo del título se salían de la pantalla */
+    @media (max-width: 640px) {
+      .cal-nav { flex-wrap:wrap; width:100%; }
+      .cal-title { order:-1; flex:1 1 100%; min-width:0; font-size:1.45rem; }
+      .cal-nav button { flex:1 1 0; padding:0.55rem 0.4rem; }
+      #today-btn { margin-left:0 !important; flex:0 0 auto; padding:0.55rem 0.9rem; }
+    }
     .cal-filter { display:flex; gap:0.3rem; flex-wrap:wrap; }
     .cal-filter button { padding:0.4rem 0.9rem; background:var(--bg-card); border:1px solid var(--border); border-radius:18px; color:var(--text-muted); font-family:var(--font-mono); font-size:0.7rem; cursor:pointer; letter-spacing:0.05em; text-transform:uppercase; transition:all var(--transition); }
     .cal-filter button.active { background:var(--accent-dim); color:var(--accent); border-color:rgba(74,222,154,0.3); }

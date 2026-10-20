@@ -249,7 +249,8 @@ export async function usa(req, res) {
   try {
     const data = await f();
     const cuerpo = { actualizado: new Date().toISOString(), ...(Array.isArray(data) ? { eventos: data } : data) };
-    await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)]);
+    // El encabezado dice si quedó guardada la copia de respaldo (para revisarlo sin entrar a Redis)
+    res.setHeader('X-Respaldo', (await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)])) === 'OK' ? 'guardado' : 'no');
     // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza.
     // Si al renovar la fuente no contesta, Vercel sigue sirviendo la copia anterior hasta 7 días.
     res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=604800');

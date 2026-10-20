@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=18" />
+  <link rel="stylesheet" href="../css/styles.css?v=19" />
   <style>
     .rank-hero { padding: 3rem 0 1rem; text-align: center; }
     .rank-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; margin-bottom: 0.5rem; }
@@ -45,6 +45,7 @@
 
     .rank-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0;max-width:1100px;margin-left:auto;margin-right:auto; }
     @media (max-width: 800px) { .rank-grid { grid-template-columns:1fr; } }
+    .rank-grid > * { min-width:0; }   /* si no, en el celular la tarjeta empuja la página afuera de la pantalla */
     .rank-card { background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.5rem; }
     .rank-card.up { border-left:3px solid var(--accent); }
     .rank-card.down { border-left:3px solid #ff6b6b; }

@@ -537,6 +537,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   padding: 3.5rem 0 6rem;
   align-items: start;
 }
+/* Sin esto la columna toma el ancho mínimo de su contenido y en el celular la página se sale de la pantalla */
+.calc-layout > * { min-width: 0; }
 
 /* Input panel */
 .input-panel, .result-panel {
