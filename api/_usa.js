@@ -295,14 +295,19 @@ const limpiar = v => (v || '').trim().replace(/^["']|["']$/g, '');
 async function censo(tipo, campos, extra) {
   const key = limpiar(process.env.CENSUS_API_KEY);
   const u = 'https://api.census.gov/data/timeseries/intltrade/' + tipo + '/hs?get=' + campos + extra + (key ? '&key=' + encodeURIComponent(key) : '');
-  const r = await fetch(u, { headers: UA, signal: AbortSignal.timeout(12000), redirect: 'manual' });
+  let r;
+  // A veces contesta 503 en ráfagas: hasta 2 reintentos
+  for (let i = 0; i < 3; i++) {
+    r = await fetch(u, { headers: UA, signal: AbortSignal.timeout(12000), redirect: 'manual' });
+    if (r.status < 500) break;
+    await new Promise(ok => setTimeout(ok, 800));
+  }
   if (r.status !== 200) throw new Error('Census ' + r.status + ' ' + ((r.headers.get('location') || '').match(/[a-z_]+.html/) || [''])[0]);   // p. ej. invalid_key.html
   const j = await r.json();
   return j.slice(1).map(f => Object.fromEntries(j[0].map((h, i) => [h, f[i]])));
 }
 const errCenso = e => /^Census/.test(e && e.message) ? e.message : 'no disponible (' + (e && e.name) + (e && e.cause && e.cause.code ? ' ' + e.cause.code : '') + ')';
 async function censoComercio() {
-  const errP = [];
   const d = new Date(), desde = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 16, 1)).toISOString().slice(0, 7);
   const [ex, im] = await Promise.all([
     censo('exports', 'CTY_CODE,CTY_NAME,ALL_VAL_MO', '&time=from+' + desde),
@@ -320,12 +325,23 @@ async function censoComercio() {
   // La Argentina (3570): mes a mes y por capítulo del arancel (HS2) en los mismos 12 meses
   const arg = m => ({ exp: Number((ex.find(x => x.CTY_CODE === '3570' && x.time === m) || {}).ALL_VAL_MO) || 0, imp: Number((im.find(x => x.CTY_CODE === '3570' && x.time === m) || {}).GEN_VAL_MO) || 0 });
   const [pe, pi] = await Promise.all([
-    censo('exports', 'E_COMMODITY,ALL_VAL_MO', '&CTY_CODE=3570&COMM_LVL=HS2&time=from+' + meses[0] + '+to+' + meses[11]).catch(e => (errP.push(errCenso(e)), [])),
-    censo('imports', 'I_COMMODITY,GEN_VAL_MO', '&CTY_CODE=3570&COMM_LVL=HS2&time=from+' + meses[0] + '+to+' + meses[11]).catch(e => (errP.push(errCenso(e)), [])),
+    censo('exports', 'E_COMMODITY,ALL_VAL_MO', '&CTY_CODE=3570&COMM_LVL=HS2&time=from+' + meses[0] + '+to+' + meses[11]).catch(() => []),
+    censo('imports', 'I_COMMODITY,GEN_VAL_MO', '&CTY_CODE=3570&COMM_LVL=HS2&time=from+' + meses[0] + '+to+' + meses[11]).catch(() => []),
   ]);
   const porCap = (filas, cod, val) => { const o = {}; for (const x of filas) o[x[cod]] = (o[x[cod]] || 0) + (Number(x[val]) || 0); return Object.entries(o).map(([hs, v]) => ({ hs, v })).filter(x => /^\d\d$/.test(x.hs) && x.v > 0).sort((a, b) => b.v - a.v); };
   return { desde: meses[0], hasta: meses[11], total: total && { exp: total.exp, imp: total.imp }, paises,
-    argentina: { meses: [...new Set([...mesesEx])].filter(m => m <= meses[11]).sort().map(m => ({ p: m, ...arg(m) })), productosExp: porCap(pe, 'E_COMMODITY', 'ALL_VAL_MO'), productosImp: porCap(pi, 'I_COMMODITY', 'GEN_VAL_MO'), errP, nPe: pe.length, ejP: pe.slice(0, 3), ejI: pi.slice(0, 2) } };
+    argentina: { meses: [...new Set([...mesesEx])].filter(m => m <= meses[11]).sort().map(m => ({ p: m, ...arg(m) })), productosExp: porCap(pe, 'E_COMMODITY', 'ALL_VAL_MO'), productosImp: porCap(pi, 'I_COMMODITY', 'GEN_VAL_MO') } };
+}
+// El Census es mensual y a veces tarda o no contesta: se guarda el último resultado completo y se renueva cada 12 horas
+async function censoGuardado() {
+  const g = JSON.parse(await redis(['GET', 'usa:censo']) || 'null');
+  if (g && Date.now() - g.t < 12 * 3600e3) return g.d;
+  try {
+    const d = await censoComercio();
+    if (d.argentina.productosExp.length && d.argentina.productosImp.length) await redis(['SET', 'usa:censo', JSON.stringify({ t: Date.now(), d }), 'EX', String(90 * 86400)]);
+    else if (g) return g.d;
+    return d;
+  } catch (e) { return g ? g.d : { error: errCenso(e) }; }
 }
 async function comercio() {
   const d = '2016-01-01', f = (id, m) => fred(id, d, m).catch(() => []), anios = [anio() - 3, anio() - 2, anio() - 1, anio()];
@@ -336,7 +352,7 @@ async function comercio() {
     beaIta('ExpGds', anios).catch(() => ({})), beaIta('ImpGds', anios).catch(() => ({})),
   ]);
   // Solo los mensajes propios ("Census 302", "faltan meses"): otros errores podrían incluir la dirección con la clave
-  const cen = await censoComercio().catch(e => ({ error: errCenso(e) }));
+  const cen = await censoGuardado();
   if (!exp.length && !Object.keys(socExp).length) throw new Error('comercio sin datos');
   const m = s => s.map(x => ({ p: x.f.slice(0, 7), v: x.v }));
   return {
