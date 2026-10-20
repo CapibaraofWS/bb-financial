@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=9" />
+  <link rel="stylesheet" href="../css/panel.css?v=10" />
 </head>
 <body>
   <header class="site-header">
@@ -282,11 +282,11 @@
     { const COL = [['d1', 'Día'], ['s1', 'Semana'], ['m1', 'Mes'], ['m3', '3 meses'], ['anio', 'En el año'], ['a1', '1 año'], ['a5', '5 años']];
       // En el celular solo se ven Día, En el año y 1 año (las otras columnas llevan la clase "sec")
       const SEC = { s1: 1, m1: 1, m3: 1, a5: 1 }, cc = k => (SEC[k] ? ' sec' : '');
-      let grupo = '', h = '<thead><tr><th>Instrumento</th><th>Último</th>' + COL.map(c => '<th class="' + cc(c[0]).trim() + '">' + c[1] + '</th>').join('') + '</tr></thead><tbody>';
+      let grupo = '', h = '<thead><tr><th>Instrumento</th><th class="ult">Último</th>' + COL.map(c => '<th class="' + cc(c[0]).trim() + '">' + c[1] + '</th>').join('') + '</tr></thead><tbody>';
       for (const [sym, n, g] of INST) {
         const x = S[sym];
         if (g !== grupo) { grupo = g; h += '<tr class="grupo"><td colspan="9">' + g + '</td></tr>'; }
-        h += '<tr><td>' + P.esc(n) + '<small>' + P.esc(sym) + '</small></td><td class="v">' + precio(sym, x.ultimo[1]) + '</td>' + COL.map(([k]) => '<td class="v ' + cls(x.ret[k]) + cc(k) + '">' + pc(x.ret[k]) + '</td>').join('') + '</tr>';
+        h += '<tr><td>' + P.esc(n) + '<small>' + P.esc(sym) + '<span class="pm"> · ' + precio(sym, x.ultimo[1]).replace(/<small>.*<\/small>/, '') + '</span></small></td><td class="v ult">' + precio(sym, x.ultimo[1]) + '</td>' + COL.map(([k]) => '<td class="v ' + cls(x.ret[k]) + cc(k) + '">' + pc(x.ret[k]) + '</td>').join('') + '</tr>';
       }
       $('tabla').innerHTML = h + '</tbody>';
       const ref = S['^GSPC'] || S.SPY;

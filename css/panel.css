@@ -261,3 +261,9 @@ a.ic-ev:hover { border-color: var(--t, var(--text-muted)); }
   .pa-tabla th, .pa-tabla td { padding: 0.45rem 0.3rem; }
   .pa-tabla .sec { display: none; }
 }
+.pa-tabla .pm { display: none; }
+@media (max-width: 640px) {
+  .pa-tabla .ult { display: none; }
+  .pa-tabla .pm { display: inline; }
+  .pa-tabla th:first-child, .pa-tabla td:first-child { white-space: normal; }
+}
