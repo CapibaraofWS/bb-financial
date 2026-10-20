@@ -3,6 +3,7 @@
 // También acepta ?series_ids=DGS1MO,DGS3MO,... (batch) — devuelve { SERIES_ID: data, ... }.
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
+import { usa } from './_usa.js';
 
 const ALLOWED_SERIES = new Set([
   'FEDFUNDS',
@@ -47,6 +48,8 @@ export default async function handler(req, res) {
   if (!apiKey) {
     return res.status(500).json({ error: 'Servicio temporalmente no disponible' });
   }
+  // Panel Estados Unidos (BLS, BEA, FRED y Tesoro): vive acá para no sumar funciones (Vercel Hobby: 12)
+  if (req.query && req.query.usa) return usa(req, res);
 
   const { series_id, series_ids, limit } = req.query || {};
   const lim = limit ? parseInt(limit, 10) : 2;
