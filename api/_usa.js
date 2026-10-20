@@ -325,7 +325,7 @@ async function censoComercio() {
   ]);
   const porCap = (filas, cod, val) => { const o = {}; for (const x of filas) o[x[cod]] = (o[x[cod]] || 0) + (Number(x[val]) || 0); return Object.entries(o).map(([hs, v]) => ({ hs, v })).filter(x => /^\d\d$/.test(x.hs) && x.v > 0).sort((a, b) => b.v - a.v); };
   return { desde: meses[0], hasta: meses[11], total: total && { exp: total.exp, imp: total.imp }, paises,
-    argentina: { meses: [...new Set([...mesesEx])].filter(m => m <= meses[11]).sort().map(m => ({ p: m, ...arg(m) })), productosExp: porCap(pe, 'E_COMMODITY', 'ALL_VAL_MO'), productosImp: porCap(pi, 'I_COMMODITY', 'GEN_VAL_MO'), errP, nPe: pe.length } };
+    argentina: { meses: [...new Set([...mesesEx])].filter(m => m <= meses[11]).sort().map(m => ({ p: m, ...arg(m) })), productosExp: porCap(pe, 'E_COMMODITY', 'ALL_VAL_MO'), productosImp: porCap(pi, 'I_COMMODITY', 'GEN_VAL_MO'), errP, nPe: pe.length, ejP: pe.slice(0, 3), ejI: pi.slice(0, 2) } };
 }
 async function comercio() {
   const d = '2016-01-01', f = (id, m) => fred(id, d, m).catch(() => []), anios = [anio() - 3, anio() - 2, anio() - 1, anio()];
