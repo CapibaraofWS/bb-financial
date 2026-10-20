@@ -350,9 +350,14 @@ window.BB_GLOSARIO = {
       ],
     },
     {
-      kind: 'link',
-      href: pagesBase + 'panel-argentina',
-      label: '<svg viewBox="0 0 30 20" width="18" height="12" aria-hidden="true" style="vertical-align:-1px;margin-right:5px;border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel',
+      kind: 'dropdown',
+      title: 'Paneles',
+      items: [
+        { href: pagesBase + 'panel-argentina', label: 'Panel Argentina',
+          bandera: '<svg viewBox="0 0 30 20" width="20" height="13" aria-hidden="true" style="border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>' },
+        { href: pagesBase + 'panel-usa', label: 'Panel Estados Unidos',
+          bandera: '<svg viewBox="0 0 30 20" width="20" height="13" aria-hidden="true" style="border-radius:2px"><rect width="30" height="20" rx="2.5" fill="#fff"/><path d="M0 0h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30V7.7H0zm0 3.07h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30v1.54H0zm0 3.07h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/></svg>' },
+      ],
     },
     {
       kind: 'link',
@@ -394,7 +399,7 @@ window.BB_GLOSARIO = {
     const anyActive = g.items.some(it => isActive(it.href));
     const itemsHtml = g.items.map(it => `
       <a href="${it.href}" class="${isActive(it.href) ? 'active' : ''}">
-        <span class="dd-icon">${bbGlifo(it.href) || it.icon || ''}</span>
+        <span class="dd-icon">${it.bandera || bbGlifo(it.href) || it.icon || ''}</span>
         <span>${it.label}${it.beta ? ' <span class="beta-badge">Beta</span>' : ''}</span>
       </a>`).join('');
     const btnStyle = g.highlight ? ' style="color:#4ade9a"' : '';

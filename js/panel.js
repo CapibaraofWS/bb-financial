@@ -335,7 +335,7 @@ window.BBPanel = (function () {
     // En el celular la lista completa es muy larga: se ven las 3 de arriba y las 3 de abajo
     if (matchMedia('(max-width: 760px)').matches && orden.length > 8) {
       const ul = el.querySelector('.pa-rank'); ul.classList.add('corta');
-      ul.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-prov">Ver ' + (usa ? 'los ' + orden.length + ' estados' : 'las ' + orden.length + ' provincias') + '</button>');
+      ul.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-prov">Ver ' + (usa ? 'todos los estados' : 'las ' + orden.length + ' provincias') + '</button>');
       el.querySelector('.pa-mas-prov').addEventListener('click', e => { ul.classList.remove('corta'); e.currentTarget.remove(); });
     }
     const caja = el.querySelector('.pa-mapa-info');
