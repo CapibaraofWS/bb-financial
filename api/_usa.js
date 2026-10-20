@@ -10,13 +10,16 @@ async function bls(ids, desde) {
   const out = {}, partes = [];
   for (let i = 0; i < ids.length; i += 50) partes.push(ids.slice(i, i + 50));
   const pedir = seriesid => fetch('https://api.bls.gov/publicAPI/v2/timeseries/data/', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', ...UA }, signal: AbortSignal.timeout(8000),
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...UA }, signal: AbortSignal.timeout(7000),
     body: JSON.stringify({ seriesid, startyear: String(desde), endyear: String(anio()), registrationkey: process.env.BLS_API_KEY }),
   }).then(r => (r.ok ? r.json() : null)).catch(() => null);
   await Promise.all(partes.map(async seriesid => {
-    // Con varios pedidos seguidos BLS a veces contesta "sitio ocupado": un reintento
+    // BLS a veces contesta "sitio ocupado" por unos segundos: hasta dos reintentos
     let j = await pedir(seriesid);
-    if (!j || j.status !== 'REQUEST_SUCCEEDED') { await new Promise(r => setTimeout(r, 1500)); j = await pedir(seriesid); }
+    for (const espera of [1500, 3500]) {
+      if (j && j.status === 'REQUEST_SUCCEEDED') break;
+      await new Promise(r => setTimeout(r, espera)); j = await pedir(seriesid);
+    }
     if (!j || j.status !== 'REQUEST_SUCCEEDED') throw new Error('BLS');
     for (const s of j.Results.series) {
       out[s.seriesID] = s.data.filter(d => /^M(0[1-9]|1[0-2])$/.test(d.period))
@@ -176,15 +179,14 @@ async function resumen() {
 
 // ---- Respaldo en Redis (Upstash): si una fuente no contesta, se sirve el último armado completo
 async function redis(cmd) {
-  // Las variables se cargaron en Vercel con comillas: se sacan
+  // Acepta los nombres de Upstash y los de la integración de Vercel (KV_*), sin comillas
   const limpia = v => (v || '').trim().replace(/^["']|["']$/g, '');
-  const url = limpia(process.env.UPSTASH_REDIS_REST_URL), token = limpia(process.env.UPSTASH_REDIS_REST_TOKEN);
+  const url = limpia(process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL), token = limpia(process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN);
   if (!url || !token) return null;
   try {
     const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmd), signal: AbortSignal.timeout(2500) });
-    if (!r.ok) redis.ultimo = 'HTTP ' + r.status + ' ' + (await r.text()).slice(0, 100);
     return r.ok ? (await r.json()).result : null;
-  } catch (e) { redis.ultimo = e.message + ' ' + (e.cause && (e.cause.code || e.cause.message) || ''); return null; }
+  } catch { return null; }
 }
 
 const MODOS = { resumen, precios, empleo, calendario };
@@ -195,10 +197,10 @@ export async function usa(req, res) {
   try {
     const data = await f();
     const cuerpo = { actualizado: new Date().toISOString(), ...(Array.isArray(data) ? { eventos: data } : data) };
-    const ok = await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)]);
-    res.setHeader('X-Respaldo', String(ok || redis.ultimo || 'nada').replace(/[^\x20-\x7e]/g, '').slice(0, 200));
-    // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza
-    res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=86400');
+    await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)]);
+    // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza.
+    // Si al renovar la fuente no contesta, Vercel sigue sirviendo la copia anterior hasta 7 días.
+    res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=604800');
     return res.status(200).json(cuerpo);
   } catch {
     const guardado = await redis(['GET', 'usa:' + modo]);
