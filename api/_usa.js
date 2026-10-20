@@ -182,7 +182,7 @@ async function redis(cmd) {
     const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmd), signal: AbortSignal.timeout(2500) });
     if (!r.ok) redis.ultimo = 'HTTP ' + r.status + ' ' + (await r.text()).slice(0, 120);
     return r.ok ? (await r.json()).result : null;
-  } catch (e) { redis.ultimo = 'error ' + e.name; return null; }
+  } catch (e) { redis.ultimo = 'error ' + e.name + ' ' + e.message + ' ' + (e.cause && (e.cause.code || e.cause.message) || '') + ' url:' + String(url).slice(0, 12); return null; }
 }
 
 const MODOS = { resumen, precios, empleo, calendario };
