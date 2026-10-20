@@ -296,7 +296,7 @@ async function censo(tipo, campos, extra) {
   const key = limpiar(process.env.CENSUS_API_KEY);
   const u = 'https://api.census.gov/data/timeseries/intltrade/' + tipo + '/hs?get=' + campos + extra + (key ? '&key=' + encodeURIComponent(key) : '');
   const r = await fetch(u, { headers: UA, signal: AbortSignal.timeout(12000), redirect: 'manual' });
-  if (r.status !== 200) throw new Error('Census ' + r.status);
+  if (r.status !== 200) throw new Error('Census ' + r.status + ' ' + ((r.headers.get('location') || '').match(/[a-z_]+.html/) || [''])[0]);   // p. ej. invalid_key.html
   const j = await r.json();
   return j.slice(1).map(f => Object.fromEntries(j[0].map((h, i) => [h, f[i]])));
 }
