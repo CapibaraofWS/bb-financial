@@ -152,7 +152,7 @@ async function resumen() {
   const anios = [anio() - 3, anio() - 2, anio() - 1, anio()], hace = d => new Date(Date.now() - d * 864e5).toISOString().slice(0, 10);
   const [pbi, real, nominal, sup, inf, d10, d2, deuda, mts] = await Promise.all([
     bea('T10101', 'Q', ['1'], anios), bea('T10106', 'Q', ['1'], anios), bea('T10105', 'Q', ['1'], anios),
-    fred('DFEDTARU', hace(800)), fred('DFEDTARL', hace(800)), fred('DGS10', hace(400)), fred('DGS2', hace(400)),
+    fred('DFEDTARU', hace(800)), fred('DFEDTARL', hace(800)), fred('DGS10', hace(800)), fred('DGS2', hace(800)),
     tesoro('v2/accounting/od/debt_to_penny', 'sort=-record_date&page[size]=400&fields=record_date,tot_pub_debt_out_amt,debt_held_public_amt,intragov_hold_amt'),
     tesoro('v1/accounting/mts/mts_table_1', 'sort=-record_date&page[size]=60'),
   ]);

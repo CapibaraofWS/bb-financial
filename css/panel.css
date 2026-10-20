@@ -177,6 +177,7 @@
 /* ---- Mapa de provincias */
 .pa-mapa { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
 .pa-mapa .lamina { position: relative; }
+.pa-mapa.ancho { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
 .pa-mapa svg { display: block; width: 100%; height: auto; }
 .pa-mapa .pv { stroke: #0a0c0f; stroke-width: 0.7; vector-effect: non-scaling-stroke; cursor: pointer; transition: opacity 0.2s ease; outline: none; }
 .pa-mapa .pv:hover, .pa-mapa .pv:focus-visible, .pa-mapa .pv.sel { stroke: #e8edf5; stroke-width: 1.4; }
@@ -200,6 +201,8 @@
 @media (max-width: 760px) {
   .pa-mapa { grid-template-columns: minmax(0, 1fr); }
   .pa-mapa .lamina { max-width: 250px; margin: 0 auto; }
+  .pa-mapa.ancho { grid-template-columns: minmax(0, 1fr); }
+  .pa-mapa.ancho .lamina { max-width: none; width: 100%; }
   .pa-rank { max-height: none; }
 }
 .pa-filas a.n { text-decoration: none; } .pa-filas a.n:hover { color: var(--accent); }

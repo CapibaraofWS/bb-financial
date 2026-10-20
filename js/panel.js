@@ -40,6 +40,9 @@ window.BBPanel = (function () {
     geo: () => json('/data/provincias-ar.json'),
     comercio: () => json('/api/indec?comercio=1'),
     fiscal: () => json('/api/indec?fiscal=1'),
+    // Estados Unidos (BLS, BEA, FRED y el Tesoro, armados en el servidor)
+    usa: m => json('/api/fred?usa=' + m),
+    geoUsa: () => json('/data/estados-usa.json'),
   };
   // Series del BCRA (vienen de la más nueva a la más vieja) → [{fecha, valor}] en orden
   const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
@@ -147,6 +150,11 @@ window.BBPanel = (function () {
       if (vals.mayorista) items.push({ fecha: vals.mayorista.fecha, orden: '99', tema: 'dolar', nombre: 'Dólar mayorista', valor: vals.mayorista.valor, nota: 'Dato diario', url: 'https://www.bcra.gob.ar/estadisticas-indicadores/' });
       for (const e of despues) items.push({ fecha: e.fecha, orden: e.hora, hora: e.hora, tema: e.tema, nombre: e.nombre, nota: e.periodo, url: cal.url, viene: true });
     }
+    agenda(el, items);
+  }
+  // Dibuja la línea de días. items: [{ fecha, orden, hora, tema, chip?, nombre, valor?, clase?, nota, url, viene? }]
+  function agenda(el, items) {
+    const hoy = hoyISO();
     if (!items.length) { el.closest('[data-franja]')?.setAttribute('hidden', ''); return; }
     // Agrupar por día
     const dias = [];
@@ -162,7 +170,7 @@ window.BBPanel = (function () {
       const falta = estado === 'hoy' ? 'Hoy' : dif === 1 ? 'Mañana' : dif > 1 ? 'En ' + dif + ' días' : dif === -1 ? 'Ayer' : 'Hace ' + (-dif) + ' días';
       return '<div class="pa-dia ' + estado + '"><div class="fecha" aria-label="' + dd + ' de ' + MESES[m - 1] + '"><span class="dsem">' + DSEM[new Date(y, m - 1, dd).getDay()] + '</span><b>' + dd + '</b><span class="mes">' + MES[m - 1] + '</span><span class="falta">' + falta + '</span></div><div class="eventos">' +
         d.items.map(i => '<a class="pa-ev t-' + esc(i.tema) + '" href="' + esc(i.url || '#') + '" target="_blank" rel="noopener">' +
-          '<span class="chip">' + esc(TEMAS[i.tema] || 'INDEC') + (i.hora ? ' · ' + esc(i.hora) : '') + '</span>' +
+          '<span class="chip">' + esc(i.chip || TEMAS[i.tema] || 'INDEC') + (i.hora ? ' · ' + esc(i.hora) : '') + '</span>' +
           '<span class="nombre">' + esc(i.nombre) + '</span>' +
           (i.valor ? '<span class="valor ' + esc(i.clase || '') + '">' + esc(i.valor) + '</span>' : '') +
           '<span class="nota">' + esc(i.nota || '') + (i.viene || i.valor ? '' : ' · informe ↗') + '</span></a>').join('') +
@@ -175,7 +183,8 @@ window.BBPanel = (function () {
 
   // ---- Bandera argentina en SVG (en Windows el emoji de bandera se ve como "AR")
   const BANDERA = '<svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>';
-  document.querySelectorAll('[data-bandera]').forEach(e => e.insertAdjacentHTML('afterbegin', BANDERA));
+  const BANDERA_USA = '<svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#fff"/><path d="M0 0h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30V7.7H0zm0 3.07h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30v1.54H0zm0 3.07h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/></svg>';
+  document.querySelectorAll('[data-bandera]').forEach(e => e.insertAdjacentHTML('afterbegin', e.dataset.bandera === 'usa' ? BANDERA_USA : BANDERA));
 
   // ---- Volver: si se llegó desde el sitio, vuelve a la página anterior; si no, va al panel
   document.addEventListener('click', e => {
@@ -290,36 +299,43 @@ window.BBPanel = (function () {
     if (Math.abs(v) < 0.05) return 'rgba(255,255,255,0.09)';
     return v > 0 ? 'rgba(74,222,154,' + (0.18 + 0.72 * k).toFixed(2) + ')' : 'rgba(255,120,100,' + (0.18 + 0.72 * k).toFixed(2) + ')';
   };
-  async function mapaProvincias(el, { valores, formato = v => signo(v) + '%', info, etiqueta = '' }) {
+  // Estados Unidos: geo = 'estados' (límites del Census, con Alaska, Hawái y D.C. en recuadros).
+  // escala = 'nivel' pinta por el valor (un solo tono; rojo si mejorSiBaja) en vez de por el signo del cambio.
+  async function mapaProvincias(el, { valores, formato = v => signo(v) + '%', info, etiqueta = '', geo = 'provincias', escala = 'cambio', mejorSiBaja = false, inicial }) {
     if (typeof el === 'string') el = document.getElementById(el);
-    const g = await API.geo();
+    const usa = geo === 'estados', g = await (usa ? API.geoUsa() : API.geo());
     if (!el || !g || !g.provincias) return;
     // Al volver a dibujarlo (otro período) se reemplaza el contenedor para no duplicar los eventos
     if (el.dataset.mapa) { const n = el.cloneNode(false); el.replaceWith(n); el = n; }
     el.dataset.mapa = '1';
     // Tope de la escala de colores: el percentil 90, para que un caso extremo no deje a todas las demás del mismo tono
-    const abs = Object.values(valores).filter(Number.isFinite).map(Math.abs).sort((a, b) => a - b);
+    const fin = Object.values(valores).filter(Number.isFinite), abs = fin.map(Math.abs).sort((a, b) => a - b);
     const max = abs[Math.floor(abs.length * 0.9)] || abs.at(-1) || 1;
+    // Por nivel: del percentil 5 al 95
+    const ord = fin.slice().sort((a, b) => a - b), lo = ord[Math.floor(ord.length * 0.05)], hi = ord[Math.min(ord.length - 1, Math.floor(ord.length * 0.95))];
+    const tono = mejorSiBaja ? '255,120,100' : '96,165,250';
+    const color = v => !Number.isFinite(v) ? 'rgba(255,255,255,0.06)' : escala === 'nivel' ? 'rgba(' + tono + ',' + (0.12 + 0.8 * Math.max(0, Math.min(1, (v - lo) / ((hi - lo) || 1)))).toFixed(2) + ')' : COLOR(mejorSiBaja ? -v : v, max);
     const nombre = Object.fromEntries(g.provincias.map(p => [p.cod, p.nombre]));
-    const corto = c => (c === '02' ? 'CABA' : c === '94' ? 'Tierra del Fuego' : nombre[c]);
-    const pv = (c, d) => '<path class="pv" data-cod="' + c + '" d="' + d + '" fill="' + COLOR(valores[c], max) + '" tabindex="0" role="button" aria-label="' + esc(corto(c) + ': ' + (Number.isFinite(valores[c]) ? formato(valores[c]) : 'sin dato')) + '"><title>' + esc(corto(c) + ': ' + (Number.isFinite(valores[c]) ? formato(valores[c]) : 'sin dato')) + '</title></path>';
-    const ca = g.caba, m = g.malvinas;
+    const corto = c => (usa ? nombre[c] : c === '02' ? 'CABA' : c === '94' ? 'Tierra del Fuego' : nombre[c]);
+    const pv = (c, d) => '<path class="pv" data-cod="' + c + '" d="' + d + '" fill="' + color(valores[c]) + '" tabindex="0" role="button" aria-label="' + esc(corto(c) + ': ' + (Number.isFinite(valores[c]) ? formato(valores[c]) : 'sin dato')) + '"><title>' + esc(corto(c) + ': ' + (Number.isFinite(valores[c]) ? formato(valores[c]) : 'sin dato')) + '</title></path>';
+    const ca = g.caba || g.recuadro, m = g.malvinas, codR = ca.cod || '02';
     const orden = Object.keys(valores).filter(c => Number.isFinite(valores[c]) && nombre[c]).sort((a, b) => valores[b] - valores[a]);
-    el.innerHTML = '<div class="pa-mapa"><div class="lamina"><svg viewBox="' + g.viewBox + '" role="img" aria-label="Mapa de la Argentina por provincia' + (etiqueta ? ': ' + esc(etiqueta) : '') + '">' +
-      g.provincias.map(p => pv(p.cod, p.d)).join('') +
+    const barra = v => escala === 'nivel' ? 'left:0;width:' + Math.max(2, Math.min(100, v / (hi || 1) * 100)).toFixed(1) + '%' : (v >= 0 ? 'left:50%' : 'right:50%') + ';width:' + Math.min(50, Math.abs(v) / max * 50).toFixed(1) + '%';
+    el.innerHTML = '<div class="pa-mapa' + (usa ? ' ancho' : '') + '"><div class="lamina"><svg viewBox="' + g.viewBox + '" role="img" aria-label="Mapa ' + (usa ? 'de Estados Unidos por estado' : 'de la Argentina por provincia') + (etiqueta ? ': ' + esc(etiqueta) : '') + '">' +
+      g.provincias.filter(p => !usa || p.cod !== codR).map(p => pv(p.cod, p.d)).join('') +
       '<line class="guia" x1="' + ca.desde[0].toFixed(1) + '" y1="' + ca.desde[1].toFixed(1) + '" x2="' + ca.x + '" y2="' + (ca.y + ca.h / 2) + '"/>' +
-      '<rect class="recuadro" x="' + ca.x + '" y="' + ca.y + '" width="' + ca.w + '" height="' + ca.h + '" rx="6"/>' + pv('02', ca.d) +
-      '<text class="rotulo" x="' + (ca.x + ca.w / 2) + '" y="' + (ca.y - 5) + '" text-anchor="middle">CABA</text>' +
-      '<text class="rotulo" x="' + (m[0] + 52) + '" y="' + (m[1] + 3) + '">Islas Malvinas</text>' +
+      '<rect class="recuadro" x="' + ca.x + '" y="' + ca.y + '" width="' + ca.w + '" height="' + ca.h + '" rx="6"/>' + pv(codR, ca.d) +
+      '<text class="rotulo" x="' + (ca.x + ca.w / 2) + '" y="' + (ca.y - 5) + '" text-anchor="middle">' + (ca.rotulo || 'CABA') + '</text>' +
+      (m ? '<text class="rotulo" x="' + (m[0] + 52) + '" y="' + (m[1] + 3) + '">Islas Malvinas</text>' : '') +
       '</svg></div><div class="lado"><div class="pa-mapa-info" aria-live="polite"></div>' +
-      '<div class="pa-mapa-ley"><span>' + formato(-max) + ' o menos</span><i></i><span>' + formato(max) + ' o más</span></div>' +
-      '<ul class="pa-rank">' + orden.map(c => { const v = valores[c], w = Math.min(50, Math.abs(v) / max * 50).toFixed(1);
-        return '<li><button type="button" data-cod="' + c + '"><span>' + esc(corto(c)) + '</span><span class="v">' + esc(formato(v)) + '</span><span class="barra"><i style="' + (v >= 0 ? 'left:50%' : 'right:50%') + ';width:' + w + '%;background:' + COLOR(v, max) + '"></i></span></button></li>'; }).join('') +
+      '<div class="pa-mapa-ley"><span>' + (escala === 'nivel' ? formato(lo) : formato(-max)) + ' o menos</span><i' + (escala === 'nivel' ? ' style="background:linear-gradient(90deg,rgba(' + tono + ',0.12),rgba(' + tono + ',0.92))"' : mejorSiBaja ? ' style="transform:scaleX(-1)"' : '') + '></i><span>' + (escala === 'nivel' ? formato(hi) : formato(max)) + ' o más</span></div>' +
+      '<ul class="pa-rank">' + orden.map(c => { const v = valores[c];
+        return '<li><button type="button" data-cod="' + c + '"><span>' + esc(corto(c)) + '</span><span class="v">' + esc(formato(v)) + '</span><span class="barra"><i style="' + barra(v) + ';background:' + color(v) + '"></i></span></button></li>'; }).join('') +
       '</ul></div></div>';
-    // En el celular la lista completa es muy larga: se ven las 3 que más subieron y las 3 que más bajaron
+    // En el celular la lista completa es muy larga: se ven las 3 de arriba y las 3 de abajo
     if (matchMedia('(max-width: 760px)').matches && orden.length > 8) {
       const ul = el.querySelector('.pa-rank'); ul.classList.add('corta');
-      ul.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-prov">Ver las ' + orden.length + ' provincias</button>');
+      ul.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-prov">Ver ' + (usa ? 'los ' + orden.length + ' estados' : 'las ' + orden.length + ' provincias') + '</button>');
       el.querySelector('.pa-mas-prov').addEventListener('click', e => { ul.classList.remove('corta'); e.currentTarget.remove(); });
     }
     const caja = el.querySelector('.pa-mapa-info');
@@ -327,14 +343,14 @@ window.BBPanel = (function () {
       if (!nombre[c]) return;
       el.dataset.sel = c;
       el.querySelectorAll('[data-cod]').forEach(x => x.classList.toggle('sel', x.dataset.cod === c));
-      const v = valores[c];
-      caja.innerHTML = '<p class="n">' + esc(nombre[c]) + '</p><p class="g ' + (v > 0.05 ? 'mejor' : v < -0.05 ? 'peor' : '') + '">' + (Number.isFinite(v) ? esc(formato(v)) : '—') + '</p><p class="d">' + (info ? info(c) : '') + '</p>';
+      const v = valores[c], s = escala === 'nivel' ? 0 : mejorSiBaja ? -v : v;
+      caja.innerHTML = '<p class="n">' + esc(nombre[c]) + '</p><p class="g ' + (s > 0.05 ? 'mejor' : s < -0.05 ? 'peor' : '') + '">' + (Number.isFinite(v) ? esc(formato(v)) : '—') + '</p><p class="d">' + (info ? info(c) : '') + '</p>';
     };
     el.addEventListener('click', e => { const x = e.target.closest('[data-cod]'); if (x) elegir(x.dataset.cod); });
     el.addEventListener('keydown', e => { const x = e.target.closest('path[data-cod]'); if (x && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); elegir(x.dataset.cod); } });
     if (matchMedia('(hover: hover) and (pointer: fine)').matches) el.addEventListener('pointerover', e => { const x = e.target.closest('path[data-cod]'); if (x) elegir(x.dataset.cod); });
-    elegir(nombre[el.dataset.sel] ? el.dataset.sel : orden.includes('06') ? '06' : orden[0]);
+    elegir(nombre[el.dataset.sel] ? el.dataset.sel : inicial && orden.includes(inicial) ? inicial : !usa && orden.includes('06') ? '06' : orden[0]);
   }
 
-  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, TEMAS, MES, MESES, DSEM, diasEntre };
+  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, agenda, BANDERA_USA, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, TEMAS, MES, MESES, DSEM, diasEntre };
 })();
