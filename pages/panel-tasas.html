@@ -147,7 +147,7 @@
   <script src="../js/main.js?v=46"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=5"></script>
+  <script src="../js/panel.js?v=6"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -158,11 +158,11 @@
     const BCRA = P.fuente('https://www.bcra.gob.ar/estadisticas-indicadores/', 'BCRA');
     const ref = (serie, dias) => serie.find(x => x.fecha >= hace(dias));
     const tam = P.det(s44), bad = P.det(s7), pf = P.det(s12), pfL = P.det(s12largo);
-    const v = id => P.variable(b, id);
+    const v = (id, serie) => P.variable(b, id, serie);
     const k = $('kpis'); k.innerHTML = '<article class="pa-card" id="k1"></article><article class="pa-card" id="k2"></article><article class="pa-card" id="k3"></article><article class="pa-card" id="k4"></article>';
     const tem = tna => tna / 100 * 30 / 365 * 100;   // TNA → tasa de 30 días, en %
 
-    const t44 = v(44), t7 = v(7), t12 = v(12), t11 = v(11), t14 = v(14), t13 = v(13), rem = v(29);
+    const t44 = v(44, tam), t7 = v(7, bad), t12 = v(12, pf), t11 = v(11), t14 = v(14), t13 = v(13), rem = v(29);
     if (t44) { const r = ref(tam, 30); P.tarjeta('k1', { que: 'TAMAR · bancos privados', grande: num(t44.ultValorInformado) + '%', contexto: P.fechaCorta(t44.ultFechaInformada) + (r ? ' · <b>' + P.signo(t44.ultValorInformado - r.valor) + ' p.p.</b> en 30 días' : '') + '. Tasa nominal anual.',
       extra: P.sparkline(tam.map(x => x.valor), { color: '#60a5fa' }),
       filas: [t7 ? ['BADLAR', 'Plazos fijos de más de $1 millón', num(t7.ultValorInformado) + '%'] : null, t12 ? ['Plazo fijo a 30 días', 'Promedio de los bancos', num(t12.ultValorInformado) + '%'] : null, t11 ? ['BAIBAR', 'Préstamos entre bancos', num(t11.ultValorInformado) + '%'] : null], fuentes: 'Fuente: ' + BCRA }); }

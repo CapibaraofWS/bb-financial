@@ -45,7 +45,13 @@ window.BBPanel = (function () {
   const det = r => ((r && r.results && r.results[0] && r.results[0].detalle) || []).slice().reverse();
   // Series del portal de datos abiertos (ordenadas desc) → por columna, en orden
   const gobCols = (r, k) => ((r && r.data) || []).filter(f => f[k + 1] != null).map(f => ({ fecha: f[0].slice(0, 7), valor: f[k + 1] })).reverse();
-  const variable = (b, id) => { const L = b && (b.results || b); const x = Array.isArray(L) && L.find(y => y.idVariable === id); return x && Number.isFinite(x.ultValorInformado) ? x : null; };
+  // Con la serie diaria, manda su último dato: el resumen del BCRA a veces publica 0 el último día (TAMAR, 16/10/2026)
+  const variable = (b, id, serie) => {
+    const L = b && (b.results || b); let x = Array.isArray(L) && L.find(y => y.idVariable === id);
+    const u = serie && serie.at(-1);
+    if (u && Number.isFinite(u.valor) && (!x || u.fecha >= x.ultFechaInformada)) x = { ...x, idVariable: id, ultValorInformado: u.valor, ultFechaInformada: u.fecha };
+    return x && Number.isFinite(x.ultValorInformado) ? x : null;
+  };
 
   // ---- Minigráfico (SVG en línea, sin librerías)
   function sparkline(valores, { ancho = 260, alto = 54, color = 'var(--accent)', relleno = true } = {}) {
