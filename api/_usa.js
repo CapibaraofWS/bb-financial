@@ -30,9 +30,10 @@ async function bls(ids, desde) {
 }
 
 // ---- FRED: [{ f: 'AAAA-MM-DD', v }] en orden
-async function fred(id, desde) {
+// mensual = true: FRED devuelve el promedio de cada mes (para series diarias o semanales largas)
+async function fred(id, desde, mensual) {
   const u = 'https://api.stlouisfed.org/fred/series/observations?series_id=' + id + '&api_key=' + process.env.FRED_API_KEY +
-    '&file_type=json&observation_start=' + desde;
+    '&file_type=json&observation_start=' + desde + (mensual ? '&frequency=m&aggregation_method=avg' : '');
   const r = await fetch(u, { signal: AbortSignal.timeout(9000) });
   if (!r.ok) throw new Error('FRED ' + r.status);
   return (await r.json()).observations.map(o => ({ f: o.date, v: num(o.value) })).filter(x => x.v !== null);
@@ -177,6 +178,55 @@ async function resumen() {
   };
 }
 
+// ---- Actividad: PBI por componente, ingreso y ahorro (BEA), PBI por estado (BEA Regional) e indicadores mensuales (FRED)
+async function beaEstados() {
+  const u = 'https://apps.bea.gov/api/data/?UserID=' + process.env.BEA_API_KEY + '&method=GetData&datasetname=Regional&TableName=SQGDP9&LineCode=1&GeoFips=STATE&Year=LAST5&ResultFormat=JSON';
+  const j = await fetch(u, { signal: AbortSignal.timeout(9000) }).then(r => r.json());
+  const out = {};
+  for (const d of (j && j.BEAAPI && j.BEAAPI.Results && j.BEAAPI.Results.Data) || []) {
+    const c = d.GeoFips.slice(0, 2), v = num(d.DataValue);
+    if (d.GeoFips.endsWith('000') && c !== '00' && +c < 60 && v !== null) (out[c] = out[c] || []).push({ p: d.TimePeriod, v });
+  }
+  for (const c in out) out[c].sort((a, b) => (a.p < b.p ? -1 : 1));
+  return out;
+}
+async function actividad() {
+  const anios = Array.from({ length: anio() - 2015 }, (_, i) => 2016 + i), d = '2016-01-01', f = (id, m) => fred(id, d, m).catch(() => []);
+  const [aportes, ingreso, consumo, estados, indpro, tcu, ventas, ventasReales, michigan, viviendas, gdpnow] = await Promise.all([
+    bea('T10102', 'Q', ['1', '2', '8', '14', '15', '22'], anios),
+    bea('T20600', 'M', ['35', '37'], anios),
+    bea('T20806', 'M', ['1'], anios).catch(() => null),
+    beaEstados().catch(() => null),
+    f('INDPRO'), f('TCU'), f('RSAFS'), f('RRSFS'), f('UMCSENT'), f('HOUST'), fred('GDPNOW', '2024-01-01').catch(() => []),
+  ]);
+  return {
+    pbi: { pbi: aportes['1'], consumo: aportes['2'], inversion: aportes['8'], inventarios: aportes['14'], exportacionesNetas: aportes['15'], gobierno: aportes['22'], revisado: aportes.revisado },
+    familias: { ahorro: ingreso['35'], ingresoReal: ingreso['37'], consumoReal: consumo && consumo['1'] },
+    estados, indpro, capacidad: tcu, ventas, ventasReales, michigan, viviendas, gdpnow,
+  };
+}
+
+// ---- Tasas: la Fed, la curva de bonos, tasas reales, hipotecas, crédito y lo que paga el Tesoro
+const PLAZOS = [['DGS1MO', '1 mes'], ['DGS3MO', '3 meses'], ['DGS6MO', '6 meses'], ['DGS1', '1 año'], ['DGS2', '2 años'], ['DGS3', '3 años'], ['DGS5', '5 años'], ['DGS7', '7 años'], ['DGS10', '10 años'], ['DGS20', '20 años'], ['DGS30', '30 años']];
+async function tasas() {
+  const hace = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10), f = (id, desde, m) => fred(id, desde, m).catch(() => []);
+  const [curva, diarias, mensuales, costo] = await Promise.all([
+    Promise.all(PLAZOS.map(([id]) => f(id, hace(400)))),
+    Promise.all(['DFEDTARU', 'DFEDTARL', 'EFFR', 'SOFR', 'DFII10', 'T10YIE', 'T10Y2Y', 'T10Y3M', 'MORTGAGE30US', 'BAMLH0A0HYM2', 'BAMLC0A0CM', 'WALCL'].map(id => f(id, hace(800)))),
+    Promise.all([['FEDFUNDS', false], ['GS2', false], ['GS10', false], ['TB3MS', false], ['USREC', false], ['MORTGAGE30US', true], ['BAMLH0A0HYM2', true], ['BAMLC0A0CM', true], ['WALCL', true], ['DFII10', true]].map(([id, m]) => f(id, '2000-01-01', m))),
+    tesoro('v2/accounting/od/avg_interest_rates', 'sort=-record_date&page[size]=200&filter=security_desc:eq:Total Marketable').catch(() => []),
+  ]);
+  const [techo, piso, efectiva, sofr, real10, inflacion10, d10y2, d10y3m, hipoteca, hy, ig, balance] = diarias;
+  const [fedfunds, gs2, gs10, tb3, recesion, hipotecaM, hyM, igM, balanceM, realM] = mensuales;
+  const corta = s => s.map(x => ({ p: x.f.slice(0, 7), v: x.v }));
+  return {
+    curva: PLAZOS.map(([id, n], i) => ({ id, plazo: n, s: curva[i] })),
+    diarias: { techo, piso, efectiva, sofr, real10, inflacion10, d10y2, d10y3m, hipoteca, hy, ig, balance },
+    mensuales: { fedfunds: corta(fedfunds), bono2: corta(gs2), bono10: corta(gs10), letra3m: corta(tb3), recesion: corta(recesion), hipoteca: corta(hipotecaM), hy: corta(hyM), ig: corta(igM), balance: corta(balanceM), real10: corta(realM) },
+    costoDeuda: costo.map(r => ({ p: r.record_date.slice(0, 7), v: num(r.avg_interest_rate_amt) })).filter(x => x.v !== null).reverse(),
+  };
+}
+
 // ---- Respaldo en Redis (Upstash): si una fuente no contesta, se sirve el último armado completo
 async function redis(cmd) {
   // Acepta los nombres de Upstash y los de la integración de Vercel (KV_*), sin comillas
@@ -189,7 +239,7 @@ async function redis(cmd) {
   } catch { return null; }
 }
 
-const MODOS = { resumen, precios, empleo, calendario };
+const MODOS = { resumen, precios, empleo, calendario, actividad, tasas };
 export async function usa(req, res) {
   const modo = req.query.usa, f = MODOS[modo];
   if (!f) return res.status(400).json({ error: 'Modo no válido' });
