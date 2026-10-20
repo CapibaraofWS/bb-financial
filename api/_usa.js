@@ -180,8 +180,9 @@ async function redis(cmd) {
   if (!url || !token) return null;
   try {
     const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmd), signal: AbortSignal.timeout(2500) });
+    if (!r.ok) redis.ultimo = 'HTTP ' + r.status + ' ' + (await r.text()).slice(0, 120);
     return r.ok ? (await r.json()).result : null;
-  } catch { return null; }
+  } catch (e) { redis.ultimo = 'error ' + e.name; return null; }
 }
 
 const MODOS = { resumen, precios, empleo, calendario };
@@ -192,7 +193,8 @@ export async function usa(req, res) {
   try {
     const data = await f();
     const cuerpo = { actualizado: new Date().toISOString(), ...(Array.isArray(data) ? { eventos: data } : data) };
-    await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)]);
+    const ok = await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)]);
+    res.setHeader('X-Respaldo', String(ok || redis.ultimo || (process.env.UPSTASH_REDIS_REST_URL ? 'sin respuesta' : 'sin configurar')).replace(/[^\x20-\x7e]/g, ''));
     // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza
     res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=86400');
     return res.status(200).json(cuerpo);
