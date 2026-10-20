@@ -334,7 +334,7 @@ async function comercio() {
     beaIta('ExpGds', anios).catch(() => ({})), beaIta('ImpGds', anios).catch(() => ({})),
   ]);
   // Solo los mensajes propios ("Census 302", "faltan meses"): otros errores podrían incluir la dirección con la clave
-  const cen = await censoComercio().catch(e => ({ error: /^Census/.test(e && e.message) ? e.message : 'no disponible' }));
+  const cen = await censoComercio().catch(e => ({ error: /^Census/.test(e && e.message) ? e.message : 'no disponible (' + (e && e.name) + (e && e.cause && e.cause.code ? ' ' + e.cause.code : '') + ')' }));
   if (!exp.length && !Object.keys(socExp).length) throw new Error('comercio sin datos');
   const m = s => s.map(x => ({ p: x.f.slice(0, 7), v: x.v }));
   return {
