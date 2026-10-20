@@ -367,7 +367,8 @@ async function getBcraPrincipales() {
   }
   return map;
 }
-const pickVar = (map, id) => (map[id] && Number.isFinite(map[id].valor) ? { valor: map[id].valor, fecha: map[id].fecha } : null);
+// tasa=true: el BCRA a veces publica 0 el último día (TAMAR, 16/10/2026); una tasa en 0 es dato faltante
+const pickVar = (map, id, tasa) => (map[id] && Number.isFinite(map[id].valor) && !(tasa && map[id].valor <= 0) ? { valor: map[id].valor, fecha: map[id].fecha } : null);
 
 async function getArPesos() {
   const [letras, priceSets, bcra] = await Promise.all([
@@ -414,8 +415,8 @@ async function getArPesos() {
       rem:                 pickVar(bcra, 29),
       inflacionMensual:    pickVar(bcra, 27),
       inflacionInteranual: pickVar(bcra, 28),
-      tamar:               pickVar(bcra, 44),
-      badlar:              pickVar(bcra, 7),
+      tamar:               pickVar(bcra, 44, true),
+      badlar:              pickVar(bcra, 7, true),
     };
   }
 
@@ -445,8 +446,8 @@ async function getArPesos() {
     rem:                 pickVar(bcra, 29),
     inflacionMensual:    pickVar(bcra, 27),
     inflacionInteranual: pickVar(bcra, 28),
-    tamar:               pickVar(bcra, 44),
-    badlar:              pickVar(bcra, 7),
+    tamar:               pickVar(bcra, 44, true),
+    badlar:              pickVar(bcra, 7, true),
   };
 }
 
