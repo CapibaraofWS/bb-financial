@@ -290,6 +290,41 @@ async function beaIta(indicador, anios) {
   for (const k in out) out[k].sort((a, b) => (a.p < b.p ? -1 : 1));
   return out;
 }
+// Census (comercio de bienes por país y por producto, mensual). La clave va en CENSUS_API_KEY.
+const limpiar = v => (v || '').trim().replace(/^["']|["']$/g, '');
+async function censo(tipo, campos, extra) {
+  const key = limpiar(process.env.CENSUS_API_KEY);
+  const u = 'https://api.census.gov/data/timeseries/intltrade/' + tipo + '/hs?get=' + campos + extra + (key ? '&key=' + encodeURIComponent(key) : '');
+  const r = await fetch(u, { headers: UA, signal: AbortSignal.timeout(12000), redirect: 'manual' });
+  if (r.status !== 200) throw new Error('Census ' + r.status);
+  const j = await r.json();
+  return j.slice(1).map(f => Object.fromEntries(j[0].map((h, i) => [h, f[i]])));
+}
+async function censoComercio() {
+  const d = new Date(), desde = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 16, 1)).toISOString().slice(0, 7);
+  const [ex, im] = await Promise.all([
+    censo('exports', 'CTY_CODE,CTY_NAME,ALL_VAL_MO', '&time=from+' + desde),
+    censo('imports', 'CTY_CODE,CTY_NAME,GEN_VAL_MO', '&time=from+' + desde),
+  ]);
+  // Último mes con exportaciones e importaciones publicadas, y los 12 meses que terminan ahí
+  const mesesEx = new Set(ex.map(x => x.time)), meses = [...new Set(im.map(x => x.time))].filter(m => mesesEx.has(m)).sort().slice(-12);
+  if (meses.length < 12) throw new Error('Census: faltan meses');
+  const en12 = new Set(meses), pais = {};
+  const sumar = (filas, campo, k) => { for (const x of filas) { if (!en12.has(x.time)) continue; const p = pais[x.CTY_CODE] = pais[x.CTY_CODE] || { codigo: x.CTY_CODE, nombre: x.CTY_NAME, exp: 0, imp: 0 }; p[k] += Number(x[campo]) || 0; } };
+  sumar(ex, 'ALL_VAL_MO', 'exp'); sumar(im, 'GEN_VAL_MO', 'imp');
+  // Países (código de 4 cifras que no empieza con 0) y la Unión Europea (agrupamiento)
+  const paises = Object.values(pais).filter(p => /^[1-9]\d{3}$/.test(p.codigo) || p.nombre === 'EUROPEAN UNION');
+  const total = pais['-'] || null;
+  // La Argentina (3570): mes a mes y por capítulo del arancel (HS2) en los mismos 12 meses
+  const arg = m => ({ exp: Number((ex.find(x => x.CTY_CODE === '3570' && x.time === m) || {}).ALL_VAL_MO) || 0, imp: Number((im.find(x => x.CTY_CODE === '3570' && x.time === m) || {}).GEN_VAL_MO) || 0 });
+  const [pe, pi] = await Promise.all([
+    censo('exports', 'E_COMMODITY,ALL_VAL_MO', '&CTY_CODE=3570&COMM_LVL=HS2&time=from+' + meses[0] + '+to+' + meses[11]).catch(() => []),
+    censo('imports', 'I_COMMODITY,GEN_VAL_MO', '&CTY_CODE=3570&COMM_LVL=HS2&time=from+' + meses[0] + '+to+' + meses[11]).catch(() => []),
+  ]);
+  const porCap = (filas, cod, val) => { const o = {}; for (const x of filas) o[x[cod]] = (o[x[cod]] || 0) + (Number(x[val]) || 0); return Object.entries(o).map(([hs, v]) => ({ hs, v })).filter(x => /^\d\d$/.test(x.hs) && x.v > 0).sort((a, b) => b.v - a.v); };
+  return { desde: meses[0], hasta: meses[11], total: total && { exp: total.exp, imp: total.imp }, paises,
+    argentina: { meses: [...new Set([...mesesEx])].filter(m => m <= meses[11]).sort().map(m => ({ p: m, ...arg(m) })), productosExp: porCap(pe, 'E_COMMODITY', 'ALL_VAL_MO'), productosImp: porCap(pi, 'I_COMMODITY', 'GEN_VAL_MO') } };
+}
 async function comercio() {
   const d = '2016-01-01', f = (id, m) => fred(id, d, m).catch(() => []), anios = [anio() - 3, anio() - 2, anio() - 1, anio()];
   const [exp, imp, saldo, saldoBienes, saldoServ, impBienes, dolar, aranceles, socExp, socImp, socExpB, socImpB] = await Promise.all([
@@ -298,11 +333,13 @@ async function comercio() {
     beaIta('ExpGdsServ', anios).catch(() => ({})), beaIta('ImpGdsServ', anios).catch(() => ({})),
     beaIta('ExpGds', anios).catch(() => ({})), beaIta('ImpGds', anios).catch(() => ({})),
   ]);
+  const cen = await censoComercio().catch(() => ({ error: 'no disponible' }));   // sin el mensaje del error: podría incluir la dirección con la clave
   if (!exp.length && !Object.keys(socExp).length) throw new Error('comercio sin datos');
   const m = s => s.map(x => ({ p: x.f.slice(0, 7), v: x.v }));
   return {
     exportaciones: m(exp), importaciones: m(imp), saldo: m(saldo), saldoBienes: m(saldoBienes), saldoServicios: m(saldoServ), importacionesBienes: m(impBienes),
     dolar: m(dolar),
+    censo: cen,
     aranceles: aranceles.map(r => ({ p: r.record_date.slice(0, 7), v: num(r.current_month_rcpt_outly_amt) })).filter(x => x.v !== null),
     // Con bienes y servicios cuando BEA los publica; si no (Vietnam, Suiza), solo bienes
     socios: Object.keys(SOCIOS).map(k => (socExp[k] && socExp[k].length ? { k, nombre: SOCIOS[k], exp: socExp[k], imp: socImp[k] || [], soloBienes: false } : { k, nombre: SOCIOS[k], exp: socExpB[k] || [], imp: socImpB[k] || [], soloBienes: true })),
