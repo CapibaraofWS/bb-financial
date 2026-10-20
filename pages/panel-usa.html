@@ -81,7 +81,7 @@
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Estados Unidos"><a href="panel-usa" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#fff"/><path d="M0 0h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30V7.7H0zm0 3.07h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30v1.54H0zm0 3.07h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/></svg>Resumen</a><a href="panel-usa-precios">Precios</a><a href="panel-usa-empleo">Empleo</a><a href="panel-usa-actividad">Actividad</a><a href="panel-usa-tasas">Tasas</a><span class="sep" aria-hidden="true"></span><a href="visor-bonos">Bonos USA</a><a href="datos">Datos macro</a><a href="calendario">Balances de empresas</a><span class="sep" aria-hidden="true"></span><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel Argentina</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Estados Unidos"><a href="panel-usa" aria-current="page"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#fff"/><path d="M0 0h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30V7.7H0zm0 3.07h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30v1.54H0zm0 3.07h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/></svg>Resumen</a><a href="panel-usa-precios">Precios</a><a href="panel-usa-empleo">Empleo</a><a href="panel-usa-actividad">Actividad</a><a href="panel-usa-tasas">Tasas</a><a href="panel-usa-fiscal">Fiscal</a><span class="sep" aria-hidden="true"></span><a href="visor-bonos">Bonos USA</a><a href="datos">Datos macro</a><a href="calendario">Balances de empresas</a><span class="sep" aria-hidden="true"></span><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Panel Argentina</a></nav>
 
       <section class="pa-franja" data-franja aria-labelledby="fr-t">
         <div class="pa-franja-cab"><h2 id="fr-t">Últimos datos y lo que viene</h2><span style="font-size:0.78rem;color:var(--text-subtle)">Hora argentina</span></div>
@@ -122,7 +122,7 @@
           <p class="que">Deuda pública federal</p>
           <p class="grande">US$40,39 billones</p>
           <p class="contexto">Al 16 de octubre de 2026 (un billón es un millón de millones). El déficit del año fiscal 2026 fue de US$1,99 billones.</p>
-          <div class="pie"><span>Fuente: <a href="https://fiscaldata.treasury.gov/" target="_blank" rel="noopener">Tesoro de EE.UU. ↗</a></span></div>
+          <div class="pie"><span>Fuente: <a href="https://fiscaldata.treasury.gov/" target="_blank" rel="noopener">Tesoro de EE.UU. ↗</a></span><a class="ir" href="panel-usa-fiscal">Panel fiscal →</a></div>
         </article>
       </div>
 
@@ -163,7 +163,7 @@
           <article class="pa-card"><h3>Tesoro (Fiscal Data)</h3><p class="que">Departamento del Tesoro</p>
             <ul class="pa-filas"><li><span class="n">Mide<small>Las cuentas del gobierno federal</small></span><span class="v"></span></li></ul>
             <p class="contexto">Lo que el gobierno cobra y gasta cada mes, el déficit, la deuda día por día y la tasa que paga por ella. El año fiscal va de octubre a septiembre.</p>
-            <div class="pie"><span><a href="https://fiscaldata.treasury.gov/" target="_blank" rel="noopener">fiscaldata.treasury.gov ↗</a></span></div></article>
+            <div class="pie"><span><a href="https://fiscaldata.treasury.gov/" target="_blank" rel="noopener">fiscaldata.treasury.gov ↗</a></span><a class="ir" href="panel-usa-fiscal">Fiscal →</a></div></article>
           <article class="pa-card"><h3>Reserva Federal</h3><p class="que">El banco central (Fed)</p>
             <ul class="pa-filas"><li><span class="n">Decide<small>La tasa de interés</small></span><span class="v"></span></li></ul>
             <p class="contexto">Se reúne ocho veces por año (FOMC) para fijar la tasa. Sus dos objetivos son precios estables (inflación de 2%) y el máximo empleo posible. Publica además la producción industrial.</p>
@@ -289,7 +289,7 @@
         filas: [['Deuda sobre el PBI', 'Contra el PBI nominal de un año', num(ud.total / pbiAnual * 100, 0) + '%'], ['En manos del público', 'Inversores, bancos, la Fed y otros países', billones(ud.publico)], ['Dentro del propio gobierno', 'Fondos como el de la seguridad social', billones(ud.intra)],
           act ? ['Déficit del año fiscal ' + act.fy + (cerrado ? '' : ' (hasta ahora)'), (cerrado ? 'Octubre ' + (act.fy - 1) + ' a septiembre ' + act.fy : 'Desde octubre de ' + (act.fy - 1)) + (prev && prev.acumulado ? ' · el anterior: ' + billones(prev.acumulado.deficit) : ''), billones(act.acumulado.deficit), prev && prev.acumulado ? cls(act.acumulado.deficit - prev.acumulado.deficit, true) : ''] : null,
           act && cerrado ? ['Déficit sobre el PBI', 'Año fiscal ' + act.fy, num(act.acumulado.deficit / pbiAnual * 100) + '%'] : null],
-        fuentes: 'Fuente: ' + P.fuente('https://fiscaldata.treasury.gov/', 'Tesoro de EE.UU.') });
+        fuentes: 'Fuente: ' + P.fuente('https://fiscaldata.treasury.gov/', 'Tesoro de EE.UU.'), ir: '<a class="ir" href="panel-usa-fiscal">Panel fiscal →</a>' });
     }
     P.brillo('.pa-grid .pa-card');
 

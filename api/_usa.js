@@ -160,7 +160,16 @@ async function resumen() {
     tesoro('v2/accounting/od/debt_to_penny', 'sort=-record_date&page[size]=400&fields=record_date,tot_pub_debt_out_amt,debt_held_public_amt,intragov_hold_amt'),
     tesoro('v1/accounting/mts/mts_table_1', 'sort=-record_date&page[size]=60'),
   ]);
-  // MTS tabla 1: el último informe trae los meses del año fiscal anterior y del actual, con su acumulado
+  return {
+    pbi: { variacion: pbi['1'], real: real['1'], nominal: nominal['1'], revisado: pbi.revisado },
+    fed: { techo: sup, piso: inf }, bonos: { d10, d2 },
+    deuda: deudaDiaria(deuda),
+    fiscal: mtsMeses(mts),
+  };
+}
+const deudaDiaria = d => d.map(x => ({ f: x.record_date, total: num(x.tot_pub_debt_out_amt), publico: num(x.debt_held_public_amt), intra: num(x.intragov_hold_amt) })).reverse();
+// MTS tabla 1: el último informe trae los meses del año fiscal anterior y del actual, con su acumulado
+function mtsMeses(mts) {
   const ult = mts[0] && mts[0].record_date, filas = mts.filter(r => r.record_date === ult).sort((a, b) => a.src_line_nbr - b.src_line_nbr);
   const anioFiscal = []; let fy = null;
   for (const r of filas) {
@@ -170,12 +179,48 @@ async function resumen() {
     const fila = { mes: r.classification_desc, ingresos: num(r.current_month_gross_rcpt_amt), gastos: num(r.current_month_gross_outly_amt), deficit: num(r.current_month_dfct_sur_amt) };
     if (r.classification_desc === 'Year-to-Date') fy.acumulado = fila; else fy.meses.push(fila);
   }
+  return { informe: ult, anios: anioFiscal };
+}
+
+// ---- Fiscal: déficit, ingresos por impuesto y gastos por función (Tesoro, MTS), deuda (Tesoro y FRED) y gasto por estado (USAspending)
+const RUBROS_INGRESO = { 'Individual Income Taxes': 'Ganancias de las personas', 'Corporation Income Taxes': 'Ganancias de las empresas', 'Employment and General Retirement': 'Aportes a la seguridad social', 'Unemployment Insurance': 'Seguro de desempleo', 'Excise Taxes': 'Impuestos a consumos específicos', 'Estate and Gift Taxes': 'Herencias y donaciones', 'Customs Duties': 'Aranceles a las importaciones', 'Miscellaneous Receipts': 'Otros (incluye ganancias de la Fed)' };
+const RUBROS_GASTO = { 'Social Security': 'Seguridad social (jubilaciones)', 'Medicare': 'Medicare (salud de los mayores)', 'Health': 'Salud (Medicaid y otros)', 'Net Interest': 'Intereses de la deuda', 'National Defense': 'Defensa', 'Income Security': 'Asistencia social', 'Veterans Benefits and Services': 'Veteranos', 'Education, Training, Employment, and Social Services': 'Educación y empleo', 'Transportation': 'Transporte', 'Administration of Justice': 'Justicia y seguridad', 'Community and Regional Development': 'Desarrollo regional', 'Natural Resources and Environment': 'Ambiente y recursos naturales', 'Agriculture': 'Agricultura', 'International Affairs': 'Asuntos internacionales', 'General Science, Space, and Technology': 'Ciencia y espacio', 'General Government': 'Administración general', 'Energy': 'Energía' };
+async function fiscal() {
+  const f = (id, d) => fred(id, d).catch(() => []);
+  const [mts, anuales, t9, deuda, pbiDeuda, saldoPbi, ingPbi, gasPbi, intPbi] = await Promise.all([
+    tesoro('v1/accounting/mts/mts_table_1', 'sort=-record_date&page[size]=60'),
+    tesoro('v1/accounting/mts/mts_table_1', 'filter=classification_desc:eq:Year-to-Date,record_calendar_month:eq:09&sort=record_date&page[size]=200'),
+    tesoro('v1/accounting/mts/mts_table_9', 'sort=-record_date&page[size]=60'),
+    tesoro('v2/accounting/od/debt_to_penny', 'sort=-record_date&page[size]=400&fields=record_date,tot_pub_debt_out_amt,debt_held_public_amt,intragov_hold_amt'),
+    f('GFDEGDQ188S', '2000-01-01'), f('FYFSGDA188S', '2000-01-01'), f('FYFRGDA188S', '2000-01-01'), f('FYONGDA188S', '2000-01-01'), f('FYOIGDA188S', '2000-01-01'),
+  ]);
+  // Años fiscales cerrados: el acumulado del informe de septiembre (la fila del año en curso es la última)
+  const porAnio = {};
+  for (const r of anuales) { const k = r.record_date; if (!porAnio[k] || +r.src_line_nbr > +porAnio[k].src_line_nbr) porAnio[k] = r; }
+  const anios = Object.values(porAnio).map(r => ({ fy: +r.record_date.slice(0, 4), ingresos: num(r.current_month_gross_rcpt_amt), gastos: num(r.current_month_gross_outly_amt), deficit: num(r.current_month_dfct_sur_amt) })).sort((a, b) => a.fy - b.fy);
+  // MTS tabla 9 del último informe: ingresos por impuesto y gastos por función, en el año fiscal y en el mismo período del anterior
+  const ult9 = t9[0] && t9[0].record_date, f9 = t9.filter(r => r.record_date === ult9);
+  const rubros = (dic, tipo) => f9.filter(r => dic[r.classification_desc] && r.record_type_cd === tipo).map(r => ({ nombre: dic[r.classification_desc], actual: num(r.current_fytd_rcpt_outly_amt), anterior: num(r.prior_fytd_rcpt_outly_amt) })).filter(x => x.actual !== null);
+  // Las dos filas "Total": primero la de ingresos y después la de gastos
+  const tot = f9.filter(r => r.classification_desc === 'Total').sort((a, b) => a.src_line_nbr - b.src_line_nbr).map(r => ({ actual: num(r.current_fytd_rcpt_outly_amt), anterior: num(r.prior_fytd_rcpt_outly_amt) }));
   return {
-    pbi: { variacion: pbi['1'], real: real['1'], nominal: nominal['1'], revisado: pbi.revisado },
-    fed: { techo: sup, piso: inf }, bonos: { d10, d2 },
-    deuda: deuda.map(d => ({ f: d.record_date, total: num(d.tot_pub_debt_out_amt), publico: num(d.debt_held_public_amt), intra: num(d.intragov_hold_amt) })).reverse(),
-    fiscal: { informe: ult, anios: anioFiscal },
+    meses: mtsMeses(mts), anios, informe9: ult9, totales9: { ingresos: tot[0] || null, gastos: tot[1] || null },
+    ingresos: rubros(RUBROS_INGRESO, 'RSG'), gastos: rubros(RUBROS_GASTO, 'F'),
+    deuda: deudaDiaria(deuda),
+    pbi: { deuda: pbiDeuda, saldo: saldoPbi, ingresos: ingPbi, gastos: gasPbi, intereses: intPbi },
+    estados: await gastoPorEstado().catch(() => null),
   };
+}
+// USAspending: lo adjudicado en cada estado en el último año fiscal cerrado (octubre a septiembre), total y por habitante
+async function gastoPorEstado() {
+  const hoy = new Date(), fy = hoy.getUTCMonth() >= 9 ? hoy.getUTCFullYear() : hoy.getUTCFullYear() - 1;
+  const r = await fetch('https://api.usaspending.gov/api/v2/search/spending_by_geography/', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...UA }, signal: AbortSignal.timeout(12000),
+    body: JSON.stringify({ scope: 'place_of_performance', geo_layer: 'state', spending_level: 'transactions', filters: { time_period: [{ start_date: (fy - 1) + '-10-01', end_date: fy + '-09-30' }] } }),
+  });
+  if (!r.ok) throw new Error('USAspending ' + r.status);
+  const j = await r.json();
+  return { fy, valores: (j.results || []).map(x => ({ abrev: x.shape_code, total: x.aggregated_amount, poblacion: x.population, porHabitante: x.per_capita })) };
 }
 
 // ---- Actividad: PBI por componente, ingreso y ahorro (BEA), PBI por estado (BEA Regional) e indicadores mensuales (FRED)
@@ -241,7 +286,7 @@ async function redis(cmd) {
   } catch { return null; }
 }
 
-const MODOS = { resumen, precios, empleo, calendario, actividad, tasas };
+const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal };
 export async function usa(req, res) {
   const modo = req.query.usa, f = MODOS[modo];
   if (!f) return res.status(400).json({ error: 'Modo no válido' });
