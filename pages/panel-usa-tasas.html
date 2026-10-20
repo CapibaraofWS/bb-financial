@@ -267,7 +267,9 @@
     // ---- Gráfico: curva
     { const C = ta.curva.filter(x => x.hoy), u = C[0].hoy;
       $('g-curva-ayuda').insertAdjacentHTML('beforeend', ' Datos al ' + fecha(u.f) + '.');
-      new Chart($('g-curva'), { type: 'line', data: { labels: C.map(x => x.plazo), datasets: [
+      // En el celular los 11 plazos no entran enteros: "6 meses" → "6 m", "10 años" → "10 a"
+      const rot = p => (matchMedia('(max-width: 640px)').matches ? p.replace(/ mes(es)?$/, ' m').replace(/ años?$/, ' a') : p);
+      new Chart($('g-curva'), { type: 'line', data: { labels: C.map(x => rot(x.plazo)), datasets: [
           { label: 'Hoy', data: C.map(x => x.hoy.v), borderColor: '#60a5fa', backgroundColor: '#60a5fa', borderWidth: 2.5, pointRadius: 3, tension: 0.25 },
           { label: 'Hace un mes', data: C.map(x => x.mes && x.mes.v), borderColor: '#e8c97a', borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, tension: 0.25 },
           { label: 'Hace un año', data: C.map(x => x.anio && x.anio.v), borderColor: 'rgba(232,237,245,0.5)', borderWidth: 1.5, borderDash: [2, 3], pointRadius: 0, tension: 0.25 } ] },
