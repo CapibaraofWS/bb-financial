@@ -276,6 +276,72 @@ async function tasas() {
   };
 }
 
+// ---- Comercio exterior: totales mensuales (BEA vía FRED), socios por trimestre (BEA, ITA), aranceles cobrados (Tesoro) y dólar (Fed)
+const SOCIOS = { China: 'China', Mexico: 'México', Canada: 'Canadá', EU: 'Unión Europea', Japan: 'Japón', UnitedKingdom: 'Reino Unido', SouthKorea: 'Corea del Sur', Taiwan: 'Taiwán', Vietnam: 'Vietnam', India: 'India', Switzerland: 'Suiza', Brazil: 'Brasil', Argentina: 'Argentina' };
+async function beaIta(indicador, anios) {
+  const u = 'https://apps.bea.gov/api/data/?UserID=' + process.env.BEA_API_KEY + '&method=GetData&datasetname=ITA&Indicator=' + indicador +
+    '&AreaOrCountry=' + Object.keys(SOCIOS).join(',') + '&Frequency=QNSA&Year=' + anios.join(',') + '&ResultFormat=JSON';
+  const j = await fetch(u, { signal: AbortSignal.timeout(9000) }).then(r => r.json());
+  const out = {};
+  for (const d of (j && j.BEAAPI && j.BEAAPI.Results && j.BEAAPI.Results.Data) || []) {
+    const v = num(d.DataValue); if (v === null) continue;
+    (out[d.AreaOrCountry] = out[d.AreaOrCountry] || []).push({ p: d.TimePeriod, v });
+  }
+  for (const k in out) out[k].sort((a, b) => (a.p < b.p ? -1 : 1));
+  return out;
+}
+async function comercio() {
+  const d = '2016-01-01', f = (id, m) => fred(id, d, m).catch(() => []), anios = [anio() - 3, anio() - 2, anio() - 1, anio()];
+  const [exp, imp, saldo, saldoBienes, saldoServ, impBienes, dolar, aranceles, socExp, socImp, socExpB, socImpB] = await Promise.all([
+    f('BOPTEXP'), f('BOPTIMP'), f('BOPGSTB'), f('BOPGTB'), f('BOPSTB'), f('BOPGIMP'), f('DTWEXBGS', true),
+    tesoro('v1/accounting/mts/mts_table_9', 'filter=classification_desc:eq:Customs Duties,record_date:gte:2016-01-01&sort=record_date&page[size]=300&fields=record_date,current_month_rcpt_outly_amt').catch(() => []),
+    beaIta('ExpGdsServ', anios).catch(() => ({})), beaIta('ImpGdsServ', anios).catch(() => ({})),
+    beaIta('ExpGds', anios).catch(() => ({})), beaIta('ImpGds', anios).catch(() => ({})),
+  ]);
+  if (!exp.length && !Object.keys(socExp).length) throw new Error('comercio sin datos');
+  const m = s => s.map(x => ({ p: x.f.slice(0, 7), v: x.v }));
+  return {
+    exportaciones: m(exp), importaciones: m(imp), saldo: m(saldo), saldoBienes: m(saldoBienes), saldoServicios: m(saldoServ), importacionesBienes: m(impBienes),
+    dolar: m(dolar),
+    aranceles: aranceles.map(r => ({ p: r.record_date.slice(0, 7), v: num(r.current_month_rcpt_outly_amt) })).filter(x => x.v !== null),
+    // Con bienes y servicios cuando BEA los publica; si no (Vietnam, Suiza), solo bienes
+    socios: Object.keys(SOCIOS).map(k => (socExp[k] && socExp[k].length ? { k, nombre: SOCIOS[k], exp: socExp[k], imp: socImp[k] || [], soloBienes: false } : { k, nombre: SOCIOS[k], exp: socExpB[k] || [], imp: socImpB[k] || [], soloBienes: true })),
+  };
+}
+
+// ---- Mercados: índices, sectores, materias primas y otros, con cierres diarios de Yahoo Finance (5 años)
+const SIMBOLOS = ['^GSPC', '^NDX', '^DJI', '^RUT', '^VIX', 'SPY', 'RSP', 'XLK', 'XLC', 'XLY', 'XLP', 'XLV', 'XLF', 'XLI', 'XLE', 'XLB', 'XLU', 'XLRE',
+  'CL=F', 'BZ=F', 'NG=F', 'GC=F', 'SI=F', 'HG=F', 'ZS=F', 'ZC=F', 'ZW=F', 'DX-Y.NYB', 'BTC-USD', 'EEM', 'ARGT'];
+async function yahoo(sym) {
+  const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(sym) + '?interval=1d&range=5y', {
+    signal: AbortSignal.timeout(8000), headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', Accept: 'application/json' } });
+  if (!r.ok) throw new Error('Yahoo ' + r.status);
+  const res = (await r.json()).chart.result[0], ts = res.timestamp || [], cl = res.indicators.quote[0].close || [];
+  const off = (res.meta.gmtoffset || 0) * 1000, s = [];
+  for (let i = 0; i < ts.length; i++) if (cl[i] != null) s.push([new Date(ts[i] * 1000 + off).toISOString().slice(0, 10), +cl[i].toFixed(4)]);
+  if (s.length < 30) throw new Error('Yahoo sin datos ' + sym);
+  // Rendimientos: por ruedas hacia atrás (1 semana = 5, 1 mes = 21...), en el año contra el último cierre del año anterior
+  const u = s.at(-1), atras = n => s[Math.max(0, s.length - 1 - n)][1], ret = b => (b ? (u[1] / b - 1) * 100 : null);
+  const finAnio = s.filter(x => x[0] < u[0].slice(0, 4) + '-01-01').at(-1), hace = a => s.find(x => x[0] >= (+u[0].slice(0, 4) - a) + u[0].slice(4));
+  const prev = res.meta.chartPreviousClose && s.length > 1 ? s.at(-2)[1] : null;
+  return {
+    nombre: res.meta.shortName || sym, moneda: res.meta.currency, ultimo: u,
+    ret: { d1: ret(prev), s1: ret(atras(5)), m1: ret(atras(21)), m3: ret(atras(63)), anio: ret(finAnio && finAnio[1]), a1: ret(hace(1) && hace(1)[1]), a3: ret(hace(3) && hace(3)[1]), a5: s[0][0] <= (+u[0].slice(0, 4) - 5) + u[0].slice(4) ? ret(s[0][1]) : null },
+    diario: s.filter(x => x[0] >= (+u[0].slice(0, 4) - 1) + '-' + u[0].slice(5)).map(x => [x[0], x[1]]),   // último año, rueda por rueda
+    semanal: s.filter((x, i) => i % 5 === (s.length - 1) % 5),                                               // 5 años, un cierre por semana
+  };
+}
+async function mercados() {
+  const out = {};
+  // De a 8 por vez para no saturar a Yahoo
+  for (let i = 0; i < SIMBOLOS.length; i += 8) {
+    const lote = SIMBOLOS.slice(i, i + 8), r = await Promise.all(lote.map(s => yahoo(s).catch(() => null)));
+    lote.forEach((s, k) => { if (r[k]) out[s] = r[k]; });
+  }
+  if (Object.keys(out).length < SIMBOLOS.length / 2) throw new Error('Yahoo no contesta');
+  return { simbolos: out };
+}
+
 // ---- Respaldo en Redis (Upstash): si una fuente no contesta, se sirve el último armado completo
 async function redis(cmd) {
   // Acepta los nombres de Upstash y los de la integración de Vercel (KV_*), sin comillas
@@ -288,7 +354,7 @@ async function redis(cmd) {
   } catch { return null; }
 }
 
-const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal };
+const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal, comercio, mercados };
 export async function usa(req, res) {
   const modo = req.query.usa, f = MODOS[modo];
   if (!f) return res.status(400).json({ error: 'Modo no válido' });
