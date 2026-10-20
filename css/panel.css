@@ -256,3 +256,8 @@ a.ic-ev:hover { border-color: var(--t, var(--text-muted)); }
 .pa-desc article { border: 1px solid var(--border); border-radius: 14px; padding: 0.85rem 1rem; background: var(--bg-card); }
 .pa-desc h4 { margin: 0 0 0.15rem; font-size: 0.95rem; } .pa-desc .tk { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-subtle); }
 .pa-desc p { margin: 0.35rem 0 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+@media (max-width: 640px) {
+  .pa-tabla { min-width: 0; font-size: 0.78rem; }
+  .pa-tabla th, .pa-tabla td { padding: 0.45rem 0.3rem; }
+  .pa-tabla .sec { display: none; }
+}
