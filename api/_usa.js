@@ -59,26 +59,50 @@ async function bea(tabla, frec, lineas, anios) {
 const tesoro = (ruta, q) => fetch('https://api.fiscaldata.treasury.gov/services/api/fiscal_service/' + ruta + '?' + q, { signal: AbortSignal.timeout(9000) })
   .then(r => { if (!r.ok) throw new Error('Tesoro ' + r.status); return r.json(); }).then(j => j.data);
 
-// Calendario: las publicaciones que más se siguen, con la fecha de FRED (que toma la de cada organismo)
+// Calendario: las publicaciones que más se siguen, con la fecha de FRED (que toma la de cada organismo).
+// [nombre, tema, quién la publica, hora de Nueva York]
 const PUBLICACIONES = {
-  10: ['Inflación (IPC)', 'precios', 'BLS'], 46: ['Precios mayoristas (PPI)', 'precios', 'BLS'], 54: ['Ingreso y gasto personal (PCE)', 'precios', 'BEA'],
-  50: ['Empleo (nóminas y desempleo)', 'empleo', 'BLS'], 192: ['Vacantes (JOLTS)', 'empleo', 'BLS'], 180: ['Pedidos de subsidio por desempleo', 'empleo', 'Dpto. de Trabajo'],
-  53: ['PBI', 'actividad', 'BEA'], 9: ['Ventas minoristas', 'actividad', 'Census'], 13: ['Producción industrial', 'actividad', 'Fed'],
-  51: ['Comercio exterior', 'comercio', 'BEA y Census'], 101: ['Decisión de tasas de la Fed (FOMC)', 'tasas', 'Fed'], 91: ['Confianza del consumidor (Michigan)', 'actividad', 'U. de Michigan'],
+  10: ['Inflación (IPC)', 'precios', 'BLS', '8:30'], 46: ['Precios mayoristas (PPI)', 'precios', 'BLS', '8:30'], 54: ['Ingreso y gasto personal (PCE)', 'precios', 'BEA', '8:30'],
+  50: ['Empleo (nóminas y desempleo)', 'empleo', 'BLS', '8:30'], 192: ['Vacantes (JOLTS)', 'empleo', 'BLS', '10:00'], 180: ['Pedidos de subsidio por desempleo', 'empleo', 'Dpto. de Trabajo', '8:30'],
+  53: ['PBI', 'actividad', 'BEA', '8:30'], 9: ['Ventas minoristas', 'actividad', 'Census', '8:30'], 13: ['Producción industrial', 'actividad', 'Fed', '9:15'],
+  51: ['Comercio exterior', 'comercio', 'BEA y Census', '8:30'], 91: ['Confianza del consumidor (Michigan)', 'actividad', 'U. de Michigan', '10:00'],
 };
+// Hora de Nueva York → hora argentina (UTC−3 todo el año; Nueva York cambia de horario en marzo y noviembre)
+const horaAR = (fecha, h) => {
+  const off = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', timeZoneName: 'shortOffset' }).formatToParts(new Date(fecha + 'T12:00:00Z')).find(p => p.type === 'timeZoneName').value;
+  const [hh, mm] = h.split(':').map(Number), t = hh * 60 + mm + (-3 - Number(off.replace('GMT', ''))) * 60;
+  return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+};
+// Reuniones de la Fed: de su calendario oficial. La decisión se anuncia el último día, a las 14 de Nueva York.
+async function reunionesFed() {
+  const r = await fetch('https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm', { headers: UA, signal: AbortSignal.timeout(9000) });
+  if (!r.ok) return [];
+  const s = await r.text(), out = [];
+  const M = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const partes = s.split(/<h4><a id="\d+">(\d{4}) FOMC Meetings<\/a><\/h4>/);
+  for (let i = 1; i < partes.length; i += 2) {
+    const re = /fomc-meeting__month[^>]*><strong>([A-Za-z/]+)<\/strong><\/div>\s*<div class="[^"]*fomc-meeting__date[^"]*">([^<]+)<\/div>/g; let m;
+    while ((m = re.exec(partes[i + 1]))) {
+      const mes = M.indexOf(m[1].split('/').at(-1)) + 1, d = +m[2].replace(/[^\d-]/g, '').split('-').at(-1);
+      if (mes && d) out.push({ fecha: partes[i] + '-' + String(mes).padStart(2, '0') + '-' + String(d).padStart(2, '0'), proyecciones: m[2].includes('*') });
+    }
+  }
+  return out;
+}
 async function calendario() {
-  const hoy = new Date(), desde = new Date(hoy - 21 * 864e5).toISOString().slice(0, 10);
-  const u = 'https://api.stlouisfed.org/fred/releases/dates?api_key=' + process.env.FRED_API_KEY + '&file_type=json&realtime_start=' + desde +
-    '&realtime_end=9999-12-31&include_release_dates_with_no_data=true&sort_order=asc&limit=1000';
-  const r = await fetch(u, { signal: AbortSignal.timeout(9000) });
-  if (!r.ok) throw new Error('FRED calendario ' + r.status);
-  const j = await r.json();
-  const vistos = new Set();
-  return (j.release_dates || []).filter(d => PUBLICACIONES[d.release_id]).map(d => {
-    const [nombre, tema, quien] = PUBLICACIONES[d.release_id];
-    return { fecha: d.date, id: d.release_id, nombre, tema, quien, original: d.release_name };
-  }).filter(e => { const k = e.id + e.fecha; if (vistos.has(k)) return false; vistos.add(k); return true; })
-    .filter(e => e.fecha <= new Date(hoy.getTime() + 75 * 864e5).toISOString().slice(0, 10));
+  const hoy = new Date(), iso = d => d.toISOString().slice(0, 10), desde = iso(new Date(hoy - 21 * 864e5)), hasta = iso(new Date(hoy.getTime() + 75 * 864e5));
+  const porId = await Promise.all(Object.keys(PUBLICACIONES).map(id => fetch('https://api.stlouisfed.org/fred/release/dates?release_id=' + id + '&api_key=' + process.env.FRED_API_KEY +
+    '&file_type=json&realtime_start=' + desde + '&realtime_end=9999-12-31&include_release_dates_with_no_data=true&sort_order=asc&limit=60', { signal: AbortSignal.timeout(9000) })
+    .then(r => (r.ok ? r.json() : null)).then(j => (j && j.release_dates) || []).catch(() => [])));
+  const ev = [];
+  Object.keys(PUBLICACIONES).forEach((id, k) => {
+    const [nombre, tema, quien, h] = PUBLICACIONES[id];
+    for (const d of new Set(porId[k].map(x => x.date))) if (d >= desde && d <= hasta) ev.push({ fecha: d, hora: horaAR(d, h), nombre, tema, quien });
+  });
+  for (const f of await reunionesFed().catch(() => [])) if (f.fecha >= desde && f.fecha <= hasta)
+    ev.push({ fecha: f.fecha, hora: horaAR(f.fecha, '14:00'), nombre: 'Decisión de tasas de la Fed' + (f.proyecciones ? ' (con proyecciones)' : ''), tema: 'tasas', quien: 'Fed' });
+  if (!ev.length) throw new Error('calendario vacío');
+  return ev.sort((a, b) => (a.fecha + a.hora.padStart(5, '0') < b.fecha + b.hora.padStart(5, '0') ? -1 : 1));
 }
 
 // ---- Precios
