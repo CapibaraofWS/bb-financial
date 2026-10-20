@@ -31,8 +31,9 @@ function getClientIp(req) {
  * @returns {Promise<boolean>} true si rate-limited (la función debe abortar)
  */
 export async function denyRateLimited(req, res, opts = {}) {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  // Las variables se cargaron en Vercel con comillas: se sacan (si no, fetch falla y no hay límite)
+  const url = (process.env.UPSTASH_REDIS_REST_URL || '').trim().replace(/^["']|["']$/g, '');
+  const token = (process.env.UPSTASH_REDIS_REST_TOKEN || '').trim().replace(/^["']|["']$/g, '');
   if (!url || !token) return false; // sin Upstash configurado, no rate-limit
 
   const limit = opts.limit || DEFAULT_LIMIT;
