@@ -38,7 +38,7 @@
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"¿Cuándo empieza el año fiscal de Estados Unidos?","acceptedAnswer":{"@type":"Answer","text":"El 1 de octubre y termina el 30 de septiembre. El año fiscal 2026 fue de octubre de 2025 a septiembre de 2026."}},
     {"@type":"Question","name":"¿Qué diferencia hay entre el déficit y la deuda?","acceptedAnswer":{"@type":"Answer","text":"El déficit es lo que el gobierno gasta de más en un año; la deuda es la suma de todo lo que pidió prestado a lo largo del tiempo para cubrir esos déficits y que todavía no devolvió. Cada año de déficit hace crecer la deuda."}},
-    {"@type":"Question","name":"¿Qué muestra el mapa del gasto federal por estado?","acceptedAnswer":{"@type":"Answer","text":"Lo que el gobierno federal adjudicó para cada estado en el año fiscal según USAspending: contratos, transferencias a los gobiernos estatales, préstamos y pagos directos a personas. Se asigna al lugar donde se hace el trabajo o se recibe el pago. No incluye todo el gasto: los intereses de la deuda, por ejemplo, no tienen estado."}}
+    {"@type":"Question","name":"¿Qué muestra el mapa del gasto federal por estado?","acceptedAnswer":{"@type":"Answer","text":"Los contratos y las transferencias que el gobierno federal adjudicó para cada estado en el año fiscal, según USAspending, asignados al lugar donde se hace el trabajo. No incluye las jubilaciones, Medicare ni otros pagos directos a personas, porque una parte se informa en bloque en el estado de la empresa que los procesa y deformaría la comparación."}}
   ]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -125,7 +125,7 @@
       <section class="pa-graf" aria-labelledby="mapa-t">
         <div class="pa-graf-cab"><div>
           <h3 id="mapa-t">Cuánto recibe cada estado</h3>
-          <p class="ayuda" id="mapa-ayuda"><strong>Qué ves:</strong> lo que el gobierno federal adjudicó en cada estado en el año fiscal: contratos, transferencias a los gobiernos estatales, préstamos y pagos directos. Tocá un estado o un nombre de la lista para ver el detalle.</p>
+          <p class="ayuda" id="mapa-ayuda"><strong>Qué ves:</strong> los contratos y las transferencias que el gobierno federal adjudicó en cada estado en el año fiscal. Tocá un estado o un nombre de la lista para ver el detalle.</p>
         </div></div>
         <div class="pa-seg" id="s-mapa" role="group" aria-label="Qué mostrar">
           <button type="button" data-v="hab" aria-pressed="true">Por habitante</button><button type="button" data-v="total" aria-pressed="false">Total</button>
@@ -158,7 +158,7 @@
         <p>Los montos están en <strong>billones de dólares</strong>, como se usa en español: un billón es un millón de millones (en inglés, "trillion"). El gasto de un año, unos 7 billones, es cerca de una cuarta parte de todo lo que produce la economía.</p>
         <details><summary>¿Qué diferencia hay entre el déficit y la deuda?</summary><p>El déficit es lo que el gobierno gasta de más en un año. La deuda es la suma de todo lo que pidió prestado a lo largo del tiempo para cubrir esos déficits y que todavía no devolvió. Cada año de déficit hace crecer la deuda; para que baje haría falta superávit.</p></details>
         <details><summary>¿Por qué pesan tanto los intereses?</summary><p>Porque la deuda creció mucho y las tasas subieron desde 2022. La deuda que vence se renueva a las tasas de hoy, más altas que las de los bonos viejos, y el costo promedio sube de a poco. En el <a href="panel-usa-tasas">panel de tasas</a> está la tasa promedio que paga el Tesoro.</p></details>
-        <details><summary>¿Qué muestra el mapa del gasto por estado?</summary><p>Lo que el gobierno federal adjudicó para cada estado en el año fiscal según USAspending: contratos, transferencias a los gobiernos estatales (como Medicaid), préstamos y pagos directos a personas. Se asigna al lugar donde se hace el trabajo o se recibe el pago. No es todo el gasto: los intereses de la deuda, por ejemplo, no tienen estado, y algunos montos se informan sin ubicación. Washington D.C. sale muy arriba por habitante porque ahí se ejecutan muchos contratos del propio gobierno.</p></details>
+        <details><summary>¿Qué muestra el mapa del gasto por estado?</summary><p>Los contratos y las transferencias que el gobierno federal adjudicó para cada estado en el año fiscal, según USAspending: contratos con empresas (defensa, obras, servicios) y transferencias a los gobiernos estatales (como Medicaid o rutas), asignados al lugar donde se hace el trabajo. No incluye las jubilaciones, Medicare ni otros pagos directos a personas: una parte se informa en bloque en el estado de la empresa que los procesa (por ejemplo, decenas de miles de millones de Medicare aparecen en Dakota del Norte) y deformaría la comparación. Washington D.C. y Virginia salen arriba por los contratos del propio gobierno y de defensa.</p></details>
         <details><summary>¿Qué es "lo que se paga de aranceles"?</summary><p>Los derechos de aduana que pagan los importadores al traer mercadería. Son una parte chica de la recaudación federal, pero se mueven mucho cuando cambian las tarifas.</p></details>
       </section>
 
@@ -246,8 +246,8 @@
       P.mapaProvincias('mapa', { geo: 'estados', valores: V, escala: 'nivel', inicial: '06',
         formato: modo === 'hab' ? v => 'US$' + Math.round(v).toLocaleString('es-AR') : v => 'US$' + num(v, 0) + ' mil M',
         etiqueta: (modo === 'hab' ? 'gasto federal por habitante' : 'gasto federal total') + ' en el año fiscal ' + E.fy,
-        info: c => { const x = info[c]; return 'Año fiscal ' + E.fy + ': <b>US$' + num(x.total / 1e9, 1) + ' mil millones</b> en total.<br>Por habitante: US$' + Math.round(x.porHabitante).toLocaleString('es-AR') + ' (' + num(x.poblacion / 1e6, 1) + ' millones de habitantes).'; } });
-      $('mapa-ayuda').innerHTML = '<strong>Qué ves:</strong> lo que el gobierno federal adjudicó en cada estado en el año fiscal ' + E.fy + ' (octubre de ' + (E.fy - 1) + ' a septiembre de ' + E.fy + ')' + (modo === 'hab' ? ', dividido por su población' : ', en miles de millones de dólares') + ': contratos, transferencias a los gobiernos estatales, préstamos y pagos directos. Cuanto más azul, más recibe. Tocá un estado o un nombre de la lista para ver el detalle.';
+        info: c => { const x = info[c]; return 'Año fiscal ' + E.fy + ': <b>US$' + num(x.total / 1e9, 1) + ' mil millones</b> en contratos y transferencias.<br>Por habitante: US$' + Math.round(x.porHabitante).toLocaleString('es-AR') + ' (' + num(x.poblacion / 1e6, 1) + ' millones de habitantes).'; } });
+      $('mapa-ayuda').innerHTML = '<strong>Qué ves:</strong> lo que el gobierno federal adjudicó en cada estado en el año fiscal ' + E.fy + ' (octubre de ' + (E.fy - 1) + ' a septiembre de ' + E.fy + ')' + (modo === 'hab' ? ', dividido por su población' : ', en miles de millones de dólares') + ': contratos con empresas y transferencias a los gobiernos estatales (como Medicaid). No incluye jubilaciones ni otros pagos directos a personas. Cuanto más azul, más recibe. Tocá un estado o un nombre de la lista para ver el detalle.';
     }
     if (E && E.valores && E.valores.length) { mapa('hab'); P.seg('s-mapa', mapa); } else $('mapa').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los datos de USAspending. Probá de nuevo en un rato.</p>';
 

@@ -211,12 +211,14 @@ async function fiscal() {
     estados: await gastoPorEstado().catch(() => null),
   };
 }
-// USAspending: lo adjudicado en cada estado en el último año fiscal cerrado (octubre a septiembre), total y por habitante
+// USAspending: contratos y transferencias adjudicados en cada estado en el último año fiscal cerrado (octubre a septiembre), total y por habitante.
+// Sin pagos directos ni préstamos: los pagos de Medicare figuran en bloque en el estado de la empresa que los procesa
+// (por ejemplo, US$90.000 millones en Dakota del Norte en 2026), lo que deforma el mapa.
 async function gastoPorEstado() {
   const hoy = new Date(), fy = hoy.getUTCMonth() >= 9 ? hoy.getUTCFullYear() : hoy.getUTCFullYear() - 1;
   const r = await fetch('https://api.usaspending.gov/api/v2/search/spending_by_geography/', {
     method: 'POST', headers: { 'Content-Type': 'application/json', ...UA }, signal: AbortSignal.timeout(12000),
-    body: JSON.stringify({ scope: 'place_of_performance', geo_layer: 'state', spending_level: 'transactions', filters: { time_period: [{ start_date: (fy - 1) + '-10-01', end_date: fy + '-09-30' }] } }),
+    body: JSON.stringify({ scope: 'place_of_performance', geo_layer: 'state', spending_level: 'transactions', filters: { time_period: [{ start_date: (fy - 1) + '-10-01', end_date: fy + '-09-30' }], award_type_codes: ['A', 'B', 'C', 'D', '02', '03', '04', '05'] } }),
   });
   if (!r.ok) throw new Error('USAspending ' + r.status);
   const j = await r.json();
