@@ -244,7 +244,7 @@ a.ic-ev:hover { border-color: var(--t, var(--text-muted)); }
 @media (min-width: 900px) { .pa-sub { flex-wrap: wrap; overflow: visible; } .pa-sub .sep { align-self: auto; height: 26px; } }
 /* Tabla de rendimientos (Panel USA, mercados): en el celular se desliza de costado con la primera columna fija */
 .pa-tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.2rem; }
-.pa-tabla { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 640px; }
+.pa-tabla { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 560px; }
 .pa-tabla th, .pa-tabla td { padding: 0.5rem 0.55rem; border-top: 1px solid var(--border); text-align: right; white-space: nowrap; }
 .pa-tabla th:first-child, .pa-tabla td:first-child { text-align: left; position: sticky; left: 0; background: var(--bg-card); z-index: 1; }
 .pa-tabla thead th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em; color: var(--text-subtle); font-weight: 400; border-top: 0; }

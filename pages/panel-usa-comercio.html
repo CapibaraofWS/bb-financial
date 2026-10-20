@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=7" />
+  <link rel="stylesheet" href="../css/panel.css?v=8" />
 </head>
 <body>
   <header class="site-header">
@@ -114,7 +114,20 @@
           <button type="button" data-v="saldo" aria-pressed="true">Saldo</button><button type="button" data-v="total" aria-pressed="false">Comercio total</button>
         </div>
         <div class="lienzo" style="height:440px"><canvas id="g-socios" aria-label="Saldo comercial por socio"></canvas></div>
-        <p class="fuente">Fuente: <a href="https://www.bea.gov/data/intl-trade-investment/international-transactions" target="_blank" rel="noopener">BEA, transacciones internacionales</a>, sin desestacionalizar. Vietnam y Suiza: solo bienes, porque el BEA no publica sus servicios por trimestre.</p>
+        <p class="fuente" id="g-socios-fuente">Fuente: <a href="https://www.bea.gov/data/intl-trade-investment/international-transactions" target="_blank" rel="noopener">BEA, transacciones internacionales</a>, sin desestacionalizar. Vietnam y Suiza: solo bienes, porque el BEA no publica sus servicios por trimestre.</p>
+      </section>
+
+      <section class="pa-graf" id="arg-sec" aria-labelledby="g-arg-t" hidden>
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-arg-t">Qué se comercia con la Argentina</h3>
+          <p class="ayuda" id="g-arg-ayuda"><strong>Qué ves:</strong> los productos que Estados Unidos le vende a la Argentina y los que le compra, por capítulo del arancel, en los últimos 12 meses. Abajo, mes a mes.</p>
+        </div></div>
+        <div class="pa-grid" style="margin-top:0.5rem">
+          <div><h4 style="margin:0 0 0.4rem;font-size:0.9rem">Lo que Estados Unidos le vende</h4><div class="lienzo" style="height:300px"><canvas id="g-arg-exp" aria-label="Exportaciones de Estados Unidos a la Argentina por producto"></canvas></div></div>
+          <div><h4 style="margin:0 0 0.4rem;font-size:0.9rem">Lo que Estados Unidos le compra</h4><div class="lienzo" style="height:300px"><canvas id="g-arg-imp" aria-label="Importaciones de Estados Unidos desde la Argentina por producto"></canvas></div></div>
+        </div>
+        <div class="lienzo" style="margin-top:1rem"><canvas id="g-arg-mes" aria-label="Comercio de bienes entre Estados Unidos y la Argentina por mes"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">Census, comercio exterior de Estados Unidos</a>. Solo bienes, en dólares de cada mes, sin desestacionalizar.</p>
       </section>
 
       <section class="pa-graf" aria-labelledby="g-arancel-t">
@@ -255,19 +268,47 @@
         options: P.ejes(v => 'US$' + v + ' mil M', { plugins: { legend: ley, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + mm(c.parsed.y * 1000) } } } }) });
       P.seg('s-mes', v => { const d = datos(v === 'todo' ? '2016-01' : menos(u, +v - 1)); ch.data.labels = d.labels; d.sets.forEach((s, i) => (ch.data.datasets[i].data = s)); ch.update(); }); }
 
-    // ---- Gráfico: socios
-    if (SOC.length) {
-      const per = SOC[0].e;
-      const datos = modo => SOC.map(s => ({ n: s.nombre + (s.soloBienes ? ' *' : ''), saldo: (s.e.v - s.i.v) / 1000, exp: s.e.v / 1000, imp: s.i.v / 1000 })).sort((a, b) => (modo === 'saldo' ? a.saldo - b.saldo : (b.exp + b.imp) - (a.exp + a.imp)));
-      const texto = modo => { $('g-socios-ayuda').innerHTML = '<strong>Qué ves:</strong> ' + (modo === 'saldo' ? 'el saldo comercial de Estados Unidos con cada socio: en rojo, con quienes compra más de lo que vende (déficit); en verde, con quienes vende más (superávit).' : 'cuánto le vende (verde) y cuánto le compra (azul) Estados Unidos a cada socio.') + ' Suma de los cuatro trimestres del ' + trim(per.desde) + ' al ' + trim(per.hasta) + ', en miles de millones de dólares. Con * solo bienes.'; };
+    // ---- Gráfico: socios. Con el Census (bienes, mes a mes, últimos 12 meses) si está; si no, el BEA (bienes y servicios, por trimestre)
+    const CE = co.censo && !co.censo.error && co.censo.paises ? co.censo : null;
+    const PAIS = { 'CHINA': 'China', 'MEXICO': 'México', 'CANADA': 'Canadá', 'EUROPEAN UNION': 'Unión Europea', 'JAPAN': 'Japón', 'GERMANY': 'Alemania', 'KOREA, SOUTH': 'Corea del Sur', 'TAIWAN': 'Taiwán', 'VIETNAM': 'Vietnam', 'INDIA': 'India', 'IRELAND': 'Irlanda', 'ITALY': 'Italia', 'SWITZERLAND': 'Suiza', 'UNITED KINGDOM': 'Reino Unido', 'FRANCE': 'Francia', 'NETHERLANDS': 'Países Bajos', 'BRAZIL': 'Brasil', 'THAILAND': 'Tailandia', 'MALAYSIA': 'Malasia', 'SINGAPORE': 'Singapur', 'ISRAEL': 'Israel', 'AUSTRALIA': 'Australia', 'BELGIUM': 'Bélgica', 'SPAIN': 'España', 'ARGENTINA': 'Argentina', 'CHILE': 'Chile', 'COLOMBIA': 'Colombia', 'SAUDI ARABIA': 'Arabia Saudita', 'UNITED ARAB EMIRATES': 'Emiratos Árabes Unidos', 'HONG KONG': 'Hong Kong', 'INDONESIA': 'Indonesia', 'PHILIPPINES': 'Filipinas', 'AUSTRIA': 'Austria', 'SWEDEN': 'Suecia', 'PERU': 'Perú', 'CAMBODIA': 'Camboya', 'TURKEY': 'Turquía', 'POLAND': 'Polonia', 'DENMARK': 'Dinamarca', 'NORWAY': 'Noruega', 'COSTA RICA': 'Costa Rica', 'DOMINICAN REPUBLIC': 'República Dominicana', 'GUATEMALA': 'Guatemala', 'ECUADOR': 'Ecuador', 'SOUTH AFRICA': 'Sudáfrica', 'NEW ZEALAND': 'Nueva Zelanda', 'QATAR': 'Catar', 'BANGLADESH': 'Bangladés', 'PANAMA': 'Panamá', 'NIGERIA': 'Nigeria' };
+    const nombrePais = n => PAIS[n] || n.toLowerCase().replace(/(^|[\s-])\S/g, c => c.toUpperCase());
+    const SOCIOS = CE
+      ? (() => { const L = CE.paises.filter(p => p.codigo !== '-'); const top = L.filter(p => p.nombre !== 'EUROPEAN UNION').sort((a, b) => (b.exp + b.imp) - (a.exp + a.imp)).slice(0, 14);
+          const eu = L.find(p => p.nombre === 'EUROPEAN UNION'), ar = L.find(p => p.codigo === '3570');
+          return [...top, eu, top.includes(ar) ? null : ar].filter(Boolean).map(p => ({ n: nombrePais(p.nombre), exp: p.exp / 1e6, imp: p.imp / 1e6 })); })()
+      : SOC.map(s => ({ n: s.nombre + (s.soloBienes ? ' *' : ''), exp: s.e.v, imp: s.i.v }));
+    const perSoc = CE ? 'Suma de ' + P.mesLargo(CE.desde) + ' a ' + P.mesLargo(CE.hasta) + ', solo bienes' : SOC.length ? 'Suma de los cuatro trimestres del ' + trim(SOC[0].e.desde) + ' al ' + trim(SOC[0].e.hasta) + '. Con * solo bienes' : '';
+    if (CE) $('g-socios-fuente').innerHTML = 'Fuente: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">Census, comercio exterior de Estados Unidos</a>, bienes, sin desestacionalizar. La Unión Europea incluye a Alemania, Irlanda, Italia y los demás países del bloque, que también aparecen por separado si están entre los principales.';
+    if (SOCIOS.length) {
+      const datos = modo => SOCIOS.map(s => ({ n: s.n, saldo: (s.exp - s.imp) / 1000, exp: s.exp / 1000, imp: s.imp / 1000 })).sort((a, b) => (modo === 'saldo' ? a.saldo - b.saldo : (b.exp + b.imp) - (a.exp + a.imp)));
+      const texto = modo => { $('g-socios-ayuda').innerHTML = '<strong>Qué ves:</strong> ' + (modo === 'saldo' ? 'el saldo comercial de Estados Unidos con cada socio: en rojo, con quienes compra más de lo que vende (déficit); en verde, con quienes vende más (superávit).' : 'cuánto le vende (verde) y cuánto le compra (azul) Estados Unidos a cada socio.') + ' ' + perSoc + ', en miles de millones de dólares.'; };
       let d = datos('saldo'); texto('saldo');
       const sets = (d, modo) => modo === 'saldo'
         ? [{ label: 'Saldo', data: d.map(x => x.saldo), backgroundColor: d.map(x => (x.saldo >= 0 ? 'rgba(74,222,154,0.7)' : 'rgba(255,120,100,0.75)')), borderRadius: 3 }]
         : [{ label: 'Le vende', data: d.map(x => x.exp), backgroundColor: 'rgba(74,222,154,0.7)', borderRadius: 3 }, { label: 'Le compra', data: d.map(x => x.imp), backgroundColor: 'rgba(96,165,250,0.7)', borderRadius: 3 }];
+      if (CE) $('g-socios').parentElement.style.height = '520px';
       const ch = new Chart($('g-socios'), { type: 'bar', data: { labels: d.map(x => P.corte(x.n, 16)), datasets: sets(d, 'saldo') },
         options: P.ejes(v => v, { indexAxis: 'y', plugins: { legend: { display: false, labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + mm(c.parsed.x * 1000) } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => 'US$' + v + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });
       P.seg('s-socios', modo => { d = datos(modo); ch.data.labels = d.map(x => P.corte(x.n, 16)); ch.data.datasets = sets(d, modo); ch.options.plugins.legend.display = modo !== 'saldo'; ch.update(); texto(modo); });
+    }
+
+    // ---- Qué se comercia con la Argentina (Census, por capítulo del arancel)
+    const AG = CE && CE.argentina;
+    if (AG && AG.productosExp.length && AG.productosImp.length) {
+      $('arg-sec').hidden = false;
+      const HS = { '01': 'Animales vivos', '02': 'Carnes', '03': 'Pescados y mariscos', '04': 'Lácteos, huevos y miel', '05': 'Otros productos animales', '06': 'Plantas y flores', '07': 'Hortalizas', '08': 'Frutas', '09': 'Café, té y especias', '10': 'Cereales', '11': 'Harinas', '12': 'Semillas y oleaginosas', '13': 'Gomas y resinas', '14': 'Otros vegetales', '15': 'Aceites y grasas', '16': 'Preparaciones de carne y pescado', '17': 'Azúcar y golosinas', '18': 'Cacao', '19': 'Preparaciones de cereales', '20': 'Conservas y jugos', '21': 'Otras preparaciones alimenticias', '22': 'Bebidas y vino', '23': 'Residuos para alimento animal', '24': 'Tabaco', '25': 'Sal, piedras y cemento', '26': 'Minerales metalíferos', '27': 'Combustibles y petróleo', '28': 'Químicos inorgánicos (incluye litio)', '29': 'Químicos orgánicos', '30': 'Medicamentos', '31': 'Fertilizantes', '32': 'Pinturas y tintes', '33': 'Perfumes y cosméticos', '34': 'Jabones y ceras', '35': 'Proteínas y colas', '36': 'Explosivos', '37': 'Productos fotográficos', '38': 'Otros químicos', '39': 'Plásticos', '40': 'Caucho', '41': 'Cueros', '42': 'Manufacturas de cuero', '43': 'Peletería', '44': 'Madera', '47': 'Pasta de papel', '48': 'Papel y cartón', '49': 'Libros e impresos', '52': 'Algodón', '61': 'Ropa de punto', '62': 'Ropa', '63': 'Otros textiles', '64': 'Calzado', '68': 'Manufacturas de piedra', '69': 'Cerámica', '70': 'Vidrio', '71': 'Oro, plata y piedras preciosas', '72': 'Hierro y acero', '73': 'Manufacturas de acero', '74': 'Cobre', '75': 'Níquel', '76': 'Aluminio', '79': 'Zinc', '81': 'Otros metales', '82': 'Herramientas', '83': 'Manufacturas de metal', '84': 'Maquinaria y computadoras', '85': 'Equipos eléctricos y electrónicos', '86': 'Material ferroviario', '87': 'Vehículos y autopartes', '88': 'Aviones y partes', '89': 'Barcos', '90': 'Instrumentos médicos y de precisión', '91': 'Relojes', '93': 'Armas y municiones', '94': 'Muebles', '95': 'Juguetes y artículos deportivos', '96': 'Manufacturas diversas', '97': 'Obras de arte', '98': 'Operaciones especiales', '99': 'Operaciones especiales' };
+      const bar = (id, L, color) => { const d = L.slice(0, 8);
+        new Chart($(id), { type: 'bar', data: { labels: d.map(x => P.corte(HS[x.hs] || 'Capítulo ' + x.hs, 18)), datasets: [{ label: 'Últimos 12 meses', data: d.map(x => x.v / 1e6), backgroundColor: color, borderRadius: 3 }] },
+          options: P.ejes(v => v, { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => 'US$' + num(c.parsed.x, 0) + ' millones' } } },
+            scales: { x: { ticks: { color: '#9aa5b8', callback: v => 'US$' + num(v, 0) + ' M' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) }); };
+      bar('g-arg-exp', AG.productosExp, 'rgba(74,222,154,0.7)'); bar('g-arg-imp', AG.productosImp, 'rgba(96,165,250,0.7)');
+      $('g-arg-ayuda').innerHTML = '<strong>Qué ves:</strong> los ocho capítulos del arancel en los que más le vende y le compra Estados Unidos a la Argentina, de ' + P.mesLargo(CE.desde) + ' a ' + P.mesLargo(CE.hasta) + ', en millones de dólares. Abajo, el comercio de bienes mes a mes.';
+      const m = AG.meses.filter(x => x.exp || x.imp);
+      new Chart($('g-arg-mes'), { type: 'line', data: { labels: m.map(x => P.mesAnio(x.p)), datasets: [
+          { label: 'Estados Unidos le vende', data: m.map(x => x.exp / 1e6), borderColor: '#4ade9a', borderWidth: 2, pointRadius: 2, tension: 0.2 },
+          { label: 'Estados Unidos le compra', data: m.map(x => x.imp / 1e6), borderColor: '#60a5fa', borderWidth: 2, pointRadius: 2, tension: 0.2 } ] },
+        options: P.ejes(v => 'US$' + num(v, 0) + ' M', { plugins: { legend: ley, tooltip: { callbacks: { label: c => c.dataset.label + ': US$' + num(c.parsed.y, 0) + ' millones' } } } }) });
     }
 
     // ---- Gráfico: tasa arancelaria efectiva

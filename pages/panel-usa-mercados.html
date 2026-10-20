@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=7" />
+  <link rel="stylesheet" href="../css/panel.css?v=8" />
 </head>
 <body>
   <header class="site-header">
@@ -262,7 +262,8 @@
       ['DX-Y.NYB', 'Índice dólar (DXY)', 'Otros'], ['BTC-USD', 'Bitcoin', 'Otros'], ['EEM', 'Emergentes (EEM)', 'Otros'], ['ARGT', 'Argentina (ARGT)', 'Otros'],
     ].filter(x => S[x[0]]);
     const nombre = Object.fromEntries(INST.map(x => [x[0], x[1]]));
-    const precio = (sym, v) => { if (TON[sym]) return 'US$' + num(v / 100 * TON[sym], 0) + '/t'; const i = INST.find(x => x[0] === sym); const pre = /^\^|DX-Y/.test(sym) ? '' : 'US$'; return pre + num(v, v >= 1000 ? 0 : 2) + (i && i[3] ? ' / ' + i[3] : ''); };
+    // La unidad va en un renglón chico: así la columna es angosta y en el celular se ven los porcentajes
+    const precio = (sym, v) => { if (TON[sym]) return 'US$' + num(v / 100 * TON[sym], 0) + '<small>por tonelada</small>'; const i = INST.find(x => x[0] === sym); const pre = /^\^|DX-Y/.test(sym) ? '' : 'US$'; return pre + num(v, v >= 1000 ? 0 : 2) + (i && i[3] ? '<small>por ' + i[3] + '</small>' : ''); };
     const pc = v => (v == null ? '—' : P.signo(v) + '%'), cls = v => (v == null || Math.abs(v) < 0.005 ? '' : v > 0 ? 'sube' : 'baja');
     const fecha = d => P.fechaCorta(d) + (d.slice(0, 4) !== P.hoyISO().slice(0, 4) ? ' de ' + d.slice(0, 4) : '');
 
