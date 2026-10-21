@@ -179,32 +179,7 @@
     const acostada = matchMedia('(max-width: 640px)').matches;
     if (acostada) $('g-casc').parentElement.style.height = '440px';
     const ejeCat = { ticks: { color: '#9aa5b8', maxRotation: 50, minRotation: 0, autoSkip: false, font: { size: 10 } }, grid: { display: false } };
-    const ejeVal = { ticks: { color: '#9aa5b8', maxTicksLimit: acostada ? 5 : 8, callback: v => (acostada ? num(v / 1000, 0) : 'US
-    const casc = new Chart($('g-casc'), { type: 'bar', data: { labels: c0.L.map(x => P.corte(x, 22)), datasets: [{ data: c0.D, backgroundColor: c0.C, borderRadius: 3, barPercentage: 0.75 }] },
-      options: P.ejes(v => v, { indexAxis: acostada ? 'y' : 'x', plugins: { legend: { display: false }, tooltip: { callbacks: { title: it => c0.L[it[0].dataIndex], label: c => { const [a, b] = c.raw; return (c.dataIndex === c0.L.length - 1 ? 'Resultado: ' : '') + usd(b - a); } } } },
-        scales: acostada ? { x: ejeVal, y: ejeCat } : { x: ejeCat, y: ejeVal } }) });
-    P.seg('s-casc', v => { c0 = armar(PER[v][1]); casc.data.labels = c0.L.map(x => P.corte(x, 22)); casc.data.datasets[0].data = c0.D; casc.data.datasets[0].backgroundColor = c0.C; casc.update();
-      $('g-casc-ayuda').innerHTML = '<strong>Qué ves:</strong> ' + PER[v][0].toLowerCase().replace(/^en /, 'en ') + (v === 'ytd' ? ' (hasta ' + P.mesLargo(ult) + ')' : '') + ', cada barra empieza donde terminó la anterior: las azules suman dólares, las naranjas restan. La última es el resultado, cuánto cambiaron las reservas por todas estas operaciones.'; });
-
-    // ---- Mes a mes: suma de 12 meses (área) y cada mes (línea fina)
-    { const OP = [['cuentaCorriente', 'Cuenta corriente'], ['bienes', 'Bienes'], ['servicios', 'Servicios y turismo'], ['intereses', 'Intereses'], ['utilidades', 'Utilidades'], ['fae', 'Compra de dólares'], ['deuda', 'Préstamos y deuda'], ['reservas', 'Reservas']];
-      let key = 'cuentaCorriente'; const chips = $('c-mes');
-      chips.innerHTML = OP.map(([kk, n]) => '<button type="button" data-t="' + kk + '" aria-pressed="' + (kk === key) + '">' + n + '</button>').join('');
-      const armar2 = () => { const L = meses.filter(p => p >= '2019-01'); return { labels: L.map(P.mesAnio), a: L.map(p => (meses.indexOf(p) >= 11 ? suma(key, ult12(p)) : null)), m: L.map(p => val(key, p)) }; };
-      let d2 = armar2();
-      const ch = new Chart($('g-mes'), { data: { labels: d2.labels, datasets: [
-          { type: 'line', label: 'Suma de 12 meses', data: d2.a, borderColor: '#60a5fa', borderWidth: 2.5, pointRadius: 0, tension: 0.25, fill: { target: 'origin', above: 'rgba(96,165,250,0.18)', below: 'rgba(245,158,11,0.22)' }, yAxisID: 'y' },
-          { type: 'line', label: 'Cada mes (eje derecho)', data: d2.m, borderColor: 'rgba(232,237,245,0.45)', borderWidth: 1.1, pointRadius: 0, tension: 0.15, yAxisID: 'y2' } ] },
-        options: P.ejes(v => num(v / 1000, 0), { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label.replace(' (eje derecho)', '') + ': ' + usd(c.parsed.y) } } },
-          scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, maxTicksLimit: 7 }, grid: { display: false } },
-                    y: { ticks: { color: '#9aa5b8', callback: v => 'US$' + num(v / 1000, 0) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y2: { position: 'right', ticks: { color: '#9aa5b8', callback: v => num(v / 1000, 1) }, grid: { display: false } } } }) });
-      $('f-mes').textContent = 'Fuente: BCRA, balance cambiario. Último dato: ' + P.mesLargo(ult) + '. Eje izquierdo: miles de millones de dólares; derecho: miles de millones por mes.';
-      chips.addEventListener('click', e => { const bt = e.target.closest('button'); if (!bt) return; key = bt.dataset.t; chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === bt))); d2 = armar2();
-        ch.data.labels = d2.labels; ch.data.datasets[0].data = d2.a; ch.data.datasets[1].data = d2.m; ch.update(); document.querySelector('[data-exportar="g-mes"]').dataset.titulo = 'Balance cambiario: ' + bt.textContent; }); }
-  })();
-  </script>
- + num(v / 1000, 0) + ' mil M') }, grid: { color: 'rgba(255,255,255,0.05)' },
+    const ejeVal = { ticks: { color: '#9aa5b8', maxTicksLimit: acostada ? 5 : 8, callback: v => (acostada ? num(v / 1000, 0) : 'US$' + num(v / 1000, 0) + ' mil M') }, grid: { color: 'rgba(255,255,255,0.05)' },
       title: { display: acostada, text: 'Miles de millones de dólares', color: '#9aa5b8', font: { size: 11 } } };
     const casc = new Chart($('g-casc'), { type: 'bar', data: { labels: c0.L.map(x => P.corte(x, 22)), datasets: [{ data: c0.D, backgroundColor: c0.C, borderRadius: 3, barPercentage: 0.75 }] },
       options: P.ejes(v => v, { indexAxis: acostada ? 'y' : 'x', plugins: { legend: { display: false }, tooltip: { callbacks: { title: it => c0.L[it[0].dataIndex], label: c => { const [a, b] = c.raw; return (c.dataIndex === c0.L.length - 1 ? 'Resultado: ' : '') + usd(b - a); } } } },
