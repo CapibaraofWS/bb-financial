@@ -74,6 +74,7 @@ var BB_GLIFO_DE = {
   'empezar-a-invertir': ['destello', '#30d158'], 'conceptos': ['libro', '#ff9f0a'],
   'brokers': ['banco', '#8e8e93'],               'etfs-fci': ['torta', '#0a84ff'],
   'mis-portafolios': ['maletin', '#0a84ff'],     'watchlist': ['estrella', '#ffb340'],
+  'panel-sectores': ['capas', '#60a5fa'],
   'calculadoras': ['calculadora', '#8e8e93'],
   'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
   'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],

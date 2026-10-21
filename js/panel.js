@@ -40,6 +40,7 @@ window.BBPanel = (function () {
     geo: () => json('/data/provincias-ar.json'),
     comercio: () => json('/api/indec?comercio=1'),
     fiscal: () => json('/api/indec?fiscal=1'),
+    sectores: () => json('/api/indec?sectores=1'),
     // Estados Unidos (BLS, BEA, FRED y el Tesoro, armados en el servidor)
     usa: m => json('/api/fred?usa=' + m),
     geoUsa: () => json('/data/estados-usa.json'),

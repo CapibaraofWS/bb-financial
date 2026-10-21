@@ -471,6 +471,57 @@ async function fiscal(req, res) {
   return res.status(200).json(out);
 }
 
+// ?sectores=1: indicadores de actividad de cada sector, del portal de datos abiertos (INDEC, Ministerio de Economía,
+// BCRA, cámaras). Los montos en pesos se pasan a pesos del último mes con el IPC del INDEC.
+const SECTORES = {
+  ipi: '453.1_SERIE_ORIGNAL_0_0_14_46', vehiculos: '453.2_VEHICULOS_RES_0_0_21_54', acero: '359.3_ACERO_CRUDUDO__11',
+  capacidad: '31.3_UNG_2004_M_18', molienda: '453.2_MOLIENDA_OSAS_0_0_20_8', isac: '33.2_ISAC_NIVELRAL_0_M_18_63',
+  cemento: '38.3_CEM_1994_M_7', super: '455.1_VENTAS_PRENAL_0_M_34_10', mayoristas: '456.1_VENTAS_PRENAL_0_M_34_85',
+  shoppings: '458.1_VENTAS_TOTNAL_0_M_42_19', autosA: '330.3_VENTAS_MERLES__34', autosU: '330.3_VENTAS_MERIOS__34',
+  confianza: '380.3_ICC_NACIONNAL_0_T_12', electricidad: '302.3_ELEC_GAS_AGWH_0_S_35', gas: '41.3_GN_0_A_11',
+  peajes: '302.3_PEAJES_RUTC_U_0_S_18', servicios: '302.3_S_ORIGINALRAL_0_S_21', agro: '349.2_ACUM_MENSUAL__13',
+  faena: '40.3_VC_0_M_15', iva: '142.3_IVA_D_2001_M_7', cheque: '142.3_CREDI_2001_M_24', ivaAduana: '142.3_IVA_DA_2001_M_7',
+  prestConsumo: '91.1_DETALLE_PREND_0_0_33', prestComerciales: '91.1_PRESTAMOS_LES_0_0_37', prestHipotecarios: '91.1_DETALLE_PRPOT_0_0_53',
+  ipcPortal: '148.3_INIVELNAL_DICI_M_26',
+};
+const EN_PESOS = ['iva', 'cheque', 'ivaAduana', 'prestConsumo', 'prestComerciales', 'prestHipotecarios'];
+async function sectores(req, res) {
+  try {
+    const ids = Object.values(SECTORES), grupos = [];
+    for (let i = 0; i < ids.length; i += 10) grupos.push(ids.slice(i, i + 10));
+    const [rCsv, ...rs] = await Promise.allSettled([
+      fetch(INDEC + '/ftp/cuadros/economia/serie_ipc_divisiones.csv', { signal: AbortSignal.timeout(15000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); }),
+      ...grupos.map(g => fetch('https://apis.datos.gob.ar/series/api/series/?format=json&limit=1000&start_date=2017-01-01&ids=' + g.join(','), { signal: AbortSignal.timeout(15000) })
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })),
+    ]);
+    const col = {};
+    rs.forEach((r, n) => { if (r.status === 'fulfilled') grupos[n].forEach((id, k) => { col[id] = r.value.data.filter(f => Number.isFinite(f[k + 1])).map(f => [f[0].slice(0, 7), f[k + 1]]); }); });
+    const s = Object.fromEntries(Object.entries(SECTORES).map(([k, id]) => [k, col[id] || []]));
+    // IPC: el portal y, encima, el archivo del INDEC (que trae el último mes antes que el portal)
+    const ipc = Object.fromEntries(s.ipcPortal);
+    if (rCsv.status === 'fulfilled') for (const linea of new TextDecoder('latin1').decode(rCsv.value).split(/\r?\n/)) {
+      const c = linea.split(';');
+      if (c[0] === '0' && /^\d{6}$/.test(c[3]) && c[7] && c[7].trim() === 'Nacional') { const v = parseFloat(String(c[4]).replace(',', '.')); if (Number.isFinite(v)) ipc[c[3].slice(0, 4) + '-' + c[3].slice(4)] = v; }
+    }
+    const ipcHasta = Object.keys(ipc).sort().at(-1);
+    for (const k of EN_PESOS) s[k] = s[k].filter(([p]) => ipc[p]).map(([p, v]) => [p, v * ipc[ipcHasta] / ipc[p]]);
+    // Autos: automóviles más utilitarios, solo los meses con los dos datos
+    const u = Object.fromEntries(s.autosU);
+    s.autos = s.autosA.filter(([p]) => u[p] != null).map(([p, v]) => [p, v + u[p]]);
+    delete s.autosA; delete s.autosU; delete s.ipcPortal;
+    const r4 = v => Number(v.toPrecision(5));
+    const series = Object.fromEntries(Object.entries(s).map(([k, v]) => [k, v.map(([p, x]) => [p, r4(x)])]));
+    if (Object.values(series).filter(v => v.length > 24).length < 15) throw new Error('pocas series');
+    // Los identificadores van para el enlace de descarga de cada serie
+    const { autosA, autosU, ipcPortal, ...idsSerie } = SECTORES;
+    idsSerie.autos = autosA + ',' + autosU;
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ actualizado: new Date().toISOString(), ipcHasta, ids: idsSerie, series });
+  } catch {
+    return res.status(502).json({ error: 'No se pudieron leer los indicadores sectoriales' });
+  }
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -483,6 +534,7 @@ export default async function handler(req, res) {
   if (req.query.canasta) return canasta(req, res);
   if (req.query.pobreza) return pobreza(req, res);
   if (req.query.calendario) return calendario(req, res);
+  if (req.query.sectores) return sectores(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {

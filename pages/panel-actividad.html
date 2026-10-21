@@ -45,7 +45,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=10" />
+  <link rel="stylesheet" href="../css/panel.css?v=11" />
 </head>
 <body>
   <header class="site-header">
@@ -81,7 +81,7 @@
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad" aria-current="page">Actividad</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad" aria-current="page">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos">Datos macro</a></nav>
 
       <div class="pa-grid" id="kpis">
         <article class="pa-card"><p class="que">Actividad (EMAE) · contra el mes anterior</p><p class="grande">−2,9%</p><p class="contexto">Julio de 2026, sin estacionalidad. INDEC.</p></article>
@@ -93,7 +93,7 @@
       <section class="pa-graf" aria-labelledby="g-emae-t">
         <div class="pa-graf-cab"><div>
           <h3 id="g-emae-t">El estimador mensual de actividad</h3>
-          <p class="ayuda"><strong>Qué ves:</strong> las barras son la variación de cada mes contra el anterior, sin efectos estacionales (verde si creció, rojo si cayó). La línea es el nivel del índice: si sube, la economía está produciendo más que antes.</p>
+          <p class="ayuda"><strong>Qué ves:</strong> la línea azul es el nivel de la actividad, sin efectos estacionales; la punteada, el mismo mes un año antes. Cuando la azul va por encima, la economía es más grande que hace un año; el espacio entre las dos es el crecimiento (o la caída) interanual. Al pasar el dedo o el mouse ves cuánto cambió contra el mes anterior.</p>
         </div><button type="button" class="pa-bajar" data-exportar="g-emae" data-titulo="Actividad económica (EMAE desestacionalizado)" data-fuente="INDEC">⬇ Imagen</button></div>
         <div class="lienzo"><canvas id="g-emae" aria-label="EMAE desestacionalizado"></canvas></div>
         <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-9-48" target="_blank" rel="noopener">INDEC, Estimador mensual de actividad económica</a>.</p>
@@ -110,7 +110,7 @@
 
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
-        <p>El <strong>EMAE</strong> es la mejor señal mensual de cómo viene el PBI. Hay dos comparaciones útiles: <strong>contra el mes anterior</strong>, sin estacionalidad, que muestra el último movimiento, y <strong>contra el mismo mes del año anterior</strong>, que muestra si la economía está más grande o más chica que hace un año.</p>
+        <p>El <strong>EMAE</strong> es la mejor señal mensual de cómo viene el PBI. Para ver qué sectores lo explican y los datos que salen antes, mirá <a href="panel-sectores">sector por sector</a>. Hay dos comparaciones útiles: <strong>contra el mes anterior</strong>, sin estacionalidad, que muestra el último movimiento, y <strong>contra el mismo mes del año anterior</strong>, que muestra si la economía está más grande o más chica que hace un año.</p>
         <p>Un mes malo no hace una recesión. Para hablar de tendencia conviene mirar varios meses seguidos y la línea del nivel, no una sola barra. Los datos se revisan: el INDEC corrige los meses anteriores cuando incorpora información nueva.</p>
         <details><summary>¿Qué mide el IPI manufacturero?</summary><p>La producción física de la industria: alimentos, autos, acero, químicos, textiles y otros rubros. Es un índice de cantidades, no de precios, así que no lo afecta la inflación.</p></details>
         <details><summary>¿Qué mide el ISAC?</summary><p>La actividad de la construcción a partir de los insumos que se despachan: cemento, hierro, ladrillos, asfalto, pinturas. Cuando se construye más, se usan más insumos.</p></details>
@@ -133,7 +133,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=9"></script>
+  <script src="../js/panel.js?v=10"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -174,14 +174,17 @@
 
     if (typeof Chart === 'undefined') return;
     if (mm.length) {
-      const d = mm.slice(-36), fi = Object.fromEntries(idx.map(x => [x.fecha, x.valor]));
-      new Chart($('g-emae'), { data: { labels: d.map(x => P.mesAnio(x.fecha)), datasets: [
-          { type: 'bar', label: 'Contra el mes anterior', data: d.map(x => x.valor), backgroundColor: d.map(x => x.valor >= 0 ? 'rgba(74,222,154,0.7)' : 'rgba(255,120,100,0.7)'), borderRadius: 3, yAxisID: 'y', order: 2 },
-          { type: 'line', label: 'Nivel del índice', data: d.map(x => fi[x.fecha] ?? null), borderColor: '#e8edf5', pointRadius: 0, tension: 0.25, yAxisID: 'y2', order: 1 } ] },
-        options: P.ejes(v => v + '%', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.yAxisID === 'y2' ? 'Índice: ' + num(c.parsed.y) : c.dataset.label + ': ' + P.signo(c.parsed.y) + '%' } } },
+      // Nivel desestacionalizado contra el mismo mes un año antes; la variación mensual va en el detalle
+      const d = idx.slice(-36), fi = Object.fromEntries(idx.map(x => [x.fecha, x.valor])), fm = Object.fromEntries(mm.map(x => [x.fecha, x.valor]));
+      const antes = f => (Number(f.slice(0, 4)) - 1) + f.slice(4), cv = $('g-emae'), grad = cv.getContext('2d').createLinearGradient(0, 0, 0, 300);
+      grad.addColorStop(0, 'rgba(96,165,250,0.35)'); grad.addColorStop(1, 'rgba(96,165,250,0)');
+      new Chart(cv, { type: 'line', data: { labels: d.map(x => P.mesAnio(x.fecha)), datasets: [
+          { label: 'Nivel de la actividad', data: d.map(x => x.valor), borderColor: '#60a5fa', backgroundColor: grad, fill: 'origin', borderWidth: 2.5, pointRadius: 0, tension: 0.25 },
+          { label: 'Un año antes', data: d.map(x => fi[antes(x.fecha)] ?? null), borderColor: 'rgba(232,237,245,0.5)', borderDash: [5, 4], borderWidth: 1.5, pointRadius: 0, tension: 0.25 } ] },
+        options: P.ejes(v => num(v, 0), { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: {
+            label: c => c.datasetIndex ? 'Un año antes: ' + num(c.parsed.y) : 'Índice: ' + num(c.parsed.y) + (fm[d[c.dataIndex].fecha] != null ? ' · contra el mes anterior: ' + P.signo(fm[d[c.dataIndex].fecha]) + '%' : '') } } },
           scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, maxTicksLimit: 8 }, grid: { display: false } },
-                    y: { position: 'left', ticks: { color: '#9aa5b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y2: { position: 'right', ticks: { color: '#9aa5b8' }, grid: { display: false } } } }) });
+                    y: { min: Math.floor((Math.min(...d.map(x => Math.min(x.valor, fi[antes(x.fecha)] ?? x.valor))) - 1) / 5) * 5, ticks: { color: '#9aa5b8' }, grid: { color: 'rgba(255,255,255,0.05)' } } } }) });
     }
     if (iIpi.length || iIsac.length) {
       const fechas = [...new Set(iIpi.concat(iIsac).map(x => x.fecha))].sort().slice(-24);
