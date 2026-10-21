@@ -56,7 +56,7 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 - [Mercados globales](https://www.bbfinanzas.com.ar/pages/datos): materias primas (petróleo, oro, cobre, granos, litio), monedas contra el dólar, criptomonedas con su índice de miedo y codicia, y activos alternativos (fondos inmobiliarios, infraestructura, capital privado).
 - [Visor de bonos de Estados Unidos](https://www.bbfinanzas.com.ar/pages/visor-bonos): curva de rendimientos, TIPS y breakeven.
 - [Visor de bonos argentinos](https://www.bbfinanzas.com.ar/pages/visor-bonos-ar): curva de bonos argentinos en dólares (Bonares, Globales, BOPREAL) con TIR y duration calculadas desde precios de mercado.
-- [Mercado](https://www.bbfinanzas.com.ar/pages/mercado): mapas de calor de sectores y del S&P 500, criptomonedas, acciones que más se mueven e indicadores como el VIX.
+- [Mapas de calor](https://www.bbfinanzas.com.ar/pages/mercado): sectores, acciones del S&P 500 y criptomonedas pintados según cuánto suben o bajan, las acciones que más se mueven en el día y las operaciones de los directivos (insider trading).
 
 ## Atlas: guías interactivas
 
