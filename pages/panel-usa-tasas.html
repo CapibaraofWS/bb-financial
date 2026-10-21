@@ -265,7 +265,7 @@
     const escalas = fmt => ({ x: { ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }, grid: { display: false } }, y: { ticks: { color: '#9aa5b8', callback: fmt }, grid: { color: 'rgba(255,255,255,0.05)' } }, rec: { display: false, min: 0, max: 1 } });
 
     // ---- Gráfico: curva
-    { const C = ta.curva.filter(x => x.hoy), u = C[0].hoy;
+    if (ta.curva.some(x => x.hoy)) { const C = ta.curva.filter(x => x.hoy), u = C[0].hoy;
       $('g-curva-ayuda').insertAdjacentHTML('beforeend', ' Datos al ' + fecha(u.f) + '.');
       // En el celular los 11 plazos no entran enteros: "6 meses" → "6 m", "10 años" → "10 a"
       const rot = p => (matchMedia('(max-width: 640px)').matches ? p.replace(/ mes(es)?$/, ' m').replace(/ años?$/, ' a') : p);

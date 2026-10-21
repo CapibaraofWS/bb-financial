@@ -287,7 +287,7 @@
       P.seg('s-aportes', v => { const d = datos(+v); ch.data.labels = d.labels; d.sets.forEach((s, i) => (ch.data.datasets[i].data = s)); ch.data.datasets[PARTES.length].data = d.total; ch.update(); }); }
 
     // ---- Gráfico: el pulso del mes
-    { const ms = Object.keys(IP).filter(p => p >= '2017-01').sort();
+    if (Object.keys(IP).some(p => p >= '2017-01')) { const ms = Object.keys(IP).filter(p => p >= '2017-01').sort();
       const datos = desde => { const s = ms.filter(p => p >= desde); return { labels: s.map(P.mesAnio), sets: [s.map(p => anual(CR, p)), s.map(p => anual(VR, p)), s.map(p => anual(IP, p))] }; };
       const d0 = datos(menos(ms.at(-1), 35));
       const ch = new Chart($('g-pulso'), { type: 'line', data: { labels: d0.labels, datasets: [['Consumo real de las familias', '#a78bfa'], ['Ventas minoristas reales', '#4ade9a'], ['Producción industrial', '#e8c97a']].map(([l, c], i) => ({ label: l, data: d0.sets[i], borderColor: c, borderWidth: 2, pointRadius: 0, tension: 0.2, spanGaps: true })) },

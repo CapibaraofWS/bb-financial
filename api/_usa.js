@@ -434,6 +434,10 @@ async function redis(cmd) {
   } catch { return null; }
 }
 
+// Cuántas series vacías trae un armado (arreglos sin datos, también los anidados)
+const vacias = o => (Array.isArray(o) ? (o.length ? o.reduce((a, x) => a + (x && typeof x === 'object' ? vacias(x) : 0), 0) : 1)
+  : o && typeof o === 'object' ? Object.values(o).reduce((a, x) => a + vacias(x), 0) : 0);
+
 const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal, comercio, mercados, globales };
 export async function usa(req, res) {
   const modo = req.query.usa, f = MODOS[modo];
@@ -442,11 +446,18 @@ export async function usa(req, res) {
   try {
     const data = await f();
     const cuerpo = { actualizado: new Date().toISOString(), ...(Array.isArray(data) ? { eventos: data } : data) };
+    // Si una fuente no contestó (FRED en mantenimiento, 21/10/2026), sus series vienen vacías:
+    // se sirve la copia anterior si estaba más completa, sin pisarla, y se vuelve a probar en 15 minutos
+    const previo = JSON.parse(await redis(['GET', 'usa:' + modo]) || 'null'), faltan = vacias(cuerpo);
+    if (previo && faltan > vacias(previo)) {
+      res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=3600');
+      return res.status(200).json({ ...previo, respaldo: true });
+    }
     // El encabezado dice si quedó guardada la copia de respaldo (para revisarlo sin entrar a Redis)
     res.setHeader('X-Respaldo', (await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)])) === 'OK' ? 'guardado' : 'no');
     // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza.
     // Si al renovar la fuente no contesta, Vercel sigue sirviendo la copia anterior hasta 7 días.
-    res.setHeader('Cache-Control', modo === 'mercados' || modo === 'globales' ? 's-maxage=900, stale-while-revalidate=86400' : 's-maxage=10800, stale-while-revalidate=604800');   // los precios, cada 15 minutos
+    res.setHeader('Cache-Control', faltan || modo === 'mercados' || modo === 'globales' ? 's-maxage=900, stale-while-revalidate=86400' : 's-maxage=10800, stale-while-revalidate=604800');   // los precios, cada 15 minutos
     return res.status(200).json(cuerpo);
   } catch {
     const guardado = await redis(['GET', 'usa:' + modo]);
