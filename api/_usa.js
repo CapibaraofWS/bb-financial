@@ -366,7 +366,7 @@ async function comercio() {
 }
 
 // ---- Mercados: índices, sectores, materias primas y otros, con cierres diarios de Yahoo Finance (5 años)
-const SIMBOLOS = ['^GSPC', '^NDX', '^DJI', '^RUT', '^VIX', 'SPY', 'RSP', 'XLK', 'XLC', 'XLY', 'XLP', 'XLV', 'XLF', 'XLI', 'XLE', 'XLB', 'XLU', 'XLRE'];
+const SIMBOLOS = ['^GSPC', '^NDX', '^DJI', '^RUT', '^VIX', 'SPY', 'RSP', 'XLK', 'XLC', 'XLY', 'XLP', 'XLV', 'XLF', 'XLI', 'XLE', 'XLB', 'XLU', 'XLRE', 'DX-Y.NYB'];
 // Mercados globales: materias primas, monedas, cripto y activos alternativos (fondos cotizados)
 const GLOBALES = ['CL=F', 'BZ=F', 'NG=F', 'GC=F', 'SI=F', 'HG=F', 'ZS=F', 'ZC=F', 'ZW=F', 'LIT',
   'DX-Y.NYB', 'EURUSD=X', 'GBPUSD=X', 'USDJPY=X', 'USDCNY=X', 'USDBRL=X', 'USDMXN=X', 'USDCLP=X', 'USDCOP=X', 'ARS=X',
