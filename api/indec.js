@@ -593,6 +593,31 @@ async function energia(req, res) {
   }
 }
 
+// ?cambiario=1: balance cambiario del BCRA (dólares que entran y salen por el mercado de cambios), del portal de datos abiertos.
+// Algunas series del portal vienen vacías (cobros y pagos por separado, FMI total, variación de reservas): se usan los netos.
+const CAMBIARIO = {
+  bienes: '182.1_CUENTA_CORNES_0_M_39', servicios: '182.1_CUENTA_CORIOS_0_M_42', intereses: '182.1_CUENTA_CORSES_0_M_59',
+  utilidades: '182.1_C_CORR_INGTAS_0_M_57', secundario: '182.1_CUENTA_CORRIO_0_M_51', cuentaCorriente: '182.1_TOTAL_CUENRIA_0_M_32',
+  fae: '182.1_C_K_FINC_CINC_0_M_56', deuda: '182.1_C_K_FINC_CRED_0_M_52', directa: '182.1_C_K_FINANCTES_0_M_51', cartera: '182.1_C_K_FINC_CTES_0_M_50',
+  organismos: '182.1_C_K_FINC_CLAT_0_M_55', fmiIn: '182.1_C_CAP_FINAFMI_0_M_50', fmiOut: '182.1_C_CAP_FINAFMI_0_M_49', financiera: '182.1_TOTAL_CUENRIA_0_M_41',
+};
+async function cambiario(req, res) {
+  try {
+    const ids = Object.values(CAMBIARIO), grupos = [];
+    for (let i = 0; i < ids.length; i += 10) grupos.push(ids.slice(i, i + 10));
+    const rs = await Promise.all(grupos.map(g => fetch('https://apis.datos.gob.ar/series/api/series/?format=json&limit=1000&start_date=2017-01-01&ids=' + g.join(','), { signal: AbortSignal.timeout(15000) })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })));
+    const col = {};
+    rs.forEach((r, n) => grupos[n].forEach((id, k) => { col[id] = r.data.filter(f => Number.isFinite(f[k + 1])).map(f => [f[0].slice(0, 7), Number(f[k + 1].toFixed(1))]); }));
+    const series = Object.fromEntries(Object.entries(CAMBIARIO).map(([k, id]) => [k, col[id] || []]));
+    if (series.cuentaCorriente.length < 24 || series.financiera.length < 24) throw new Error('pocos datos');
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ fuente: 'BCRA, Balance cambiario, vía datos.gob.ar', series });
+  } catch {
+    return res.status(502).json({ error: 'No se pudo leer el balance cambiario' });
+  }
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -608,6 +633,7 @@ export default async function handler(req, res) {
   if (req.query.sectores) return sectores(req, res);
   if (req.query.presupuesto) return presupuesto(req, res);
   if (req.query.energia) return energia(req, res);
+  if (req.query.cambiario) return cambiario(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {

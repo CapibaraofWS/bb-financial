@@ -77,6 +77,7 @@ var BB_GLIFO_DE = {
   'panel-sectores': ['capas', '#60a5fa'],
   'panel-bcra': ['banco', '#60a5fa'],          'panel-presupuesto': ['torta', '#e8c97a'],
   'panel-energia': ['sol', '#e8c97a'],
+  'panel-energia': ['sol', '#e8c97a'],         'panel-cambiario': ['dolar', '#4ade9a'],
   'calculadoras': ['calculadora', '#8e8e93'],
   'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
   'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],

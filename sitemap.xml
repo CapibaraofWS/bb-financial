@@ -175,6 +175,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/panel-cambiario</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.bbfinanzas.com.ar/pages/panel-pobreza</loc>
     <lastmod>2026-10-16</lastmod>
     <changefreq>daily</changefreq>
