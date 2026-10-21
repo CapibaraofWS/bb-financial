@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=12" />
+  <link rel="stylesheet" href="../css/panel.css?v=13" />
 </head>
 <body>
   <header class="site-header">
@@ -145,7 +145,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=13"></script>
+  <script src="../js/panel.js?v=14"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
@@ -169,9 +169,10 @@
     P.tarjeta('k1', { que: 'Presupuesto ' + d.anio + ' · vigente', grande: plata(T[1]), contexto: 'Lo aprobado al empezar el año, más las modificaciones.', filas: [['Aprobado', 'Al empezar el año', plata(T[0])], ['Cambio en el año', '', P.signo(pct(T[1] - T[0], T[0])) + '%']], fuentes: 'Fuente: ' + PA });
     P.tarjeta('k2', { que: 'Gastado hasta ahora · devengado', grande: num(pct(T[2]), 1) + '%', contexto: plata(T[2]) + (fechaTxt ? ' al ' + fechaTxt : '') + '. Pasó el ' + num(anioPaso, 0) + '% del año.', fuentes: 'Fuente: ' + PA });
     const funs = Object.entries(d.fun).sort((a, b) => b[1][1] - a[1][1]), f1 = funs[0];
-    P.tarjeta('k3', { que: 'Lo que más pesa · función', grande: num(pct(f1[1][1]), 1) + '%', contexto: esc(f1[0].split('|')[1]) + (/Seguridad Social/.test(f1[0]) ? ': jubilaciones, pensiones y asignaciones.' : '.'), fuentes: 'Fuente: ' + PA });
+    $('g-rep').dataset.ultimo = $('g-hist').dataset.ultimo = (fechaTxt ? fechaTxt + ' de ' : '') + d.anio;
+    P.tarjeta('k3', { que: 'Lo que más pesa en ' + d.anio + ' · función', grande: num(pct(f1[1][1]), 1) + '%', contexto: esc(f1[0].split('|')[1]) + (/Seguridad Social/.test(f1[0]) ? ': jubilaciones, pensiones y asignaciones.' : '.'), fuentes: 'Fuente: ' + PA });
     const deu = d.fin['DEUDA PUBLICA'];
-    if (deu) P.tarjeta('k4', { que: 'Intereses de la deuda · del total', grande: num(pct(deu[1]), 1) + '%', contexto: plata(deu[1]) + ' en el año. El pago del capital no está, porque no es un gasto sino una operación financiera.', fuentes: 'Fuente: ' + PA });
+    if (deu) P.tarjeta('k4', { que: 'Intereses de la deuda en ' + d.anio + ' · del total', grande: num(pct(deu[1]), 1) + '%', contexto: plata(deu[1]) + ' en el año. El pago del capital no está, porque no es un gasto sino una operación financiera.', fuentes: 'Fuente: ' + PA });
     P.brillo('#kpis .pa-card');
     $('f-rep').textContent = 'Fuente: Presupuesto Abierto, Ministerio de Economía. Administración Nacional, crédito vigente y devengado' + (fechaTxt ? ' al ' + fechaTxt + ' de ' + d.anio : '') + '.';
 

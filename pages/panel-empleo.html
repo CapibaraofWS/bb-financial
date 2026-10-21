@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Empleo y salarios en la Argentina: sueldos, RIPTE y desocupación — BB Finanzas</title>
-  <meta name="description" content="Cómo vienen los sueldos y el trabajo en la Argentina: salarios contra la inflación (INDEC), sueldo promedio (RIPTE), salario mínimo, desocupación, trabajadores registrados y un mapa del empleo por provincia. Se actualiza solo." />
+  <meta name="description" content="Cómo vienen los sueldos y el trabajo en la Argentina: salarios contra la inflación (INDEC), sueldo promedio (RIPTE), salario mínimo, desocupación, trabajo no registrado por actividad, sueldo mediano, personal del Estado nacional y un mapa del empleo por provincia. Se actualiza solo." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-empleo" />
   <meta property="og:type" content="website" />
@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=12" />
+  <link rel="stylesheet" href="../css/panel.css?v=13" />
 </head>
 <body>
   <header class="site-header">
@@ -78,7 +78,7 @@
       <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
       <p class="pa-eyebrow" data-bandera>Panel Argentina · Empleo y salarios</p>
       <h1>Trabajo y sueldos</h1>
-      <p class="sub">Si los sueldos le ganan a la inflación, cuánto es el sueldo promedio, cuánta gente busca trabajo y no lo encuentra, y cómo viene el empleo registrado en cada provincia. Con los datos del INDEC y la Secretaría de Trabajo.</p>
+      <p class="sub">Si los sueldos le ganan a la inflación, cuánto es el sueldo promedio, cuánta gente busca trabajo y no lo encuentra, cuánto trabajo no está registrado y cómo viene el empleo en cada provincia. Con los datos del INDEC y la Secretaría de Trabajo.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
@@ -151,6 +151,51 @@
         <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-58" target="_blank" rel="noopener">INDEC, Mercado de trabajo (EPH)</a>, vía datos.gob.ar.</p>
       </section>
 
+      <h2 id="trab-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:3rem 0 0">Cómo es el trabajo por dentro</h2>
+      <div class="pa-chips pa-pestanas" id="s-trab" role="group" aria-labelledby="trab-t" style="margin-top:0.8rem">
+        <button type="button" data-v="aportes" aria-pressed="true">Con y sin aportes</button><button type="button" data-v="actividad" aria-pressed="false">Por actividad</button><button type="button" data-v="sueldos" aria-pressed="false">El sueldo del medio</button><button type="button" data-v="estado" aria-pressed="false">Estado nacional</button>
+      </div>
+
+      <section class="pa-graf" id="t-aportes" aria-labelledby="g-aportes-t" style="margin-top:0.8rem">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-aportes-t">Cuántos trabajan con aportes y cuántos sin</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> los puestos de trabajo de todo el país, en tres grupos: asalariados registrados (con aportes jubilatorios y obra social), asalariados no registrados (en negro) y no asalariados (cuentapropistas, patrones y trabajadores familiares, con o sin monotributo). Cada barra es el promedio de los cuatro trimestres del año, en millones.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-aportes" data-titulo="Puestos de trabajo con y sin aportes" data-fuente="INDEC, cuenta de generación del ingreso">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-aportes"></div>
+        <div class="lienzo"><canvas id="g-aportes" aria-label="Puestos de trabajo registrados, no registrados y no asalariados por año"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/9/49" target="_blank" rel="noopener">INDEC, Cuenta de generación del ingreso e insumo de mano de obra</a> y <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-58" target="_blank" rel="noopener">EPH</a>, vía datos.gob.ar.</p>
+      </section>
+
+      <section class="pa-graf" id="t-actividad" aria-labelledby="comp-t" style="margin-top:0.8rem" hidden>
+        <div class="pa-graf-cab"><div>
+          <h3 id="comp-t">En qué actividades hay más trabajo no registrado</h3>
+          <p class="ayuda" id="comp-ayuda"><strong>Qué ves:</strong> de qué está hecho cada actividad. El número de la derecha es la parte de sus asalariados que no está registrada.</p>
+        </div></div>
+        <p class="pa-comp-ley"><span><i class="c-reg"></i>Asalariados registrados</span><span><i class="c-noreg"></i>Asalariados no registrados</span><span><i class="c-noasal"></i>No asalariados</span></p>
+        <div class="pa-comp" id="comp"></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/9/49" target="_blank" rel="noopener">INDEC, Cuenta de generación del ingreso e insumo de mano de obra</a>, vía datos.gob.ar. En la administración pública todos los puestos figuran como registrados.</p>
+      </section>
+
+      <section class="pa-graf" id="t-sueldos" aria-labelledby="g-sueldos-t" style="margin-top:0.8rem" hidden>
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-sueldos-t">El sueldo del medio y el promedio, en pesos de hoy</h3>
+          <p class="ayuda" id="g-sueldos-ayuda"><strong>Qué ves:</strong> el sueldo bruto mediano de los asalariados privados registrados (la mitad cobra menos que eso y la otra mitad, más) y el promedio, ajustados por la inflación. La línea fina es cada mes (en junio y diciembre sube por el aguinaldo); la gruesa, el promedio de los últimos 12 meses.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-sueldos" data-titulo="Sueldo mediano y promedio, en pesos de hoy" data-fuente="Secretaría de Trabajo (SIPA) e INDEC">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-sueldos"></div>
+        <div class="lienzo"><canvas id="g-sueldos" aria-label="Sueldo mediano y promedio en pesos de hoy"></canvas></div>
+        <p class="fuente">Fuente: Secretaría de Trabajo (SIPA), remuneración bruta del sector privado registrado; INDEC (EPH e IPC), vía datos.gob.ar. Cálculo propio.</p>
+      </section>
+
+      <section class="pa-graf" id="t-estado" aria-labelledby="g-estado-t" style="margin-top:0.8rem" hidden>
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-estado-t">Cuánta gente trabaja en el Estado nacional</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> las personas que trabajan en la administración pública nacional y en las empresas y sociedades del Estado, mes a mes y por tipo de organismo. No incluye provincias ni municipios: esos empleados están dentro de los asalariados públicos del gráfico de modalidades.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-estado" data-titulo="Personal del Estado nacional" data-fuente="INDEC, dotación de la APN">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-estado"></div>
+        <div class="lienzo"><canvas id="g-estado" aria-label="Personal del Estado nacional por tipo de organismo"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/10/102" target="_blank" rel="noopener">INDEC, Dotación de personal de la administración pública nacional, empresas y sociedades</a>. Algunos meses incluyen datos estimados por el INDEC para organismos que no informaron.</p>
+      </section>
+
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
         <p>Para saber si los sueldos <strong>le ganan a la inflación</strong>, la referencia es el índice de salarios del INDEC: compara los sueldos de los mismos puestos de trabajo mes a mes. Si en un año subieron 30% y los precios 25%, el poder de compra mejoró un 4% (1,30 / 1,25 = 1,04), no un 5%: por eso las cuentas de esta página dividen, no restan.</p>
@@ -158,6 +203,8 @@
         <details><summary>¿Qué quiere decir trabajo registrado?</summary><p>Que el trabajo está declarado y hace aportes a la seguridad social: asalariados del sector privado y del público, trabajadoras y trabajadores de casas particulares, monotributistas y autónomos. Los datos salen del SIPA, el sistema donde se registran esos aportes. El trabajo no registrado (en negro) no aparece ahí; se estima con la encuesta de hogares del INDEC.</p></details>
         <details><summary>¿Y los sueldos no registrados?</summary><p>El INDEC también los mide, pero con un rezago de cinco meses: el dato de cada mes refleja lo que pasó cinco meses antes. Por eso esta página compara contra la inflación solo los sueldos registrados, que se miden en el mismo mes que los precios.</p></details>
         <details><summary>¿Por qué la desocupación es trimestral?</summary><p>Porque sale de una encuesta a hogares que el INDEC hace durante todo el trimestre en 31 ciudades. Cubre a la población urbana, que es la gran mayoría del país. La fecha del próximo dato está en la tarjeta y en el <a href="panel-argentina">calendario del panel</a>.</p></details>
+        <details><summary>¿Por qué hay dos números de trabajo no registrado?</summary><p>Porque se miden distinto. La encuesta de hogares del INDEC pregunta a las personas si les descuentan aportes jubilatorios, en 31 ciudades. Las cuentas nacionales cuentan puestos de trabajo en todo el país (una persona con dos trabajos suma dos) y combinan la encuesta con los registros de aportes. Los dos van en la misma dirección; el de la encuesta sale antes.</p></details>
+        <details><summary>¿Por qué el sueldo mediano es más bajo que el promedio?</summary><p>Porque pocos sueldos muy altos suben el promedio, pero no mueven el del medio. Si en una oficina cuatro personas cobran $1 millón y una cobra $6 millones, el promedio es $2 millones y la mediana, $1 millón. Por eso la mediana dice mejor cuánto cobra un trabajador típico.</p></details>
         <details><summary>¿Por qué el mapa no muestra la desocupación por provincia?</summary><p>Porque la encuesta del INDEC mide ciudades (aglomerados), no provincias enteras. El mapa usa el registro de aportes, que sí tiene a todos los asalariados privados de cada provincia, mes a mes. La provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur incluye las Islas Malvinas, territorio argentino.</p></details>
       </section>
 
@@ -186,10 +233,11 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=13"></script>
+  <script src="../js/panel.js?v=14"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, pesos = P.pesos;
+    const pTra = P.API.trabajo();
     const [sal, emp, ipc, can, cal] = await Promise.all([P.API.salarios(), P.API.empleo(), P.API.ipc(), P.API.canasta(), P.API.calendario()]);
 
     // ---- Herramientas comunes
@@ -275,6 +323,7 @@
       for (const [c, s] of Object.entries(PR.valores)) if (s[i1] > 0 && s[i0] > 0) valores[c] = (s[i1] / s[i0] - 1) * 100;
       P.mapaProvincias('mapa', { valores, etiqueta: 'cambio de los asalariados privados registrados entre ' + P.mesLargo(f[i0]) + ' y ' + P.mesLargo(f[i1]),
         info: c => { const s = PR.valores[c], d = (s[i1] - s[i0]) * 1000; return 'Asalariados privados registrados: <b>' + num(s[i1], 1) + ' mil</b> en ' + P.mesLargo(f[i1]) + '.<br>Son ' + Math.round(Math.abs(d)).toLocaleString('es-AR') + ' ' + (d >= 0 ? 'más' : 'menos') + ' que en ' + P.mesLargo(f[i0]) + '.'; } });
+      P.ultimo('mapa', P.mesLargo(f[i1]));
       $('mapa-fuente').firstChild.textContent = 'Entre ' + P.mesLargo(f[i0]) + ' y ' + P.mesLargo(f[i1]) + '. Fuente: Secretaría de Trabajo (SIPA), datos sin estacionalidad, vía datos.gob.ar. Límites: ';
     }
     if (PR) { mapa(12); P.seg('s-mapa', v => mapa(+v)); } else $('mapa').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los datos por provincia. Probá de nuevo en un rato.</p>';
@@ -310,7 +359,8 @@
       const datos = n => { const a = S.find(x => x.p === menos(u.p, n)); return MOD.map(([k]) => (a && u[k] != null && a[k] != null ? Math.round((u[k] - a[k]) * 10) / 10 : null)); };
       const texto = n => { const a = S.find(x => x.p === menos(u.p, n)); if (a) $('g-sipa-ayuda').innerHTML = '<strong>Qué ves:</strong> cuántos trabajadores registrados más (o menos) hay en cada modalidad entre ' + P.mesLargo(a.p) + ' y ' + P.mesLargo(u.p) + ', en miles. En total: <b class="' + cls(u.total - a.total) + '">' + P.signo(u.total - a.total, 1) + ' mil</b>. Cada persona se cuenta una sola vez, en su trabajo principal.'; };
       const d = datos(12); texto(12);
-      const color = v => v.map(x => (x >= 0 ? 'rgba(74,222,154,0.7)' : 'rgba(255,120,100,0.7)'));
+      $('g-sipa').dataset.ultimo = P.mesLargo(u.p);
+      const color = v => v.map(x => (x >= 0 ? 'rgba(96,165,250,0.75)' : 'rgba(245,158,11,0.75)'));
       const ch = new Chart($('g-sipa'), { type: 'bar', data: { labels: MOD.map(m => m[1]), datasets: [{ label: 'Cambio (miles)', data: d, backgroundColor: color(d), borderRadius: 4 }] },
         options: opc(v => v, { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => P.signo(c.parsed.x, 1) + ' mil' } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => v + ' mil' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });
@@ -325,6 +375,91 @@
           { label: 'Subocupación', data: s.map(x => x.subocupacion), borderColor: '#60a5fa', pointRadius: 2, tension: 0.2 } ] },
         options: opc(v => v + '%', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + num(c.parsed.y) + '%' } } } }) });
     }
+
+    // ---- Cómo es el trabajo por dentro: cuatro pestañas; cada una se dibuja la primera vez que se abre
+    const TR = await pTra;
+    const mini = (t, v, d) => '<div><span>' + t + '</span><b>' + v + '</b><small>' + d + '</small></div>';
+    const prom = a => { const v = a.filter(Number.isFinite); return v.length ? v.reduce((x, y) => x + y, 0) / v.length : null; };
+    const millones = v => num(v / 1000, 2) + ' M';
+    const DIBUJO = {
+      aportes() {
+        const PU = TR && TR.puestos, IN = (TR && TR.informalidad) || [];
+        if (!PU) { $('m-aportes').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los puestos de trabajo. Probá de nuevo en un rato.</p>'; return; }
+        const n = PU.p.length - 1, u = PU.p[n], ia = PU.p.indexOf(menos(u, 12));
+        const asal = i => PU.reg[i] + PU.noreg[i], pct = i => PU.noreg[i] / asal(i) * 100;
+        const ui = IN.at(-1), ai = ui && IN.find(x => x[0] === menos(ui[0], 12));
+        $('m-aportes').innerHTML = (ui ? mini('Asalariados sin descuento jubilatorio', num(ui[1]) + '%', trim(ui[0], true) + ', encuesta de hogares' + (ai ? ' · un año antes: ' + num(ai[1]) + '% (' + P.signo(ui[1] - ai[1]) + ' p.p.)' : '')) : '') +
+          mini('Puestos asalariados no registrados', millones(PU.noreg[n]), num(pct(n)) + '% de los asalariados, ' + trim(u) + ', todo el país' + (ia >= 0 ? ' · un año antes: ' + num(pct(ia)) + '%' : '')) +
+          mini('Puestos no asalariados', millones(PU.noasal[n]), num(PU.noasal[n] / PU.total[n] * 100, 0) + '% de todos los puestos: cuentapropistas, patrones y familiares');
+        if (typeof Chart === 'undefined') return;
+        // Promedio de los cuatro trimestres de cada año completo y, si el último año está a medias, de los últimos cuatro
+        const anios = [...new Set(PU.p.map(p => p.slice(0, 4)))].filter(a => PU.p.filter(p => p.startsWith(a)).length === 4);
+        const grupos = anios.map(a => [a, PU.p.map((p, i) => (p.startsWith(a) ? i : -1)).filter(i => i >= 0)]);
+        if (!u.endsWith('-10')) grupos.push(['Últimos 4 trim.', [n - 3, n - 2, n - 1, n]]);
+        const K = [['reg', 'Asalariados registrados', '#60a5fa'], ['noreg', 'Asalariados no registrados', '#f59e0b'], ['noasal', 'No asalariados', '#a78bfa']];
+        $('g-aportes').dataset.ultimo = trim(u, true);
+        new Chart($('g-aportes'), { type: 'bar', data: { labels: grupos.map(g => g[0]), datasets: K.map(([k, t, c]) => ({ label: t, data: grupos.map(([, ix]) => prom(ix.map(i => PU[k][i])) / 1000), backgroundColor: c, borderRadius: 3, stack: 'p' })) },
+          options: opc(v => num(v, 0) + ' M', { scales: { x: { stacked: true, ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true }, grid: { display: false } }, y: { stacked: true, ticks: { color: '#9aa5b8', callback: v => num(v, 0) + ' M' }, grid: { color: 'rgba(255,255,255,0.05)' } } },
+            plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => { const t = c.chart.data.datasets.reduce((a, d) => a + d.data[c.dataIndex], 0); return c.dataset.label + ': ' + num(c.parsed.y, 2) + ' millones (' + num(c.parsed.y / t * 100, 0) + '%)'; } } } } }) });
+      },
+      actividad() {
+        const PU = TR && TR.puestos;
+        if (!PU) { $('comp').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los datos por actividad.</p>'; return; }
+        // Promedio de los últimos cuatro trimestres (las cosechas y la temporada de verano mueven mucho cada trimestre) contra los cuatro anteriores
+        const n = PU.p.length - 1, ult = [n - 3, n - 2, n - 1, n], ant = ult.map(i => i - 4);
+        const val = (s, ix) => (s ? prom(ix.map(i => s[i])) || 0 : 0);
+        const F = PU.actividades.map(a => { const r = val(a.reg, ult), nr = val(a.noreg, ult), na = val(a.noasal, ult), t = r + nr + na, r0 = val(a.reg, ant), nr0 = val(a.noreg, ant);
+          return { n: a.n, t, r: r / t * 100, nr: nr / t * 100, na: na / t * 100, inf: nr / (r + nr) * 100, inf0: r0 + nr0 > 0 ? nr0 / (r0 + nr0) * 100 : null }; }).sort((a, b) => b.inf - a.inf);
+        $('comp-ayuda').innerHTML = '<strong>Qué ves:</strong> de qué está hecho cada actividad, con el promedio de los cuatro trimestres hasta el ' + trim(PU.p[n], true) + ' (así no pesan las cosechas ni la temporada de verano). El número de la derecha es la parte de sus asalariados que no está registrada.';
+        $('comp').innerHTML = F.map(f => '<div class="fila"><span class="n">' + f.n + '<small>' + num(f.t / 1000, 2) + ' M de puestos' + (f.inf0 != null && f.inf > 0 ? ' · un año antes: ' + num(f.inf0, 0) + '%' : '') + '</small></span>' +
+          '<span class="barra" role="img" aria-label="' + num(f.r, 0) + '% registrados, ' + num(f.nr, 0) + '% no registrados, ' + num(f.na, 0) + '% no asalariados"><i class="c-reg" style="width:' + f.r.toFixed(1) + '%"></i><i class="c-noreg" style="width:' + f.nr.toFixed(1) + '%"></i><i class="c-noasal" style="width:' + f.na.toFixed(1) + '%"></i></span>' +
+          '<span class="v">' + num(f.inf, 0) + '%</span></div>').join('');
+        $('comp').classList.add('corta');
+        $('comp').insertAdjacentHTML('afterend', '<button type="button" class="pa-ver-mas" id="comp-mas">Ver las ' + F.length + ' actividades</button>');
+        $('comp-mas').addEventListener('click', e => { $('comp').classList.remove('corta'); e.target.remove(); });
+        P.ultimo('comp', trim(PU.p[n], true));
+      },
+      sueldos() {
+        const SU = ((TR && TR.sueldos) || []).filter(x => IPC[x[0]]), G = (TR && TR.gini) || [];
+        if (SU.length < 24) { $('m-sueldos').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los sueldos.</p>'; return; }
+        // El último mes sin aguinaldo, para que el número no salte en junio y diciembre
+        const u = SU.filter(x => !/-(06|12)$/.test(x[0])).at(-1), a = SU.find(x => x[0] === menos(u[0], 12));
+        const rm = a ? ((u[2] / a[2]) / (IPC[u[0]] / IPC[a[0]]) - 1) * 100 : null, ug = G.at(-1), ag = ug && G.find(x => x[0] === menos(ug[0], 12));
+        $('m-sueldos').innerHTML = mini('Sueldo mediano', pesos(u[2]), P.mesAnio(u[0]) + ', bruto y sin aguinaldo: la mitad cobra menos' + (rm != null ? ' · contra un año atrás, descontada la inflación: ' + P.signo(rm) + '%' : '')) +
+          mini('Sueldo promedio', pesos(u[1]), 'El mismo mes. Los sueldos más altos lo tiran para arriba') +
+          mini('El del medio, contra el promedio', num(u[2] / u[1] * 100, 0) + '%', 'Cuanto más bajo, más desparejos son los sueldos' + (a ? ' · un año antes: ' + num(a[2] / a[1] * 100, 0) + '%' : '')) +
+          (ug ? mini('Desigualdad del ingreso (Gini)', num(ug[1], 3), trim(ug[0], true) + ', ingreso por persona de cada hogar. 0 sería que todos tienen lo mismo' + (ag ? ' · un año antes: ' + num(ag[1], 3) : '')) : '');
+        if (typeof Chart === 'undefined') return;
+        const s = SU.filter(x => x[0] >= '2017-01'), hoy = ultIPC, real = v => v.map((x, i) => x * IPC[hoy] / IPC[s[i][0]]);
+        const movil = v => v.map((_, i) => (i < 11 ? null : prom(v.slice(i - 11, i + 1))));
+        const med = real(s.map(x => x[2])), pro = real(s.map(x => x[1]));
+        $('g-sueldos-ayuda').insertAdjacentHTML('beforeend', ' Valores en pesos de ' + P.mesLargo(hoy) + '.');
+        new Chart($('g-sueldos'), { type: 'line', data: { labels: s.map(x => P.mesAnio(x[0])), datasets: [
+            { label: 'Mediano, cada mes', data: med, borderColor: 'rgba(96,165,250,0.45)', borderWidth: 1, pointRadius: 0, tension: 0.2 },
+            { label: 'Sueldo mediano (promedio de 12 meses)', data: movil(med), borderColor: '#60a5fa', borderWidth: 3, pointRadius: 0, tension: 0.3 },
+            { label: 'Promedio, cada mes', data: pro, borderColor: 'rgba(167,139,250,0.45)', borderWidth: 1, pointRadius: 0, tension: 0.2 },
+            { label: 'Sueldo promedio (promedio de 12 meses)', data: movil(pro), borderColor: '#a78bfa', borderWidth: 3, pointRadius: 0, tension: 0.3 } ] },
+          options: opc(v => '$' + num(v / 1e6, 1) + ' M', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12, filter: i => i.text.includes('12 meses') } }, tooltip: { callbacks: { label: c => c.parsed.y == null ? null : c.dataset.label + ': ' + pesos(c.parsed.y) } } } }) });
+      },
+      estado() {
+        const ES = TR && TR.estado;
+        if (!ES) { $('m-estado').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudo cargar el personal del Estado nacional.</p>'; return; }
+        const n = ES.fechas.length - 1, ia = ES.fechas.indexOf(menos(ES.fechas[n], 12)), v = ES.total, gente = x => Math.round(x).toLocaleString('es-AR');
+        const dif = i => gente(Math.abs(v[n] - v[i])) + (v[n] >= v[i] ? ' más' : ' menos');
+        $('m-estado').innerHTML = mini('Personal del Estado nacional', gente(v[n]), P.mesAnio(ES.fechas[n]) + ' · ' + gente(ES.apn[n]) + ' en la administración y ' + gente(ES.empresas[n]) + ' en empresas y sociedades') +
+          (ia >= 0 ? mini('Contra un año atrás', P.signo((v[n] / v[ia] - 1) * 100) + '%', P.mesAnio(ES.fechas[ia]) + ': ' + gente(v[ia]) + ' personas · ' + dif(ia)) : '') +
+          mini('Desde ' + P.mesLargo(ES.fechas[0]), P.signo((v[n] / v[0] - 1) * 100) + '%', 'Primer mes de la serie del INDEC: ' + gente(v[0]) + ' personas · ' + dif(0));
+        if (typeof Chart === 'undefined') return;
+        const K = [['central', 'Administración centralizada (ministerios)', '#60a5fa'], ['descentral', 'Organismos descentralizados', '#a78bfa'], ['desconcentrada', 'Organismos desconcentrados', '#5eead4'], ['otros', 'Otros entes', '#e8c97a'], ['empresas', 'Empresas y sociedades del Estado', '#f59e0b']];
+        new Chart($('g-estado'), { type: 'line', data: { labels: ES.fechas.map(P.mesAnio), datasets: K.map(([k, t, c], i) => ({ label: t, data: ES[k].map(x => x / 1000), borderColor: c, backgroundColor: c + '55', fill: i ? '-1' : 'origin', borderWidth: 1.5, pointRadius: 0, tension: 0.2, stack: 'e' })) },
+          options: opc(x => num(x, 0) + ' mil', { scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }, grid: { display: false } }, y: { stacked: true, ticks: { color: '#9aa5b8', callback: x => num(x, 0) + ' mil' }, grid: { color: 'rgba(255,255,255,0.05)' } } },
+            plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + gente(c.parsed.y * 1000) } } } }) });
+      },
+    };
+    const hecho = {};
+    const abrir = t => { for (const k of Object.keys(DIBUJO)) $('t-' + k).hidden = k !== t; if (!hecho[t]) { hecho[t] = true; DIBUJO[t](); } };
+    abrir('aportes');
+    P.seg('s-trab', abrir);
   })();
   </script>
 </body>

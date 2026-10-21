@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=12" />
+  <link rel="stylesheet" href="../css/panel.css?v=13" />
 </head>
 <body>
   <header class="site-header">
@@ -151,7 +151,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=13"></script>
+  <script src="../js/panel.js?v=14"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -232,6 +232,7 @@
       $('g-dest-ayuda').insertAdjacentHTML('beforeend', ' Período: enero a ' + P.MESES[+ua.p.slice(5) - 1] + ' de ' + anio + ' contra el mismo período de ' + (+anio - 1) + '.');
       let d = datosDest('gas');
       const color = s => s.map(x => (x.v >= 0 ? 'rgba(96,165,250,0.7)' : 'rgba(232,201,122,0.75)'));
+      $('g-dest').dataset.ultimo = P.mesLargo(ua.p);
       const gD = new Chart($('g-dest'), { type: 'bar', data: { labels: d.map(x => P.corte(x.n)), datasets: [{ label: 'Cambio real', data: d.map(x => x.v), backgroundColor: color(d), borderRadius: 3 }] },
         options: P.ejes(v => v + '%', { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => P.signo(x.parsed.x) + '% descontada la inflación', afterLabel: x => bill(d[x.dataIndex].nom) + ' en el año · ' + num(d[x.dataIndex].peso) + '% del total' } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });

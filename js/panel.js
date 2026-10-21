@@ -45,6 +45,7 @@ window.BBPanel = (function () {
     presupuesto: () => json('/api/indec?presupuesto=1'),
     energia: () => json('/api/indec?energia=1'),
     cambiario: () => json('/api/indec?cambiario=1'),
+    trabajo: () => json('/api/indec?trabajo=1'),
     // Estados Unidos (BLS, BEA, FRED y el Tesoro, armados en el servidor)
     usa: m => json('/api/fred?usa=' + m),
     geoUsa: () => json('/data/estados-usa.json'),
@@ -232,6 +233,39 @@ window.BBPanel = (function () {
               y: { ticks: { color: '#9aa5b8', callback: fmtY }, grid: { color: 'rgba(255,255,255,0.05)' } } },
   }, extra);
 
+  // ---- "Último dato" arriba de la fuente de cada gráfico. Sale de la última etiqueta con datos del gráfico,
+  // o de data-ultimo en el canvas cuando el eje no es de fechas (rubros, cascadas). ultimo() sirve también para tablas y mapas.
+  const MES_MAY = MES.map(m => m.replace(/^./, c => c.toUpperCase()));
+  function textoFecha(l) {
+    l = Array.isArray(l) ? l.join(' ') : String(l ?? '');
+    let m = l.match(/^([A-Z][a-z]{2}) (\d{4})$/);
+    if (m && MES_MAY.includes(m[1])) return MESES[MES_MAY.indexOf(m[1])] + ' de ' + m[2];
+    m = l.match(/^(\d{1,2}) ([a-z]{3})$/);
+    if (m && MES.includes(m[2])) return m[1] + ' de ' + MESES[MES.indexOf(m[2])];
+    if (/trim\. \d{4}$|sem\. \d{4}$|^(AF )?\d{4}$/.test(l)) return l.replace('trim.', 'trimestre de').replace('sem.', 'semestre de').replace(/^AF /, 'año fiscal ');
+    return null;
+  }
+  function ultimo(el, texto) {
+    if (typeof el === 'string') el = document.getElementById(el);
+    const sec = el && el.closest('.pa-graf');
+    if (!sec || !texto) return;
+    // Va en su propio renglón antes de la fuente (varias páginas reescriben el texto de la fuente)
+    const p = [...sec.querySelectorAll('.fuente')].find(x => el.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING);
+    let s = p ? p.previousElementSibling : sec.lastElementChild;
+    if (!s || !s.classList.contains('pa-ult')) { s = document.createElement('p'); s.className = 'pa-ult'; if (p) p.before(s); else sec.append(s); }
+    s.textContent = 'Último dato: ' + texto;
+  }
+  if (window.Chart) Chart.register({ id: 'bbUltimo', afterUpdate(ch) {
+    let t = ch.canvas.dataset.ultimo;
+    if (!t) {
+      const L = ch.data.labels || [], hay = i => ch.data.datasets.some(d => d.data && Number.isFinite(typeof d.data[i] === 'object' && d.data[i] ? d.data[i].y : d.data[i]));
+      let i = L.length - 1;
+      while (i >= 0 && !hay(i)) i--;
+      t = i >= 0 ? textoFecha(L[i]) : null;
+    }
+    if (t) ultimo(ch.canvas, t);
+  } });
+
   // ---- Mapa de calor: un año por fila, un mes por columna
   function mapaCalor(el, serie, { escala = [0.5, 1, 1.5, 2, 3, 5, 8, 13], unidad = '%' } = {}) {
     if (!el || !serie || !serie.length) return;
@@ -357,5 +391,5 @@ window.BBPanel = (function () {
     elegir(nombre[el.dataset.sel] ? el.dataset.sel : inicial && orden.includes(inicial) ? inicial : !usa && orden.includes('06') ? '06' : orden[0]);
   }
 
-  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, agenda, BANDERA_USA, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, TEMAS, MES, MESES, DSEM, diasEntre };
+  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, agenda, BANDERA_USA, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, ultimo, TEMAS, MES, MESES, DSEM, diasEntre };
 })();

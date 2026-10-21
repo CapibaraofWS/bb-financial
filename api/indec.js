@@ -383,14 +383,15 @@ async function comercio(req, res) {
   if (rPai.status === 'fulfilled') {
     const f = rPai.value, cab = f.find(r => r && r.some(v => txt(v) === 'Exportaciones') && r.some(v => txt(v) === 'Importaciones'));
     if (cab) {
-      const ce = cab.findIndex(v => txt(v) === 'Exportaciones'), ci = cab.findIndex(v => txt(v) === 'Importaciones');
+      // La columna de los nombres: desde octubre de 2026 la primera viene vacía
+      const ce = cab.findIndex(v => txt(v) === 'Exportaciones'), ci = cab.findIndex(v => txt(v) === 'Importaciones'), cn = Math.max(0, cab.findIndex(v => /pa[ií]ses/i.test(txt(v))));
       const periodo = txt((f[f.indexOf(cab) + 1] || [])[ce]).replace(/[e*]+$/, '');
       const mill = v => (Number.isFinite(v) ? Math.round(v / 100) / 10 : 0);
-      const filas = f.filter(r => r && typeof r[0] === 'string' && txt(r[0]) && (Number.isFinite(r[ce]) || Number.isFinite(r[ci])));
-      const fila = r => ({ nombre: txt(r[0]).replace(/^Total de /, ''), expo: mill(r[ce]), expoAnt: mill(r[ce + 1]), impo: mill(r[ci]), impoAnt: mill(r[ci + 1]) });
+      const filas = f.filter(r => r && typeof r[cn] === 'string' && txt(r[cn]) && (Number.isFinite(r[ce]) || Number.isFinite(r[ci])));
+      const fila = r => ({ nombre: txt(r[cn]).replace(/^Total de /, ''), expo: mill(r[ce]), expoAnt: mill(r[ce + 1]), impo: mill(r[ci]), impoAnt: mill(r[ci + 1]) });
       // Las filas con sangría son aperturas de la fila de arriba (por ejemplo, China sin Hong Kong ni Macao)
-      const paises = filas.filter(r => !/^\s/.test(r[0]) && !/^Total|^Los demás|^Resto/i.test(txt(r[0]))).map(fila).sort((a, b) => b.expo + b.impo - a.expo - a.impo).slice(0, 12);
-      const continentes = filas.filter(r => /^Total de /.test(txt(r[0]))).map(fila);
+      const paises = filas.filter(r => !/^\s/.test(r[cn]) && !/^Total|^Los demás|^Resto/i.test(txt(r[cn]))).map(fila).sort((a, b) => b.expo + b.impo - a.expo - a.impo).slice(0, 12);
+      const continentes = filas.filter(r => /^Total de /.test(txt(r[cn]))).map(fila);
       if (paises.length >= 8) out.socios = { periodo, paises, continentes };
     }
   }
@@ -618,6 +619,62 @@ async function cambiario(req, res) {
   }
 }
 
+// ?trabajo=1: puestos de trabajo registrados, no registrados y no asalariados por actividad (cuentas nacionales del INDEC),
+// asalariados sin descuento jubilatorio y coeficiente de Gini (EPH), sueldo promedio y mediano del sector privado (SIPA)
+// y personal del Estado nacional (INDEC, dotación de la APN, empresas y sociedades).
+const ACTIVIDADES = { a: 'Agro', b: 'Pesca', c: 'Minería y petróleo', d: 'Industria', e: 'Electricidad, gas y agua', f: 'Construcción', g: 'Comercio', h: 'Hoteles y restaurantes',
+  i: 'Transporte y comunicaciones', j: 'Bancos y seguros', k: 'Inmobiliarias y servicios a empresas', l: 'Administración pública', m: 'Enseñanza', n: 'Salud y servicios sociales', o: 'Otros servicios', p: 'Casas particulares' };
+const ESTADO = { total: 'Total', apn: 'Administración pública nacional', central: 'Administración centralizada', descentral: 'Administración descentralizada', desconcentrada: 'Administración desconcentrada', otros: 'Otros entes', empresas: 'Empresas y sociedades' };
+const MES_CORTO = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+async function trabajo(req, res) {
+  const serie = ids => fetch('https://apis.datos.gob.ar/series/api/series/?format=json&limit=1000&start_date=2016-01-01&ids=' + ids, { signal: AbortSignal.timeout(15000) })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); });
+  const [rCgi, rEph, rSue, rEst] = await Promise.allSettled([
+    csvGob('324/distribution/324.1/download/insumo-de-mano-de-obra-por-sector-de-actividad-economica-datos-trimestrales.csv'),
+    serie('52.2_ASDJ_0_0_37,65.1_CGI_0_0_21'),
+    serie('153.1_RNERACIDIO_2009_M_21,153.1_RNERACIANA_2009_M_20'),
+    fetch(INDEC + '/ftp/cuadros/economia/serie_dotacion_apn.xlsx', { signal: AbortSignal.timeout(15000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); }),
+  ]);
+  const out = { fuente: 'INDEC (cuentas nacionales, EPH y dotación de la APN) y Secretaría de Trabajo (SIPA), vía datos.gob.ar' };
+  const r1 = v => (v == null ? null : Math.round(v * 10) / 10);
+
+  // Puestos de trabajo por actividad (miles, trimestral): total, asalariados registrados, no registrados y no asalariados
+  if (rCgi.status === 'fulfilled') {
+    const d = rCgi.value, cols = (re, letra) => d.cab.findIndex(c => c.startsWith(letra + '_') && re.test(c));
+    const tomar = i => (i > 0 ? d.filas.map(f => r1(f[i])) : null);
+    const grupo = letra => ({ total: tomar(cols(/_puestos?_trabajo$/, letra)), noreg: tomar(cols(/no_reg$/, letra)), reg: tomar(cols(/asal(ariado)?_reg(istrado)?$/, letra)), noasal: tomar(cols(/no_asal$/, letra)) });
+    const tot = { total: tomar(d.cab.indexOf('total_general_puestos_trabajo')), reg: tomar(d.cab.indexOf('total_general_puestos_trabajo_asalariado_registrado')),
+      noreg: tomar(d.cab.indexOf('total_general_asalariados_no_reg')), noasal: tomar(d.cab.indexOf('total_general_puestos_trab_no_asal')), publico: tomar(d.cab.indexOf('total_sector_publico_puestos_trabajo')) };
+    const act = Object.entries(ACTIVIDADES).map(([k, n]) => Object.assign({ k, n }, grupo(k)));
+    if (Object.values(tot).every(Boolean) && act.every(a => a.total && a.reg) && d.filas.length > 12 && tot.total.at(-1) > 10000) out.puestos = { p: d.filas.map(f => f[0]), ...tot, actividades: act };
+  }
+  // EPH: asalariados sin descuento jubilatorio (%) y Gini del ingreso per cápita familiar (trimestral)
+  if (rEph.status === 'fulfilled') {
+    const d = rEph.value.data || [], col = k => d.filter(f => Number.isFinite(f[k])).map(f => [f[0].slice(0, 7), Math.round(f[k] * (k === 1 ? 1000 : 10000)) / (k === 1 ? 10 : 10000)]);
+    const inf = col(1), gini = col(2);
+    if (inf.length > 8 && inf.at(-1)[1] < 80) out.informalidad = inf;
+    if (gini.length > 8 && gini.at(-1)[1] < 1) out.gini = gini;
+  }
+  // Sueldo bruto promedio y mediano de los asalariados privados registrados (mensual, en pesos; junio y diciembre incluyen aguinaldo)
+  if (rSue.status === 'fulfilled') {
+    const s = (rSue.value.data || []).filter(f => f[1] > 0 && f[2] > 0).map(f => [f[0].slice(0, 7), Math.round(f[1]), Math.round(f[2])]);
+    if (s.length > 24) out.sueldos = s;
+  }
+  // Personal del Estado nacional (personas, mensual desde julio de 2022). Las fechas vienen como número de Excel o como "nov-22 (i)" (con datos imputados)
+  if (rEst.status === 'fulfilled') {
+    try {
+      const h = leerXlsx(Buffer.from(rEst.value))[0].filas, cab = h.find(f => f && typeof f[1] === 'number' && f[1] > 40000 && f[1] < 80000);
+      const fecha = v => { if (typeof v === 'number') return fechaExcel(v).slice(0, 7); const m = String(v || '').match(/^([a-z]{3})[a-z]*-(\d{2})/i); const i = m ? MES_CORTO.indexOf(m[1].toLowerCase()) : -1; return i < 0 ? null : '20' + m[2] + '-' + String(i + 1).padStart(2, '0'); };
+      const cols = cab.map((v, i) => [i, fecha(v)]).filter(x => x[0] > 0 && x[1]);
+      const filas = Object.fromEntries(Object.entries(ESTADO).map(([k, t]) => { const f = h.find(x => x && String(x[0] || '').trim() === t); return [k, f ? cols.map(([i]) => (typeof f[i] === 'number' ? f[i] : null)) : null]; }));
+      if (Object.values(filas).every(Boolean) && cols.length > 24 && filas.total.at(-1) > 100000) out.estado = { fechas: cols.map(x => x[1]), ...filas };
+    } catch { /* planilla con otro formato: se omite */ }
+  }
+  if (!out.puestos && !out.informalidad && !out.estado) return res.status(502).json({ error: 'No se pudieron leer los datos del trabajo' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -634,6 +691,7 @@ export default async function handler(req, res) {
   if (req.query.presupuesto) return presupuesto(req, res);
   if (req.query.energia) return energia(req, res);
   if (req.query.cambiario) return cambiario(req, res);
+  if (req.query.trabajo) return trabajo(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {

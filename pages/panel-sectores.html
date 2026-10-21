@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=12" />
+  <link rel="stylesheet" href="../css/panel.css?v=13" />
 </head>
 <body>
   <header class="site-header">
@@ -156,7 +156,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=13"></script>
+  <script src="../js/panel.js?v=14"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
@@ -312,6 +312,7 @@
         return '<td class="c' + (v == null ? ' vacio' : '') + '" style="' + color(i, v) + '" title="' + esc(i.n) + ', ' + P.mesAnio(p) + (v == null ? ': sin dato' : ': ' + fmt(i, v)) + '">' + (v == null ? '' : P.signo(v, Math.abs(v) < 10 ? 1 : 0)) + '</td>'; }).join('') + '</tr>'; });
     });
     $('termo').innerHTML = h + '</tbody>';
+    P.ultimo('termo', P.mesLargo(R.map(r => r.p).sort().at(-1)));
     }
     termo(); celu.addEventListener('change', termo);
 
@@ -321,6 +322,8 @@
       return '<button type="button" class="fila" data-ficha="' + r.i.k + '"><span class="n">' + esc(r.i.n) + '<small>' + tri(r.p) + '</small></span>' +
         '<span class="pista" aria-hidden="true"><i class="cero"></i><i class="palo ' + (v >= 0 ? 'sube' : 'baja') + '" style="left:' + Math.min(pos, 50).toFixed(1) + '%;width:' + ancho.toFixed(1) + '%"></i><b class="' + (v >= 0 ? 'sube' : 'baja') + '" style="left:' + pos.toFixed(1) + '%"></b>' + (Math.abs(v) > tope ? '<em style="' + (v > 0 ? 'right' : 'left') + ':0">' + (v > 0 ? '›' : '‹') + '</em>' : '') + '</span>' +
         '<span class="v ' + (v >= 0 ? 'sube' : 'baja') + '">' + fmt(r.i, v) + '</span></button>'; }).join('');
+
+    P.ultimo('rank', P.mesLargo(R.map(r => r.p).sort().at(-1)));
 
     if (typeof Chart === 'undefined') return;
     const gris = '#9aa5b8', grilla = 'rgba(255,255,255,0.05)';

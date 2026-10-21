@@ -52,6 +52,7 @@ export default async function handler(req, res) {
         weeklyChangePercent: weeklyPct,
         regularMarketPreviousClose: prev,
         regularMarketVolume: vol,
+        regularMarketTime: m.regularMarketTime,
         marketCap: m.marketCap, // a veces presente, a veces no
         fiftyTwoWeekHigh: m.fiftyTwoWeekHigh,
         fiftyTwoWeekLow: m.fiftyTwoWeekLow,

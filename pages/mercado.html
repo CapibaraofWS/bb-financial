@@ -377,6 +377,15 @@
     }
   }
 
+  // En la etiqueta de cada pestaña, la hora de la cotización más nueva (con el mercado cerrado, la del cierre)
+  function marcarHora(tab, ms) {
+    const el = document.querySelector('#tab-' + tab + ' .mkt-live');
+    if (!el || !(ms > 0)) return;
+    const d = new Date(ms), hoy = d.toDateString() === new Date().toDateString();
+    el.textContent = 'Último dato: ' + (hoy ? '' : d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }) + ', ') + d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) + ' h';
+  }
+  const horaQuotes = quotes => Math.max(0, ...quotes.map(q => (q.regularMarketTime || 0) * 1000));
+
   async function fetchQuotes(symbols) {
     const chunks = [];
     for (let i = 0; i < symbols.length; i += 50) chunks.push(symbols.slice(i, i+50));
@@ -411,6 +420,7 @@
   async function loadSectores() {
     const grid = document.getElementById('grid-sectores');
     const quotes = await fetchQuotes(SECTORS.map(s => s.sym));
+    marcarHora('sectores', horaQuotes(quotes));
     const map = Object.fromEntries(quotes.map(q => [q.symbol, q]));
     grid.innerHTML = SECTORS.map(s => {
       const q = map[s.sym];
@@ -452,6 +462,7 @@
   async function loadSP500() {
     const wrap = document.getElementById('treemap-sp500');
     const quotes = await fetchQuotes(SP500_TOP);
+    marcarHora('sp500', horaQuotes(quotes));
     const valid = quotes.filter(q => q.regularMarketChangePercent != null).map(q => ({
       sym: q.symbol, name: q.shortName || q.longName || q.symbol,
       cap: q.marketCap || SP500_WEIGHTS[q.symbol] || 50e9,
@@ -477,6 +488,7 @@
       const r = await fetch('/api/crypto?path=coins/markets&vs_currency=usd&per_page=30&order=market_cap_desc', { signal: AbortSignal.timeout(10000) });
       if (!r.ok) throw new Error();
       const arr = await r.json();
+      marcarHora('cripto', Math.max(0, ...arr.map(c => Date.parse(c.last_updated) || 0)));
       let data = arr.filter(c => c.market_cap && c.price_change_percentage_24h != null).map(c => ({
         sym: c.symbol.toUpperCase(),
         name: c.name,
@@ -592,6 +604,7 @@
   async function loadMovers() {
     const grid = document.getElementById('movers-grid');
     const quotes = await fetchQuotes(SP500_TOP);
+    marcarHora('movers', horaQuotes(quotes));
     const valid = quotes.filter(q => q.regularMarketChangePercent != null).map(q => ({
       sym: q.symbol, name: q.shortName || q.symbol,
       px: q.regularMarketPrice, pct: q.regularMarketChangePercent,

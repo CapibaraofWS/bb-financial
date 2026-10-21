@@ -45,7 +45,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=12" />
+  <link rel="stylesheet" href="../css/panel.css?v=13" />
 </head>
 <body>
   <header class="site-header">
@@ -161,7 +161,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=13"></script>
+  <script src="../js/panel.js?v=14"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
@@ -230,6 +230,7 @@
       if (!d) return;
       const cats = d.categorias.filter(x => x.nombre !== 'Total').sort((a, b) => b.actual - a.actual);
       $(ayuda).insertAdjacentHTML('beforeend', ' De enero a ' + esc(d.hasta) + '.');
+      $(id).dataset.ultimo = d.hasta + ' de ' + d.anio;
       new Chart($(id), { type: 'bar', data: { labels: cats.map(x => P.corte(corto(x.nombre))), datasets: [
           { label: String(d.anio), data: cats.map(x => x.actual), backgroundColor: 'rgba(74,222,154,0.7)', borderRadius: 3 },
           { label: String(d.anio - 1), data: cats.map(x => x.anterior), backgroundColor: 'rgba(154,165,184,0.35)', borderRadius: 3 } ] },
@@ -243,6 +244,7 @@
     if (S) {
       const top = S.paises.slice(0, 10);
       $('g-soc-ayuda').insertAdjacentHTML('beforeend', ' Período: ' + esc(S.periodo.toLowerCase()) + '.');
+      $('g-soc').dataset.ultimo = 'acumulado ' + S.periodo.toLowerCase();
       new Chart($('g-soc'), { type: 'bar', data: { labels: top.map(x => P.corte(x.nombre)), datasets: [
           { label: 'Exportaciones', data: top.map(x => x.expo), backgroundColor: 'rgba(74,222,154,0.7)', borderRadius: 3 },
           { label: 'Importaciones', data: top.map(x => x.impo), backgroundColor: 'rgba(96,165,250,0.6)', borderRadius: 3 } ] },

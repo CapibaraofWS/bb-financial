@@ -45,7 +45,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=12" />
+  <link rel="stylesheet" href="../css/panel.css?v=13" />
 </head>
 <body>
   <header class="site-header">
@@ -134,7 +134,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=13"></script>
+  <script src="../js/panel.js?v=14"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -181,6 +181,7 @@
     const ejeCat = { ticks: { color: '#9aa5b8', maxRotation: 50, minRotation: 0, autoSkip: false, font: { size: 10 } }, grid: { display: false } };
     const ejeVal = { ticks: { color: '#9aa5b8', maxTicksLimit: acostada ? 5 : 8, callback: v => (acostada ? num(v / 1000, 0) : 'US$' + num(v / 1000, 0) + ' mil M') }, grid: { color: 'rgba(255,255,255,0.05)' },
       title: { display: acostada, text: 'Miles de millones de dólares', color: '#9aa5b8', font: { size: 11 } } };
+    $('g-casc').dataset.ultimo = P.mesLargo(ult);
     const casc = new Chart($('g-casc'), { type: 'bar', data: { labels: c0.L.map(x => P.corte(x, 22)), datasets: [{ data: c0.D, backgroundColor: c0.C, borderRadius: 3, barPercentage: 0.75 }] },
       options: P.ejes(v => v, { indexAxis: acostada ? 'y' : 'x', plugins: { legend: { display: false }, tooltip: { callbacks: { title: it => c0.L[it[0].dataIndex], label: c => { const [a, b] = c.raw; return (c.dataIndex === c0.L.length - 1 ? 'Resultado: ' : '') + usd(b - a); } } } },
         scales: acostada ? { x: ejeVal, y: ejeCat } : { x: ejeCat, y: ejeVal } }) });
@@ -200,7 +201,7 @@
           scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, maxTicksLimit: 7 }, grid: { display: false } },
                     y: { ticks: { color: '#9aa5b8', callback: v => 'US$' + num(v / 1000, 0) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } },
                     y2: { position: 'right', ticks: { color: '#9aa5b8', callback: v => num(v / 1000, 1) }, grid: { display: false } } } }) });
-      $('f-mes').textContent = 'Fuente: BCRA, balance cambiario. Último dato: ' + P.mesLargo(ult) + '. Eje izquierdo: miles de millones de dólares; derecho: miles de millones por mes.';
+      $('f-mes').textContent = 'Fuente: BCRA, balance cambiario. Eje izquierdo: miles de millones de dólares; derecho: miles de millones por mes.';
       chips.addEventListener('click', e => { const bt = e.target.closest('button'); if (!bt) return; key = bt.dataset.t; chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === bt))); d2 = armar2();
         ch.data.labels = d2.labels; ch.data.datasets[0].data = d2.a; ch.data.datasets[1].data = d2.m; ch.update(); document.querySelector('[data-exportar="g-mes"]').dataset.titulo = 'Balance cambiario: ' + bt.textContent; }); }
   })();
