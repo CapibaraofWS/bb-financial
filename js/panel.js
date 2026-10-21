@@ -43,6 +43,7 @@ window.BBPanel = (function () {
     sectores: () => json('/api/indec?sectores=1'),
     bcraPanel: () => json('/api/bcra?endpoint=Panel'),
     presupuesto: () => json('/api/indec?presupuesto=1'),
+    energia: () => json('/api/indec?energia=1'),
     // Estados Unidos (BLS, BEA, FRED y el Tesoro, armados en el servidor)
     usa: m => json('/api/fred?usa=' + m),
     geoUsa: () => json('/data/estados-usa.json'),

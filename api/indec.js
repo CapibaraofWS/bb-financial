@@ -563,6 +563,36 @@ async function presupuesto(req, res) {
   }
 }
 
+// ?energia=1: petróleo y gas (convencional y no convencional), litio, oro y plata del IPI minero del INDEC,
+// (el comercio exterior de energía sale de ?comercio=1).
+async function energia(req, res) {
+  try {
+    const r0 = await fetch(INDEC + '/ftp/cuadros/economia/serie_ipi_minero.xlsx', { signal: AbortSignal.timeout(15000), headers: UA });
+    if (!r0.ok) throw new Error();
+    const rx = await r0.arrayBuffer();
+    const H = Object.fromEntries(leerXlsx(Buffer.from(rx)).map(h => [h.nombre, h.filas]));
+    // Filas [n, año (solo en enero, a veces con asterisco), mes, valores...]
+    const filas = (hoja, cols) => { let anio = null; const out = [];
+      for (const f of H[hoja] || []) {
+        if (!f || typeof f[2] !== 'string') continue;
+        const a = parseInt(String(f[1] ?? ''), 10); if (a > 2000) anio = a;
+        const m = MESES_ES.indexOf(f[2].replace(/[^a-záéíóú]/gi, '').toLowerCase());
+        if (!anio || m < 0) continue;
+        const v = cols.map(c => num(typeof f[c] === 'number' ? f[c] : NaN));
+        if (v.every(x => x == null)) continue;
+        out.push([anio + '-' + String(m + 1).padStart(2, '0'), ...v.map(x => (x == null ? null : Number(x.toPrecision(6))))]);
+      }
+      return out; };
+    const petroleo = filas('Cuadro 5', [3, 4, 5]), gas = filas('Cuadro 6', [3, 4, 5]);
+    if (petroleo.length < 60 || gas.length < 60) throw new Error('pocos datos');
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ fuente: 'INDEC, Índice de producción industrial minero', url: INDEC + '/ftp/cuadros/economia/serie_ipi_minero.xlsx',
+      petroleo, gas, litio: filas('Cuadro 7', [3]), ipi: filas('Cuadro 1', [3, 7]), oroPlata: filas('Cuadro 2', [9]) });
+  } catch {
+    return res.status(502).json({ error: 'No se pudieron leer los datos de energía y minería' });
+  }
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -577,6 +607,7 @@ export default async function handler(req, res) {
   if (req.query.calendario) return calendario(req, res);
   if (req.query.sectores) return sectores(req, res);
   if (req.query.presupuesto) return presupuesto(req, res);
+  if (req.query.energia) return energia(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {
