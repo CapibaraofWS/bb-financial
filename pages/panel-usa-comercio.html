@@ -191,7 +191,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=14"></script>
+  <script src="../js/panel.js?v=15"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -281,12 +281,13 @@
     if (CE) $('g-socios-fuente').innerHTML = 'Fuente: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">Census, comercio exterior de Estados Unidos</a>, bienes, sin desestacionalizar. La Unión Europea incluye a Alemania, Irlanda, Italia y los demás países del bloque, que también aparecen por separado si están entre los principales.';
     if (SOCIOS.length) {
       const datos = modo => SOCIOS.map(s => ({ n: s.n, saldo: (s.exp - s.imp) / 1000, exp: s.exp / 1000, imp: s.imp / 1000 })).sort((a, b) => (modo === 'saldo' ? a.saldo - b.saldo : (b.exp + b.imp) - (a.exp + a.imp)));
-      const texto = modo => { $('g-socios-ayuda').innerHTML = '<strong>Qué ves:</strong> ' + (modo === 'saldo' ? 'el saldo comercial de Estados Unidos con cada socio: en rojo, con quienes compra más de lo que vende (déficit); en verde, con quienes vende más (superávit).' : 'cuánto le vende (verde) y cuánto le compra (azul) Estados Unidos a cada socio.') + ' ' + perSoc + ', en miles de millones de dólares.'; };
+      const texto = modo => { $('g-socios-ayuda').innerHTML = '<strong>Qué ves:</strong> ' + (modo === 'saldo' ? 'el saldo comercial de Estados Unidos con cada socio: en naranja, con quienes compra más de lo que vende (déficit); en azul, con quienes vende más (superávit).' : 'cuánto le vende (azul) y cuánto le compra (violeta) Estados Unidos a cada socio.') + ' ' + perSoc + ', en miles de millones de dólares.'; };
       let d = datos('saldo'); texto('saldo');
       const sets = (d, modo) => modo === 'saldo'
-        ? [{ label: 'Saldo', data: d.map(x => x.saldo), backgroundColor: d.map(x => (x.saldo >= 0 ? 'rgba(74,222,154,0.7)' : 'rgba(255,120,100,0.75)')), borderRadius: 3 }]
-        : [{ label: 'Le vende', data: d.map(x => x.exp), backgroundColor: 'rgba(74,222,154,0.7)', borderRadius: 3 }, { label: 'Le compra', data: d.map(x => x.imp), backgroundColor: 'rgba(96,165,250,0.7)', borderRadius: 3 }];
+        ? [{ label: 'Saldo', data: d.map(x => x.saldo), backgroundColor: d.map(x => (x.saldo >= 0 ? 'rgba(96,165,250,0.75)' : 'rgba(245,158,11,0.75)')), borderRadius: 3 }]
+        : [{ label: 'Le vende', data: d.map(x => x.exp), backgroundColor: 'rgba(96,165,250,0.75)', borderRadius: 3 }, { label: 'Le compra', data: d.map(x => x.imp), backgroundColor: 'rgba(167,139,250,0.7)', borderRadius: 3 }];
       if (CE) $('g-socios').parentElement.style.height = '520px';
+      if (CE) $('g-socios').dataset.ultimo = P.mesLargo(CE.hasta);
       const ch = new Chart($('g-socios'), { type: 'bar', data: { labels: d.map(x => P.corte(x.n, 16)), datasets: sets(d, 'saldo') },
         options: P.ejes(v => v, { indexAxis: 'y', plugins: { legend: { display: false, labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + mm(c.parsed.x * 1000) } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => 'US$' + v + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });

@@ -187,7 +187,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=14"></script>
+  <script src="../js/panel.js?v=15"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -243,6 +243,7 @@
       if (!E || !geo) return;
       const cod = Object.fromEntries(geo.provincias.map(p => [p.abrev, p.cod])), V = {}, info = {};
       for (const x of E.valores) { const c = cod[x.abrev]; if (!c) continue; info[c] = x; V[c] = modo === 'hab' ? x.porHabitante : x.total / 1e9; }
+      P.ultimo('mapa', 'año fiscal ' + E.fy);
       P.mapaProvincias('mapa', { geo: 'estados', valores: V, escala: 'nivel', inicial: '06',
         formato: modo === 'hab' ? v => 'US$' + Math.round(v).toLocaleString('es-AR') : v => 'US$' + num(v, 0) + ' mil M',
         etiqueta: (modo === 'hab' ? 'gasto federal por habitante' : 'gasto federal total') + ' en el año fiscal ' + E.fy,
@@ -278,6 +279,7 @@
     const barras = (id, L, ayudaId, texto) => {
       const d = L.filter(x => x.actual > 0).sort((a, b) => b.actual - a.actual);
       $(ayudaId).innerHTML = '<strong>Qué ves:</strong> ' + texto + ' en el ' + per9.replace('Año', 'año') + ', ' + contra + ', en miles de millones de dólares.';
+      $(id).dataset.ultimo = per9.replace(/^Año/, 'año');
       new Chart($(id), { type: 'bar', data: { labels: d.map(x => P.corte(x.nombre, 18)), datasets: [
           { label: 'Año fiscal ' + fy9, data: d.map(x => x.actual / 1e9), backgroundColor: 'rgba(96,165,250,0.75)', borderRadius: 3 },
           { label: 'Año fiscal ' + (fy9 - 1), data: d.map(x => x.anterior / 1e9), backgroundColor: 'rgba(232,237,245,0.22)', borderRadius: 3 } ] },

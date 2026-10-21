@@ -185,7 +185,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=14"></script>
+  <script src="../js/panel.js?v=15"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -264,6 +264,7 @@
       for (const [c, s] of Object.entries(ES)) { const m = Object.fromEntries(s.map(x => [x.p, x.v])); if (m[ult] == null || m[ref] == null) continue; info[c] = m;
         V[c] = modo === 'anual' ? (m[ult] / m[ref] - 1) * 100 : (Math.pow(m[ult] / m[ref], 4) - 1) * 100; }
       const total = Object.values(info).reduce((a, m) => a + m[ult], 0);
+      P.ultimo('mapa', ult.slice(-1) + '.º trimestre de ' + ult.slice(0, 4));
       P.mapaProvincias('mapa', { geo: 'estados', valores: V, inicial: '06',
         etiqueta: modo === 'anual' ? 'crecimiento del PBI real entre el ' + trim(ref) + ' y el ' + trim(ult) : 'crecimiento anualizado del PBI real en el ' + trim(ult),
         info: c => { const m = info[c]; return 'PBI real en el ' + trim(ult, true) + ': <b>US$' + num(m[ult] / 1e6, 2) + ' billones</b> de 2017 (a ritmo anual).<br>Es el ' + num(m[ult] / total * 100) + '% del total de los estados.'; } });

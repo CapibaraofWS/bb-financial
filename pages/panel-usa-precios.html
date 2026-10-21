@@ -178,7 +178,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=14"></script>
+  <script src="../js/panel.js?v=15"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -240,6 +240,7 @@
     P.brillo('#kpis .pa-card');
 
     // ---- Mapa de calor: IPC desestacionalizado, mes a mes
+    P.ultimo('calor', P.mesLargo(Object.keys(ipcSA).sort().at(-1)));
     P.mapaCalor($('calor'), Object.keys(ipcSA).filter(p => p >= '2017-01').sort().map(p => ({ p, m: mensual(ipcSA, p) })).filter(x => x.m != null),
       { escala: [0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.6, 0.9] });
 
@@ -262,6 +263,7 @@
       const pintar = modo => { const d = datos(modo); $('g-rubros-ayuda').innerHTML = '<strong>Qué ves:</strong> la inflación de cada rubro del IPC ' + (modo === 'anual' ? 'entre ' + P.mesLargo(menos(u, 12)) + ' y ' + P.mesLargo(u) : 'en ' + P.mesLargo(u) + ', desestacionalizada') + '. En naranja, los que subieron más que la inflación general (' + num(general[modo]) + '%); en azul, los que subieron menos.'; return d; };
       let d = pintar('anual');
       const col = (d, modo) => d.map(x => (x.v > general[modo] ? 'rgba(255,159,122,0.8)' : 'rgba(96,165,250,0.7)'));
+      $('g-rubros').dataset.ultimo = P.mesLargo(u);
       const ch = new Chart($('g-rubros'), { type: 'bar', data: { labels: d.map(x => P.corte(x.n, 18)), datasets: [{ label: 'Inflación', data: d.map(x => x.v), backgroundColor: col(d, 'anual'), borderRadius: 4 }] },
         options: P.ejes(v => v, { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => P.signo(c.parsed.x) + '%' } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });

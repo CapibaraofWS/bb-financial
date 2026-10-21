@@ -235,11 +235,10 @@ window.BBPanel = (function () {
 
   // ---- "Último dato" arriba de la fuente de cada gráfico. Sale de la última etiqueta con datos del gráfico,
   // o de data-ultimo en el canvas cuando el eje no es de fechas (rubros, cascadas). ultimo() sirve también para tablas y mapas.
-  const MES_MAY = MES.map(m => m.replace(/^./, c => c.toUpperCase()));
   function textoFecha(l) {
     l = Array.isArray(l) ? l.join(' ') : String(l ?? '');
-    let m = l.match(/^([A-Z][a-z]{2}) (\d{4})$/);
-    if (m && MES_MAY.includes(m[1])) return MESES[MES_MAY.indexOf(m[1])] + ' de ' + m[2];
+    let m = l.match(/^([A-Za-z][a-z]{2}) (\d{4})$/);
+    if (m && MES.includes(m[1].toLowerCase())) return MESES[MES.indexOf(m[1].toLowerCase())] + ' de ' + m[2];
     m = l.match(/^(\d{1,2}) ([a-z]{3})$/);
     if (m && MES.includes(m[2])) return m[1] + ' de ' + MESES[MES.indexOf(m[2])];
     if (/trim\. \d{4}$|sem\. \d{4}$|^(AF )?\d{4}$/.test(l)) return l.replace('trim.', 'trimestre de').replace('sem.', 'semestre de').replace(/^AF /, 'año fiscal ');

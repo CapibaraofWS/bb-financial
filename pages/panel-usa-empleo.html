@@ -191,7 +191,7 @@
   <script src="../js/main.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=14"></script>
+  <script src="../js/panel.js?v=15"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -261,6 +261,7 @@
       const ult = Object.values(ES).map(s => s.at(-1) && s.at(-1).p).filter(Boolean).sort().at(-1); if (!ult) return;
       const ant = menos(ult, 12), V = {}, info = {};
       for (const [c, s] of Object.entries(ES)) { const m = M(s); if (m[ult] == null) continue; info[c] = m; V[c] = modo === 'nivel' ? m[ult] : (m[ant] != null ? m[ult] - m[ant] : NaN); }
+      P.ultimo('mapa', P.mesLargo(ult));
       P.mapaProvincias('mapa', { geo: 'estados', valores: V, escala: modo === 'nivel' ? 'nivel' : 'cambio', mejorSiBaja: true, inicial: '06',
         formato: modo === 'nivel' ? v => num(v) + '%' : v => P.signo(v) + ' p.p.',
         etiqueta: modo === 'nivel' ? 'tasa de desempleo en ' + P.mesLargo(ult) : 'cambio de la tasa de desempleo entre ' + P.mesLargo(ant) + ' y ' + P.mesLargo(ult),
@@ -287,6 +288,7 @@
       const texto = n => { $('g-sec-ayuda').innerHTML = '<strong>Qué ves:</strong> cuántos puestos más (o menos) hay en cada sector entre ' + P.mesLargo(menos(u, n)) + ' y ' + P.mesLargo(u) + ', en miles. En total: <b class="' + cls(N[u] - N[menos(u, n)]) + '">' + mil(N[u] - N[menos(u, n)]) + '</b>.'; };
       let d = datos(12); texto(12);
       const col = d => d.map(x => (x.v >= 0 ? 'rgba(74,222,154,0.7)' : 'rgba(255,120,100,0.75)'));
+      $('g-sec').dataset.ultimo = P.mesLargo(u);
       const ch = new Chart($('g-sec'), { type: 'bar', data: { labels: d.map(x => P.corte(x.n, 18)), datasets: [{ label: 'Cambio (miles)', data: d.map(x => x.v), backgroundColor: col(d), borderRadius: 4 }] },
         options: P.ejes(v => v, { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => mil(c.parsed.x) } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => v + ' mil' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });
