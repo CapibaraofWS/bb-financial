@@ -2,8 +2,8 @@
 // leerXlsx(buffer) → [{ nombre, filas }] con filas[fila][columna] = número o texto (índices desde 0).
 import { inflateRawSync } from 'zlib';
 
-// Archivos del zip a partir del directorio central
-function archivos(buf) {
+// Archivos del zip a partir del directorio central. tope: tamaño máximo de cada archivo al descomprimirlo
+export function archivos(buf, tope = 20e6) {
   let e = buf.length - 22;
   while (e >= 0 && buf.readUInt32LE(e) !== 0x06054b50) e--;
   if (e < 0) throw new Error('No es un zip');
@@ -18,7 +18,7 @@ function archivos(buf) {
     const ini = loc + 30 + buf.readUInt16LE(loc + 26) + buf.readUInt16LE(loc + 28);
     const datos = buf.subarray(ini, ini + comp);
     // Tope de tamaño al descomprimir: una planilla oficial no pesa más que unos pocos MB
-    out[nombre] = () => (metodo === 0 ? datos : inflateRawSync(datos, { maxOutputLength: 20e6 }));
+    out[nombre] = () => (metodo === 0 ? datos : inflateRawSync(datos, { maxOutputLength: tope }));
     p += 46 + lnom + lext + lcom;
   }
   return out;

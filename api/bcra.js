@@ -53,10 +53,33 @@ function buildUrl(q) {
   return `https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias?${p}`;
 }
 
+// ?endpoint=Panel: las series del panel del Banco Central en una sola respuesta.
+// Por variable: el último dato, el de hace 30 días y un año, y el promedio de cada mes (tres años y medio).
+const PANEL = [15, 16, 17, 19, 1526, 1528, 1532, 1534, 1341, 1564, 1355, 1265, 1266, 1225, 1259, 1221, 25];
+async function panel(res) {
+  const d = new Date(); d.setUTCMonth(d.getUTCMonth() - 42);
+  const desde = d.toISOString().slice(0, 7) + '-01';
+  const rs = await Promise.allSettled(PANEL.map(id => fetch('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/' + id + '?desde=' + desde + '&limit=1000', { signal: AbortSignal.timeout(12000) })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })));
+  const series = {};
+  rs.forEach((r, k) => {
+    const det = r.status === 'fulfilled' && r.value.results && r.value.results[0] && r.value.results[0].detalle;
+    if (!det || !det.length) return;
+    const s = det.map(x => [x.fecha, x.valor]).filter(x => Number.isFinite(x[1])).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    const u = s.at(-1), antes = dias => { const t = new Date(u[0] + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() - dias); const iso = t.toISOString().slice(0, 10), x = s.filter(z => z[0] <= iso).at(-1); return x ? x[1] : null; };
+    const mes = {}; for (const [f, v] of s) (mes[f.slice(0, 7)] = mes[f.slice(0, 7)] || []).push(v);
+    series[PANEL[k]] = { u, d30: antes(30), a1: antes(365), mes: Object.entries(mes).map(([m, v]) => [m, Number((v.reduce((a, b) => a + b, 0) / v.length).toPrecision(6))]) };
+  });
+  if (Object.keys(series).length < PANEL.length / 2) return res.status(502).json({ error: 'No se pudieron cargar las series del BCRA' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=172800');
+  return res.status(200).json({ actualizado: new Date().toISOString(), series });
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'bcra' })) return;
   const endpoint = req.query.endpoint || 'Monetarias';
+  if (endpoint === 'Panel') return panel(res).catch(() => res.status(500).json({ error: 'No se pudo conectar con BCRA API' }));
 
   if (!ALLOWED.has(endpoint)) {
     return res.status(400).json({ error: 'Endpoint no permitido', validos: [...ALLOWED] });

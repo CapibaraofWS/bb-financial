@@ -3,7 +3,8 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "functions": {
-    "api/fred.js": { "maxDuration": 30 }
+    "api/fred.js": { "maxDuration": 30 },
+    "api/indec.js": { "maxDuration": 30 }
   },
   "redirects": [
     {

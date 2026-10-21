@@ -2,7 +2,7 @@
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
 import { leerXls, fechaExcel } from './_xls.js';
-import { leerXlsx } from './_xlsx.js';
+import { leerXlsx, archivos } from './_xlsx.js';
 
 // ?canasta=1: canastas básicas (líneas de indigencia y pobreza) leídas del archivo del INDEC,
 // que se actualiza el mismo día del informe. El portal de datos abiertos tarda semanas en cargarlas.
@@ -522,6 +522,47 @@ async function sectores(req, res) {
   }
 }
 
+// ?presupuesto=1: el presupuesto de la Administración Nacional del año y cuánto se gastó, de Presupuesto Abierto.
+// El archivo anual se actualiza todos los días; en enero, hasta que aparece el del año nuevo, se usa el anterior.
+const PRESU = a => 'https://dgsiaf-repo.mecon.gob.ar/repository/pa/datasets/' + a + '/credito-anual-' + a + '.zip';
+// CSV del crédito anual → totales por finalidad, función, jurisdicción e inciso: [presupuestado, vigente, devengado] en millones
+export function agregarPresupuesto(texto) {
+  const L = texto.replace(/^﻿/, '').split(/\r?\n/), cab = L[0].split(',');
+  const K = ['finalidad_desc', 'funcion_desc', 'jurisdiccion_desc', 'inciso_desc', 'credito_presupuestado', 'credito_vigente', 'credito_devengado', 'ultima_actualizacion_fecha'].map(n => cab.indexOf(n));
+  if (K.some(i => i < 0)) throw new Error('columnas');
+  // Los montos vienen entre comillas y con coma decimal: "112314,62"
+  const campos = l => { if (!l.includes('"')) return l.split(','); const o = []; let c = '', q = false;
+    for (let i = 0; i < l.length; i++) { const ch = l[i]; if (q) { if (ch === '"') { if (l[i + 1] === '"') { c += '"'; i++; } else q = false; } else c += ch; } else if (ch === '"') q = true; else if (ch === ',') { o.push(c); c = ''; } else c += ch; }
+    o.push(c); return o; };
+  const n = x => parseFloat(String(x).replace(',', '.')) || 0;
+  const out = { total: [0, 0, 0], fin: {}, fun: {}, jur: {}, inc: {} }, sumar = (o, k, v) => { const a = o[k] = o[k] || [0, 0, 0]; v.forEach((x, i) => (a[i] += x)); };
+  let fecha = '';
+  for (let i = 1; i < L.length; i++) {
+    if (!L[i]) continue;
+    const c = campos(L[i]), v = [n(c[K[4]]), n(c[K[5]]), n(c[K[6]])];
+    sumar(out, 'total', v); sumar(out.fin, c[K[0]], v); sumar(out.fun, c[K[0]] + '|' + c[K[1]], v); sumar(out.jur, c[K[2]], v); sumar(out.inc, c[K[3]], v);
+    fecha = c[K[7]] || fecha;
+  }
+  const r = a => a.map(x => Math.round(x));
+  out.total = r(out.total); for (const g of ['fin', 'fun', 'jur', 'inc']) for (const k in out[g]) out[g][k] = r(out[g][k]);
+  out.fecha = (fecha.match(/(\d{1,2} \w+ \d{4})/) || [])[1] || '';
+  return out;
+}
+async function presupuesto(req, res) {
+  try {
+    let anio = new Date().getUTCFullYear(), r = await fetch(PRESU(anio), { signal: AbortSignal.timeout(20000), headers: UA });
+    if (r.status === 404) { anio--; r = await fetch(PRESU(anio), { signal: AbortSignal.timeout(20000), headers: UA }); }
+    if (!r.ok) throw new Error();
+    const zip = archivos(Buffer.from(await r.arrayBuffer()), 400e6), nombre = Object.keys(zip).find(x => /\.csv$/i.test(x));
+    const d = agregarPresupuesto(zip[nombre]().toString('utf8'));
+    if (!(d.total[1] > 0)) throw new Error('vacío');
+    res.setHeader('Cache-Control', 's-maxage=43200, stale-while-revalidate=604800');
+    return res.status(200).json({ anio, ...d });
+  } catch {
+    return res.status(502).json({ error: 'No se pudo leer el presupuesto' });
+  }
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -535,6 +576,7 @@ export default async function handler(req, res) {
   if (req.query.pobreza) return pobreza(req, res);
   if (req.query.calendario) return calendario(req, res);
   if (req.query.sectores) return sectores(req, res);
+  if (req.query.presupuesto) return presupuesto(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {

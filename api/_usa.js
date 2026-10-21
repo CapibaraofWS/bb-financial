@@ -366,8 +366,12 @@ async function comercio() {
 }
 
 // ---- Mercados: índices, sectores, materias primas y otros, con cierres diarios de Yahoo Finance (5 años)
-const SIMBOLOS = ['^GSPC', '^NDX', '^DJI', '^RUT', '^VIX', 'SPY', 'RSP', 'XLK', 'XLC', 'XLY', 'XLP', 'XLV', 'XLF', 'XLI', 'XLE', 'XLB', 'XLU', 'XLRE',
-  'CL=F', 'BZ=F', 'NG=F', 'GC=F', 'SI=F', 'HG=F', 'ZS=F', 'ZC=F', 'ZW=F', 'DX-Y.NYB', 'BTC-USD', 'EEM', 'ARGT'];
+const SIMBOLOS = ['^GSPC', '^NDX', '^DJI', '^RUT', '^VIX', 'SPY', 'RSP', 'XLK', 'XLC', 'XLY', 'XLP', 'XLV', 'XLF', 'XLI', 'XLE', 'XLB', 'XLU', 'XLRE'];
+// Mercados globales: materias primas, monedas, cripto y activos alternativos (fondos cotizados)
+const GLOBALES = ['CL=F', 'BZ=F', 'NG=F', 'GC=F', 'SI=F', 'HG=F', 'ZS=F', 'ZC=F', 'ZW=F', 'LIT',
+  'DX-Y.NYB', 'EURUSD=X', 'GBPUSD=X', 'USDJPY=X', 'USDCNY=X', 'USDBRL=X', 'USDMXN=X', 'USDCLP=X', 'USDCOP=X', 'ARS=X',
+  'BTC-USD', 'ETH-USD', 'SOL-USD', 'XRP-USD', 'BNB-USD',
+  'VNQ', 'REET', 'IGF', 'PSP', 'TIP', 'HYG', 'EEM', 'ARGT'];
 async function yahoo(sym) {
   const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(sym) + '?interval=1d&range=5y', {
     signal: AbortSignal.timeout(8000), headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', Accept: 'application/json' } });
@@ -377,25 +381,45 @@ async function yahoo(sym) {
   for (let i = 0; i < ts.length; i++) if (cl[i] != null) s.push([new Date(ts[i] * 1000 + off).toISOString().slice(0, 10), +cl[i].toFixed(4)]);
   if (s.length < 30) throw new Error('Yahoo sin datos ' + sym);
   // Rendimientos: por ruedas hacia atrás (1 semana = 5, 1 mes = 21...), en el año contra el último cierre del año anterior
-  const u = s.at(-1), atras = n => s[Math.max(0, s.length - 1 - n)][1], ret = b => (b ? (u[1] / b - 1) * 100 : null);
+  const u = s.at(-1), ret = b => (b ? (u[1] / b - 1) * 100 : null);
+  const atras = dias => { const t = new Date(u[0] + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() - dias); const iso = t.toISOString().slice(0, 10), x = s.filter(z => z[0] <= iso).at(-1); return x ? x[1] : null; };
   const finAnio = s.filter(x => x[0] < u[0].slice(0, 4) + '-01-01').at(-1), hace = a => s.find(x => x[0] >= (+u[0].slice(0, 4) - a) + u[0].slice(4));
   const prev = res.meta.chartPreviousClose && s.length > 1 ? s.at(-2)[1] : null;
   return {
     nombre: res.meta.shortName || sym, moneda: res.meta.currency, ultimo: u,
-    ret: { d1: ret(prev), s1: ret(atras(5)), m1: ret(atras(21)), m3: ret(atras(63)), anio: ret(finAnio && finAnio[1]), a1: ret(hace(1) && hace(1)[1]), a3: ret(hace(3) && hace(3)[1]), a5: s[0][0] <= (+u[0].slice(0, 4) - 5) + u[0].slice(4) ? ret(s[0][1]) : null },
+    ret: { d1: ret(prev), s1: ret(atras(7)), m1: ret(atras(30)), m3: ret(atras(91)), anio: ret(finAnio && finAnio[1]), a1: ret(hace(1) && hace(1)[1]), a3: ret(hace(3) && hace(3)[1]), a5: s[0][0] <= (+u[0].slice(0, 4) - 5) + u[0].slice(4) ? ret(s[0][1]) : null },
     diario: s.filter(x => x[0] >= (+u[0].slice(0, 4) - 1) + '-' + u[0].slice(5)).map(x => [x[0], x[1]]),   // último año, rueda por rueda
     semanal: s.filter((x, i) => i % 5 === (s.length - 1) % 5),                                               // 5 años, un cierre por semana
   };
 }
-async function mercados() {
+async function cotizaciones(lista) {
   const out = {};
   // De a 8 por vez para no saturar a Yahoo
-  for (let i = 0; i < SIMBOLOS.length; i += 8) {
-    const lote = SIMBOLOS.slice(i, i + 8), r = await Promise.all(lote.map(s => yahoo(s).catch(() => null)));
+  for (let i = 0; i < lista.length; i += 8) {
+    const lote = lista.slice(i, i + 8), r = await Promise.all(lote.map(s => yahoo(s).catch(() => null)));
     lote.forEach((s, k) => { if (r[k]) out[s] = r[k]; });
   }
-  if (Object.keys(out).length < SIMBOLOS.length / 2) throw new Error('Yahoo no contesta');
-  return { simbolos: out };
+  if (Object.keys(out).length < lista.length / 2) throw new Error('Yahoo no contesta');
+  return out;
+}
+async function mercados() {
+  return { simbolos: await cotizaciones(SIMBOLOS) };
+}
+// Además de las cotizaciones: el mercado cripto completo (CoinGecko), el índice de miedo y codicia (alternative.me)
+// y el precio de las casas en EE.UU. (Case-Shiller, vía FRED)
+async function globales() {
+  const json = u => fetch(u, { signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' } }).then(r => { if (!r.ok) throw new Error(); return r.json(); });
+  const [simbolos, cg, fng, casas] = await Promise.all([
+    cotizaciones(GLOBALES),
+    json('https://api.coingecko.com/api/v3/global').catch(() => null),
+    json('https://api.alternative.me/fng/?limit=400').catch(() => null),
+    fred('CSUSHPINSA', '2016-01-01').catch(() => []),
+  ]);
+  const g = cg && cg.data;
+  return { simbolos,
+    cripto: g ? { total: g.total_market_cap && g.total_market_cap.usd, cambio24: g.market_cap_change_percentage_24h_usd, dominio: { btc: g.market_cap_percentage && g.market_cap_percentage.btc, eth: g.market_cap_percentage && g.market_cap_percentage.eth, usdt: g.market_cap_percentage && g.market_cap_percentage.usdt, usdc: g.market_cap_percentage && g.market_cap_percentage.usdc } } : null,
+    miedo: fng && Array.isArray(fng.data) ? fng.data.map(x => [new Date(Number(x.timestamp) * 1000).toISOString().slice(0, 10), Number(x.value)]).reverse() : [],
+    casas: casas.map(x => [x.f.slice(0, 7), x.v]) };
 }
 
 // ---- Respaldo en Redis (Upstash): si una fuente no contesta, se sirve el último armado completo
@@ -410,7 +434,7 @@ async function redis(cmd) {
   } catch { return null; }
 }
 
-const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal, comercio, mercados };
+const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal, comercio, mercados, globales };
 export async function usa(req, res) {
   const modo = req.query.usa, f = MODOS[modo];
   if (!f) return res.status(400).json({ error: 'Modo no válido' });
@@ -422,7 +446,7 @@ export async function usa(req, res) {
     res.setHeader('X-Respaldo', (await redis(['SET', 'usa:' + modo, JSON.stringify(cuerpo), 'EX', String(30 * 86400)])) === 'OK' ? 'guardado' : 'no');
     // Son datos mensuales o trimestrales (la deuda y las tasas, diarios): con 3 horas alcanza.
     // Si al renovar la fuente no contesta, Vercel sigue sirviendo la copia anterior hasta 7 días.
-    res.setHeader('Cache-Control', modo === 'mercados' ? 's-maxage=900, stale-while-revalidate=86400' : 's-maxage=10800, stale-while-revalidate=604800');   // los precios, cada 15 minutos
+    res.setHeader('Cache-Control', modo === 'mercados' || modo === 'globales' ? 's-maxage=900, stale-while-revalidate=86400' : 's-maxage=10800, stale-while-revalidate=604800');   // los precios, cada 15 minutos
     return res.status(200).json(cuerpo);
   } catch {
     const guardado = await redis(['GET', 'usa:' + modo]);

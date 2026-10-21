@@ -46,7 +46,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="css/styles.css?v=19" />
-  <link rel="stylesheet" href="css/panel.css?v=11" />
+  <link rel="stylesheet" href="css/panel.css?v=12" />
 
   <style>
     /* Contact section on homepage */
@@ -113,7 +113,7 @@
         <a href="pages/comparador-dolares" class="nav-link">Dólar</a>
         <a href="pages/agenda-ar" class="nav-link">Agenda AR</a>
         <a href="pages/visor-bonos-ar" class="nav-link">Bonos AR</a>
-        <a href="pages/datos" class="nav-link">Datos macro</a>
+        <a href="pages/datos" class="nav-link">Mercados globales</a>
         <a href="pages/panel-argentina" class="nav-link">Panel Argentina</a>
         <a href="pages/blog" class="nav-link">Blog</a>
         <a href="pages/atlas" class="nav-link">Atlas</a>
@@ -157,14 +157,6 @@
       </div>
     </section>
 
-    <!-- ===== DESDE TU ULTIMA VISITA — lo primero que quiere saber alguien
-         que ya conoce el sitio: que cambio mientras no entraba ===== -->
-    <section data-seccion="visita" style="padding:2rem 0 0">
-      <div class="container">
-        <div id="desde-tu-visita" hidden></div>
-      </div>
-    </section>
-
     <!-- ===== MARKET BRIEF — live snapshot del mercado ===== -->
     <section data-seccion="mercado" style="padding:2rem 0 0">
       <div class="container">
@@ -197,7 +189,7 @@
           </div>
           <div class="brief-grid" id="brief-grid">
             <div class="b-stat loading"><p class="lbl">Dólar Oficial</p><p class="val"><span class="brief-loading-skel"></span></p></div>
-            <div class="b-stat loading"><p class="lbl">Dólar Blue</p><p class="val"><span class="brief-loading-skel"></span></p></div>
+            <div class="b-stat loading"><p class="lbl">Merval</p><p class="val"><span class="brief-loading-skel"></span></p></div>
             <div class="b-stat loading"><p class="lbl">Dólar MEP</p><p class="val"><span class="brief-loading-skel"></span></p></div>
             <div class="b-stat loading"><p class="lbl">Riesgo País</p><p class="val"><span class="brief-loading-skel"></span></p></div>
             <div class="b-stat loading"><p class="lbl">S&amp;P 500</p><p class="val"><span class="brief-loading-skel"></span></p></div>
@@ -549,7 +541,7 @@
           <li><a href="pages/salario">Salario Real</a></li>
           <li><a href="pages/mis-portafolios">Portafolio (Beta)</a></li>
           <li><a href="pages/meta-financiera">Meta Financiera</a></li>
-          <li><a href="pages/datos">Datos Macro</a></li>
+          <li><a href="pages/datos">Mercados globales</a></li>
           <li><a href="pages/proyectos">Proyectos</a></li>
         </ul>
       </nav>
@@ -561,10 +553,9 @@
 
   <script src="js/sanitize.js?v=1"></script>
   <script src="js/main.js?v=49"></script>
-  <script src="js/panel.js?v=10"></script>
+  <script src="js/panel.js?v=11"></script>
   <script>addEventListener('load', function () { if (window.BBPanel) BBPanel.franja(document.getElementById('home-franja'), matchMedia('(max-width: 640px)').matches ? { pasados: 2, proximos: 3 } : { pasados: 4, proximos: 5 }); });</script>
   <script src="js/esqueletos.js?v=2" defer></script>
-  <script src="js/desde-tu-visita.js?v=1" defer></script>
   <script src="js/ticker.js?v=6"></script>
   <script>
   /* ---- Homepage news carousel ---- */
@@ -733,7 +724,7 @@
       }
     }
 
-    // Layout: 0 Oficial · 1 Blue · 2 MEP · 3 Riesgo País · 4 S&P 500 · 5 Nasdaq · 6 BTC · 7 Treasury 10Y
+    // Layout: 0 Oficial · 1 Merval · 2 MEP · 3 Riesgo País · 4 S&P 500 · 5 Nasdaq · 6 BTC · 7 Treasury 10Y
     async function loadDolares() {
       try {
         const r = await fetch('/api/dolar', { signal: AbortSignal.timeout(8000) });
@@ -741,10 +732,8 @@
         const d = await r.json();
         const byName = (n) => d.find(x => x.nombre?.toLowerCase().includes(n));
         const ofi = byName('oficial');
-        const blue = byName('blue');
         const mep = byName('bolsa') || byName('mep');
         if (ofi) setStat(0, 'Dólar Oficial', fmtMoney(ofi.venta), null, 'venta · ' + (ofi.fechaActualizacion?.slice(11, 16) || ''));
-        if (blue) setStat(1, 'Dólar Blue', fmtMoney(blue.venta), null, 'venta · ' + (blue.fechaActualizacion?.slice(11, 16) || ''));
         if (mep) setStat(2, 'Dólar MEP', fmtMoney(mep.venta), null, 'venta · ' + (mep.fechaActualizacion?.slice(11, 16) || ''));
       } catch {}
     }
@@ -770,6 +759,10 @@
         const res = j?.quoteResponse?.result || [];
         const map = Object.fromEntries(res.map(q => [q.symbol, q]));
         const gspc = map['^GSPC']; const ndx = map['^NDX']; const merv = map['^MERV'];
+        if (merv && Number.isFinite(merv.regularMarketPrice)) {
+          setStat(1, 'Merval', merv.regularMarketPrice.toLocaleString('es-AR', { maximumFractionDigits: 0 }),
+            merv.regularMarketChangePercent, fmtPct(merv.regularMarketChangePercent));
+        }
         if (gspc && Number.isFinite(gspc.regularMarketPrice)) {
           setStat(4, 'S&P 500', gspc.regularMarketPrice.toLocaleString('en-US', { maximumFractionDigits: 0 }),
             gspc.regularMarketChangePercent, fmtPct(gspc.regularMarketChangePercent));

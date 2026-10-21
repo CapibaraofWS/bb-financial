@@ -1580,47 +1580,6 @@ body .faq-body { color: var(--text-read); }
 }
 
 /* ============================================================
-   "DESDE TU ÚLTIMA VISITA"
-   Los números clave y cuánto se movieron desde la última vez.
-   Se guarda en el navegador del visitante, no en un servidor.
-   ============================================================ */
-#desde-tu-visita[hidden] { display: none !important; }
-.dv-caja {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.1rem 1.3rem 1.25rem;
-}
-.dv-encabezado {
-  display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
-  padding-bottom: 0.85rem; margin-bottom: 0.4rem;
-  border-bottom: 1px solid var(--border);
-}
-.dv-titulo {
-  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--accent);
-}
-.dv-cuando { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-subtle); }
-.dv-grilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.2rem 1.5rem; }
-.dv-item {
-  display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
-  padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.dv-etiqueta { flex: 1 1 auto; font-size: 0.86rem; color: var(--text-muted); }
-.dv-valor { font-family: var(--font-display); font-size: 1.15rem; color: var(--text); }
-.dv-delta { font-family: var(--font-mono); font-size: 0.76rem; font-weight: 500; white-space: nowrap; }
-.dv-sube  { color: var(--accent); }
-.dv-baja  { color: #ff6b6b; }
-.dv-igual { color: var(--text-subtle); }
-.dv-nota { margin: 0.9rem 0 0; font-size: 0.78rem; line-height: 1.55; color: var(--text-subtle); }
-
-@media (max-width: 720px) {
-  .dv-grilla { grid-template-columns: 1fr; gap: 0; }
-  .dv-item:last-child { border-bottom: none; }
-  .dv-valor { font-size: 1.1rem; }
-}
-
-/* ============================================================
    WIDGET VIVO EN EL BLOG
    Trae el dato de hoy adentro del artículo, para que la nota siga
    sirviendo dentro de seis meses.

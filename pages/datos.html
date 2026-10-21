@@ -16,359 +16,43 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Datos Macro — BB Finanzas</title>
-  <meta name="description" content="Datos macroeconómicos en tiempo real: dólar, inflación, reservas BCRA, INDEC, sector fiscal, criptomonedas, forex y más." />
-  <meta name="keywords" content="dolar blue, inflacion argentina, reservas bcra, canasta basica, emae, desocupacion, cripto, forex" />
+  <title>Mercados globales: oro, petróleo, soja, bitcoin, monedas y activos alternativos — BB Finanzas</title>
+  <meta name="description" content="Cómo vienen las materias primas (petróleo, oro, cobre, soja, maíz, trigo, litio), las monedas de la región contra el dólar, las criptomonedas y los activos alternativos como los fondos inmobiliarios. Precios que se actualizan solos, con gráficos y qué es cada uno." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/datos" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
-  <meta property="og:title" content="Datos Macro — BB Finanzas" />
-  <meta property="og:description" content="Datos macroeconómicos en tiempo real: dólar, inflación, reservas BCRA, INDEC, sector fiscal, criptomonedas, forex y más." />
+  <meta property="og:title" content="Mercados globales: materias primas, monedas, cripto y alternativos" />
+  <meta property="og:description" content="Oro, petróleo, granos, bitcoin, el real y el peso contra el dólar, fondos inmobiliarios: cómo les fue y qué es cada uno." />
   <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/datos" />
   <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Datos Macro — BB Finanzas" />
-  <meta name="twitter:description" content="Datos macroeconómicos en tiempo real: dólar, inflación, reservas BCRA, INDEC, sector fiscal, criptomonedas, forex y más." />
-  <meta name="twitter:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Datos","item":"https://www.bbfinanzas.com.ar/pages/datos"}]}
+  {"@context":"https://schema.org","@type":"WebPage","name":"Mercados globales","url":"https://www.bbfinanzas.com.ar/pages/datos","inLanguage":"es-AR","isPartOf":{"@id":"https://www.bbfinanzas.com.ar/#sitio"},"publisher":{"@id":"https://www.bbfinanzas.com.ar/#organizacion"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Mercados globales","item":"https://www.bbfinanzas.com.ar/pages/datos"}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"¿Qué es un activo alternativo?","acceptedAnswer":{"@type":"Answer","text":"Uno que no es una acción ni un bono tradicional: inmuebles, infraestructura, capital privado, materias primas o criptomonedas. Se usan para diversificar, porque no siempre se mueven igual que la bolsa. Muchos se pueden comprar a través de fondos que cotizan en bolsa (ETF)."}},
+    {"@type":"Question","name":"¿Qué mide el índice de miedo y codicia de las criptomonedas?","acceptedAnswer":{"@type":"Answer","text":"El ánimo del mercado cripto en una escala de 0 a 100, a partir de la volatilidad, el volumen, las redes sociales y la dominancia de bitcoin. Por debajo de 25 hay miedo extremo y por encima de 75, codicia extrema."}},
+    {"@type":"Question","name":"¿Por qué los granos aparecen en dólares por tonelada?","acceptedAnswer":{"@type":"Answer","text":"Porque en Chicago cotizan en centavos de dólar por bushel, una medida de volumen distinta para cada grano. Se convierten a toneladas: un bushel de soja o de trigo son 27,2 kilos y uno de maíz, 25,4."}}
+  ]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
-  <link rel="stylesheet" href="../css/panel.css?v=11" />
-
-  <style>
-    /* ---- BETA BADGE (shared) ---- */
-    .beta-badge {
-      display: inline-flex; align-items: center;
-      background: rgba(50,130,210,0.12); color: #60a5fa;
-      border: 1px solid rgba(50,130,210,0.25); border-radius: 20px;
-      padding: 0.2rem 0.65rem; font-family: var(--font-mono);
-      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
-      vertical-align: middle; margin-left: 0.4rem;
-    }
-
-    /* ======================================
-       TABS
-    ====================================== */
-    .datos-tabs-wrap {
-      position: sticky;
-      top: 64px; /* header height */
-      z-index: 50;
-      background: rgba(10,12,15,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .datos-tabs-bar {
-      display: flex;
-      gap: 0.25rem;
-      overflow-x: auto;
-      padding: 0.6rem 0;
-      scrollbar-width: none;
-    }
-    .datos-tabs-bar::-webkit-scrollbar { display: none; }
-
-    .dtab-btn {
-      flex-shrink: 0;
-      padding: 0.5rem 1.1rem;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.04em;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      background: transparent;
-      transition: all var(--transition);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .dtab-btn:hover { color: var(--text); background: var(--bg-card); border-color: var(--border); }
-    .dtab-btn.active {
-      color: var(--accent);
-      background: var(--accent-dim);
-      border-color: rgba(74,222,154,0.25);
-    }
-
-    .dtab-content { display: none; padding-bottom: 6rem; }
-    .dtab-content.active { display: block; }
-
-    /* ======================================
-       SECTION HEADER
-    ====================================== */
-    .datos-section { padding-top: 2.5rem; }
-
-    .datos-sec-hdr {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .dsec-icon { font-size: 1.35rem; line-height: 1; }
-    .dsec-title {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      letter-spacing: -0.01em;
-    }
-    .dsec-live {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      padding: 0.15rem 0.55rem;
-      border-radius: 4px;
-      background: rgba(74,222,154,0.12);
-      color: var(--accent);
-      border: 1px solid rgba(74,222,154,0.2);
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-    .dsec-live::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
-    .dsec-src {
-      margin-left: auto;
-      font-family: var(--font-mono);
-      font-size: 0.64rem;
-      color: var(--text-subtle);
-      letter-spacing: 0.04em;
-    }
-    .dsec-upd {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: var(--text-subtle);
-    }
-
-    /* ======================================
-       CARD GRID
-    ====================================== */
-    .datos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
-      gap: 1rem;
-    }
-    .datos-grid.wide { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
-
-    /* ======================================
-       BASE CARD
-    ====================================== */
-    .dato-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.3rem 1.1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-    .dato-card:hover {
-      border-color: rgba(255,255,255,0.12);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 22px rgba(0,0,0,0.22);
-    }
-    .dato-card.green-card  { border-color: rgba(74,222,154,0.18); background: linear-gradient(135deg,#11141a 0%,#0e1810 100%); }
-    .dato-card.gold-card   { border-color: rgba(232,201,122,0.18); background: linear-gradient(135deg,#11141a 0%,#181510 100%); }
-    .dato-card.blue-card   { border-color: rgba(96,165,250,0.18); background: linear-gradient(135deg,#11141a 0%,#0e1220 100%); }
-    .dato-card.red-card    { border-color: rgba(248,113,113,0.18); }
-
-    /* Card elements */
-    .dc-cat {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-subtle);
-    }
-    .dc-name {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      line-height: 1.35;
-      margin-bottom: 0.3rem;
-    }
-    .dc-value {
-      font-family: var(--font-display);
-      font-size: 1.55rem;
-      letter-spacing: -0.025em;
-      color: var(--text);
-      line-height: 1.1;
-    }
-    .dc-value.sm { font-size: 1.2rem; }
-    .dc-unit {
-      font-size: 0.62em;
-      color: var(--text-muted);
-      margin-left: 0.2rem;
-      font-family: var(--font-mono);
-      vertical-align: middle;
-    }
-    .dc-change {
-      font-family: var(--font-mono);
-      font-size: 0.73rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      margin-top: 0.1rem;
-    }
-    .dc-change.pos { color: var(--accent); }
-    .dc-change.neg { color: #f87171; }
-    .dc-change.neu { color: var(--text-muted); }
-    .dc-sub {
-      font-family: var(--font-mono);
-      font-size: 0.67rem;
-      color: var(--text-subtle);
-      margin-top: 0.1rem;
-      line-height: 1.4;
-    }
-    .dc-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.65rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid var(--border);
-      gap: 0.5rem;
-    }
-    .dc-period {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: var(--text-subtle);
-    }
-    .dc-src {
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      color: var(--text-subtle);
-      padding: 0.1rem 0.38rem;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      white-space: nowrap;
-    }
-
-    /* ======================================
-       DÓLAR CARDS (special layout)
-    ====================================== */
-    .dolar-card { padding: 1.35rem 1.4rem; }
-    .dolar-card .dc-name { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
-    .dc-bs-row { display: flex; gap: 1.1rem; }
-    .dc-bs-col { display: flex; flex-direction: column; gap: 0.15rem; }
-    .dc-bs-lbl { font-family: var(--font-mono); font-size: 0.59rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-subtle); }
-    .dc-bs-val { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1; }
-    .dc-bs-val.buy  { color: var(--accent); }
-    .dc-bs-val.sell { color: #f87171; }
-    .dc-spread { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-subtle); margin-top: 0.5rem; }
-
-    /* ======================================
-       SKELETON LOADING
-    ====================================== */
-    @keyframes shimmer {
-      0%   { background-position: -600px 0; }
-      100% { background-position: 600px 0; }
-    }
-    .skel-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.3rem;
-    }
-    .skel-line {
-      height: 0.75rem;
-      border-radius: 4px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
-      background-size: 1200px 100%;
-      animation: shimmer 1.6s infinite;
-      margin-bottom: 0.55rem;
-    }
-    .skel-line.tall { height: 1.7rem; }
-    .skel-line.w40 { width: 40%; }
-    .skel-line.w60 { width: 60%; }
-    .skel-line.w75 { width: 75%; }
-
-    /* ======================================
-       INFO BOX
-    ====================================== */
-    .info-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 1rem 1.25rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-      margin-top: 1rem;
-    }
-    .info-box a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
-
-    /* ======================================
-       PROX CARD (coming soon)
-    ====================================== */
-    .prox-card {
-      background: var(--bg-card);
-      border: 1px dashed var(--border);
-      border-radius: var(--radius-lg);
-      padding: 3.5rem 2rem;
-      text-align: center;
-    }
-    .prox-card .prox-icon { font-size: 2.8rem; display: block; margin-bottom: 1rem; }
-    .prox-card .prox-ttl { font-family: var(--font-display); font-size: 1.3rem; color: var(--text); margin-bottom: 0.5rem; }
-    .prox-card .prox-sub { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
-
-    /* ======================================
-       API INFO TABLE (footer of page)
-    ====================================== */
-    .api-info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-    .api-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.9rem 1.1rem;
-      font-size: 0.78rem;
-    }
-    .api-card strong { color: var(--accent); font-family: var(--font-mono); font-size: 0.72rem; display: block; margin-bottom: 0.3rem; }
-    .api-card span { color: var(--text-muted); }
-    .api-card a { color: var(--text-subtle); text-decoration: underline; text-underline-offset: 2px; font-size: 0.65rem; display: block; margin-top: 0.25rem; word-break: break-all; }
-
-    /* ======================================
-       RESPONSIVE
-    ====================================== */
-    @media (max-width: 680px) {
-      .datos-grid { grid-template-columns: repeat(2, 1fr); }
-      .dc-value { font-size: 1.25rem; }
-    }
-    @media (max-width: 380px) {
-      .datos-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="../css/panel.css?v=12" />
 </head>
 <body>
-
-  <header class="site-header" role="banner">
+  <header class="site-header">
     <div class="container header-inner">
-      <a href="../" class="logo" aria-label="BB Finanzas - Inicio">
-        <img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" />
-      </a>
-      <nav class="main-nav" role="navigation" aria-label="Navegación principal">
+      <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav">
         <a href="../" class="nav-link">Inicio</a>
         <a href="calculadoras" class="nav-link">Calculadoras</a>
         <a href="empezar-a-invertir" class="nav-link">Empezar a invertir</a>
@@ -378,973 +62,213 @@
         <a href="comparador-dolares" class="nav-link">Dólar</a>
         <a href="agenda-ar" class="nav-link">Agenda AR</a>
         <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
-        <a href="datos" class="nav-link">Datos macro</a>
+        <a href="datos" class="nav-link">Mercados globales</a>
         <a href="panel-argentina" class="nav-link">Panel Argentina</a>
         <a href="blog" class="nav-link">Blog</a>
         <a href="atlas" class="nav-link">Atlas</a>
         <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
         <a href="contacto" class="nav-link">Contacto</a>
       </nav>
-      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
     </div>
   </header>
 
   <main>
-    <div class="container" style="padding-top:1.25rem"><nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-tasas">Tasas</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a><a href="datos" aria-current="page">Datos macro</a></nav></div>
-
-    <!-- HERO -->
-    <section class="page-hero" aria-labelledby="datos-title">
-      <div class="container">
-        <p class="page-eyebrow">Indicadores económicos y financieros</p>
-        <h1 id="datos-title" class="page-title">Datos Macro</h1>
-        <p class="page-subtitle">Información actualizada de Argentina y el mundo: dólar, inflación, reservas, BCRA, INDEC, criptomonedas, forex y más. Fuentes oficiales y de mercado.</p>
-      </div>
+    <section class="container pa-hero">
+      <p class="pa-eyebrow">Mercados globales</p>
+      <h1>Materias primas, monedas, cripto y alternativos</h1>
+      <p class="sub">Cómo vienen el petróleo, el oro, los granos, el bitcoin, las monedas de la región contra el dólar y activos como los fondos inmobiliarios. Con precios que se actualizan solos y qué es cada uno.</p>
     </section>
 
-    <!-- Reddit-feedback panel -->
-    <div class="container" style="padding-top:1rem">
-      <details style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0;margin:0 0 1.25rem;overflow:hidden">
-        <summary style="padding:0.85rem 1.15rem;cursor:pointer;font-size:0.85rem;color:var(--text-muted);list-style:none"><strong style="color:var(--text)">ℹ️ Sobre esta página</strong> — fuentes, frecuencia, limitaciones</summary>
-        <div style="padding:0.95rem 1.15rem 1.1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.75;border-top:1px solid var(--border)">
-          <p><strong style="color:var(--text)">Qué datos mostramos:</strong> snapshot de los principales indicadores macro/financieros, todo via proxies propios (sin exponer API keys). Las fuentes oficiales son:</p>
-          <ul style="padding-left:1.4rem;margin:0.3rem 0">
-            <li><strong style="color:var(--text)">Argentina:</strong> DolarAPI (cotizaciones), ArgentinaDatos (riesgo país, reservas BCRA, UVA, IPC, canasta), datos.gob.ar (deuda, INDEC para tablas más profundas)</li>
-            <li><strong style="color:var(--text)">EE.UU.:</strong> FRED — St. Louis Fed (Fed Funds, CPI/PCE, desempleo, mortgage, OAS credit spreads, M2, VIX, INDPRO) + World Bank (PBI nominal, cuenta corriente)</li>
-            <li><strong style="color:var(--text)">Cripto:</strong> CoinGecko (precios, market cap, variación 24h)</li>
-            <li><strong style="color:var(--text)">Forex:</strong> ExchangeRate-API (paridades mayores)</li>
-            <li><strong style="color:var(--text)">Acciones:</strong> Yahoo Finance vía <code style="background:var(--bg);padding:0.05rem 0.4rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent)">/api/quotes</code></li>
-          </ul>
-          <p style="margin-top:0.5rem"><strong style="color:var(--text)">Frecuencia de actualización:</strong></p>
-          <ul style="padding-left:1.4rem;margin:0.3rem 0">
-            <li><strong style="color:var(--text)">Diaria</strong>: dólar oficial/blue/MEP, FRED Treasuries, UVA, riesgo país</li>
-            <li><strong style="color:var(--text)">Mensual</strong>: inflación, desempleo, IPC argentino, Core CPI/PCE USA</li>
-            <li><strong style="color:var(--text)">Anual</strong>: PBI, cuenta corriente (World Bank)</li>
-            <li><strong style="color:var(--text)">Cripto</strong>: precios en vivo (cache 1 min), 24h delta</li>
-          </ul>
-          <p><strong style="color:var(--text)">Cómo se calcula YoY:</strong> tomamos la última observación de FRED y la dividimos por la de 12 meses atrás. Para indicadores trimestrales o mensuales que requieren YoY (Core CPI, PCE, INDPRO) usamos esta fórmula y publicamos como <code style="background:var(--bg);padding:0.05rem 0.4rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent)">(X_hoy/X_hace_12m − 1) × 100</code>.</p>
-          <p><strong style="color:var(--text)">Limitaciones:</strong></p>
-          <ul style="padding-left:1.4rem;margin:0.3rem 0">
-            <li>Algunos datos tienen retraso de 1-30 días según frecuencia de publicación de la fuente.</li>
-            <li>Las APIs públicas pueden estar caídas — si ves "—" o "Sin dato", reintentá en unos minutos.</li>
-            <li>Los <strong style="color:var(--text)">tipos de dólar</strong> (compra/venta) son de DolarAPI — la mayoría de bancos cotizan distinto a estos valores referenciales.</li>
-            <li>El INDEC publica varios datos solo en PDF/Excel — para esos, linkeamos a la página oficial.</li>
-          </ul>
-          <p style="margin-top:0.5rem"><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> Datos en vivo para informarte, no para decidir por vos.</p>
+    <div class="container" style="padding-bottom:4rem">
+      <div class="pa-grid" id="kpis">
+        <article class="pa-card" id="k-GC=F"><p class="que">Oro · por onza</p><p class="grande">—</p></article>
+        <article class="pa-card" id="k-BZ=F"><p class="que">Petróleo Brent · por barril</p><p class="grande">—</p></article>
+        <article class="pa-card" id="k-ZS=F"><p class="que">Soja en Chicago · por tonelada</p><p class="grande">—</p></article>
+        <article class="pa-card" id="k-BTC-USD"><p class="que">Bitcoin</p><p class="grande">—</p></article>
+      </div>
+
+      <div class="pa-chips pa-pestanas" id="pestanas" role="tablist" aria-label="Mercado">
+        <button type="button" role="tab" data-t="materias" aria-pressed="true">Materias primas</button>
+        <button type="button" role="tab" data-t="monedas" aria-pressed="false">Monedas</button>
+        <button type="button" role="tab" data-t="cripto" aria-pressed="false">Cripto</button>
+        <button type="button" role="tab" data-t="alternativos" aria-pressed="false">Alternativos</button>
+      </div>
+
+      <section class="pa-graf" aria-labelledby="g-t" style="margin-top:0.8rem">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-t">Materias primas</h3>
+          <p class="ayuda" id="g-ayuda"></p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-glob" data-titulo="Mercados globales" data-fuente="Yahoo Finance">⬇ Imagen</button></div>
+        <div class="pa-mini" id="extra"></div>
+        <div class="pa-seg" id="s-per" role="group" aria-label="Período" style="margin:0.4rem 0 0.5rem">
+          <button type="button" data-v="m3" aria-pressed="false">3 meses</button><button type="button" data-v="anio" aria-pressed="false">En el año</button><button type="button" data-v="a1" aria-pressed="true">1 año</button><button type="button" data-v="a5" aria-pressed="false">5 años</button>
         </div>
-      </details>
+        <div class="lienzo"><canvas id="g-glob" aria-label="Evolución en base 100"></canvas></div>
+        <p class="fuente" style="margin-bottom:1rem">Tocá un nombre de la leyenda para mostrarlo u ocultarlo. Base 100 al principio del período.</p>
+        <div class="pa-tabla-wrap"><table class="pa-tabla" id="tabla"><thead><tr><th>Cargando…</th></tr></thead></table></div>
+        <p class="fuente" id="g-fuente"></p>
+        <details class="pa-que-es"><summary>Qué es cada uno</summary><div class="pa-desc" id="desc"></div></details>
+      </section>
+
+      <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
+        <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
+        <p>Los rendimientos son de precio, en dólares, contra el cierre de cada fecha: "en el año" es contra el último cierre del año anterior. Las materias primas son el contrato a futuro más cercano; el día que vence y se pasa al siguiente, el cambio puede reflejar la diferencia entre los dos.</p>
+        <details><summary>¿Qué es un activo alternativo?</summary><p>Uno que no es una acción ni un bono tradicional: inmuebles, infraestructura, capital privado, materias primas o criptomonedas. Se usan para diversificar, porque no siempre se mueven igual que la bolsa. Acá se siguen con fondos que cotizan en bolsa (ETF), que en la Argentina muchas veces se compran como CEDEAR. No es una recomendación de inversión.</p></details>
+        <details><summary>¿Cómo se leen las monedas?</summary><p>Todas se miden contra el dólar y en el mismo sentido: cuando la línea sube, esa moneda se fortalece (hacen falta menos unidades para comprar un dólar). El índice dólar (DXY) es al revés: mide al dólar contra seis monedas grandes, así que cuando sube, el dólar se fortalece.</p></details>
+        <details><summary>¿Cada cuánto se actualiza?</summary><p>Los precios se renuevan cada 15 minutos. Las cripto cotizan todos los días, también los fines de semana; el resto, de lunes a viernes. El dólar, el riesgo país y los datos de la Argentina están en el <a href="panel-argentina">Panel Argentina</a>; las bolsas y la economía de Estados Unidos, en el <a href="panel-usa">Panel Estados Unidos</a>.</p></details>
+      </section>
     </div>
-
-    <!-- TABS -->
-    <div class="datos-tabs-wrap" role="navigation" aria-label="Categorías de datos">
-      <div class="container">
-        <div class="datos-tabs-bar" role="tablist">
-          <button class="dtab-btn active" data-tab="argentina" role="tab" aria-selected="true">🇦🇷 Argentina</button>
-          <button class="dtab-btn" data-tab="eeuu"      role="tab" aria-selected="false">🇺🇸 EE.UU.</button>
-          <button class="dtab-btn" data-tab="cripto"    role="tab" aria-selected="false">🪙 Cripto</button>
-          <button class="dtab-btn" data-tab="forex"     role="tab" aria-selected="false">💱 Forex</button>
-          <button class="dtab-btn" data-tab="acciones"  role="tab" aria-selected="false">📈 Acciones</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════
-         TAB: ARGENTINA
-    ═══════════════════════════════════════ -->
-    <div id="tab-argentina" class="dtab-content active" role="tabpanel">
-
-      <!-- TIPO DE CAMBIO -->
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">💵</span>
-          <h2 class="dsec-title">Tipo de Cambio</h2>
-          <span class="dsec-live">En vivo</span>
-          <span class="dsec-src">DolarAPI.com</span>
-          <span class="dsec-upd" id="dolar-upd"></span>
-        </div>
-        <div class="datos-grid wide" id="grid-dolar" aria-live="polite" aria-label="Cotizaciones del dólar"></div>
-      </div>
-
-      <!-- INDEC -->
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">📊</span>
-          <h2 class="dsec-title">Indicadores INDEC</h2>
-          <span class="dsec-src">INDEC · ArgentinaDatos · datos.gob.ar</span>
-        </div>
-        <div class="datos-grid" id="grid-indec" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Datos oficiales del INDEC vía ArgentinaDatos y datos.gob.ar.
-          Fuentes: <a href="https://www.indec.gob.ar" target="_blank" rel="noopener">INDEC</a> ·
-          <a href="https://argentinadatos.com" target="_blank" rel="noopener">ArgentinaDatos</a>
-        </div>
-      </div>
-
-      <!-- BCRA Principales Variables -->
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">🏦</span>
-          <h2 class="dsec-title">Principales Variables BCRA</h2>
-          <span class="dsec-src" id="bcra-upd">BCRA — API v4.0 en vivo</span>
-        </div>
-        <div class="datos-grid" id="grid-bcra" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Datos en tiempo real de la API oficial del Banco Central (<code>api.bcra.gob.ar/estadisticas/v4.0/Monetarias</code>). Incluye base monetaria, inflación, tasas TAMAR y BADLAR, UVA, CER y reservas. Verificá los datos en <a href="https://www.bcra.gob.ar" target="_blank" rel="noopener">bcra.gob.ar</a>.
-        </div>
-      </div>
-
-    </div><!-- /tab-argentina -->
-
-
-    <!-- ═══════════════════════════════════════
-         TAB: EE.UU.
-    ═══════════════════════════════════════ -->
-    <div id="tab-eeuu" class="dtab-content" role="tabpanel">
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">🏦</span>
-          <h2 class="dsec-title">Indicadores Macro — EE.UU.</h2>
-          <span class="dsec-src">World Bank · FRED (St. Louis Fed)</span>
-          <span class="dsec-upd" id="eeuu-upd"></span>
-        </div>
-        <div class="datos-grid" id="grid-eeuu" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Los datos del Banco Mundial son anuales. El Fed Funds Rate es mensual (FRED).
-          Fuentes: <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank Open Data</a> ·
-          <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED — St. Louis Fed</a>
-        </div>
-      </div>
-    </div><!-- /tab-eeuu -->
-
-
-    <!-- ═══════════════════════════════════════
-         TAB: CRIPTO
-    ═══════════════════════════════════════ -->
-    <div id="tab-cripto" class="dtab-content" role="tabpanel">
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">🪙</span>
-          <h2 class="dsec-title">Criptomonedas</h2>
-          <span class="dsec-live">En vivo</span>
-          <span class="dsec-src">CoinGecko API</span>
-          <span class="dsec-upd" id="cripto-upd"></span>
-        </div>
-        <div class="datos-grid wide" id="grid-cripto" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Precios en USD con variación de las últimas 24 horas. CoinGecko tiene un límite de 30 consultas/min en el plan gratuito.
-          <a href="https://www.coingecko.com/api" target="_blank" rel="noopener">Ver documentación de CoinGecko</a>
-        </div>
-      </div>
-    </div><!-- /tab-cripto -->
-
-
-    <!-- ═══════════════════════════════════════
-         TAB: FOREX
-    ═══════════════════════════════════════ -->
-    <div id="tab-forex" class="dtab-content" role="tabpanel">
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">💱</span>
-          <h2 class="dsec-title">Divisas — Forex</h2>
-          <span class="dsec-live">En vivo</span>
-          <span class="dsec-src">ExchangeRate-API (open.er-api.com)</span>
-          <span class="dsec-upd" id="forex-upd"></span>
-        </div>
-        <div class="datos-grid" id="grid-forex" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Tipo de cambio referencial (mid-market). Base: 1 USD. Actualizado cada 24 horas.
-          <a href="https://open.er-api.com" target="_blank" rel="noopener">Ver documentación ExchangeRate-API</a>
-        </div>
-      </div>
-    </div><!-- /tab-forex -->
-
-
-    <!-- ═══════════════════════════════════════
-         TAB: ACCIONES
-    ═══════════════════════════════════════ -->
-    <div id="tab-acciones" class="dtab-content" role="tabpanel">
-      <div class="container datos-section">
-        <div class="datos-sec-hdr">
-          <span class="dsec-icon">📈</span>
-          <h2 class="dsec-title">Índices y Acciones</h2>
-          <span class="dsec-live">En vivo</span>
-          <span class="dsec-src">Yahoo Finance</span>
-          <span class="dsec-upd" id="acciones-upd"></span>
-        </div>
-        <div class="datos-grid wide" id="grid-acciones" aria-live="polite"></div>
-        <div class="info-box">
-          ℹ️ Precio de último cierre o mercado en tiempo real via Yahoo Finance.
-          Si el mercado está cerrado se muestra el precio del último cierre disponible.
-        </div>
-      </div>
-    </div>
-
-  
-    <aside class="related-reads">
-      <h2>Seguí leyendo</h2>
-      <ul>
-      <li>
-        <a href="blog/que-es-la-inflacion">¿Qué es la inflación y por qué te roba sin que te des cuenta?</a>
-        <p>Cómo la mide el INDEC y qué le hace de verdad a tu poder de compra.</p>
-      </li>
-      </ul>
-    </aside>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="site-footer" role="contentinfo">
+  <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
         <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
-        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+        <p>Datos del INDEC, el Banco Central y otras fuentes oficiales.</p>
       </div>
-      <nav class="footer-nav" aria-label="Navegación del pie">
-        <h3>Secciones</h3>
-        <ul>
-          <li><a href="calculadoras">Calculadoras</a></li>
-          <li><a href="datos">Datos Macro</a></li>
-          <li><a href="guia-multiplos">Guía de Múltiplos</a></li>
-          <li><a href="noticias">Noticias</a></li>
-          <li><a href="mis-portafolios">Portafolio (Beta)</a></li>
-          <li><a href="proyectos">Proyectos</a></li>
-        </ul>
-      </nav>
     </div>
-    <div class="footer-bottom">
-      <p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p>
-    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Finanzas · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a> · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=49"></script>
-  <script src="../js/esqueletos.js?v=2" defer></script>
-  <script src="../js/ticker.js?v=6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
+  <script src="../js/chart-mobile.js?v=1"></script>
+  <script src="../js/panel.js?v=11"></script>
   <script>
-  /* ==============================================
-     DATOS MACRO — Data Layer
-     APIs:
-       - DolarAPI.com          (dólar, sin clave)
-       - ArgentinaDatos        (inflación, CBA, CBT, reservas, sin clave)
-       - api.bcra.gob.ar       (variables BCRA, sin clave)
-       - apis.datos.gob.ar     (series INDEC/fiscal, sin clave)
-       - CoinGecko             (cripto, sin clave)
-       - open.er-api.com       (forex, sin clave)
-       - api.worldbank.org     (EE.UU., sin clave)
-       - api.stlouisfed.org    (Fed Funds Rate, clave pública demo)
-  ============================================== */
+  (async function () {
+    const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
+    const d = await P.API.usa('globales'), S = d && d.simbolos;
+    if (!S) { $('tabla').innerHTML = '<tbody><tr><td style="color:var(--text-subtle)">No se pudieron cargar los precios. Probá de nuevo en un rato.</td></tr></tbody>'; return; }
+    // Los granos cotizan en centavos por bushel: se pasan a dólares por tonelada
+    const TON = { 'ZS=F': 36.7437, 'ZW=F': 36.7437, 'ZC=F': 39.3679 };
+    // [símbolo, nombre, unidad o moneda, descripción]. inv: cotiza como unidades por dólar (se da vuelta para medir la moneda)
+    const T = {
+      materias: { t: 'Materias primas', fuente: 'Fuente: Yahoo Finance, contrato a futuro más cercano (NYMEX, ICE, COMEX y CBOT). Litio: fondo LIT.',
+        ayuda: 'cuánto subió o bajó cada materia prima. La soja, el maíz, el trigo, el petróleo y el litio son de los que más pesan en lo que exporta la Argentina.',
+        L: [['BZ=F', 'Petróleo Brent', 'barril', 'El crudo de referencia del comercio internacional (Mar del Norte). Es el que se usa para el petróleo argentino, incluido el de Vaca Muerta.'],
+          ['CL=F', 'Petróleo WTI', 'barril', 'El crudo de referencia de Estados Unidos. La diferencia con el Brent depende del transporte y de la oferta de cada región.'],
+          ['NG=F', 'Gas natural', 'MMBtu', 'El gas de referencia de Estados Unidos (Henry Hub). Depende mucho del clima y de cuánto se exporta como gas licuado.'],
+          ['GC=F', 'Oro', 'onza', 'El refugio clásico: sube con la incertidumbre, con tasas reales bajas y cuando los bancos centrales compran.'],
+          ['SI=F', 'Plata', 'onza', 'Sigue al oro, pero además tiene mucho uso industrial (paneles solares, electrónica): se mueve más fuerte.'],
+          ['HG=F', 'Cobre', 'libra', 'Se usa en todo lo eléctrico: cables, motores, autos eléctricos, centros de datos. Anticipa la actividad industrial del mundo; la Argentina tiene proyectos grandes en San Juan y Catamarca.'],
+          ['ZS=F', 'Soja', 'tonelada', 'El principal producto de exportación argentino (con la harina y el aceite). Precio de Chicago, pasado a dólares por tonelada.'],
+          ['ZC=F', 'Maíz', 'tonelada', 'La Argentina es de los tres mayores exportadores del mundo. Precio de Chicago, en dólares por tonelada.'],
+          ['ZW=F', 'Trigo', 'tonelada', 'Precio de Chicago, en dólares por tonelada. El argentino se vende con descuento o premio según la calidad y el flete.'],
+          ['LIT', 'Litio y baterías', 'cuotaparte', 'Fondo (ETF) con mineras de litio y fabricantes de baterías. El litio no tiene un mercado de futuros líquido, así que se sigue por las empresas. La Argentina tiene la tercera reserva del mundo.']] },
+      monedas: { t: 'Monedas contra el dólar', fuente: 'Fuente: Yahoo Finance, cotizaciones de referencia del mercado internacional. Peso argentino: tipo de cambio oficial mayorista.',
+        ayuda: 'cuánto se fortaleció (sube) o se debilitó (baja) cada moneda contra el dólar. El índice dólar es al revés: si sube, el que se fortalece es el dólar.',
+        L: [['DX-Y.NYB', 'Índice dólar (DXY)', '', 'El dólar contra seis monedas grandes (el euro pesa más de la mitad). Cuando sube, el dólar se fortalece en el mundo y suelen bajar las materias primas.'],
+          ['EURUSD=X', 'Euro', 'euro', 'La segunda moneda del mundo. Se mueve con la diferencia entre las tasas de Europa y de Estados Unidos.'],
+          ['GBPUSD=X', 'Libra esterlina', 'libra', 'La moneda del Reino Unido.'],
+          ['USDJPY=X', 'Yen japonés', 'yenes', 'Moneda refugio con tasas muy bajas: muchos se endeudan en yenes para invertir en otros lados, y cuando hay miedo, la deshacen y el yen sube.', 1],
+          ['USDCNY=X', 'Yuan chino', 'yuanes', 'Lo administra el Banco Popular de China dentro de una banda. China es el segundo socio comercial de la Argentina.', 1],
+          ['USDBRL=X', 'Real brasileño', 'reales', 'Brasil es el principal socio comercial: cuando el real se debilita, a la industria argentina (en especial la automotriz) le cuesta más venderle.', 1],
+          ['USDMXN=X', 'Peso mexicano', 'pesos', 'La moneda más operada de América latina, muy ligada a la economía de Estados Unidos.', 1],
+          ['USDCLP=X', 'Peso chileno', 'pesos', 'Se mueve con el precio del cobre, el principal producto de exportación de Chile.', 1],
+          ['USDCOP=X', 'Peso colombiano', 'pesos', 'Ligado al petróleo, que es lo que más exporta Colombia.', 1],
+          ['ARS=X', 'Peso argentino (oficial)', 'pesos', 'El tipo de cambio oficial mayorista. Los otros dólares (MEP, contado con liquidación, blue) y la banda cambiaria están en el <a href="panel-dolar">panel del dólar</a>.', 1]] },
+      cripto: { t: 'Criptomonedas', fuente: 'Fuente: Yahoo Finance (precios), CoinGecko (valor del mercado) y alternative.me (miedo y codicia).',
+        ayuda: 'cuánto subió o bajó cada criptomoneda en dólares. Son mucho más volátiles que las acciones: caídas de 50% en un año no son raras.',
+        L: [['BTC-USD', 'Bitcoin', '', 'La primera y la más grande: más de la mitad de todo el mercado cripto. Tiene una emisión máxima de 21 millones de unidades.'],
+          ['ETH-USD', 'Ethereum', '', 'La red donde funcionan la mayoría de las aplicaciones cripto, las monedas estables y los tokens. Su moneda es el ether.'],
+          ['SOL-USD', 'Solana', '', 'Una red más rápida y barata que Ethereum, muy usada para pagos y aplicaciones de consumo.'],
+          ['XRP-USD', 'XRP', '', 'La moneda de la red de Ripple, pensada para transferencias internacionales entre instituciones.'],
+          ['BNB-USD', 'BNB', '', 'La moneda de la red de Binance, el mayor exchange del mundo.']] },
+      alternativos: { t: 'Activos alternativos', fuente: 'Fuente: Yahoo Finance (fondos que cotizan en bolsa) y S&P Dow Jones Indices vía FRED (precio de las casas).',
+        ayuda: 'cuánto rindieron fondos que siguen activos distintos de las acciones y los bonos tradicionales. Los nombres son los fondos (ETF) con los que se los sigue; no es una recomendación de inversión.',
+        L: [['VNQ', 'Inmuebles de EE.UU. (REIT)', '', 'VNQ: fondos que compran y alquilan inmuebles (oficinas, depósitos, departamentos, centros de datos) y reparten casi todo lo que ganan.'],
+          ['REET', 'Inmuebles del mundo (REIT)', '', 'REET: lo mismo, pero con inmuebles de Estados Unidos, Europa, Japón y Australia.'],
+          ['IGF', 'Infraestructura', '', 'IGF: empresas dueñas de autopistas, aeropuertos, puertos, electricidad y gasoductos. Ingresos estables y muchas veces atados a la inflación.'],
+          ['PSP', 'Capital privado cotizado', '', 'PSP: firmas que invierten en empresas que no cotizan (private equity), como Blackstone o KKR. Es la forma de exponerse a ese mundo sin ser un gran inversor.'],
+          ['TIP', 'Bonos atados a la inflación', '', 'TIP: bonos del Tesoro de Estados Unidos que ajustan por inflación, como los bonos CER en la Argentina.'],
+          ['HYG', 'Bonos de alto rendimiento', '', 'HYG: deuda de empresas con calificación baja, que paga más tasa a cambio de más riesgo. Se mueve más parecido a las acciones que a los bonos.'],
+          ['EEM', 'Acciones de emergentes', '', 'EEM: China, Taiwán, India, Corea y Brasil, entre otros.'],
+          ['ARGT', 'Acciones argentinas', '', 'ARGT: empresas argentinas y ligadas a la Argentina que cotizan en el exterior; MercadoLibre es la de más peso.']] },
+    };
+    Object.values(T).forEach(t => { t.L = t.L.filter(x => S[x[0]]); });
+    const DE = Object.fromEntries(Object.values(T).flatMap(t => t.L.map(x => [x[0], x])));
+    // Valor de la moneda medida en dólares: las que cotizan como unidades por dólar se dan vuelta
+    const val = (sym, v) => (DE[sym] && DE[sym][4] ? 1 / v : v);
+    const rv = (sym, r) => (r == null ? null : DE[sym] && DE[sym][4] ? (1 / (1 + r / 100) - 1) * 100 : r);
+    const precio = (sym, v) => { const x = DE[sym] || [];
+      if (TON[sym]) return 'US$' + num(v / 100 * TON[sym], 0);
+      if (x[4]) return num(v, v >= 100 ? 0 : 2) + '<small>' + x[2] + ' por US$</small>';
+      if (/=X$/.test(sym)) return 'US$' + num(v, 4) + '<small>por ' + x[2] + '</small>';
+      if (sym === 'DX-Y.NYB') return num(v, 1);
+      return 'US$' + num(v, v >= 1000 ? 0 : 2) + (x[2] && x[2] !== 'cuotaparte' ? '<small>por ' + x[2] + '</small>' : ''); };
+    const pc = v => (v == null ? '—' : Math.abs(v) < 0.05 ? '0,0%' : P.signo(v) + '%'), cls = v => (v == null || Math.abs(v) < 0.005 ? '' : v > 0 ? 'sube' : 'baja');
+    const fecha = f => P.fechaCorta(f) + (f.slice(0, 4) !== P.hoyISO().slice(0, 4) ? ' de ' + f.slice(0, 4) : '');
 
-  /* ── Tab switching ── */
-  const tabBtns    = document.querySelectorAll('.dtab-btn');
-  const tabPanels  = document.querySelectorAll('.dtab-content');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
-      tabPanels.forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected','true');
-      const panel = document.getElementById('tab-' + btn.dataset.tab);
-      if (panel) panel.classList.add('active');
-    });
-  });
-
-  // Enlace directo a una pestaña (por ejemplo, #eeuu)
-  document.addEventListener('DOMContentLoaded', () => {
-    const h = location.hash.slice(1);
-    const b = /^[a-z]+$/.test(h) && document.querySelector('.dtab-btn[data-tab="' + h + '"]');
-    if (b) b.click();
-  });
-
-  /* ── Helpers ── */
-  function fmtNum(n, dec = 2) {
-    if (n == null || isNaN(n)) return '—';
-    return Number(n).toLocaleString('es-AR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-  }
-  function fmtBig(n) {
-    if (n == null || isNaN(n)) return '—';
-    const abs = Math.abs(n);
-    if (abs >= 1e12) return (n/1e12).toFixed(2) + ' B';
-    if (abs >= 1e9)  return (n/1e9).toFixed(2) + ' M';
-    if (abs >= 1e6)  return (n/1e6).toFixed(1) + ' MM';
-    return fmtNum(n, 0);
-  }
-  function fmtDate(str) {
-    if (!str) return '';
-    try {
-      // Por partes y en hora local: new Date('2026-08-01') es UTC y en Argentina da 31 de julio
-      const [y, m, dd] = String(str).slice(0, 10).split('-').map(Number);
-      const d = new Date(y, (m || 1) - 1, dd || 1);
-      return d.toLocaleDateString('es-AR', { month: 'short', year: 'numeric' });
-    } catch { return String(str).slice(0,7); }
-  }
-  function nowTime() {
-    return new Date().toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
-  }
-  function chgClass(v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : 'neu'; }
-  function chgArrow(v) { return v > 0 ? '▲' : v < 0 ? '▼' : '—'; }
-
-  /* ── Skeleton loader ── */
-  function skeleton(n = 6) {
-    return Array(n).fill(0).map(() => `
-      <div class="skel-card">
-        <div class="skel-line w40"></div>
-        <div class="skel-line w75 tall"></div>
-        <div class="skel-line w60"></div>
-      </div>`).join('');
-  }
-
-  /* ── Card builders ── */
-  function datoCard({ cat, name, value, unit, changePct, changeAbs, sub, period, source, cls }) {
-    const hasChg = changePct != null || changeAbs != null;
-    const chgNum = changePct ?? changeAbs ?? 0;
-    const chgStr = changePct != null
-      ? `${chgNum > 0 ? '+' : ''}${fmtNum(chgNum,2)}%`
-      : changeAbs != null
-        ? `${chgNum > 0 ? '+' : ''}${fmtNum(chgNum,2)}`
-        : '';
-    const valueIsLong = value && value.length > 9;
-    return `
-      <div class="dato-card${cls ? ' '+cls : ''}">
-        ${cat ? `<div class="dc-cat">${cat}</div>` : ''}
-        <div class="dc-name">${name}</div>
-        <div class="dc-value${valueIsLong ? ' sm' : ''}">${value ?? '—'}${unit ? `<span class="dc-unit">${unit}</span>` : ''}</div>
-        ${hasChg && chgStr ? `<div class="dc-change ${chgClass(chgNum)}">${chgArrow(chgNum)} ${chgStr}<span style="opacity:0.5;font-size:0.65rem;margin-left:0.25rem">vs anterior</span></div>` : ''}
-        ${sub ? `<div class="dc-sub">${sub}</div>` : ''}
-        <div class="dc-footer">
-          <span class="dc-period">${period ?? ''}</span>
-          ${source ? `<span class="dc-src">${source}</span>` : ''}
-        </div>
-      </div>`;
-  }
-
-  function errorCard(name, msg) {
-    return `<div class="dato-card" style="border-color:rgba(248,113,113,0.15);opacity:0.7">
-      <div class="dc-name">${name}</div>
-      <div class="dc-value sm" style="color:var(--text-subtle)">—</div>
-      <div class="dc-sub" style="color:#f87171;margin-top:0.4rem">⚠ ${msg}</div>
-    </div>`;
-  }
-
-  /* ── Dólar card (special) ── */
-  function dolarCard({ nombre, compra, venta, fechaActualizacion }) {
-    const hasCompra = compra != null;
-    const spread = hasCompra && venta ? (((venta - compra) / compra) * 100).toFixed(1) : null;
-    return `
-      <div class="dato-card dolar-card green-card">
-        <div class="dc-cat">Tipo de cambio · Argentina</div>
-        <div class="dc-name">${nombre}</div>
-        <div class="dc-bs-row">
-          ${hasCompra ? `
-          <div class="dc-bs-col">
-            <span class="dc-bs-lbl">Compra</span>
-            <span class="dc-bs-val buy">$${fmtNum(compra, 2)}</span>
-          </div>` : ''}
-          <div class="dc-bs-col">
-            <span class="dc-bs-lbl">${hasCompra ? 'Venta' : 'Precio'}</span>
-            <span class="dc-bs-val sell">$${fmtNum(venta, 2)}</span>
-          </div>
-        </div>
-        ${spread ? `<div class="dc-spread">Spread: ${spread}%</div>` : ''}
-        <div class="dc-footer">
-          <span class="dc-period">${fechaActualizacion ? fmtDate(fechaActualizacion) : ''}</span>
-          <span class="dc-src">DolarAPI</span>
-        </div>
-      </div>`;
-  }
-
-  /* ══════════════════════════════════════════
-     FETCH: DÓLAR
-     https://dolarapi.com/v1/dolares
-  ══════════════════════════════════════════ */
-  const DOLAR_ORDER = ['oficial','blue','bolsa','contadoconliqui','mayorista','tarjeta','cripto'];
-  const DOLAR_LABELS = {
-    oficial:'Dólar Oficial', blue:'Dólar Blue', bolsa:'Dólar MEP (Bolsa)',
-    contadoconliqui:'Dólar CCL', mayorista:'Dólar Mayorista',
-    tarjeta:'Dólar Tarjeta', cripto:'Dólar Cripto'
-  };
-
-  async function loadDolares() {
-    document.getElementById('grid-dolar').innerHTML = skeleton(7);
-    try {
-      const r = await fetch('/api/dolar', { signal: AbortSignal.timeout(9000) });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const data = await r.json();
-      const map = Object.fromEntries(data.map(d => [d.casa, d]));
-      const html = DOLAR_ORDER.map(k => {
-        const d = map[k];
-        return d ? dolarCard({ ...d, nombre: DOLAR_LABELS[k] || d.nombre }) : '';
-      }).join('');
-      document.getElementById('grid-dolar').innerHTML = html || errorCard('Dólar', 'Sin datos');
-      document.getElementById('dolar-upd').textContent = 'Act. ' + nowTime();
-    } catch {
-      document.getElementById('grid-dolar').innerHTML = errorCard('Dólar', 'No se pudo conectar con DolarAPI.com');
+    // ---- Tarjetas
+    for (const sym of ['GC=F', 'BZ=F', 'ZS=F', 'BTC-USD']) {
+      const x = S[sym], el = $('k-' + sym); if (!x || !el) continue;
+      const r = x.ret;
+      P.tarjeta(el, { que: el.querySelector('.que').innerHTML, grande: precio(sym, x.ultimo[1]).replace(/<small>.*<\/small>/, ''),
+        contexto: fecha(x.ultimo[0]) + (r.d1 != null ? ' · <b class="' + (r.d1 > 0 ? 'mejor' : r.d1 < 0 ? 'peor' : '') + '">' + pc(r.d1) + '</b> en el día' : ''),
+        extra: P.sparkline(x.diario.map(z => z[1]), { color: '#60a5fa' }),
+        filas: [['En el año', '', pc(r.anio), r.anio > 0 ? 'mejor' : 'peor'], ['En un año', '', pc(r.a1), r.a1 > 0 ? 'mejor' : 'peor']] });
     }
-  }
+    P.brillo('#kpis .pa-card');
 
-  /* ══════════════════════════════════════════
-     FETCH: BCRA — Principales variables v4.0
-     IDs específicos identificados del endpoint /Monetarias
-  ══════════════════════════════════════════ */
-  async function loadBCRA() {
-    const grid = document.getElementById('grid-bcra');
-    if (!grid) return;
-    grid.innerHTML = skeleton(12);
-    const cards = [];
+    // ---- Datos extra de cada pestaña
+    const ia = (s, f) => { const u = s.at(-1), a = u && s.find(z => z[0] === (+u[0].slice(0, 4) - 1) + u[0].slice(4)); return a ? (u[1] / a[1] - 1) * 100 : null; };
+    const MIEDO = v => (v < 25 ? 'miedo extremo' : v < 45 ? 'miedo' : v <= 55 ? 'neutral' : v <= 75 ? 'codicia' : 'codicia extrema');
+    const mini = items => items.filter(Boolean).map(([n, v, c]) => '<div><span>' + n + '</span><b>' + v + '</b>' + (c ? '<small>' + c + '</small>' : '') + '</div>').join('');
+    const EXTRA = {
+      materias: () => { const o = S['GC=F'], p = S['SI=F'], c = S['HG=F']; if (!o || !p) return '';
+        const rat = o.ultimo[1] / p.ultimo[1], hace = (a, b) => { const x = a.semanal.find(z => z[0] >= (+a.ultimo[0].slice(0, 4) - 1) + a.ultimo[0].slice(4)), y = x && b.semanal.find(z => z[0] >= x[0]); return x && y ? x[1] / y[1] : null; }, r1 = hace(o, p);
+        return mini([['Oro contra plata', num(rat, 0) + ' onzas', 'de plata compra una de oro' + (r1 ? ' (hace un año, ' + num(r1, 0) + ')' : '') + '. Cuando sube, el mercado busca refugio.'],
+          c ? ['Cobre contra oro', num(c.ultimo[1] / o.ultimo[1] * 1000, 2), 'por mil. Sube cuando se espera más actividad industrial; baja con el miedo.'] : null]); },
+      monedas: () => { const a = S['ARS=X'], b = S['USDBRL=X']; if (!a || !b) return '';
+        return mini([['Un real en pesos', '$' + num(a.ultimo[1] / b.ultimo[1], 0), 'tipo de cambio oficial cruzado. Si sube, los productos brasileños se encarecen para la Argentina.'],
+          ['Peso argentino en el año', pc(rv('ARS=X', a.ret.anio)), 'contra el dólar oficial (negativo: el peso perdió valor).']]); },
+      cripto: () => { const c = d.cripto, m = d.miedo || [], u = m.at(-1);
+        return mini([c && c.total ? ['Valor de todo el mercado', 'US$' + num(c.total / 1e12, 2) + ' billones', c.cambio24 != null ? pc(c.cambio24) + ' en 24 horas' : ''] : null,
+          c && c.dominio ? ['Peso de bitcoin', num(c.dominio.btc, 1) + '%', 'del mercado total; ether, ' + num(c.dominio.eth, 1) + '%; monedas estables (USDT y USDC), ' + num((c.dominio.usdt || 0) + (c.dominio.usdc || 0), 1) + '%.'] : null,
+          u ? ['Miedo y codicia', u[1] + ' de 100', MIEDO(u[1]) + (m.length > 30 ? '. Hace un mes: ' + m.at(-31)[1] + ' (' + MIEDO(m.at(-31)[1]) + ').' : '.')] : null]); },
+      alternativos: () => { const c = d.casas || [], u = c.at(-1), v = ia(c);
+        return u && v != null ? mini([['Precio de las casas en EE.UU.', pc(v), 'contra un año atrás, índice Case-Shiller nacional, ' + P.mesLargo(u[0]) + '. Sale con dos meses de demora.']]) : ''; },
+    };
 
-    // Variables BCRA — IDs verificados contra v4.0/Monetarias
-    const VARS = [
-      // Vienen en millones: "49.32 M" se leía como 49 millones cuando son 49 mil millones
-      { id: 15,  name: 'Base Monetaria',                    fmt: v => '$ ' + fmtNum(v / 1e6, 2) + ' billones', cls: 'blue-card' },
-      { id: 1,   name: 'Reservas Internacionales BCRA',     fmt: v => 'USD ' + fmtNum(v, 0) + ' M', cls: 'green-card' },
-      { id: 27,  name: 'Inflación mensual',                 fmt: v => fmtNum(v, 2) + '%' },
-      { id: 28,  name: 'Inflación interanual',              fmt: v => fmtNum(v, 1) + '%' },
-      { id: 29,  name: 'Inflación esperada (REM) — 12m',    fmt: v => fmtNum(v, 1) + '%' },
-      { id: 4,   name: 'TC Minorista (promedio vendedor)',  fmt: v => '$ ' + fmtNum(v, 2) },
-      { id: 5,   name: 'TC Mayorista (referencia)',         fmt: v => '$ ' + fmtNum(v, 2) },
-      { id: 44,  name: 'TAMAR bancos privados (TNA)',       fmt: v => fmtNum(v, 2) + '%' },
-      { id: 45,  name: 'TAMAR bancos privados (TEA)',       fmt: v => fmtNum(v, 2) + '%' },
-      { id: 139, name: 'BADLAR bancos privados (TNA)',      fmt: v => fmtNum(v, 2) + '%' },
-      { id: 140, name: 'BADLAR bancos privados (TEA)',      fmt: v => fmtNum(v, 2) + '%' },
-      { id: 31,  name: 'UVA (Unidad de Valor Adquisitivo)', fmt: v => '$ ' + fmtNum(v, 2) },
-      { id: 30,  name: 'CER (Coef. Estabilización)',        fmt: v => fmtNum(v, 4) },
-      { id: 1187,name: 'Banda Cambiaria — Límite Inferior', fmt: v => '$ ' + fmtNum(v, 2) },
-      { id: 1188,name: 'Banda Cambiaria — Límite Superior', fmt: v => '$ ' + fmtNum(v, 2) },
-      { id: 1197,name: 'Tasa de Intereses Moratorios (TIM)',fmt: v => fmtNum(v, 2) },
-    ];
-
-    // Compra de divisas (variable 78, millones de USD por día): se pide aparte
-    // porque la tarjeta muestra lo acumulado del mes y del año. La API a veces
-    // responde vacía, así que hay un reintento.
-    const compras = (async () => {
-      const url = '/api/bcra?endpoint=Monetarias&idVariable=78&desde=' + new Date().getFullYear() + '-01-01';
-      for (let intento = 0; intento < 2; intento++) {
-        try {
-          const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
-          if (!r.ok) continue;
-          const d = (await r.json()).results?.[0]?.detalle || [];
-          if (d.length) return d;
-        } catch {}
-      }
-      return null;
-    })();
-
-    try {
-      const r = await fetch('/api/bcra?endpoint=Monetarias', { signal: AbortSignal.timeout(10000) });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const data = await r.json();
-      const results = data.results || [];
-      const byId = {};
-      for (const v of results) byId[v.idVariable] = v;
-
-      for (const vdef of VARS) {
-        const v = byId[vdef.id];
-        if (!v || !Number.isFinite(v.ultValorInformado)) continue;
-        cards.push(datoCard({
-          cat: 'BCRA',
-          name: vdef.name,
-          value: vdef.fmt(v.ultValorInformado),
-          period: v.ultFechaInformada,
-          source: 'BCRA v4',
-          cls: vdef.cls || ''
-        }));
-      }
-    } catch {}
-
-    const d = await compras;
-    if (d) {
-      const ult = d[0];   // viene de la más nueva a la más vieja
-      const suma = pref => d.filter(x => x.fecha.startsWith(pref)).reduce((s, x) => s + x.valor, 0);
-      const mesNombre = new Date(ult.fecha.slice(0, 7) + '-15').toLocaleDateString('es-AR', { month: 'long' });
-      cards.splice(Math.min(2, cards.length), 0, datoCard({
-        cat: 'BCRA',
-        name: 'Compra de dólares del BCRA (último día)',
-        value: 'USD ' + fmtNum(ult.valor, 0) + ' M',
-        sub: 'En ' + mesNombre + ': USD ' + fmtNum(suma(ult.fecha.slice(0, 7)), 0) + ' M · en el año: USD ' + fmtNum(suma(ult.fecha.slice(0, 4)), 0) + ' M',
-        period: ult.fecha,
-        source: 'BCRA v4',
-        cls: 'green-card'
-      }));
+    // ---- Tabla y gráfico de la pestaña elegida
+    const COLS = ['#60a5fa', '#e8c97a', '#4ade9a', '#a78bfa', '#ff9f7a', '#f472b6', '#2dd4bf', '#facc15', '#94a3b8', '#fb7185'];
+    const COL = [['d1', 'Día'], ['s1', 'Semana'], ['m1', 'Mes'], ['anio', 'En el año'], ['a1', '1 año'], ['a5', '5 años']], SEC = { s1: 1, m1: 1, a5: 1 }, cc = k => (SEC[k] ? ' sec' : '');
+    const desdePer = (ref, per) => { const u = S[ref].ultimo[0], f = new Date(u + 'T12:00:00Z');
+      if (per === 'm3') f.setUTCMonth(f.getUTCMonth() - 3); else if (per === 'anio') return (+u.slice(0, 4) - 1) + '-12-31'; else if (per === 'a5') f.setUTCFullYear(f.getUTCFullYear() - 5); else f.setUTCFullYear(f.getUTCFullYear() - 1);
+      return f.toISOString().slice(0, 10); };
+    const serie = (sym, per, ref) => { const x = S[sym], s = per === 'a5' ? x.semanal : x.diario, f = desdePer(ref, per);
+      const k = per === 'anio' ? s.findIndex(p => p[0] > f) - 1 : s.findIndex(p => p[0] >= f); return k < -1 ? [] : s.slice(Math.max(0, k)); };
+    const base100 = (syms, per) => { const ref = syms.reduce((a, b) => (S[b].diario.length > S[a].diario.length ? b : a)), fechas = serie(ref, per, ref).map(p => p[0]);
+      return { labels: fechas.map(f => (per === 'a5' ? P.mesAnio(f.slice(0, 7)) : P.fechaCorta(f))), sets: syms.map(sym => { const s = serie(sym, per, ref); let j = 0, ult = null, b = null;
+        return fechas.map(f => { while (j < s.length && s[j][0] <= f) ult = val(sym, s[j++][1]); if (ult == null) return null; if (b == null) b = ult; return ult / b * 100; }); }) };
+    };
+    let tab = 'materias', per = 'a1', graf = null;
+    function mostrar() {
+      const t = T[tab];
+      $('g-t').textContent = t.t; $('g-ayuda').innerHTML = '<strong>Qué ves:</strong> ' + t.ayuda; $('g-fuente').textContent = t.fuente;
+      $('extra').innerHTML = EXTRA[tab]();
+      let h = '<thead><tr><th>' + (tab === 'monedas' ? 'Moneda' : 'Instrumento') + '</th><th class="ult">Último</th>' + COL.map(c => '<th class="' + cc(c[0]).trim() + '">' + c[1] + '</th>').join('') + '</tr></thead><tbody>';
+      for (const [sym, n] of t.L) { const x = S[sym];
+        h += '<tr><td>' + esc(n) + '<small>' + esc(sym.replace('=X', '').replace('=F', '')) + '<span class="pm"> · ' + precio(sym, x.ultimo[1]).replace(/<small>.*<\/small>/, '') + '</span></small></td><td class="v ult">' + precio(sym, x.ultimo[1]) + '</td>' +
+          COL.map(([k]) => { const v = rv(sym, x.ret[k]); return '<td class="v ' + cls(v) + cc(k) + '">' + pc(v) + '</td>'; }).join('') + '</tr>'; }
+      $('tabla').innerHTML = h + '</tbody>';
+      $('desc').innerHTML = t.L.map(x => '<article><h4>' + esc(x[1]) + '</h4><span class="tk">' + esc(x[0]) + '</span><p>' + x[3] + '</p></article>').join('');
+      if (typeof Chart === 'undefined') return;
+      const syms = t.L.map(x => x[0]), b = base100(syms, per);
+      const ds = syms.map((s, i) => ({ label: DE[s][1], data: b.sets[i], borderColor: COLS[i % COLS.length], borderWidth: 2, pointRadius: 0, tension: 0.15, spanGaps: true, hidden: i >= 4 }));
+      document.querySelector('[data-exportar="g-glob"]').dataset.titulo = t.t;
+      if (graf) { graf.data.labels = b.labels; graf.data.datasets = ds; graf.update(); return; }
+      graf = new Chart($('g-glob'), { type: 'line', data: { labels: b.labels, datasets: ds },
+        options: P.ejes(v => v, { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => (c.parsed.y == null ? null : c.dataset.label + ': ' + P.signo(c.parsed.y - 100) + '%') } } } }) });
     }
-
-    if (!cards.length) cards.push(errorCard('BCRA', 'No se pudo conectar con la API del BCRA. Intentá en unos minutos.'));
-    grid.innerHTML = cards.join('');
-    const upd = document.getElementById('bcra-upd');
-    if (upd) upd.textContent = '✓ ' + cards.length + ' indicadores · BCRA v4 en vivo';
-  }
-
-  /* ══════════════════════════════════════════
-     FETCH: INDEC
-     ArgentinaDatos + datos.gob.ar series
-  ══════════════════════════════════════════ */
-  async function loadINDEC() {
-    document.getElementById('grid-indec').innerHTML = skeleton(8);
-    const cards = [];
-
-    async function serieGobAr(id, n = 3) {
-      // sort=desc: sin eso la API devuelve los PRIMEROS n datos de la serie (2004), no los últimos
-      const r = await fetch(`/api/indec?series=${id}&limit=${n}&sort=desc`, { signal: AbortSignal.timeout(9000) });
-      if (!r.ok) return null;
-      const j = await r.json();
-      const rows = j.data?.filter(x => x[1] != null).reverse();
-      return rows?.length ? rows : null;
-    }
-
-    /* Inflación mensual IPC */
-    try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/indices/inflacion', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const arr = await r.json();
-        if (arr?.length >= 2) {
-          const last = arr.at(-1), prev = arr.at(-2);
-          // Compuesta, no sumada: sumar las 12 tasas daba 29,3% cuando la interanual real era 33,5%
-          const anual = (arr.slice(-12).reduce((p, x) => p * (1 + x.valor / 100), 1) - 1) * 100;
-          cards.push(datoCard({
-            cat:'INDEC', name:'Inflación Mensual (IPC)',
-            value: fmtNum(last.valor,1)+'%',
-            changeAbs: last.valor - prev.valor,
-            sub: '↗ Acumulado 12 meses: ' + fmtNum(anual,1) + '%',
-            period: fmtDate(last.fecha), source:'INDEC', cls:'gold-card'
-          }));
-        }
-      }
-    } catch {}
-
-    /* Series del portal de datos abiertos (apis.datos.gob.ar). Las anteriores
-       (11.3_VMATOTAL, 170.2_TASA_*, 204.1_PIBCONST, 11.2_IM_2016) fueron dadas
-       de baja y devolvían error: estas son sus reemplazos vigentes. Los
-       porcentajes vienen como fracción (0,079 = 7,9%). */
-    // Todas las series a la vez: una por una tardaban varios segundos en frío
-    const pre = Object.fromEntries([
-      ['150.1_CSTA_BARIA_0_D_26', 2],
-      ['150.1_CSTA_BATAL_0_D_20', 2],
-      ['42.3_EPH_PUNTUATAL_0_M_30', 2],
-      ['42.3_EPH_PUNTUATAL_0_M_24', 2],
-      ['143.3_ICE_SERVIA_2004_A_25', 2],
-      ['143.3_ICE_SER_VM_2004_A_34', 1],
-      ['4.2_OGP_2004_T_17', 5],
-      ['453.1_SERIE_ORIGNAL_0_0_14_46', 13],
-    ].map(([id, n]) => [id, serieGobAr(id, n).catch(() => null)]));
-    const pct100 = v => v * 100;
-    // La serie de pobreza fecha cada semestre con el día en que termina: 2025-07-01
-    // es el 1.er semestre de 2025 y 2026-01-01 el 2.º de 2025 (verificado contra
-    // los informes: 1.er sem. 2024 = 52,9%). Las trimestrales usan el inicio.
-    const semestre = f => Number(f.slice(5, 7)) === 7 ? '1.er sem. ' + f.slice(0, 4) : '2.º sem. ' + (Number(f.slice(0, 4)) - 1);
-    const trimestre = f => Math.ceil(Number(f.slice(5, 7)) / 3) + '.º trim. ' + f.slice(0, 4);
-
-    /* Canasta básica alimentaria y total — por adulto equivalente.
-       Primero el archivo del INDEC (llega el día del informe); si falla, el portal de datos abiertos. */
-    let canastaIndec = null;
-    try {
-      const r = await fetch('/api/indec?canasta=1', { signal: AbortSignal.timeout(12000) });
-      if (r.ok) { const j = await r.json(); if (j.serie?.length >= 2) canastaIndec = j.serie; }
-    } catch {}
-    for (const [id, name] of [['150.1_CSTA_BARIA_0_D_26', 'Canasta Básica Alimentaria'], ['150.1_CSTA_BATAL_0_D_20', 'Canasta Básica Total']]) {
-      try {
-        const campo = name.endsWith('Total') ? 'cbt' : 'cba';
-        const rows = canastaIndec ? canastaIndec.map(x => [x.fecha + '-01', x[campo]]) : await pre[id];
-        if (rows?.length >= 2) {
-          const last = rows.at(-1), prev = rows.at(-2);
-          cards.push(datoCard({
-            cat:'INDEC', name,
-            value: '$'+fmtNum(last[1],0),
-            changePct: (last[1]-prev[1])/prev[1]*100,
-            sub: name.endsWith('Total') ? 'Por adulto / mes · es la línea de pobreza' : 'Por adulto / mes · es la línea de indigencia',
-            period: fmtDate(last[0]), source:'INDEC'
-          }));
-        }
-      } catch {}
-    }
-
-    /* Actividad económica — EMAE, variación interanual */
-    try {
-      const [ia, mm] = await Promise.all([
-        pre['143.3_ICE_SERVIA_2004_A_25'],
-        pre['143.3_ICE_SER_VM_2004_A_34'],
-      ]);
-      if (ia?.length >= 2) {
-        const last = ia.at(-1), prev = ia.at(-2);
-        cards.push(datoCard({
-          cat:'INDEC', name:'Actividad económica (EMAE)',
-          value: (last[1] > 0 ? '+' : '') + fmtNum(pct100(last[1]),1)+'%', unit:'interanual',
-          changeAbs: pct100(last[1]-prev[1]),
-          sub: mm?.length ? 'Contra el mes anterior (desestacionalizado): ' + (mm.at(-1)[1] > 0 ? '+' : '') + fmtNum(pct100(mm.at(-1)[1]),1) + '%' : '',
-          period: fmtDate(last[0]), source:'INDEC'
-        }));
-      }
-    } catch {}
-
-    /* PBI real — trimestre contra el mismo trimestre del año anterior */
-    try {
-      const rows = await pre['4.2_OGP_2004_T_17'];
-      if (rows?.length >= 5) {
-        const last = rows.at(-1), haceUnAnio = rows.at(-5);
-        cards.push(datoCard({
-          cat:'INDEC', name:'PBI real',
-          value: (last[1] >= haceUnAnio[1] ? '+' : '') + fmtNum((last[1]/haceUnAnio[1]-1)*100,1)+'%', unit:'interanual',
-          sub: 'A precios constantes: descuenta la inflación',
-          period: trimestre(last[0]), source:'INDEC'
-        }));
-      }
-    } catch {}
-
-    /* Desocupación y empleo — EPH, 31 aglomerados, trimestral */
-    for (const [id, name] of [['42.3_EPH_PUNTUATAL_0_M_30', 'Tasa de Desocupación'], ['42.3_EPH_PUNTUATAL_0_M_24', 'Tasa de Empleo']]) {
-      try {
-        const rows = await pre[id];
-        if (rows?.length >= 1) {
-          const last = rows.at(-1), prev = rows.at(-2);
-          cards.push(datoCard({
-            cat:'INDEC', name,
-            value: fmtNum(pct100(last[1]),1)+'%',
-            changeAbs: prev ? pct100(last[1]-prev[1]) : null,
-            period: trimestre(last[0]), source:'INDEC · EPH'
-          }));
-        }
-      } catch {}
-    }
-
-    /* Industria — IPI manufacturero, variación interanual de la serie original */
-    try {
-      const rows = await pre['453.1_SERIE_ORIGNAL_0_0_14_46'];
-      if (rows?.length >= 13) {
-        const last = rows.at(-1), haceUnAnio = rows.at(-13);
-        cards.push(datoCard({
-          cat:'INDEC', name:'Producción industrial (IPI)',
-          value: (last[1] >= haceUnAnio[1] ? '+' : '') + fmtNum((last[1]/haceUnAnio[1]-1)*100,1)+'%', unit:'interanual',
-          sub: 'Índice ' + fmtNum(last[1],1) + ' (base 2004 = 100)',
-          period: fmtDate(last[0]), source:'INDEC'
-        }));
-      }
-    } catch {}
-
-    /* Pobreza — personas bajo la línea de pobreza, 31 aglomerados, semestral. Del informe del INDEC:
-       la serie del portal de datos abiertos dejó de actualizarse. */
-    try {
-      const pj = await fetch('/api/indec?pobreza=1', { signal: AbortSignal.timeout(15000) }).then(r => r.ok ? r.json() : null).catch(() => null);
-      if (pj && pj.serie && pj.serie.length >= 2) {
-        const u = pj.serie.at(-1), p = pj.serie.at(-2);
-        cards.push(datoCard({
-          cat:'INDEC', name:'Pobreza (personas)',
-          value: fmtNum(u.pobrezaPersonas,1)+'%',
-          sub: (u.pobrezaPersonas >= p.pobrezaPersonas ? '+' : '−') + fmtNum(Math.abs(u.pobrezaPersonas - p.pobrezaPersonas),1) + ' p.p. vs. el semestre anterior · Indigencia: ' + fmtNum(u.indigenciaPersonas,1) + '% · <a href="panel-pobreza" style="color:var(--accent)">Panel de pobreza →</a>',
-          period: String(u.semestre).replace(/[^A-Za-zÀ-ÿ0-9 .º]/g,''), source:'INDEC · EPH', cls:'red-card'
-        }));
-      }
-    } catch {}
-
-    /* Riesgo País — Ámbito intraday (fallback argentinadatos EOD) */
-    let riesgoOk = false;
-    try {
-      const r = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const d = await r.json();
-        if (d?.valor != null) {
-          cards.push(datoCard({
-            cat:'Mercado · 🇦🇷 Argentina', name:'Riesgo País (EMBI+)',
-            value: fmtNum(d.valor, 0), unit:'pts',
-            changeAbs: Number.isFinite(d.prevValor) ? d.valor - d.prevValor : null,
-            sub:'Spread sobre bonos del Tesoro EE.UU.',
-            period: fmtDate(d.fecha), source: d.source === 'ambito.com' ? 'Ámbito · intraday' : 'JP Morgan · EOD', cls:'red-card'
-          }));
-          riesgoOk = true;
-        }
-      }
-    } catch {}
-    if (!riesgoOk) {
-      cards.push(errorCard('🇦🇷 Riesgo País', 'API temporalmente no disponible'));
-    }
-
-    /* Valor UVA — ArgentinaDatos */
-    try {
-      const r = await fetch('/api/argentinadatos?path=finanzas/indices/uva', { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        const arr = await r.json();
-        if (arr?.length >= 2) {
-          const last = arr.at(-1), prev = arr.at(-2);
-          cards.push(datoCard({
-            cat:'BCRA', name:'Valor UVA',
-            value: '$' + fmtNum(last.valor, 2),
-            changePct: ((last.valor - prev.valor) / prev.valor) * 100,
-            period: fmtDate(last.fecha), source:'BCRA', cls:'blue-card'
-          }));
-        }
-      }
-    } catch {}
-    if (!cards.length) cards.push(errorCard('INDEC', 'No se pudieron cargar los datos'));
-    document.getElementById('grid-indec').innerHTML = cards.join('');
-  }
-
-  /* ══════════════════════════════════════════
-     FETCH: EE.UU. — World Bank + FRED
-  ══════════════════════════════════════════ */
-  async function loadEEUU() {
-    document.getElementById('grid-eeuu').innerHTML = skeleton(7);
-    const cards = [];
-
-    /* FRED — múltiples series (Fed Funds + indicadores macro) */
-    const fredInds = [
-      { id: 'FEDFUNDS',     cat: 'Fed Reserve',   name: 'Fed Funds Rate',         fv: v => fmtNum(v,2)+'%', cls: 'blue-card' },
-      { id: 'CPILFESL',     cat: 'BLS · FRED',    name: 'Core CPI (YoY)',         fv: v => fmtNum(v,2)+'%', yoy: true },
-      { id: 'PCEPILFE',     cat: 'BEA · FRED',    name: 'Core PCE (YoY) — Fed pref.', fv: v => fmtNum(v,2)+'%', yoy: true },
-      { id: 'UNRATE',       cat: 'BLS · FRED',    name: 'Tasa de Desempleo',      fv: v => fmtNum(v,1)+'%' },
-      { id: 'ICSA',         cat: 'DOL · FRED',    name: 'Initial Jobless Claims', fv: v => fmtBig(v) },
-      { id: 'MORTGAGE30US', cat: 'Freddie · FRED',name: 'Mortgage 30Y',           fv: v => fmtNum(v,2)+'%' },
-      { id: 'BAMLC0A0CM',   cat: 'ICE · FRED',    name: 'Credit Spread IG (OAS)', fv: v => Math.round(v*100)+' bps' },
-      { id: 'BAMLH0A0HYM2', cat: 'ICE · FRED',    name: 'Credit Spread HY (OAS)', fv: v => Math.round(v*100)+' bps' },
-      { id: 'VIXCLS',       cat: 'CBOE · FRED',   name: 'VIX (volatilidad)',      fv: v => fmtNum(v,2) },
-      { id: 'DCOILWTICO',   cat: 'EIA · FRED',    name: 'Petróleo WTI',           fv: v => 'USD '+fmtNum(v,2) },
-      { id: 'M2SL',         cat: 'Fed · FRED',    name: 'M2 Money Supply',        fv: v => 'USD '+fmtBig(v*1e9) },
-      { id: 'INDPRO',       cat: 'Fed · FRED',    name: 'Producción Industrial (YoY)',  fv: v => fmtNum(v,2)+'%', yoy: true },
-    ];
-
-    /* Batch fetch FRED — limit 13 para series con YoY y 2 para deltas día/día */
-    try {
-      const ids = fredInds.map(i => i.id).join(',');
-      const r = await fetch('/api/fred?series_ids=' + encodeURIComponent(ids) + '&limit=16', { signal: AbortSignal.timeout(10000) });
-      if (r.ok) {
-        const data = await r.json();
-        for (const ind of fredInds) {
-          const obs = data[ind.id]?.observations?.filter(o => o.value !== '.');
-          if (!obs?.length) continue;
-          const last = obs[0];
-          let value = parseFloat(last.value);
-          let chg = null;
-          let chgPct = null;
-          if (ind.yoy && obs.length >= 13) {
-            // YoY: comparar con observación de hace 12 meses
-            const yoyBase = parseFloat(obs[12].value);
-            value = (value / yoyBase - 1) * 100;
-            // Para YoY, mostrar el último valor; el delta vs período previo es la diff de YoY recientes
-            const prevYoY = obs.length >= 14 ? (parseFloat(obs[1].value) / parseFloat(obs[13].value) - 1) * 100 : null;
-            if (Number.isFinite(prevYoY)) chg = value - prevYoY;
-          } else if (obs.length >= 2) {
-            const prev = parseFloat(obs[1].value);
-            chg = value - prev;
-            chgPct = prev !== 0 ? (value - prev) / Math.abs(prev) * 100 : null;
-          }
-          cards.push(datoCard({
-            cat: ind.cat, name: ind.name,
-            value: ind.fv(value),
-            changeAbs: ind.yoy ? chg : null,
-            changePct: ind.yoy ? null : chgPct,
-            period: fmtDate(last.date), source: 'FRED', cls: ind.cls || ''
-          }));
-        }
-      }
-    } catch {}
-
-    /* World Bank indicators */
-    const WB = 'https://api.worldbank.org/v2/country/US/indicator/';
-    /* World Bank: solo lo que NO viene de FRED (CPI y desempleo ya están en FRED, más recientes) */
-    const wbInds = [
-      { id:'NY.GDP.MKTP.CD',    name:'PBI Nominal',                  fv: v => 'USD '+fmtBig(v) },
-      { id:'NY.GDP.MKTP.KD.ZG', name:'Crecimiento PBI Real',        fv: v => fmtNum(v,1)+'%' },
-      { id:'GC.BAL.CASH.GD.ZS', name:'Balance Fiscal (% PBI)',      fv: v => fmtNum(v,2)+'%' },
-      { id:'BN.CAB.XOKA.GD.ZS', name:'Cuenta Corriente (% PBI)',    fv: v => fmtNum(v,2)+'%' },
-    ];
-
-    await Promise.all(wbInds.map(async ind => {
-      try {
-        const r = await fetch(`${WB}${ind.id}?format=json&mrv=3&source=2`, { signal: AbortSignal.timeout(9000) });
-        if (!r.ok) return;
-        const j = await r.json();
-        const entries = (j[1] || []).filter(e => e.value != null);
-        if (!entries.length) return;
-        const last = entries[0], prev = entries[1];
-        const chgPct = prev?.value ? (last.value - prev.value) / Math.abs(prev.value) * 100 : null;
-        cards.push(datoCard({
-          cat:'World Bank · EE.UU.', name: ind.name,
-          value: ind.fv(last.value),
-          changePct: chgPct,
-          period: last.date + ' (anual)', source:'World Bank'
-        }));
-      } catch {}
-    }));
-
-    if (!cards.length) cards.push(errorCard('EE.UU.', 'No se pudieron cargar los datos'));
-    document.getElementById('grid-eeuu').innerHTML = cards.join('');
-    document.getElementById('eeuu-upd').textContent = 'Act. ' + nowTime();
-  }
-
-  /* ══════════════════════════════════════════
-     FETCH: CRIPTO — CoinGecko (free, no key)
-  ══════════════════════════════════════════ */
-  const CRYPTOS = [
-    { id:'bitcoin',      name:'Bitcoin',        sym:'BTC', cls:'gold-card' },
-    { id:'ethereum',     name:'Ethereum',       sym:'ETH', cls:'blue-card' },
-    { id:'tether',       name:'Tether',         sym:'USDT' },
-    { id:'binancecoin',  name:'BNB',            sym:'BNB', cls:'gold-card' },
-    { id:'solana',       name:'Solana',         sym:'SOL' },
-    { id:'ripple',       name:'XRP',            sym:'XRP' },
-    { id:'cardano',      name:'Cardano',        sym:'ADA' },
-    { id:'dogecoin',     name:'Dogecoin',       sym:'DOGE' },
-    { id:'avalanche-2',  name:'Avalanche',      sym:'AVAX' },
-    { id:'chainlink',    name:'Chainlink',      sym:'LINK' },
-  ];
-
-  async function loadCripto() {
-    document.getElementById('grid-cripto').innerHTML = skeleton(10);
-    try {
-      const ids = CRYPTOS.map(c => c.id).join(',');
-      const r = await fetch(
-        `/api/crypto?ids=${ids}&vs_currencies=usd`,
-        { signal: AbortSignal.timeout(12000) }
-      );
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const data = await r.json();
-
-      const html = CRYPTOS.map(c => {
-        const d = data[c.id];
-        if (!d) return '';
-        const price = d.usd;
-        const chg   = d.usd_24h_change;
-        const mcap  = d.usd_market_cap;
-        return datoCard({
-          cat: c.sym, name: c.name,
-          value: 'USD ' + (price >= 1 ? fmtNum(price,2) : fmtNum(price,5)),
-          changePct: chg,
-          sub: mcap ? 'Cap. mercado: USD ' + fmtBig(mcap) : '',
-          period: 'Var. 24h', source:'CoinGecko',
-          cls: c.cls
-        });
-      }).join('');
-
-      document.getElementById('grid-cripto').innerHTML = html || errorCard('Cripto','Sin datos');
-      document.getElementById('cripto-upd').textContent = 'Act. ' + nowTime();
-    } catch {
-      document.getElementById('grid-cripto').innerHTML = errorCard('Cripto','No se pudo conectar con CoinGecko — el plan gratuito tiene límite de tasa. Intentá de nuevo en 1 minuto.');
-    }
-  }
-
-  /* ══════════════════════════════════════════
-     FETCH: FOREX — ExchangeRate-API (free, no key)
-     https://open.er-api.com/v6/latest/USD
-  ══════════════════════════════════════════ */
-  const FOREX_PAIRS = [
-    { code:'EUR', name:'Euro',                  flag:'🇪🇺' },
-    { code:'GBP', name:'Libra Esterlina',       flag:'🇬🇧' },
-    { code:'JPY', name:'Yen Japonés',           flag:'🇯🇵', dec:0 },
-    { code:'CNY', name:'Yuan Chino',            flag:'🇨🇳' },
-    { code:'BRL', name:'Real Brasileño',        flag:'🇧🇷' },
-    { code:'MXN', name:'Peso Mexicano',         flag:'🇲🇽', dec:2 },
-    { code:'CLP', name:'Peso Chileno',          flag:'🇨🇱', dec:0 },
-    { code:'UYU', name:'Peso Uruguayo',         flag:'🇺🇾' },
-    { code:'CHF', name:'Franco Suizo',          flag:'🇨🇭' },
-    { code:'CAD', name:'Dólar Canadiense',      flag:'🇨🇦' },
-    { code:'AUD', name:'Dólar Australiano',     flag:'🇦🇺' },
-    { code:'SGD', name:'Dólar de Singapur',     flag:'🇸🇬' },
-    { code:'INR', name:'Rupia India',           flag:'🇮🇳', dec:2 },
-    { code:'ZAR', name:'Rand Sudafricano',      flag:'🇿🇦' },
-  ];
-
-  async function loadForex() {
-    document.getElementById('grid-forex').innerHTML = skeleton(14);
-    try {
-      const r = await fetch('https://open.er-api.com/v6/latest/USD', { signal: AbortSignal.timeout(9000) });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const data = await r.json();
-      if (data.result !== 'success') throw new Error('API error');
-
-      const html = FOREX_PAIRS.map(p => {
-        const rate = data.rates[p.code];
-        if (!rate) return '';
-        return datoCard({
-          cat:`Forex · 1 USD =`, name:`${p.flag} ${p.name} (${p.code})`,
-          value: fmtNum(rate, p.dec ?? 4),
-          period: 'Tipo de cambio de referencia', source:'ExchangeRate-API'
-        });
-      }).join('');
-
-      document.getElementById('grid-forex').innerHTML = html;
-      document.getElementById('forex-upd').textContent = 'Act. ' + nowTime();
-    } catch {
-      document.getElementById('grid-forex').innerHTML = errorCard('Forex','No se pudo conectar con ExchangeRate-API');
-    }
-  }
-
-  /* ══════════════════════════════════════════
-     FETCH: ACCIONES E ÍNDICES — Yahoo Finance
-     Estrategia: intento directo → fallback AllOrigins proxy
-  ══════════════════════════════════════════ */
-  const ACCIONES_LIST = [
-    { sym: '^GSPC', name: 'S&P 500',          cat: 'Índice · EE.UU.',   pre: '',     cls: ''           },
-    { sym: '^DJI',  name: 'Dow Jones',         cat: 'Índice · EE.UU.',   pre: '',     cls: ''           },
-    { sym: 'QQQ',   name: 'Nasdaq 100 (QQQ)',  cat: 'ETF · EE.UU.',      pre: 'USD ', cls: 'blue-card'  },
-    { sym: '^MERV', name: 'Merval',            cat: 'Índice · Argentina', pre: '$',    cls: 'green-card' },
-    { sym: 'GC=F',  name: 'Oro Nueva York',    cat: 'Commodities',        pre: 'USD ', cls: 'gold-card'  },
-    { sym: 'CL=F',  name: 'Petróleo WTI',      cat: 'Commodities',        pre: 'USD ', cls: ''           },
-  ];
-
-  async function getYahooQuote(sym) {
-    try {
-      const r = await fetch(`/api/acciones?symbol=${encodeURIComponent(sym)}`, {
-        signal: AbortSignal.timeout(8000)
-      });
-      if (!r.ok) return null;
-      return parseYahooMeta(await r.json());
-    } catch {
-      return null;
-    }
-  }
-
-  function parseYahooMeta(d) {
-    const meta = d?.chart?.result?.[0]?.meta;
-    if (!meta) return null;
-    const price = meta.regularMarketPrice;
-    const prev  = meta.chartPreviousClose;
-    return { price, chg: prev ? (price - prev) / prev * 100 : 0 };
-  }
-
-  async function loadAcciones() {
-    const grid = document.getElementById('grid-acciones');
-    if (!grid) return;
-    grid.innerHTML = skeleton(ACCIONES_LIST.length);
-
-    // Todas las cotizaciones en paralelo
-    const results = await Promise.all(ACCIONES_LIST.map(t => getYahooQuote(t.sym)));
-
-    const html = ACCIONES_LIST.map((t, i) => {
-      const q = results[i];
-      if (!q) return errorCard(t.name, 'Sin datos disponibles');
-      return datoCard({
-        cat: t.cat,
-        name: t.name,
-        value: t.pre + fmtNum(q.price, 2),
-        changePct: q.chg,
-        period: 'Precio de mercado / cierre',
-        source: 'Yahoo Finance',
-        cls: t.cls,
-      });
-    }).join('');
-
-    grid.innerHTML = html || errorCard('Acciones', 'No se pudieron cargar los datos del mercado');
-    const upd = document.getElementById('acciones-upd');
-    if (upd) upd.textContent = 'Act. ' + nowTime();
-  }
-
-  /* ══════════════════════════════════════════
-     INIT — carga inmediata de Argentina,
-             lazy-load para las otras pestañas
-  ══════════════════════════════════════════ */
-  const lazyLoaded = { argentina: true };
-
-  function initTab(tab) {
-    if (lazyLoaded[tab]) return;
-    lazyLoaded[tab] = true;
-    if (tab === 'eeuu')     loadEEUU();
-    if (tab === 'cripto')   loadCripto();
-    if (tab === 'forex')    loadForex();
-    if (tab === 'acciones') loadAcciones(); // ¡Agregá esta línea!
-  }
-
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => initTab(btn.dataset.tab));
-  });
-
-  /* Carga inicial: Argentina */
-  Promise.all([loadDolares(), loadINDEC(), loadBCRA()]);
-
+    const pest = $('pestanas'), elegir = t => { if (!T[t]) return; tab = t; pest.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.t === t))); mostrar(); };
+    pest.addEventListener('click', e => { const bt = e.target.closest('button'); if (!bt) return; elegir(bt.dataset.t); history.replaceState(null, '', '#' + bt.dataset.t); });
+    P.seg('s-per', v => { per = v; mostrar(); });
+    // Enlaces viejos: #forex era la pestaña de monedas
+    const h0 = location.hash.slice(1); elegir(h0 === 'forex' ? 'monedas' : T[h0] ? h0 : 'materias');
+  })();
   </script>
 </body>
 </html>
-
