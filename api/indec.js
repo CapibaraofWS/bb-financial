@@ -434,11 +434,52 @@ const IMIG_GAS = { jubilaciones: ['jubilaciones_pensiones_contributivas'], asign
   energia: ['energia'], transporte: ['transporte'], otrosSubsidios: ['otras_funciones'], salarios: ['salarios'], funcionamiento: ['otros_gastos_funcionamiento'],
   provincias: ['transferencias_corrientes_provincias_educacion', 'transferencias_corrientes_provincias_seguridad_social', 'transferencias_corrientes_provincias_desarrollo_social', 'transferencias_corrientes_provincias_salud', 'transferencias_corrientes_provincias_otras'],
   universidades: ['otros_corrientes_transferencias_universidades'], empresas: ['otros_corrientes_deficit_operativo_empresas_publicas'], otrosCorrientes: ['otros_corrientes_resto'], capital: ['capital_', 'fondo_federal_solidario'] };
+// PBI a precios corrientes del INDEC (millones de pesos, trimestral, en valores anualizados). El nombre del archivo cambia con cada informe.
+async function pibCorriente() {
+  const tema = await fetch(INDEC + '/Nivel4/Tema/3/9/47', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : ''));
+  const ruta = (tema.match(/\/ftp\/cuadros\/economia\/sh_oferta_demanda_\d{2}_\d{2}\.xls/) || [])[0];
+  if (!ruta) throw new Error('sin archivo');
+  const x = await fetch(INDEC + ruta, { signal: AbortSignal.timeout(15000), headers: UA });
+  if (!x.ok) throw new Error('archivo');
+  const s = (leerXls(Buffer.from(await x.arrayBuffer())).find(h => /^cuadro 8$/i.test(h.nombre.trim())) || {}).filas || [];
+  const fila = s.find(r => r && String(r[1] || '').trim() === 'Producto Interno Bruto'), anios = s[3] || [], trims = s[4] || [];
+  if (!fila) throw new Error('sin PBI');
+  let anio = null; const out = [];
+  for (let c = 2; c < fila.length; c++) {
+    const a = parseInt(String(anios[c] ?? ''), 10); if (a > 2000) anio = a;
+    const q = String(trims[c] ?? '').match(/^(\d)º trimestre/);
+    if (anio && q && Number.isFinite(fila[c])) out.push([anio + 'Q' + q[1], Math.round(fila[c])]);
+  }
+  return out;
+}
+// Deuda bruta de la Administración Central (Secretaría de Finanzas, boletín mensual, millones de dólares).
+// Las fechas vienen como número de Excel o como "jul-26 (*)" (datos preliminares).
+const DEUDA_MONEDA = { pesos: 'Pesos no ajustable por CER', cer: 'Pesos ajustable por CER', dolares: 'Dólares', fmi: 'DEG', euros: 'Euros', yenes: 'Yenes', otras: 'Otras monedas' };
+async function deudaTesoro() {
+  const pag = await fetch('https://www.argentina.gob.ar/economia/finanzas/datos-mensuales', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : ''));
+  const ruta = (pag.match(/\/sites\/default\/files\/boletin_mensual_\d{2}_\d{2}_\d{4}[\w-]*\.xlsx/) || [])[0];
+  if (!ruta) throw new Error('sin archivo');
+  const x = await fetch('https://www.argentina.gob.ar' + ruta, { signal: AbortSignal.timeout(20000), headers: UA });
+  if (!x.ok) throw new Error('archivo');
+  const H = Object.fromEntries(leerXlsx(Buffer.from(await x.arrayBuffer())).map(h => [h.nombre.trim(), h.filas]));
+  const fecha = v => { if (typeof v === 'number' && v > 40000) return fechaExcel(v).slice(0, 7); const m = String(v || '').match(/^([a-z]{3})[a-z]*-(\d{2})/i); const i = m ? MES_CORTO.indexOf(m[1].toLowerCase()) : -1; return i < 0 ? null : '20' + m[2] + '-' + String(i + 1).padStart(2, '0'); };
+  const leer = hoja => { const f = H[hoja] || [], cab = f.find(r => r && r.filter(v => typeof v === 'number' && v > 40000).length > 20) || [];
+    const cols = cab.map((v, i) => [i, fecha(v)]).filter(c => c[1]);
+    return { fechas: cols.map(c => c[1]), fila: t => { const r = f.find(r => r && String(r[1] || '').trim().startsWith(t)); return r ? cols.map(([i]) => (Number.isFinite(r[i]) ? Math.round(r[i]) : null)) : null; } }; };
+  const a1 = leer('A.1'), a3 = leer('A.3'), total = a1.fila('A- DEUDA BRUTA');
+  const mon = Object.fromEntries(Object.entries(DEUDA_MONEDA).map(([k, t]) => [k, a3.fila(t)]));
+  if (!total || Object.values(mon).some(v => !v) || a1.fechas.join() !== a3.fechas.join() || a1.fechas.length < 24) throw new Error('formato');
+  // "Otras" junta euros, yenes, otras monedas y la deuda en pago diferido o pendiente de reestructuración (lo que falta para el total)
+  const otras = total.map((t, i) => t - mon.pesos[i] - mon.cer[i] - mon.dolares[i] - mon.fmi[i]);
+  return { fechas: a1.fechas, total, pesos: mon.pesos, cer: mon.cer, dolares: mon.dolares, fmi: mon.fmi, otras };
+}
 async function fiscal(req, res) {
-  const [rImig, rRec, rOf] = await Promise.allSettled([
+  const [rImig, rRec, rOf, rPib, rDeu] = await Promise.allSettled([
     csvGob('452/distribution/452.3/download/imig-mensual.csv'),
     csvGob('172/distribution/172.3/download/recaudacion-tributaria-datos-mensuales.csv'),
     planillaHacienda(),
+    pibCorriente(),
+    deudaTesoro(),
   ]);
   const out = { fuente: 'Secretaría de Hacienda (base caja del Sector Público Nacional no financiero y recaudación tributaria)' };
   if (rImig.status === 'fulfilled') {
@@ -467,6 +508,8 @@ async function fiscal(req, res) {
       if (s.length > 24) out.recaudacion = s;
     }
   }
+  if (rPib.status === 'fulfilled' && rPib.value.length > 40) out.pib = rPib.value;
+  if (rDeu.status === 'fulfilled') out.deuda = rDeu.value;
   if (!out.mensual && !out.recaudacion) return res.status(502).json({ error: 'No se pudieron leer las cuentas fiscales' });
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
   return res.status(200).json(out);

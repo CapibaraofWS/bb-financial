@@ -17,13 +17,13 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Cuentas públicas de la Argentina: resultado fiscal y recaudación — BB Finanzas</title>
-  <meta name="description" content="Ingresos, gastos y resultado fiscal del Sector Público Nacional, los intereses de la deuda y la recaudación de impuestos, con los datos oficiales de la Secretaría de Hacienda. Se actualiza solo." />
+  <meta name="description" content="Ingresos, gastos y resultado fiscal del Sector Público Nacional, los intereses, el resultado en porcentaje del PBI, la deuda del Tesoro por moneda y la recaudación de impuestos, con datos oficiales. Se actualiza solo." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-fiscal" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
   <meta property="og:title" content="Cuentas públicas de la Argentina" />
-  <meta property="og:description" content="Resultado fiscal, ingresos y gastos del Estado nacional y recaudación de impuestos, con datos oficiales." />
+  <meta property="og:description" content="Resultado fiscal en pesos y en % del PBI, ingresos y gastos del Estado nacional, deuda del Tesoro y recaudación de impuestos, con datos oficiales." />
   <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/panel-fiscal" />
   <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg" />
   <meta property="og:locale" content="es_AR" />
@@ -78,7 +78,7 @@
       <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
       <p class="pa-eyebrow" data-bandera>Panel Argentina · Cuentas públicas</p>
       <h1>Las cuentas del Estado</h1>
-      <p class="sub">Cuánto ingresa y cuánto gasta el Estado nacional, cuánto paga de intereses de la deuda y cómo viene la recaudación de impuestos. Con los datos oficiales de la Secretaría de Hacienda.</p>
+      <p class="sub">Cuánto ingresa y cuánto gasta el Estado nacional, cuánto paga de intereses, cuánto debe el Tesoro y en qué moneda, y cómo viene la recaudación de impuestos. Con los datos oficiales de Hacienda, Finanzas y el INDEC.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
@@ -114,6 +114,25 @@
         </div>
         <div class="lienzo" style="height:420px"><canvas id="g-dest" aria-label="Cambio real de gastos e ingresos por concepto"></canvas></div>
         <p class="fuente">Fuente: Secretaría de Hacienda (IMIG) e INDEC (IPC). Cálculo propio.</p>
+      </section>
+
+      <section class="pa-graf" aria-labelledby="g-pbi-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-pbi-t">El resultado de cada año, contra el tamaño de la economía</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> el resultado del Estado nacional de cada año como porcentaje del PBI. El círculo es el resultado primario (sin intereses) y el rombo, el financiero (después de pagar intereses); azul si es superávit, naranja si es déficit. La barra entre los dos es lo que se fue en intereses de la deuda.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-pbi" data-titulo="Resultado fiscal en % del PBI" data-fuente="Secretaría de Hacienda e INDEC">⬇ Imagen</button></div>
+        <div class="lienzo"><canvas id="g-pbi" aria-label="Resultado primario y financiero de cada año en porcentaje del PBI"></canvas></div>
+        <p class="fuente">Fuente: Secretaría de Hacienda (base caja, Sector Público Nacional no financiero) e <a href="https://www.indec.gob.ar/Nivel4/Tema/3/9/47" target="_blank" rel="noopener">INDEC, PBI a precios corrientes</a>. Cálculo propio.</p>
+      </section>
+
+      <section class="pa-graf" aria-labelledby="g-deuda-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-deuda-t">Cuánto debe el Tesoro y en qué moneda</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> la deuda bruta de la Administración Central a fin de cada mes, en miles de millones de dólares, separada por la moneda en que hay que pagarla. La deuda en pesos se pasa a dólares al tipo de cambio de ese día: si el peso se deprecia, en dólares baja aunque no se haya pagado nada.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-deuda" data-titulo="Deuda bruta del Tesoro por moneda" data-fuente="Secretaría de Finanzas">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-deuda"></div>
+        <div class="lienzo"><canvas id="g-deuda" aria-label="Deuda bruta de la Administración Central por moneda"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.argentina.gob.ar/economia/finanzas/datos-mensuales" target="_blank" rel="noopener">Secretaría de Finanzas, deuda bruta de la Administración Central</a> (los últimos meses son preliminares). Incluye la deuda con organismos del propio Estado, como el Banco Central y la ANSES.</p>
       </section>
 
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
@@ -237,6 +256,48 @@
         options: P.ejes(v => v + '%', { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => P.signo(x.parsed.x) + '% descontada la inflación', afterLabel: x => bill(d[x.dataIndex].nom) + ' en el año · ' + num(d[x.dataIndex].peso) + '% del total' } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });
       P.seg('s-dest', v => { d = datosDest(v); gD.data.labels = d.map(x => P.corte(x.n)); gD.data.datasets[0].data = d.map(x => x.v); gD.data.datasets[0].backgroundColor = color(d); gD.update(); });
+    }
+
+    // ---- Resultado en % del PBI: cada año completo y los últimos 12 meses hasta el último trimestre con PBI
+    // (el PBI trimestral del INDEC viene anualizado: el del año es el promedio de sus cuatro trimestres)
+    const PIB = Object.fromEntries(f.pib || []);
+    if (Object.keys(PIB).length) {
+      const pibDe = qs => (qs.every(q => PIB[q]) ? qs.reduce((s, q) => s + PIB[q], 0) / qs.length : null);
+      const mesesDe = (a, hasta) => M.filter(x => x.p >= a && x.p <= hasta && !x.planilla);
+      // En el celular los años van cortos ('17) para que entren los diez
+      const filas = [], celu = matchMedia('(max-width: 640px)').matches;
+      for (let y = 2017; ; y++) { const ms = mesesDe(y + '-01', y + '-12'), g = pibDe([1, 2, 3, 4].map(q => y + 'Q' + q)); if (ms.length !== 12 || !g) break; filas.push({ et: celu ? "'" + String(y).slice(2) : String(y), ms, g }); }
+      const uq = Object.keys(PIB).sort().at(-1), [ya, qa] = uq.split('Q').map(Number), finQ = ya + '-' + String(qa * 3).padStart(2, '0');
+      if (qa !== 4) { const qs = [0, 1, 2, 3].map(k => { let y = ya, q = qa - k; if (q < 1) { q += 4; y--; } return y + 'Q' + q; }), ms = M.filter(x => x.p > hace12(finQ) && x.p <= finQ && !x.planilla);
+        if (ms.length === 12 && pibDe(qs)) filas.push({ et: celu ? ['12 m', P.MES[qa * 3 - 1] + " '" + String(ya).slice(2)] : ['12 meses', 'a ' + P.MES[qa * 3 - 1] + ' ' + ya], ms, g: pibDe(qs) }); }
+      const pct = (ms, k, g) => ms.reduce((s, x) => s + x[k], 0) / g * 100;
+      const pri = filas.map(r => pct(r.ms, 'primario', r.g)), fin = filas.map(r => pct(r.ms, 'financiero', r.g));
+      const col = v => v.map(x => (x >= 0 ? '#60a5fa' : '#f59e0b'));
+      $('g-pbi').dataset.ultimo = qa === 4 ? String(ya) : '12 meses hasta ' + P.mesLargo(finQ);
+      new Chart($('g-pbi'), { data: { labels: filas.map(r => r.et), datasets: [
+          { type: 'bar', label: 'Intereses de la deuda', data: filas.map((r, i) => [fin[i], pri[i]]), backgroundColor: 'rgba(232,237,245,0.16)', borderRadius: 2, barPercentage: 0.35, order: 3 },
+          { type: 'line', label: 'Resultado primario', data: pri, showLine: false, pointRadius: 7, pointHoverRadius: 9, pointBackgroundColor: col(pri), pointBorderColor: '#14161b', order: 1 },
+          { type: 'line', label: 'Resultado financiero', data: fin, showLine: false, pointStyle: 'rectRot', pointRadius: 7, pointHoverRadius: 9, pointBackgroundColor: col(fin), pointBorderColor: '#14161b', order: 2 } ] },
+        options: P.ejes(v => num(v, 0) + '%', { scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: false, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#9aa5b8', callback: v => num(v, 0) + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } } },
+          // En la leyenda, la forma en gris: el color de cada punto dice si es superávit o déficit
+          plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12, usePointStyle: true, generateLabels: c => Chart.defaults.plugins.legend.labels.generateLabels(c).map(l => (l.datasetIndex ? Object.assign(l, { fillStyle: '#c9d1dd', strokeStyle: '#c9d1dd' }) : l)) } },
+          tooltip: { callbacks: { label: c => c.datasetIndex === 0 ? 'Intereses: ' + num(pri[c.dataIndex] - fin[c.dataIndex]) + '% del PBI' : c.dataset.label + ': ' + P.signo(c.parsed.y) + '% del PBI' } } } }) });
+    }
+
+    // ---- Deuda del Tesoro por moneda
+    const D = f.deuda;
+    if (D && D.fechas.length > 13) {
+      const n = D.fechas.length - 1, ia = D.fechas.indexOf(hace12(D.fechas[n])), mm = v => 'US$' + num(v / 1000, 1) + ' mil M', parte = k => num(D[k][n] / D.total[n] * 100, 0) + '%';
+      $('m-deuda').innerHTML = '<div><span>Deuda bruta del Tesoro</span><b>' + mm(D.total[n]) + '</b><small>' + P.mesAnio(D.fechas[n]) + (ia >= 0 ? ' · un año antes: ' + mm(D.total[ia]) + ' (' + P.signo((D.total[n] / D.total[ia] - 1) * 100) + '%)' : '') + '</small></div>' +
+        '<div><span>En pesos</span><b>' + num((D.pesos[n] + D.cer[n]) / D.total[n] * 100, 0) + '%</b><small>' + parte('cer') + ' del total se ajusta por inflación (CER)</small></div>' +
+        '<div><span>En dólares</span><b>' + parte('dolares') + '</b><small>' + mm(D.dolares[n]) + ': bonos, letras y préstamos</small></div>' +
+        '<div><span>Con el FMI</span><b>' + mm(D.fmi[n]) + '</b><small>' + parte('fmi') + ' del total, en derechos especiales de giro</small></div>';
+      if (typeof Chart !== 'undefined') {
+        const K = [['pesos', 'Pesos', '#60a5fa'], ['cer', 'Pesos ajustados por inflación (CER)', '#a78bfa'], ['dolares', 'Dólares', '#f59e0b'], ['fmi', 'FMI', '#e8c97a'], ['otras', 'Otras monedas y deuda en litigio', '#9aa5b8']];
+        new Chart($('g-deuda'), { type: 'line', data: { labels: D.fechas.map(P.mesAnio), datasets: K.map(([k, t, c], i) => ({ label: t, data: D[k].map(v => v / 1000), borderColor: c, backgroundColor: c + '55', fill: i ? '-1' : 'origin', borderWidth: 1.5, pointRadius: 0, tension: 0.2, stack: 'd' })) },
+          options: P.ejes(v => 'US$' + num(v, 0), { scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }, grid: { display: false } }, y: { stacked: true, ticks: { color: '#9aa5b8', callback: v => 'US$' + num(v, 0) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } } },
+            plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': US$' + num(c.parsed.y, 1) + ' mil M', footer: it => 'Total: US$' + num(D.total[it[0].dataIndex] / 1000, 1) + ' mil M' } } } }) });
+      }
     }
   })();
   </script>
