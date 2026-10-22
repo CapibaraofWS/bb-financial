@@ -4,6 +4,9 @@ import { denyRateLimited } from './_rateLimit.js';
 import { leerXls, fechaExcel } from './_xls.js';
 import { leerXlsx, archivos } from './_xlsx.js';
 
+// Temporal (21/10/2026): versión de Node del runtime en los registros de Vercel, para confirmar el parche de seguridad
+console.info('runtime node ' + process.version);
+
 // ?canasta=1: canastas básicas (líneas de indigencia y pobreza) leídas del archivo del INDEC,
 // que se actualiza el mismo día del informe. El portal de datos abiertos tarda semanas en cargarlas.
 // Va dentro de esta función porque el plan de Vercel permite 12 funciones como máximo.
