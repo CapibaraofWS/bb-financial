@@ -95,6 +95,8 @@ export function leerXls(buf) {
     else if (r.tipo === 0x027E) poner(d.readUInt16LE(0), d.readUInt16LE(2), rk(d.readInt32LE(6)));
     else if (r.tipo === 0x00BD) { const f = d.readUInt16LE(0), c0 = d.readUInt16LE(2); for (let k = 0; 4 + k * 6 + 6 <= d.length - 2; k++) poner(f, c0 + k, rk(d.readInt32LE(4 + k * 6 + 2))); }
     else if (r.tipo === 0x00FD) poner(d.readUInt16LE(0), d.readUInt16LE(2), sst[d.readUInt32LE(6)]);
+    // Fórmula: el resultado guardado es un número salvo que sus dos últimos bytes sean 0xFFFF (texto, lógico o error)
+    else if (r.tipo === 0x0006 && d.length >= 14 && d.readUInt16LE(12) !== 0xFFFF) poner(d.readUInt16LE(0), d.readUInt16LE(2), d.readDoubleLE(6));
     else if (r.tipo === 0x000A) actual = null;   // EOF de la hoja
   }
   return hojas.map(({ nombre, filas }) => ({ nombre, filas }));

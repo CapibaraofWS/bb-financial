@@ -46,6 +46,7 @@ window.BBPanel = (function () {
     energia: () => json('/api/indec?energia=1'),
     cambiario: () => json('/api/indec?cambiario=1'),
     trabajo: () => json('/api/indec?trabajo=1'),
+    icc: () => json('/api/indec?icc=1'),
     // Estados Unidos (BLS, BEA, FRED y el Tesoro, armados en el servidor)
     usa: m => json('/api/fred?usa=' + m),
     geoUsa: () => json('/data/estados-usa.json'),

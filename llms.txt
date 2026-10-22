@@ -33,7 +33,7 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 - [Inflación en la Argentina](https://www.bbfinanzas.com.ar/pages/panel-precios): IPC del INDEC con núcleo, regulados, estacionales, rubros, regiones y un mapa de calor mensual desde 2017.
 - [Dólar y reservas](https://www.bbfinanzas.com.ar/pages/panel-dolar): dólar mayorista dentro de las bandas cambiarias, oficial, MEP, contado con liquidación y blue, brecha, reservas y compras del Banco Central.
 - [Tasas de interés](https://www.bbfinanzas.com.ar/pages/panel-tasas): TAMAR, BADLAR, plazo fijo, préstamos, tasa real contra la inflación mes a mes y riesgo país.
-- [Actividad económica](https://www.bbfinanzas.com.ar/pages/panel-actividad): EMAE, producción industrial (IPI) y construcción (ISAC) del INDEC.
+- [Actividad económica](https://www.bbfinanzas.com.ar/pages/panel-actividad): EMAE, producción industrial (IPI) y construcción (ISAC) del INDEC, e Índice de Confianza del Consumidor de la UTDT (nacional, por tema y por región).
 - [Empleo y salarios](https://www.bbfinanzas.com.ar/pages/panel-empleo): sueldos registrados contra la inflación (INDEC), sueldo promedio (RIPTE), salario mínimo, desocupación, trabajadores registrados, trabajo no registrado por actividad, sueldo mediano, desigualdad (Gini), personal del Estado nacional y un mapa del empleo privado por provincia.
 - [Sueldo vs. promedio](https://www.bbfinanzas.com.ar/pages/sueldo-vs-promedio): compara un sueldo con el RIPTE, el salario mínimo y la línea de pobreza del hogar, con los datos oficiales del mes.
 - [Comercio exterior](https://www.bbfinanzas.com.ar/pages/panel-comercio): exportaciones, importaciones y saldo comercial del INDEC, mes a mes, por gran rubro, por uso económico y por país.

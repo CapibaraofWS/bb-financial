@@ -718,6 +718,54 @@ async function trabajo(req, res) {
   return res.status(200).json(out);
 }
 
+// ?icc=1: Índice de Confianza del Consumidor de la Universidad Torcuato Di Tella (nacional, por tema y por región).
+// Se lee la planilla de la UTDT, que tiene el mes recién publicado (el nombre del archivo cambia: se busca en su página);
+// si no contesta o cambia el formato, el portal de datos abiertos, que lo carga un mes después.
+const ICC_COLS = { icc: 'icc_nacional', capital: 'desagregacion_regiones_capital', interior: 'desagregacion_regiones_interior', gba: 'desagregacion_regiones_gba',
+  personal: 'desagregacion_subindices_situacion_personal', macro: 'desagregacion_subindices_situacion_macro', durables: 'desagregacion_subindices_bienes_durables_inmuebles' };
+async function iccUtdt() {
+  const pag = await fetch('https://www.utdt.edu/listado_contenidos.php?id_item_menu=16458', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : ''));
+  const ruta = (pag.match(/\/download\.php\?fname=_\d+\.xls\b/) || [])[0];
+  if (!ruta) throw new Error('sin archivo');
+  const x = await fetch('https://www.utdt.edu' + ruta, { signal: AbortSignal.timeout(15000), headers: UA });
+  if (!x.ok) throw new Error('archivo');
+  const H = leerXls(Buffer.from(await x.arrayBuffer())), hoja = re => (H.find(h => re.test(h.nombre)) || {}).filas || [];
+  const reg = hoja(/regiones/i), sub = hoja(/sub.ndices/i), txt = v => String(v ?? '').trim();
+  // Columnas esperadas: fecha, Capital, var., Interior, var., GBA, var., Nacional | fecha, Personal, var., Macro, var., Durables, var., Nacional
+  if (!reg.some(f => f && txt(f[1]) === 'Capital' && txt(f[3]) === 'Interior' && txt(f[5]) === 'GBA') || !sub.some(f => f && /Personal/i.test(txt(f[1])) && /Macro/i.test(txt(f[3])) && /Durables/i.test(txt(f[5])))) throw new Error('formato');
+  // Algunas filas traen la fecha como texto ("abr.-22") o vacía: como son meses seguidos, la fecha sale del orden
+  // y se corrige con cada fecha de Excel que aparece
+  const r2 = v => (Number.isFinite(v) ? Math.round(v * 100) / 100 : null), sig = p => { const [y, m] = p.split('-').map(Number); return m === 12 ? (y + 1) + '-01' : y + '-' + String(m + 1).padStart(2, '0'); };
+  const meses = filas => { const out = []; let p = null;
+    for (const f of filas) {
+      if (!f || !Number.isFinite(f[7])) continue;
+      p = typeof f[0] === 'number' && f[0] > 30000 ? fechaExcel(f[0]).slice(0, 7) : p && sig(p);
+      if (p) out.push([p, f]);
+    }
+    return out; };
+  const M = {};
+  for (const [p, f] of meses(reg)) M[p] = { p, icc: r2(f[7]), capital: r2(f[1]), interior: r2(f[3]), gba: r2(f[5]) };
+  for (const [p, f] of meses(sub)) if (M[p]) Object.assign(M[p], { personal: r2(f[1]), macro: r2(f[3]), durables: r2(f[5]) });
+  return Object.values(M).sort((a, b) => (a.p < b.p ? -1 : 1));
+}
+async function icc(req, res) {
+  let serie = [], fuente = 'Universidad Torcuato Di Tella, Centro de Investigación en Finanzas';
+  try { serie = await iccUtdt(); } catch { /* se prueba con el portal */ }
+  if (serie.length < 60) {
+    try {
+      const d = await csvGob('380/distribution/380.3/download/indice-confianza-consumidor-valores-mensuales.csv'), idx = Object.fromEntries(Object.entries(ICC_COLS).map(([k, c]) => [k, d.cab.indexOf(c)]));
+      if (Object.values(idx).every(i => i > 0)) {
+        serie = d.filas.filter(f => Number.isFinite(f[idx.icc])).map(f => Object.assign({ p: f[0] }, Object.fromEntries(Object.entries(idx).map(([k, i]) => [k, Number.isFinite(f[i]) ? Math.round(f[i] * 100) / 100 : null]))));
+        fuente += ', vía datos.gob.ar';
+      }
+    } catch { /* sin datos */ }
+  }
+  serie = serie.filter(x => x.p >= '2010-01');
+  if (serie.length < 60 || !(serie.at(-1).icc > 0 && serie.at(-1).icc < 100)) return res.status(502).json({ error: 'No se pudo leer la confianza del consumidor' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json({ fuente, serie });
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -735,6 +783,7 @@ export default async function handler(req, res) {
   if (req.query.energia) return energia(req, res);
   if (req.query.cambiario) return cambiario(req, res);
   if (req.query.trabajo) return trabajo(req, res);
+  if (req.query.icc) return icc(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {
