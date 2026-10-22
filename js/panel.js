@@ -6,7 +6,8 @@
 // ============================================================
 window.BBPanel = (function () {
   const cache = {};
-  const json = u => cache[u] || (cache[u] = fetch(u, { signal: AbortSignal.timeout(20000) })
+  // 30 s, lo mismo que dura como máximo una función: después de cada deploy la caché arranca vacía y el Panel USA tarda más de 20 s en armarse
+  const json = u => cache[u] || (cache[u] = fetch(u, { signal: AbortSignal.timeout(30000) })
     .then(r => (r.ok ? r.json() : null)).catch(() => null));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const num = (v, d = 1) => Number(v).toLocaleString('es-AR', { minimumFractionDigits: d, maximumFractionDigits: d });
