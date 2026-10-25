@@ -16,8 +16,8 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Calculadora de plazo fijo: tasas de hoy por banco — BB Finanzas</title>
-  <meta name="description" content="Simulá tu plazo fijo con las tasas que publica el BCRA para cada banco, actualizadas todos los días. Cuánto cobrás a 30, 60, 90 o 365 días." />
+  <title>Calculadora de plazo fijo: cuánto ganás con las tasas de hoy por banco — BB Finanzas</title>
+  <meta name="description" content="Calculá cuánto te da un plazo fijo con las tasas que cada banco informa al BCRA, actualizadas todos los días, a 30, 60, 90 o 365 días. Con la cuenta explicada: capital × TNA × días ÷ 365." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/comparador-plazos-fijos" />
   <meta property="og:type" content="website" />
@@ -42,6 +42,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=19" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","inLanguage":"es-AR","mainEntity":[{"@type":"Question","name":"¿Cómo se calcula el interés de un plazo fijo?","acceptedAnswer":{"@type":"Answer","text":"Con la tasa nominal anual (TNA) que publica el banco, proporcional a los días: interés = capital × TNA × días ÷ 365. Por ejemplo, $1.000.000 a 30 días con una TNA de 30% da 1.000.000 × 0,30 × 30 ÷ 365 = $24.658 de interés, y al vencimiento se cobran $1.024.658."}},{"@type":"Question","name":"¿Qué diferencia hay entre la TNA y la TEA?","acceptedAnswer":{"@type":"Answer","text":"La TNA es la tasa nominal anual que publica el banco: una tasa simple, sin reinversión. La TEA es la efectiva anual: lo que ganarías en un año si cada 30 días renovaras el capital más los intereses a la misma tasa. Siempre es más alta que la TNA. Para pasar de una a otra podés usar la calculadora de conversión de tasas."}},{"@type":"Question","name":"¿El plazo fijo le gana a la inflación?","acceptedAnswer":{"@type":"Answer","text":"Depende del período. Para comparar, pasá la TNA a tasa mensual (TNA × 30 ÷ 365) y comparala con la inflación del mes. Si es más alta, en ese mes el depósito ganó poder de compra. La inflación de cada mes está en el panel de inflación y el efecto acumulado en la calculadora de inflación."}},{"@type":"Question","name":"¿Qué es un plazo fijo UVA?","acceptedAnswer":{"@type":"Answer","text":"Es un plazo fijo cuyo capital se ajusta por la UVA, una unidad que sigue a la inflación, y además paga una tasa chica. Protege contra una suba de la inflación, a cambio de un plazo mínimo más largo (en general, 90 días). Conviene comparar lo que paga contra un plazo fijo tradicional con la inflación que esperás."}},{"@type":"Question","name":"¿Por qué algunos bancos pagan más a quien no es cliente?","acceptedAnswer":{"@type":"Answer","text":"Porque buscan sumar clientes nuevos. Para acceder a esa tasa hay que abrir una cuenta en ese banco. Las tasas de la lista son las que los bancos informan para plazos fijos hechos por home banking o app, que suelen ser más altas que las de sucursal."}},{"@type":"Question","name":"¿Está garantizado?","acceptedAnswer":{"@type":"Answer","text":"Los depósitos en bancos están cubiertos por el Sistema de Seguro de Garantía de los Depósitos hasta un tope por persona y por banco, que se actualiza cada tanto. El valor vigente lo publica el Banco Central. Lo que supere ese tope no está cubierto."}}]}
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -134,7 +137,12 @@
     </div>
 
     <section class="container bb-faq" id="guia-plazo-fijo" aria-labelledby="guia-plazo-fijo-t">
-      <h2 id="guia-plazo-fijo-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo elegir un plazo fijo</h2>
+      <h2 style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo calcular cuánto te da un plazo fijo</h2>
+      <p>El interés de un plazo fijo tradicional sale de la tasa nominal anual (TNA) que publica el banco, proporcional a los días del plazo:</p>
+      <p style="font-family:var(--font-mono);font-size:1rem;padding:0.8rem 1rem;border:1px solid var(--border);border-radius:12px;text-align:center"><strong>Interés = capital × TNA × días ÷ 365</strong></p>
+      <p>Por ejemplo, $1.000.000 a 30 días con una TNA de 30%: 1.000.000 × 0,30 × 30 ÷ 365 = <strong>$24.658</strong> de interés. Al vencimiento cobrás $1.024.658. La calculadora de arriba hace esa cuenta con la tasa de cada banco.</p>
+      <p>Para saber si ganaste de verdad, compará con la inflación: en ese ejemplo la tasa del mes es 2,47% (30% × 30 ÷ 365). Si la inflación del mes fue menor, el depósito le ganó.</p>
+      <h2 id="guia-plazo-fijo-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:1.5rem 0 0.75rem">Cómo elegir un plazo fijo</h2>
       <p>La calculadora ordena los bancos según lo que te pagarían al vencimiento, con las tasas que cada uno informa al Banco Central. La tasa es lo primero que se mira, pero no lo único: también importan el plazo, si ya sos cliente del banco y qué vas a hacer con la plata cuando vence.</p>
       <p>Un plazo fijo tradicional paga una tasa fija y no se puede retirar antes de tiempo. Si en el medio la inflación sube, la tasa no cambia; si baja, haber fijado la tasa te favorece. Por eso suele usarse para plata que sabés que no vas a tocar durante el plazo, y una cuenta remunerada o un <a href="blog/fci-money-market">fondo money market</a> para la que podés necesitar en cualquier momento.</p>
       <details><summary>¿Qué diferencia hay entre la TNA y la TEA?</summary><p>La TNA es la tasa nominal anual que publica el banco: una tasa simple, sin reinversión. La TEA es la efectiva anual: lo que ganarías en un año si cada 30 días renovaras el capital más los intereses a la misma tasa. Siempre es más alta que la TNA. Para pasar de una a otra podés usar la <a href="conversion-tasas">calculadora de conversión de tasas</a>.</p></details>

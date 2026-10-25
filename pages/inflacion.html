@@ -16,8 +16,8 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Calculadora de inflación de Argentina (IPC del INDEC) — BB Finanzas</title>
-  <meta name="description" content="Convertí precios entre cualquier mes desde 1992 con el IPC del INDEC: cuánto valen hoy tus pesos, cuánta inflación acumulada hubo y cómo comparar sueldos." />
+  <title>Cuánto valen hoy tus pesos: calculadora de inflación de Argentina — BB Finanzas</title>
+  <meta name="description" content="Poné un monto y un mes (por ejemplo, 700.000 pesos de 2021) y mirá cuánto valen hoy con la inflación del INDEC. Cualquier mes desde 1992 y la inflación acumulada entre dos fechas." />
   <meta name="keywords" content="calculadora inflación argentina, inflación acumulada, poder adquisitivo, IPC INDEC, valor del peso, convertir precios históricos" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/inflacion" />
@@ -287,6 +287,7 @@
         <p class="page-breadcrumb"><a href="../">Inicio</a><span>/</span>Inflación</p>
         <h1 class="page-title">Calculadora de inflación de Argentina</h1>
         <p class="page-subtitle">Pesos de años distintos son unidades distintas. Poné un importe y un mes, y te lo traduzco a lo que vale en cualquier otro mes desde enero de 1992, con el índice de precios del INDEC.</p>
+        <p class="page-subtitle" id="ejemplo-hoy" style="font-size:0.95rem;margin-top:0.6rem" hidden></p>
       </div>
     </section>
 
@@ -1141,6 +1142,14 @@
       leerUrl();                                        // el enlace compartido manda
       pintarPresets();
       calcular();
+
+      // Ejemplo con el último dato: responde la búsqueda típica ("cuánto valen hoy 700 mil pesos de 2021")
+      const ult = meses[meses.length - 1], ej = document.getElementById('ejemplo-hoy');
+      if (ej && indice['2021-06'] && indice[ult]) {
+        const hoy = Math.round(700000 * indice[ult] / indice['2021-06'] / 1000) * 1000;
+        ej.innerHTML = 'Por ejemplo: <strong>$700.000 de junio de 2021 equivalen a $' + hoy.toLocaleString('es-AR') + '</strong> de ' + nombreMes(ult) + '. <a href="?monto=700000&amp;desde=2021-06">Ver el cálculo</a>';
+        ej.hidden = false;
+      }
 
       el.nota.textContent =
         'Último mes con dato publicado: ' + nombreMes(meses[meses.length - 1]) + '. ' +
