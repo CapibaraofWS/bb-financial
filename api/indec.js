@@ -143,7 +143,8 @@ async function calendario(req, res) {
       if (/^Argentine|^INDEC Informa/.test(titulo)) continue;   // versiones en inglés y la revista mensual
       const k = fecha + titulo; if (vistos.has(k)) continue; vistos.add(k);
       const limpio = url.replace(/^\/+/, '');
-      eventos.push({ fecha, hora, titulo, informe: /^uploads\/informesdeprensa\/[A-Za-z0-9_]+\.pdf$/.test(limpio) ? INDEC + '/' + limpio : null });
+      // El informe suele estar en uploads/informesdeprensa; algunos (productos industriales, productividad) en ftp/cuadros
+      eventos.push({ fecha, hora, titulo, informe: /^(uploads\/informesdeprensa|ftp\/cuadros\/[a-z]+)\/[A-Za-z0-9_]+\.pdf$/.test(limpio) ? INDEC + '/' + limpio : null });
     }
     if (eventos.length < 5) throw new Error();
     eventos.sort((a, b) => (a.fecha + a.hora < b.fecha + b.hora ? -1 : 1));
@@ -529,18 +530,66 @@ const SECTORES = {
   ipcPortal: '148.3_INIVELNAL_DICI_M_26',
 };
 const EN_PESOS = ['iva', 'cheque', 'ivaAduana', 'prestConsumo', 'prestComerciales', 'prestHipotecarios'];
+// Supermercados, autoservicios mayoristas, centros de compras y capacidad instalada salen semanas antes en los archivos del INDEC
+// que en el portal: se leen de ahí (los nombres de dos archivos cambian con cada informe y se buscan en la página del tema).
+const planillaIndec = async (ruta, tema) => {
+  if (!ruta) {
+    const pag = await fetch(INDEC + tema.pagina, { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : ''));
+    ruta = (pag.match(tema.re) || [])[0];
+    if (!ruta) throw new Error('sin archivo');
+  }
+  const x = await fetch(INDEC + ruta, { signal: AbortSignal.timeout(15000), headers: UA });
+  if (!x.ok) throw new Error('archivo');
+  const buf = Buffer.from(await x.arrayBuffer());
+  return buf[0] === 0x50 ? leerXlsx(buf) : leerXls(buf);   // "PK": .xlsx; si no, .xls
+};
+// Cuadro 1 de las encuestas de comercio: fecha de Excel y el índice de ventas a precios constantes, serie original
+const ventasIndec = H => {
+  const f = (H.find(h => /cuadro\s*(web_)?1\.?$/i.test(h.nombre.trim())) || {}).filas || [];
+  if (!f.some(r => r && /precios constantes/i.test(String(r[0] || ''))) || !f.some(r => r && /Serie original/i.test(String(r[1] || '')))) throw new Error('formato');
+  return f.filter(r => r && typeof r[0] === 'number' && r[0] > 40000 && Number.isFinite(r[1])).map(r => [fechaExcel(r[0]).slice(0, 7), r[1]]);
+};
+// Capacidad instalada: filas "Año 2026" y después un mes por fila, con el nivel general en la segunda columna
+const capacidadIndec = H => {
+  let anio = null; const out = [];
+  for (const r of (H[0] && H[0].filas) || []) {
+    if (!r) continue;
+    const a = String(r[0] ?? '').match(/^Año (\d{4})/); if (a) { anio = a[1]; continue; }
+    const m = MESES_ES.indexOf(String(r[0] ?? '').replace(/[^a-záéíóú]/gi, '').toLowerCase());
+    if (anio && m >= 0 && Number.isFinite(r[1])) out.push([anio + '-' + String(m + 1).padStart(2, '0'), r[1]]);
+  }
+  if (out.length < 24) throw new Error('formato');
+  return out;
+};
+async function ultimosIndec() {
+  const [sup, may, cc, uc] = await Promise.allSettled([
+    planillaIndec('/ftp/cuadros/economia/serie_supermercados.xlsx').then(ventasIndec),
+    planillaIndec('/ftp/cuadros/economia/serie_autoservicios_mayoristas.xlsx').then(ventasIndec),
+    planillaIndec(null, { pagina: '/Nivel4/Tema/3/1/36', re: /\/ftp\/cuadros\/economia\/sh_compras_\d{2}_\d{2}\.xls/ }).then(ventasIndec),
+    planillaIndec(null, { pagina: '/Nivel4/Tema/3/6/15', re: /\/ftp\/cuadros\/economia\/sh_capacidad_\d{2}_\d{2}\.xls/ }).then(capacidadIndec),
+  ]);
+  const ok = r => (r.status === 'fulfilled' ? r.value : []);
+  return { super: ok(sup), mayoristas: ok(may), shoppings: ok(cc), capacidad: ok(uc) };
+}
 async function sectores(req, res) {
   try {
     const ids = Object.values(SECTORES), grupos = [];
     for (let i = 0; i < ids.length; i += 10) grupos.push(ids.slice(i, i + 10));
-    const [rCsv, ...rs] = await Promise.allSettled([
+    const [rCsv, rInd, ...rs] = await Promise.allSettled([
       fetch(INDEC + '/ftp/cuadros/economia/serie_ipc_divisiones.csv', { signal: AbortSignal.timeout(15000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); }),
+      ultimosIndec(),
       ...grupos.map(g => fetch('https://apis.datos.gob.ar/series/api/series/?format=json&limit=1000&start_date=2017-01-01&ids=' + g.join(','), { signal: AbortSignal.timeout(15000) })
         .then(r => { if (!r.ok) throw new Error(); return r.json(); })),
     ]);
     const col = {};
     rs.forEach((r, n) => { if (r.status === 'fulfilled') grupos[n].forEach((id, k) => { col[id] = r.value.data.filter(f => Number.isFinite(f[k + 1])).map(f => [f[0].slice(0, 7), f[k + 1]]); }); });
     const s = Object.fromEntries(Object.entries(SECTORES).map(([k, id]) => [k, col[id] || []]));
+    // Encima del portal, lo que ya publicó el INDEC en sus archivos (mismos valores y los meses que al portal le faltan)
+    if (rInd.status === 'fulfilled') for (const [k, filas] of Object.entries(rInd.value)) {
+      if (!filas.length) continue;
+      const m = Object.fromEntries(s[k]); for (const [p, v] of filas) if (p >= '2017-01') m[p] = v;
+      s[k] = Object.entries(m).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    }
     // IPC: el portal y, encima, el archivo del INDEC (que trae el último mes antes que el portal)
     const ipc = Object.fromEntries(s.ipcPortal);
     if (rCsv.status === 'fulfilled') for (const linea of new TextDecoder('latin1').decode(rCsv.value).split(/\r?\n/)) {
@@ -672,11 +721,12 @@ const MES_CORTO = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep'
 async function trabajo(req, res) {
   const serie = ids => fetch('https://apis.datos.gob.ar/series/api/series/?format=json&limit=1000&start_date=2016-01-01&ids=' + ids, { signal: AbortSignal.timeout(15000) })
     .then(r => { if (!r.ok) throw new Error(); return r.json(); });
-  const [rCgi, rEph, rSue, rEst] = await Promise.allSettled([
+  const [rCgi, rEph, rSue, rEst, rGini] = await Promise.allSettled([
     csvGob('324/distribution/324.1/download/insumo-de-mano-de-obra-por-sector-de-actividad-economica-datos-trimestrales.csv'),
     serie('52.2_ASDJ_0_0_37,65.1_CGI_0_0_21'),
     serie('153.1_RNERACIDIO_2009_M_21,153.1_RNERACIANA_2009_M_20'),
     fetch(INDEC + '/ftp/cuadros/economia/serie_dotacion_apn.xlsx', { signal: AbortSignal.timeout(15000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); }),
+    planillaIndec('/ftp/cuadros/sociedad/serie_coeficiente_gini.xlsx'),
   ]);
   const out = { fuente: 'INDEC (cuentas nacionales, EPH y dotación de la APN) y Secretaría de Trabajo (SIPA), vía datos.gob.ar' };
   const r1 = v => (v == null ? null : Math.round(v * 10) / 10);
@@ -697,6 +747,19 @@ async function trabajo(req, res) {
     const inf = col(1), gini = col(2);
     if (inf.length > 8 && inf.at(-1)[1] < 80) out.informalidad = inf;
     if (gini.length > 8 && gini.at(-1)[1] < 1) out.gini = gini;
+  }
+  // Gini del archivo del INDEC, que trae el trimestre nuevo semanas antes que el portal: filas con el año (solo en el
+  // primer trimestre) y "2° trim", desde la EPH continua
+  if (rGini.status === 'fulfilled') {
+    let anio = null; const M = Object.fromEntries(out.gini || []);
+    for (const f of (rGini.value[0] && rGini.value[0].filas) || []) {
+      if (!f) continue;
+      if (typeof f[0] === 'number' && f[0] > 2000) anio = f[0];
+      const q = String(f[1] ?? '').match(/^(\d)\s*°\s*trim/i);
+      if (anio >= 2003 && q && Number.isFinite(f[2]) && f[2] > 0 && f[2] < 1) M[anio + '-' + ['01', '04', '07', '10'][q[1] - 1]] = f[2];
+    }
+    const g = Object.entries(M).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    if (g.length > 8) out.gini = g;
   }
   // Sueldo bruto promedio y mediano de los asalariados privados registrados (mensual, en pesos; junio y diciembre incluyen aguinaldo)
   if (rSue.status === 'fulfilled') {
