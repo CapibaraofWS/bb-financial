@@ -145,9 +145,10 @@ window.BBPanel = (function () {
     if (cal && Array.isArray(cal.eventos)) {
       const ev = cal.eventos.map(e => Object.assign({}, e, corto(e.titulo))).filter(e => e.nivel <= 2);
       const yaSalio = e => e.fecha < hoy || (e.fecha === hoy && new Date().getHours() >= 16);
-      // Publicados: los de nivel 1 primero; si sobra lugar, los de nivel 2. Después, en orden de fecha.
+      // Publicados: los de nivel 1 y los de nivel 2 de los últimos 3 días (así lo que salió hoy siempre aparece);
+      // si sobra lugar, los demás de nivel 2. Después, en orden de fecha.
       const salieron = ev.filter(yaSalio);
-      const antes = salieron.filter(e => e.nivel === 1).slice(-pasados);
+      const antes = salieron.filter(e => e.nivel === 1 || diasEntre(e.fecha, hoy) <= 3).slice(-pasados);
       if (antes.length < pasados) antes.push(...salieron.filter(e => e.nivel === 2).slice(-(pasados - antes.length)));
       const despues = ev.filter(e => !yaSalio(e)).slice(0, proximos);
       for (const e of antes) {
