@@ -137,6 +137,20 @@
         <p class="fuente">Fuente: INDEC.</p>
       </section>
 
+
+      <section class="pa-graf" aria-labelledby="g-otros-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-otros-t">Precios mayoristas y costo de la construcción</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> cuánto subieron en un año los precios mayoristas (lo que cobran productores e importadores antes de que la mercadería llegue al comercio) y el costo de construir una vivienda, al lado de la inflación al consumidor. Los mayoristas a veces anticipan parte de lo que después llega a las góndolas.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-otros" data-titulo="Precios mayoristas, construcción y consumidor: variación interanual" data-fuente="INDEC">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-otros"></div>
+        <div class="pa-seg" id="s-otros" role="group" aria-label="Período">
+          <button type="button" data-v="24" aria-pressed="true">2 años</button><button type="button" data-v="todo" aria-pressed="false">Desde 2019</button>
+        </div>
+        <div class="lienzo"><canvas id="g-otros" aria-label="Variación interanual de precios mayoristas, construcción y consumidor"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/5/32" target="_blank" rel="noopener">INDEC, precios mayoristas (SIPM)</a> y <a href="https://www.indec.gob.ar/Nivel4/Tema/3/5/33" target="_blank" rel="noopener">costo de la construcción (ICC)</a>. El índice de la construcción empieza en 2022.</p>
+      </section>
+
       <a class="pa-cta" href="inflacion">
         <div><b>¿Cuánto valen hoy tus pesos de otro año?</b><span>La calculadora de inflación convierte cualquier monto entre dos meses desde 1992, con este mismo índice.</span></div>
         <span class="flecha">Calcular →</span>
@@ -167,10 +181,11 @@
   <script src="../js/main.js?v=50"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=18"></script>
+  <script src="../js/panel.js?v=19"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
+    const pOtros = P.API.otrosPrecios();
     const [ipc, b] = await Promise.all([P.API.ipc(), P.API.bcra()]);
     if (!ipc || !ipc.general) return;
     const g = ipc.general, u = g.at(-1), a = g.at(-2), mes = P.mesAnio(u.p), cat = ipc.categorias, bs = ipc.bienesServicios;
@@ -234,6 +249,27 @@
         { label: 'Servicios', data: s36.map(x => x.a), borderColor: '#ff9f7a', pointRadius: 0, tension: 0.25 },
         { label: 'Bienes', data: b36.map(x => x.a), borderColor: '#e8c97a', pointRadius: 0, tension: 0.25 } ] },
       options: P.ejes(v => v + '%', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + pc(c.parsed.y) } } } }) });
+
+    // ---- Precios mayoristas y costo de la construcción, al lado de la inflación al consumidor
+    const OP = await pOtros, MY = OP && OP.mayoristas, CO = OP && OP.construccion;
+    if (MY || CO) {
+      const ia = (s, p) => { const M = Object.fromEntries(s), q = (+p.slice(0, 4) - 1) + p.slice(4); return M[p] && M[q] ? (M[p] / M[q] - 1) * 100 : null; };
+      const mm = s => (s.length > 1 ? (s.at(-1)[1] / s.at(-2)[1] - 1) * 100 : null);
+      const mini = (t, v, d) => '<div><span>' + t + '</span><b>' + v + '</b><small>' + d + '</small></div>';
+      let h = '';
+      if (MY) { const um = MY.general.at(-1)[0];
+        h += mini('Precios mayoristas · ' + P.mesAnio(um), P.signo(mm(MY.general)) + '%', 'En el mes. Contra un año atrás: ' + P.signo(ia(MY.general, um)) + '%') +
+          mini('Mayoristas, contra un año atrás', P.signo(ia(MY.importados, um)) + '%', 'Importados. Nacionales: primarios ' + P.signo(ia(MY.primarios, um)) + '%, manufacturados y energía ' + P.signo(ia(MY.manufacturados, um)) + '%'); }
+      if (CO) { const uc = CO.general.at(-1)[0];
+        h += mini('Costo de la construcción · ' + P.mesAnio(uc), P.signo(mm(CO.general)) + '%', 'En el mes. Contra un año atrás: ' + P.signo(ia(CO.general, uc)) + '% (materiales ' + P.signo(ia(CO.materiales, uc)) + '%, mano de obra ' + P.signo(ia(CO.manoDeObra, uc)) + '%)'); }
+      $('m-otros').innerHTML = h;
+      const base = g.filter(x => x.p >= '2019-01' && x.a != null);
+      const datos = n => { const s = n === 'todo' ? base : base.slice(-n); return { labels: s.map(x => P.mesAnio(x.p)), sets: [s.map(x => x.a), s.map(x => (MY ? ia(MY.general, x.p) : null)), s.map(x => (CO ? ia(CO.general, x.p) : null))] }; };
+      const d0 = datos(24);
+      const chO = new Chart($('g-otros'), { type: 'line', data: { labels: d0.labels, datasets: [['Al consumidor (IPC)', '#e8edf5', 2.5], ['Mayoristas', '#60a5fa', 2], ['Construcción', '#f59e0b', 2]].map(([t, c, w], i) => ({ label: t, data: d0.sets[i], borderColor: c, borderWidth: w, pointRadius: 0, tension: 0.25 })) },
+        options: P.ejes(v => v + '%', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => (c.parsed.y == null ? null : c.dataset.label + ': ' + pc(c.parsed.y) + ' en un año') } } } }) });
+      P.seg('s-otros', v => { const d = datos(v === 'todo' ? 'todo' : +v); chO.data.labels = d.labels; d.sets.forEach((x, i) => (chO.data.datasets[i].data = x)); chO.update(); });
+    }
   })();
   </script>
 </body>

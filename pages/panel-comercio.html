@@ -127,6 +127,16 @@
         <p class="fuente">Fuente: INDEC, exportaciones e importaciones por continentes y países.</p>
       </section>
 
+      <section class="pa-graf" aria-labelledby="g-tur-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-tur-t">Turismo: cuántos vienen y cuántos se van</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> los turistas extranjeros que llegaron al país y los residentes que viajaron al exterior, sumando los últimos 12 meses para que no pese la temporada, en millones de personas. Cuando la línea de los que se van está arriba, salen más dólares por turismo de los que entran.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-tur" data-titulo="Turismo internacional: llegadas y salidas" data-fuente="INDEC">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-tur"></div>
+        <div class="lienzo"><canvas id="g-tur" aria-label="Turistas que llegan y residentes que viajan al exterior, últimos 12 meses"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/13/55" target="_blank" rel="noopener">INDEC, Estadísticas de turismo internacional</a> (total del país).</p>
+      </section>
+
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
         <p>El <strong>saldo comercial</strong> es la diferencia entre lo que el país exporta e importa en bienes. Un superávit significa que entraron más dólares por ventas de bienes de los que salieron por compras. No es todo el movimiento de dólares: el turismo, los fletes, las ganancias de las empresas y los pagos de deuda van por otro lado, en la balanza de pagos.</p>
@@ -161,10 +171,11 @@
   <script src="../js/main.js?v=50"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=18"></script>
+  <script src="../js/panel.js?v=19"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
+    const pExt = P.API.externo();
     const [c, cal] = await Promise.all([P.API.comercio(), P.API.calendario()]);
     const usd = v => 'US$ ' + Math.round(v).toLocaleString('es-AR') + ' M';
     const usdS = v => (v < 0 ? '−' : '') + usd(Math.abs(v));
@@ -250,6 +261,21 @@
           { label: 'Importaciones', data: top.map(x => x.impo), backgroundColor: 'rgba(96,165,250,0.6)', borderRadius: 3 } ] },
         options: P.ejes(v => v, { indexAxis: 'y', plugins: { legend: leyenda, tooltip: { callbacks: { label: x => x.dataset.label + ': ' + usd(x.parsed.x) } } },
           scales: { x: { ticks: { color: '#9aa5b8', callback: v => num(v / 1000, 0) + ' mil' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#9aa5b8', autoSkip: false }, grid: { display: false } } } }) });
+    }
+
+    // ---- Turismo internacional: llegadas y salidas, en suma de 12 meses
+    const EX = await pExt, TU = EX && EX.turismo;
+    if (TU && TU.length > 24) {
+      const n = TU.length - 1, u = TU[n], ia = TU.find(x => x[0] === (+u[0].slice(0, 4) - 1) + u[0].slice(4)), mil = v => Math.round(v / 1000).toLocaleString('es-AR') + ' mil';
+      const suma = (i, k) => TU.slice(i - 11, i + 1).reduce((s, x) => s + x[k], 0), var_ = (a, b) => P.signo((a / b - 1) * 100) + '%';
+      $('m-tur').innerHTML = '<div><span>Llegaron · ' + P.mesAnio(u[0]) + '</span><b>' + mil(u[1]) + '</b><small>Turistas extranjeros' + (ia ? ' · contra un año atrás: ' + var_(u[1], ia[1]) : '') + '</small></div>' +
+        '<div><span>Viajaron al exterior · ' + P.mesAnio(u[0]) + '</span><b>' + mil(u[2]) + '</b><small>Residentes' + (ia ? ' · contra un año atrás: ' + var_(u[2], ia[2]) : '') + '</small></div>' +
+        '<div><span>Saldo de los últimos 12 meses</span><b>' + P.signo((suma(n, 1) - suma(n, 2)) / 1e6, 2) + ' M</b><small>Llegadas menos salidas, en millones de personas</small></div>';
+      const idx = TU.map((_, i) => i).filter(i => i >= 11 && TU[i][0] >= '2017-12');
+      new Chart($('g-tur'), { type: 'line', data: { labels: idx.map(i => P.mesAnio(TU[i][0])), datasets: [
+          { label: 'Llegan (turistas extranjeros)', data: idx.map(i => suma(i, 1) / 1e6), borderColor: '#60a5fa', borderWidth: 2.5, pointRadius: 0, tension: 0.25 },
+          { label: 'Se van (residentes al exterior)', data: idx.map(i => suma(i, 2) / 1e6), borderColor: '#f59e0b', borderWidth: 2.5, pointRadius: 0, tension: 0.25 } ] },
+        options: P.ejes(v => num(v, 0) + ' M', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + num(c.parsed.y, 2) + ' millones en 12 meses' } } } }) });
     }
   })();
   </script>

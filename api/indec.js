@@ -829,6 +829,63 @@ async function icc(req, res) {
   return res.status(200).json({ fuente, serie });
 }
 
+// ?otrosprecios=1: precios mayoristas (IPIM) y costo de la construcción (ICC) de los CSV del INDEC, que se actualizan el día del informe
+const IPIM = { general: /^ng_/, primarios: /^1_primarios/, manufacturados: /^2_industria/, importados: /^i_productos_importados/ };
+const ICC_CONS = { general: 'nivel_general', materiales: 'materiales', manoDeObra: 'mano_de_obra', gastos: 'gastos_generales' };
+async function otrosPrecios(req, res) {
+  const csv = f => fetch(INDEC + '/ftp/cuadros/economia/' + f, { signal: AbortSignal.timeout(15000), headers: UA }).then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); })
+    .then(b => new TextDecoder('latin1').decode(b).split(/\r?\n/).slice(1).map(l => l.split(';')).filter(c => c.length >= 3));
+  const [rIpim, rIcc] = await Promise.allSettled([csv('indice_ipim.csv'), csv('indice_icc_general_capitulos.csv')]);
+  const n = v => { const x = parseFloat(String(v).replace(',', '.')); return Number.isFinite(x) ? Number(x.toPrecision(7)) : null; };
+  const out = { fuente: 'INDEC, Sistema de índices de precios mayoristas e Índice del costo de la construcción' };
+  if (rIpim.status === 'fulfilled') {
+    // Filas "2026-09-01;ng_nivel_general;17104,02"
+    const m = Object.fromEntries(Object.entries(IPIM).map(([k, re]) => [k, rIpim.value.filter(c => re.test(c[1]) && /^\d{4}-\d{2}-01$/.test(c[0]) && n(c[2])).map(c => [c[0].slice(0, 7), n(c[2])])]));
+    if (m.general.length > 24 && Object.values(m).every(s => s.length > 24)) out.mayoristas = m;
+  }
+  if (rIcc.status === 'fulfilled') {
+    // Filas "1/9/2026;nivel_general;1779,72" (día/mes/año)
+    const per = f => { const x = String(f).match(/^\d{1,2}\/(\d{1,2})\/(\d{4})$/); return x ? x[2] + '-' + x[1].padStart(2, '0') : null; };
+    const m = Object.fromEntries(Object.entries(ICC_CONS).map(([k, c]) => [k, rIcc.value.filter(r => r[1] === c && per(r[0]) && n(r[2])).map(r => [per(r[0]), n(r[2])]).sort((a, b) => (a[0] < b[0] ? -1 : 1))]));
+    if (m.general.length > 12 && Object.values(m).every(s => s.length > 12)) out.construccion = m;
+  }
+  if (!out.mayoristas && !out.construccion) return res.status(502).json({ error: 'No se pudieron leer los precios mayoristas ni la construcción' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
+// ?externo=1: turismo internacional (llegadas y salidas de turistas, mensual) y balanza de pagos (trimestral) del INDEC.
+// El archivo de la balanza de pagos cambia de nombre cada trimestre (cin_II_2026.xls): se busca en la página del tema.
+const BOP_FILAS = { cuentaCorriente: /^1\.\s*Cuenta corriente/, bienes: /^1\.A\.a\s*Bienes/, servicios: /^1\.A\.b\s*Servicios/, primario: /^1\.B\.?\s*Ingreso primario/,
+  secundario: /^1\.C\.?\s*Ingreso secundario/, financiera: /^3\.\s*Cuenta financiera/, directa: /^3\.1\s*Inversión directa/, reservas: /^3\.5\s*Activos de reserva/, errores: /^Errores y omisiones/ };
+async function externo(req, res) {
+  const [rTur, rBop] = await Promise.allSettled([
+    planillaIndec('/ftp/cuadros/economia/serie_turismo_receptivo_emisivo.xlsx'),
+    planillaIndec(null, { pagina: '/Nivel4/Tema/3/35/45', re: /\/ftp\/cuadros\/economia\/cin_[IV]+_\d{4}\.xls/ }),
+  ]);
+  const out = { fuente: 'INDEC, Estadísticas de turismo internacional y Balanza de pagos' };
+  if (rTur.status === 'fulfilled') {
+    const f = (rTur.value[0] && rTur.value[0].filas) || [];
+    if (f.some(r => r && /receptivo/i.test(String(r[1] || '')) && /emisivo/i.test(String(r[2] || '')))) {
+      const s = f.filter(r => r && typeof r[0] === 'number' && r[0] > 40000 && Number.isFinite(r[1]) && Number.isFinite(r[2])).map(r => [fechaExcel(r[0]).slice(0, 7), Math.round(r[1]), Math.round(r[2])]);
+      if (s.length > 24) out.turismo = s;
+    }
+  }
+  if (rBop.status === 'fulfilled') {
+    const f = ((rBop.value.find(h => /^cuadro 1$/i.test(h.nombre.trim())) || {}).filas) || [];
+    const cab = f.find(r => r && r.filter(v => /^\d{4}T[1-4]/.test(String(v || ''))).length > 8) || [];
+    const cols = cab.map((v, i) => [i, (String(v || '').match(/^(\d{4})T([1-4])/) || [])]).filter(c => c[1].length).map(([i, m]) => [i, m[1] + '-Q' + m[2]]);
+    const txt = v => String(v ?? '').replace(/\s+/g, ' ').trim();
+    const filas = Object.fromEntries(Object.entries(BOP_FILAS).map(([k, re]) => { const r = f.find(x => x && re.test(txt(x[0]))); return [k, r ? cols.map(([i]) => (Number.isFinite(r[i]) ? Math.round(r[i]) : null)) : null]; }));
+    // Control: la cuenta corriente tiene que ser la suma de sus cuatro partes
+    const cc = filas.cuentaCorriente, suma = i => filas.bienes[i] + filas.servicios[i] + filas.primario[i] + filas.secundario[i];
+    if (Object.values(filas).every(Boolean) && cols.length > 20 && cc.every((v, i) => v == null || Math.abs(v - suma(i)) < 5)) out.balanza = { trimestres: cols.map(c => c[1]), ...filas };
+  }
+  if (!out.turismo && !out.balanza) return res.status(502).json({ error: 'No se pudieron leer el turismo ni la balanza de pagos' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json(out);
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
@@ -847,6 +904,8 @@ export default async function handler(req, res) {
   if (req.query.cambiario) return cambiario(req, res);
   if (req.query.trabajo) return trabajo(req, res);
   if (req.query.icc) return icc(req, res);
+  if (req.query.otrosprecios) return otrosPrecios(req, res);
+  if (req.query.externo) return externo(req, res);
   const series = req.query.series;
 
   if (!series || !/^[A-Za-z0-9._,-]{1,300}$/.test(series)) {
