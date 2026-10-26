@@ -497,7 +497,7 @@ document.addEventListener('toggle', (e) => {
         <p class="donation-sub">El sitio es gratis y no pide registro. Para que siga así puede mostrar algunos anuncios. Si te sirvió, sumate con el valor de un café — me ayudás a mantenerlo vivo y a sumar más herramientas.</p>
       </div>
       <div class="donation-buttons">
-        <a href="https://cafecito.app/bb-financial" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">
+        <a href="https://cafecito.app/bb-finanzas" target="_blank" rel="noopener noreferrer" class="donation-btn cafecito">
           ☕ Invitame un cafecito
         </a>
       </div>
