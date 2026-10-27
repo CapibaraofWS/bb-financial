@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Test del inversor: ¿qué tipo de inversor sos? — BB Finanzas</title>
   <meta name="description" content="Diez preguntas para conocer tu perfil de riesgo y qué instrumentos van con tu situación real, no con la del manual." />
-  <meta name="keywords" content="test inversor argentina, perfil inversor, perfil conservador moderado agresivo, recomendacion cartera, asesor financiero" />
+  <meta name="keywords" content="test inversor argentina, perfil inversor, perfil conservador moderado agresivo, asesor financiero" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/test-inversor" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
@@ -132,7 +132,7 @@
       <div class="container">
         <p class="page-breadcrumb"><a href="../">Inicio</a><span>/</span>Test del Inversor</p>
         <h1 class="page-title">¿Qué tipo de inversor sos?</h1>
-        <p class="page-subtitle">10 preguntas de 1 minuto. Te clasificamos en <strong>conservador</strong>, <strong>moderado</strong> o <strong>agresivo</strong> y te sugerimos una cartera modelo con instrumentos reales del mercado argentino y USA.</p>
+        <p class="page-subtitle">10 preguntas de 1 minuto. Te clasificamos en <strong>conservador</strong>, <strong>moderado</strong> o <strong>agresivo</strong> y te mostramos qué tipos de instrumentos suelen asociarse a cada perfil y qué riesgos tienen.</p>
       </div>
     </section>
 
@@ -147,11 +147,11 @@
         <div class="ti-content">
           <p><strong>Qué hace este test:</strong> 10 preguntas que miden 3 dimensiones — <em>tolerancia al riesgo</em>, <em>horizonte temporal</em> y <em>conocimientos previos</em>. Cada respuesta suma 1 (conservador), 2 (moderado) o 3 (agresivo) puntos. El total (entre 10 y 30) se mapea a uno de los 3 perfiles.</p>
           <p><strong>De dónde vienen las preguntas:</strong> el cuestionario está inspirado en los <em>perfiles de inversor</em> que usan las ALyCs reguladas por CNV (similar a lo que te haría firmar un broker al abrir cuenta), pero adaptado a la realidad del mercado argentino. No es un test psicológico formal — es una herramienta educativa para que te conozcas como inversor.</p>
-          <p><strong>Cómo se construyen las carteras modelo:</strong> son <em>asignaciones tipo</em> ampliamente recomendadas en la literatura (Bogle, Ferri, Markowitz). Los porcentajes no son únicos — un asesor experto puede ajustar según tu impuesto, tus ingresos, tu edad. Los instrumentos mencionados (CEDEARs, ONs, FCI específicos) son ejemplos reales del mercado argentino y USA, NO recomendaciones individuales.</p>
+          <p><strong>Qué muestra el resultado:</strong> los tipos de instrumentos que la literatura financiera suele asociar a cada nivel de riesgo, con sus riesgos principales. No incluye porcentajes, productos ni empresas concretas: no es una cartera ni una recomendación.</p>
           <p><strong>Limitaciones:</strong></p>
           <ul>
-            <li>El test no considera tu <strong>situación impositiva</strong> (residente fiscal, monotributo, etc.) — afecta qué instrumentos te convienen.</li>
-            <li>No considera tu <strong>capital total</strong> — la cartera ideal para alguien con USD 5k difiere de alguien con USD 500k.</li>
+            <li>El test no considera tu <strong>situación impositiva</strong> (residente fiscal, monotributo, etc.) — cambia cómo tributa cada instrumento.</li>
+            <li>No considera tu <strong>capital total</strong> — las opciones disponibles no son las mismas con USD 5.000 que con USD 500.000.</li>
             <li>No mide tu <strong>estabilidad de ingresos</strong> (sueldo fijo vs freelance) — clave para decidir cuánto efectivo guardar.</li>
             <li>Las respuestas son <strong>autoreportadas</strong> — la gente suele sobreestimar su tolerancia al riesgo (hasta que ven una caída del 30% en pantalla).</li>
             <li>Los <strong>instrumentos mencionados</strong> cambian: un FCI puede cerrar, un CEDEAR puede dejar de listar, una ON puede defaultear. Verificá disponibilidad antes de operar.</li>
@@ -222,7 +222,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=52"></script>
+  <script src="../js/main.js?v=53"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     // ===== Preguntas (cada opción suma puntos al perfil: 1=conservador, 2=moderado, 3=agresivo) =====
@@ -240,7 +240,7 @@
         opts: [
           { txt: 'Menos de 1 año.', sub: 'Necesitás liquidez pronto.', score: 1 },
           { txt: 'Entre 1 y 5 años.', sub: 'Tenés un objetivo de mediano plazo.', score: 2 },
-          { txt: 'Más de 5 años (jubilación, casa, etc.).', sub: 'Horizonte largo — el tiempo juega a favor.', score: 3 },
+          { txt: 'Más de 5 años (jubilación, casa, etc.).', sub: 'Horizonte largo.', score: 3 },
         ]
       },
       {
@@ -270,9 +270,9 @@
       {
         q: '¿Tenés un fondo de emergencia (3-6 meses de gastos) aparte de lo que invertís?',
         opts: [
-          { txt: 'No, todavía lo estoy armando.', sub: 'Prioridad: fondo de emergencia antes de inversión riesgosa.', score: 1 },
-          { txt: 'Sí, tengo entre 1 y 3 meses.', sub: 'Vas bien, podés asumir algo de riesgo.', score: 2 },
-          { txt: 'Sí, más de 6 meses cubiertos.', sub: 'Excelente base — podés tomar más riesgo.', score: 3 },
+          { txt: 'No, todavía lo estoy armando.', sub: 'Todavía sin colchón para imprevistos.', score: 1 },
+          { txt: 'Sí, tengo entre 1 y 3 meses.', sub: 'Colchón parcial para imprevistos.', score: 2 },
+          { txt: 'Sí, más de 6 meses cubiertos.', sub: 'Colchón completo para imprevistos.', score: 3 },
         ]
       },
       {
@@ -294,17 +294,17 @@
       {
         q: '¿Cuál es tu edad? (afecta el horizonte natural)',
         opts: [
-          { txt: 'Más de 55.', sub: 'Foco en preservación, plazo más corto.', score: 1 },
-          { txt: 'Entre 35 y 55.', sub: 'Etapa de crecimiento con balance.', score: 2 },
-          { txt: 'Menos de 35.', sub: 'Tiempo a favor — podés tomar riesgo.', score: 3 },
+          { txt: 'Más de 55.', sub: 'Horizonte más corto.', score: 1 },
+          { txt: 'Entre 35 y 55.', sub: 'Horizonte intermedio.', score: 2 },
+          { txt: 'Menos de 35.', sub: 'Horizonte más largo.', score: 3 },
         ]
       },
       {
         q: '¿Estás dispuesto a estudiar/leer sobre inversiones regularmente?',
         opts: [
-          { txt: 'No mucho. Prefiero que sea simple.', sub: 'Mejor instrumentos pasivos y delegados.', score: 1 },
-          { txt: 'Algo. Una hora por semana.', sub: 'Podés manejar selección moderada.', score: 2 },
-          { txt: 'Sí, varias horas. Me gusta el tema.', sub: 'Podés operar activamente.', score: 3 },
+          { txt: 'No mucho. Prefiero que sea simple.', sub: 'Instrumentos simples, de poco seguimiento.', score: 1 },
+          { txt: 'Algo. Una hora por semana.', sub: 'Algo de seguimiento.', score: 2 },
+          { txt: 'Sí, varias horas. Me gusta el tema.', sub: 'Seguimiento frecuente.', score: 3 },
         ]
       },
     ];
@@ -313,49 +313,50 @@
       conservador: {
         icon: '🛡️',
         title: 'Perfil Conservador',
-        desc: 'Tu prioridad es <strong>preservar el capital</strong> y obtener rendimientos predecibles. Tolerás poca volatilidad y preferís instrumentos líquidos y de bajo riesgo. Es el perfil correcto para personas cerca de la jubilación, con horizonte corto o sin fondo de emergencia.',
+        desc: 'Tu prioridad es <strong>preservar el capital</strong> y obtener rendimientos predecibles. Tolerás poca volatilidad y preferís instrumentos líquidos y de bajo riesgo. Es un perfil frecuente en personas con un horizonte corto, cerca de la jubilación o que todavía están armando un fondo para imprevistos.',
         portfolio: [
-          { pct: '40%', label: 'Renta fija corta', ex: 'Plazo fijo bancos top + LECAPs cortas + FCI Money Market' },
-          { pct: '30%', label: 'Cuentas remuneradas', ex: 'Billeteras virtuales (Mercado Pago, Naranja X) — alta liquidez' },
-          { pct: '20%', label: 'Dólar / Hard Dollar', ex: 'Cuenta dólar MEP + 1-2 bonos hard dollar cortos (AL30, GD30)' },
-          { pct: '10%', label: 'Liquidez / Reserva', ex: 'Caja para imprevistos. NO se invierte.' },
+          { pct: 'Plazo fijo', label: 'Riesgo bajo', ex: 'Tasa fija en pesos por un plazo determinado. Se sabe de antemano cuánto se cobra; la plata queda inmovilizada hasta el vencimiento.' },
+          { pct: 'Cuentas remuneradas y fondos money market', label: 'Riesgo bajo', ex: 'Pagan una tasa diaria y la plata se puede retirar en cualquier momento. La tasa cambia con el mercado.' },
+          { pct: 'Letras del Tesoro cortas', label: 'Riesgo bajo a medio', ex: 'Deuda del Estado en pesos a pocos meses. Se compran en un broker; el precio puede moverse antes del vencimiento.' },
+          { pct: 'Dólares', label: 'Variable', ex: 'Cubren frente a una suba del tipo de cambio. Si quedan quietos, no generan intereses.' },
         ],
-        examples: {
-          ar: ['<strong>Plazo fijo</strong> en bancos top (Nación, BBVA, Galicia)', '<strong>LECAPs cortas</strong> (S29Y6, S31G6) — vencimiento &lt; 6 meses', '<strong>FCI Money Market</strong> via Mercado Pago / Cocos Daruma', '<strong>Bono AL30</strong> (hard dollar, plazo medio)'],
-          us: ['<strong>T-Bills</strong> 3M-6M (libre de riesgo USD)', '<strong>SHY ETF</strong> (Treasury 1-3Y) si querés diversificar'],
-        }
+        riesgos: [
+          '<strong>La inflación</strong>: una tasa baja puede quedar por debajo de la suba de los precios.',
+          '<strong>La liquidez</strong>: el plazo fijo tradicional no se puede retirar antes del vencimiento.',
+          '<strong>Las tasas y comisiones</strong>: cambian según el banco, el broker o la app, y también con el tiempo.',
+        ],
       },
       moderado: {
         icon: '⚖️',
         title: 'Perfil Moderado',
-        desc: 'Buscás <strong>crecimiento estable</strong> aceptando volatilidad media. Tu horizonte es 3-7 años. Podés combinar renta fija con algo de variable. Es el perfil más común — la mayoría de inversores caen acá.',
+        desc: 'Buscás <strong>crecimiento estable</strong> aceptando volatilidad media, con un horizonte de algunos años. Este perfil suele asociarse a combinaciones de renta fija con algo de renta variable. Es uno de los perfiles más comunes.',
         portfolio: [
-          { pct: '40%', label: 'Renta variable', ex: 'CEDEARs blue-chip (AAPL, MSFT, KO, JNJ) + 2-3 acciones locales' },
-          { pct: '30%', label: 'Renta fija HD', ex: 'Bonos hard dollar (GD30, GD35) + ONs YPF/Pampa' },
-          { pct: '15%', label: 'Renta fija pesos', ex: 'BONCAPs / LECAPs largas + bonos CER (TX26, DICP)' },
-          { pct: '10%', label: 'Cash / Money Market', ex: 'FCI MM para liquidez y rebalanceo' },
-          { pct: '5%', label: 'Alternativos', ex: 'Cripto (BTC), oro, commodities — opcional' },
+          { pct: 'Cuentas remuneradas y money market', label: 'Riesgo bajo', ex: 'Para la parte que se necesita tener disponible. La tasa cambia con el mercado.' },
+          { pct: 'Bonos en pesos', label: 'Riesgo medio', ex: 'Los de tasa fija pagan un rendimiento conocido y los CER se ajustan por inflación. Sus precios cambian todos los días.' },
+          { pct: 'Bonos en dólares y obligaciones negociables', label: 'Riesgo medio', ex: 'Pagan intereses en dólares. Dependen de que el Estado o la empresa que los emitió cumpla con los pagos.' },
+          { pct: 'Acciones y CEDEAR', label: 'Riesgo alto', ex: 'Participación en empresas. Pueden subir o bajar mucho en poco tiempo; los fondos que siguen un índice reparten ese riesgo entre muchas empresas.' },
         ],
-        examples: {
-          ar: ['<strong>CEDEARs</strong>: SPY (S&P 500), QQQ (Nasdaq), AAPL, MSFT, KO, JNJ', '<strong>Acciones AR</strong>: YPFD, GGAL, PAMP, TGSU2 (líquidas)', '<strong>Bonos HD</strong>: GD30, GD35, ON YPF YCA6O', '<strong>CER</strong>: TX26 o DICP para cubrir inflación'],
-          us: ['<strong>ETF SPY</strong> (S&P 500) — núcleo de la cartera', '<strong>TLT</strong> (Treasury 20+Y) — protección anti-recesión', '<strong>Treasuries 5-10Y</strong> directos para renta fija'],
-        }
+        riesgos: [
+          '<strong>El precio de los bonos</strong> cambia todos los días: venderlos antes del vencimiento puede dar pérdida.',
+          '<strong>El riesgo del emisor</strong>: si el Estado o la empresa no paga, el bono pierde valor.',
+          '<strong>El tipo de cambio</strong>: los CEDEAR y los bonos en dólares también se mueven con el dólar.',
+        ],
       },
       agresivo: {
         icon: '🚀',
         title: 'Perfil Agresivo',
-        desc: 'Aceptás <strong>volatilidad alta</strong> a cambio de potencial de retorno superior. Horizonte largo (10+ años). Tenés conocimiento y tiempo para investigar. Cuidado: este perfil requiere disciplina psicológica para no vender en pánico.',
+        desc: 'Aceptás <strong>volatilidad alta</strong> a cambio de la posibilidad de un rendimiento mayor, con un horizonte largo. Este perfil implica tolerar caídas fuertes sin vender en el peor momento.',
         portfolio: [
-          { pct: '60%', label: 'Renta variable', ex: 'CEDEARs growth (NVDA, TSLA, META) + acciones AR + ETFs sectoriales' },
-          { pct: '15%', label: 'Renta fija HD largo', ex: 'GD41, GD46 (alta TIR + alta convexidad)' },
-          { pct: '10%', label: 'Cripto', ex: 'BTC + ETH como satélites (NO más del 10%)' },
-          { pct: '10%', label: 'Alternativos / oportunidades', ex: 'Opciones, futuros, IPOs, small caps' },
-          { pct: '5%', label: 'Cash táctico', ex: 'Para entrar en correcciones' },
+          { pct: 'Acciones y CEDEAR', label: 'Riesgo alto', ex: 'Participación en empresas de la Argentina y del exterior. Su precio depende de los resultados de cada empresa y del humor del mercado.' },
+          { pct: 'Bonos largos', label: 'Riesgo medio a alto', ex: 'Los bonos a muchos años mueven más su precio cuando cambian las tasas de interés.' },
+          { pct: 'Criptomonedas', label: 'Riesgo muy alto', ex: 'Muy volátiles y sin un emisor que las respalde: pueden perder gran parte de su valor en poco tiempo.' },
+          { pct: 'Opciones y futuros', label: 'Riesgo muy alto', ex: 'Instrumentos derivados que amplifican ganancias y pérdidas. Requieren conocimiento específico.' },
         ],
-        examples: {
-          ar: ['<strong>CEDEARs growth</strong>: NVDA, TSLA, META, AMZN, GOOGL', '<strong>Acciones AR small/mid cap</strong>: MIRG, CRES, BYMA, AGRO', '<strong>Bonos largos</strong>: GD41, GD46 (alta convexidad)', '<strong>Cripto</strong>: BTC y ETH directos o via cripto-billetera regulada'],
-          us: ['<strong>ETF QQQ</strong> (Nasdaq 100) — tech growth', '<strong>ARKK, SOXX</strong> (innovación, semis)', '<strong>Opciones LEAP</strong> sobre índices (si entendés el riesgo)'],
-        }
+        riesgos: [
+          '<strong>Las caídas fuertes</strong>: en una crisis, estos instrumentos pueden perder 30% o más.',
+          '<strong>El apalancamiento</strong>: los futuros y algunas estrategias con opciones pueden hacer perder más de lo invertido.',
+          '<strong>La concentración</strong>: tener mucho en pocos activos aumenta el riesgo.',
+        ],
       }
     };
 
@@ -479,7 +480,7 @@
 
       const h = document.createElement('h3');
       h.style.fontFamily = 'var(--font-display)'; h.style.fontSize = '1.15rem'; h.style.marginBottom = '0.9rem';
-      h.textContent = 'Cartera modelo sugerida';
+      h.textContent = 'Instrumentos que suelen asociarse a este perfil';
       card.appendChild(h);
 
       const grid = document.createElement('div'); grid.className = 'portfolio-grid';
@@ -495,10 +496,10 @@
 
       const exSec = document.createElement('div'); exSec.className = 'examples-section';
 
-      const exH1 = document.createElement('h3'); exH1.textContent = '🇦🇷 Ejemplos en mercado argentino';
+      const exH1 = document.createElement('h3'); exH1.textContent = 'Qué tener en cuenta';
       exSec.appendChild(exH1);
       const ul1 = document.createElement('ul');
-      r.examples.ar.forEach(item => {
+      r.riesgos.forEach(item => {
         const li = document.createElement('li');
         // parse <strong> safely
         const parts = item.split(/(<strong>.*?<\/strong>)/g);
@@ -514,23 +515,6 @@
       });
       exSec.appendChild(ul1);
 
-      const exH2 = document.createElement('h3'); exH2.textContent = '🇺🇸 Ejemplos en mercado USA';
-      exSec.appendChild(exH2);
-      const ul2 = document.createElement('ul');
-      r.examples.us.forEach(item => {
-        const li = document.createElement('li');
-        const parts = item.split(/(<strong>.*?<\/strong>)/g);
-        parts.forEach(p => {
-          if (p.startsWith('<strong>')) {
-            const s = document.createElement('strong'); s.textContent = p.replace(/<\/?strong>/g, '');
-            li.appendChild(s);
-          } else {
-            li.appendChild(document.createTextNode(p));
-          }
-        });
-        ul2.appendChild(li);
-      });
-      exSec.appendChild(ul2);
 
       card.appendChild(exSec);
       out.appendChild(card);
@@ -538,7 +522,7 @@
       // Disclaimer + retake button
       const warn = document.createElement('div'); warn.className = 'info-box warn';
       const wb = document.createElement('strong'); wb.textContent = '⚠ Importante:';
-      warn.append(wb, document.createTextNode(' este resultado es orientativo. Los instrumentos sugeridos son ejemplos — no son recomendaciones de inversión. Tu situación particular (impuestos, residencia, capital total) puede cambiar la cartera óptima. Consultá un asesor matriculado en CNV antes de operar.'));
+      warn.append(wb, document.createTextNode(' este resultado es orientativo y solo informativo. Los instrumentos mencionados son tipos generales, no recomendaciones de inversión. Las tasas, los precios y las comisiones cambian. Tu situación particular (impuestos, ingresos, capital total) también influye. Consultá un asesor matriculado en CNV antes de operar.'));
       out.appendChild(warn);
 
       const actions = document.createElement('div'); actions.className = 'nav-buttons';

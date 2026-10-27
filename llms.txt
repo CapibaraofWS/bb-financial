@@ -20,9 +20,9 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 - [Calculadora de inflación de Argentina](https://www.bbfinanzas.com.ar/pages/inflacion): cuánto valen hoy los pesos de otro año, con el IPC del INDEC desde 1992. Incluye la serie descargable.
 - [Calculadora de plazo fijo por banco](https://www.bbfinanzas.com.ar/pages/comparador-plazos-fijos): con las tasas que publica el BCRA.
 - [Dólar hoy](https://www.bbfinanzas.com.ar/pages/comparador-dolares): oficial, blue, MEP, CCL y tarjeta.
-- [¿Dónde conviene poner la plata hoy?](https://www.bbfinanzas.com.ar/pages/comparador-tasas): tasas en vivo.
+- [¿Cuánto rinde la plata hoy?](https://www.bbfinanzas.com.ar/pages/comparador-tasas): tasas en vivo.
 - [Interés compuesto](https://www.bbfinanzas.com.ar/pages/interes-compuesto): cuánto crece un capital con aportes mensuales y un rendimiento dado, año por año y con gráfico.
-- [¿Conviene comprar en cuotas?](https://www.bbfinanzas.com.ar/pages/contado-vs-cuotas): compara pagar de contado con descuento contra cuotas sin interés, teniendo en cuenta la inflación argentina.
+- [Cuotas o contado](https://www.bbfinanzas.com.ar/pages/contado-vs-cuotas): compara pagar de contado con descuento contra cuotas sin interés, teniendo en cuenta la inflación argentina.
 - [¿Tu aumento le ganó a la inflación?](https://www.bbfinanzas.com.ar/pages/salario): compara un aumento de sueldo con la inflación del período para saber si el salario real subió o bajó.
 - [Calculadora FIRE](https://www.bbfinanzas.com.ar/pages/fire): cuánto capital hace falta para vivir de rentas, según la regla del 4%.
 - [Comparador de brokers en Argentina](https://www.bbfinanzas.com.ar/pages/brokers): comisiones, montos mínimos y servicios de los principales brokers del país, y cómo verificar que estén registrados en la CNV.

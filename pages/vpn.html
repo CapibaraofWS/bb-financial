@@ -114,7 +114,7 @@
         <li><strong>Flujos futuros:</strong> lo que esperás recibir cada año (positivo si entra plata, negativo si pagás más).</li>
         <li><strong>Tasa de descuento:</strong> tu costo de oportunidad — qué rinde lo mejor que podrías hacer con esa plata. En Argentina: 30-50% si invertís en LECAPs/FCI. Si invertís en USD: 6-10%.</li>
       </ol>
-      <div class="tip">💡 <strong>Regla simple:</strong> <strong>VPN positivo</strong> = la inversión te da más de lo que rendiría tu mejor alternativa = aceptala. <strong>VPN negativo</strong> = rechazala. <strong>VPN ≈ 0</strong> = es indiferente, decide por otros factores.</div>
+      <div class="tip">💡 <strong>Regla simple:</strong> <strong>VPN positivo</strong> = la inversión da más de lo que rendiría la mejor alternativa; según la regla clásica, se acepta. <strong>VPN negativo</strong> = se rechaza. <strong>VPN ≈ 0</strong> = es indiferente y deciden otros factores.</div>
       <div class="tip" style="background:rgba(255,107,107,0.06);border-left-color:#ff6b6b">⚠ <strong>La TIR es engañosa</strong> sin contexto: una TIR del 80% suena espectacular hasta que recordás que la inflación es 100%. Siempre comparála contra tu tasa real de costo de oportunidad.</div>
     </div>
   </details>
@@ -126,7 +126,7 @@
       <p><strong>Fórmulas:</strong></p>
       <ul>
         <li><strong>VPN</strong> = <code>−CF₀ + Σ CFₜ / (1+r)^t</code> donde r = tasa de descuento.</li>
-        <li><strong>TIR (IRR)</strong> = la tasa r* que hace VPN = 0. Si TIR &gt; r del proyecto, conviene.</li>
+        <li><strong>TIR (IRR)</strong> = la tasa r* que hace VPN = 0. Si TIR &gt; r del proyecto, el proyecto crea valor.</li>
         <li><strong>Período de repago</strong> = en qué año los flujos acumulados igualan la inversión inicial (ignora el costo del tiempo).</li>
       </ul>
       <p><strong>Supuestos críticos:</strong></p>
@@ -149,7 +149,7 @@
     <div class="container" style="padding-top:2rem;padding-bottom:6rem">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.25rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7">
         <strong style="color:var(--text)">¿Qué es el VPN?</strong> El Valor Presente Neto responde: si tengo que pagar $X hoy para recibir flujos de caja en el futuro, ¿vale la pena? Un dinero futuro vale <em>menos</em> que ese mismo dinero hoy, porque hoy podría invertirlo. La tasa de descuento (normalmente el WACC o el costo de oportunidad) refleja ese costo del tiempo.<br/><br/>
-        <strong style="color:var(--text)">Regla de decisión:</strong> <span style="color:var(--accent)">VPN &gt; 0</span> → el proyecto crea valor, conviene. <span style="color:#ff6b6b">VPN &lt; 0</span> → destruye valor, no conviene. La <strong style="color:var(--text)">TIR</strong> es la tasa a la que el VPN = 0: si la TIR supera tu tasa de descuento, el proyecto es rentable.
+        <strong style="color:var(--text)">Regla de decisión:</strong> <span style="color:var(--accent)">VPN &gt; 0</span> → el proyecto crea valor. <span style="color:#ff6b6b">VPN &lt; 0</span> → destruye valor. La <strong style="color:var(--text)">TIR</strong> es la tasa a la que el VPN = 0: si la TIR supera tu tasa de descuento, el proyecto es rentable.
       </div>
 
       <div class="calc-layout">
@@ -254,7 +254,7 @@
 
         <details class="faq-item">
           <summary>¿Cuándo tomo una decisión positiva con VPN?</summary>
-          <div class="faq-body">VPN <strong>&gt; 0</strong>: la inversión genera más valor que tu costo de oportunidad — acéptala. VPN <strong>= 0</strong>: indiferente. VPN <strong>&lt; 0</strong>: rechazala, te conviene poner la plata en tu alternativa estándar.</div>
+          <div class="faq-body">VPN <strong>&gt; 0</strong>: la inversión genera más valor que tu costo de oportunidad — según la regla clásica, se acepta. VPN <strong>= 0</strong>: indiferente. VPN <strong>&lt; 0</strong>: según la regla clásica, se rechaza: la alternativa de referencia rinde más.</div>
         </details>
         <details class="faq-item">
           <summary>¿Qué tasa de descuento uso?</summary>
@@ -287,7 +287,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=52"></script>
+  <script src="../js/main.js?v=53"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
     let vpnChart = null;
@@ -397,7 +397,7 @@
       document.getElementById('vb-label').textContent  = 'VPN';
       document.getElementById('vpn-value').textContent = (vpn >= 0 ? '+$' : '−$') + formatUSD(Math.abs(vpn));
       document.getElementById('vpn-value').style.color = vpn >= 0 ? 'var(--accent)' : '#ff6b6b';
-      document.getElementById('vpn-interp').textContent= vpn > 0 ? '✅ El proyecto crea valor — conviene invertir' : vpn < 0 ? '❌ El proyecto destruye valor — no conviene' : '🟡 VPN neutro — igual al costo de oportunidad';
+      document.getElementById('vpn-interp').textContent= vpn > 0 ? '✅ El proyecto crea valor (VPN positivo)' : vpn < 0 ? '❌ El proyecto destruye valor (VPN negativo)' : '🟡 VPN neutro — igual al costo de oportunidad';
 
       document.getElementById('rv-inversion').textContent  = '$' + formatUSD(inv0);
       document.getElementById('rv-suma-nom').textContent   = '$' + formatUSD(sumaNom) + (tvAmount>0 ? ` (incl. TV $${formatUSD(tvAmount)})` : '');
