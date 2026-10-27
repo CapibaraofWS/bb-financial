@@ -308,7 +308,7 @@
   <script src="../js/main.js?v=51"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/bond-math.js?v=2"></script>
-  <script src="../js/ticker.js?v=6"></script>
+  <script src="../js/ticker.js?v=7"></script>
   <script>
   (function() {
     const today = new Date();
@@ -669,7 +669,7 @@
         return;
       }
 
-      const asOf = data.asOf ? new Date(data.asOf).toLocaleString('es-AR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      const asOf = data.asOf ? new Date(data.asOf).toLocaleString('es-AR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : '';
       sub.textContent = `${list.length} instrumentos · ${data.source}${asOf ? ' · actualizado ' + asOf : ''}`;
 
       // --- Gráfico: TEA y TNA por meses al vencimiento ---

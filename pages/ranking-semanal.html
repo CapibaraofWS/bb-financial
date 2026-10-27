@@ -203,7 +203,7 @@
         else q.bucket = 'us';
       });
 
-      document.getElementById('freshness').innerHTML = '✅ Actualizado: ' + new Date().toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      document.getElementById('freshness').innerHTML = '✅ Actualizado: ' + new Date().toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
       render();
     } catch (e) {
       document.getElementById('freshness').innerHTML = '⚠ Error de conexión. Reintentá en unos segundos.';

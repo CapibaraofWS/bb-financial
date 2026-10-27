@@ -417,7 +417,7 @@
         if (!d) return '';
         const m = META[casa];
         const brecha = (oficialVenta && casa !== 'oficial' && d.venta) ? ((d.venta - oficialVenta) / oficialVenta * 100) : null;
-        const date = d.fechaActualizacion ? new Date(d.fechaActualizacion).toLocaleString('es-AR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '—';
+        const date = d.fechaActualizacion ? new Date(d.fechaActualizacion).toLocaleString('es-AR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit', hourCycle:'h23' }) : '—';
         return `
           <div class="dolar-card ${m.cls}">
             <h3>${m.emoji} ${m.title}</h3>
@@ -433,7 +433,7 @@
       grid.innerHTML = cards;
 
       const latest = ORDER.map(c => byCasa[c]?.fechaActualizacion).filter(Boolean).sort().pop();
-      if (latest) badge.textContent = '🕐 Último dato: ' + new Date(latest).toLocaleString('es-AR');
+      if (latest) badge.textContent = '🕐 Último dato: ' + new Date(latest).toLocaleString('es-AR', { hourCycle: 'h23' });
     } catch (e) {
       grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">No se pudieron cargar las cotizaciones. Reintentá en unos segundos.</p>';
       badge.textContent = '⚠ Error de conexión';

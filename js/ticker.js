@@ -218,7 +218,7 @@
     // Marca de última actualización (hora ARG)
     const hasData = items.some(it => it.priceStr && it.priceStr !== '—');
     if (hasData) {
-      lastUpdate = new Date().toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: '2-digit', minute: '2-digit' });
+      lastUpdate = new Date().toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
     }
     ensureClock();
   }
