@@ -344,7 +344,6 @@ window.BB_GLOSARIO = {
         { href: pagesBase + 'visor-bonos',label: 'Visor de Bonos USA', icon: '💵' },
         { href: pagesBase + 'visor-bonos-ar', label: 'Visor de Bonos AR', icon: '📊' },
         { href: pagesBase + 'calendario', label: 'Calendario',   icon: '📅' },
-        { href: pagesBase + 'noticias',   label: 'Noticias',     icon: '📰' },
         { href: pagesBase + 'datos',      label: 'Mercados globales', icon: '🌎' },
         { href: pagesBase + 'dividendos', label: 'Dividendos',   icon: '💸' },
       ],

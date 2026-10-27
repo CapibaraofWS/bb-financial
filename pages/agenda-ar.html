@@ -144,23 +144,6 @@
     .rp-bond .bn-chg.flat { color:var(--text-subtle); }
     .rp-fine { font-size:0.72rem; color:var(--text-subtle); margin-top:0.85rem; line-height:1.5; }
 
-    /* ============= VOCES DEL MERCADO ============= */
-    .voces-filters { display:flex; gap:0.35rem; flex-wrap:wrap; margin-bottom:1.25rem; }
-    .voces-filter { font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.05em; padding:0.4rem 0.85rem; border-radius:20px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-muted); cursor:pointer; transition:all 0.2s; }
-    .voces-filter:hover { border-color:rgba(74,222,154,0.3); color:var(--text); }
-    .voces-filter.active { background:rgba(74,222,154,0.12); border-color:rgba(74,222,154,0.35); color:var(--accent); }
-    .voces-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
-    .voces-card { display:flex; flex-direction:column; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; text-decoration:none; color:inherit; transition:transform 0.22s, border-color 0.22s; }
-    .voces-card:hover { transform:translateY(-3px); border-color:rgba(255,80,80,0.4); }
-    .voces-card .v-thumb { aspect-ratio:16/9; background-size:cover; background-position:center; background-color:#0e1318; position:relative; }
-    .voces-card .v-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0); transition:background 0.2s; }
-    .voces-card:hover .v-play { background:rgba(0,0,0,0.3); }
-    .voces-card .v-play::after { content:'▶'; color:rgba(255,255,255,0.95); font-size:2.2rem; text-shadow:0 4px 14px rgba(0,0,0,0.5); opacity:0; transition:opacity 0.2s; }
-    .voces-card:hover .v-play::after { opacity:1; }
-    .voces-card .v-channel { position:absolute; bottom:0.5rem; left:0.5rem; font-family:var(--font-mono); font-size:0.62rem; color:#fff; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); padding:0.22rem 0.55rem; border-radius:20px; letter-spacing:0.04em; }
-    .voces-card .v-body { padding:0.9rem 1.05rem 1rem; flex:1; display:flex; flex-direction:column; gap:0.45rem; }
-    .voces-card .v-date { font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.06em; color:var(--text-subtle); }
-    .voces-card .v-title { font-size:0.88rem; line-height:1.4; color:var(--text); font-weight:500; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
   </style>
 </head>
 <body>
@@ -306,24 +289,11 @@
       </div>
     </section>
 
-    <!-- ============== VOCES DEL MERCADO ============== -->
-    <section id="voces" class="agenda-section" style="scroll-margin-top:80px">
+    <section class="agenda-section">
       <div class="container">
-        <div class="agenda-section-head">
-          <div>
-            <h2>Voces del mercado</h2>
-            <p>Últimos videos de canales financieros argentinos. Se actualiza solo cuando suben contenido.</p>
-          </div>
-          <a class="source-link" href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube →</a>
-        </div>
-        <div class="voces-filters" id="voces-filters"></div>
-        <div class="voces-grid" id="voces-grid">
-          <p class="news-loading" style="grid-column:1/-1">Cargando videos…</p>
-        </div>
-
     <section class="container bb-faq" id="guia-agenda" aria-labelledby="guia-agenda-t">
       <h2 id="guia-agenda-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo usar la agenda</h2>
-      <p>La agenda junta en una pantalla las fechas que mueven el mercado argentino en pesos. Arriba está el <strong>riesgo país</strong>; después, los próximos eventos; el <strong>cronograma del Tesoro</strong> con sus llamados, licitaciones y liquidaciones; el <strong>calendario del Banco Central</strong> con sus informes; el <strong>calendario del INDEC</strong>, con todo lo que publica y filtros por tema; las noticias oficiales de la Secretaría de Finanzas y videos de canales financieros.</p>
+      <p>La agenda junta en una pantalla las fechas que mueven el mercado argentino en pesos. Arriba está el <strong>riesgo país</strong>; después, los próximos eventos; el <strong>cronograma del Tesoro</strong> con sus llamados, licitaciones y liquidaciones; el <strong>calendario del Banco Central</strong> con sus informes; el <strong>calendario del INDEC</strong>, con todo lo que publica y filtros por tema, y las noticias oficiales de la Secretaría de Finanzas.</p>
       <p>Sirve para anticiparse. Una licitación del Tesoro puede mover las tasas de las letras y, detrás, las de plazos fijos y billeteras. El REM muestra qué inflación y qué dólar esperan las consultoras. Y el día que se publica la inflación cambian los cálculos de casi todo lo que ajusta por precios.</p>
       <details><summary>¿Qué es el riesgo país?</summary><p>Es la tasa extra que piden los inversores por prestarle a la Argentina en dólares, comparada con lo que rinden los bonos del Tesoro de Estados Unidos. Se mide en puntos básicos: 100 puntos son un punto porcentual. El índice oficial lo calcula JP Morgan al cierre del día; la estimación del día se arma con los precios de los bonos argentinos en dólares.</p></details>
       <details><summary>¿Qué es una licitación del Tesoro?</summary><p>Es la subasta en la que el Tesoro coloca letras y bonos en pesos para pagar los que vencen. Hay, en general, dos por mes. Cómo se leen sus resultados, qué es el rollover y qué instrumentos se ofrecen está en <a href="blog/licitacion-del-tesoro-como-leer-resultados">Licitación del Tesoro: cómo leer los resultados</a>.</p></details>
@@ -334,7 +304,7 @@
 
         <div class="agenda-disclaimer" style="margin-top:2.5rem">
           <p><strong style="color:var(--text-muted)">Sobre esta agenda:</strong> los datos se traen en vivo desde fuentes oficiales (Secretaría de Finanzas, BCRA) y de mercado, y se cachean 5-60 min según la fuente. Si una fuente cambia formato, el panel queda con su última versión válida hasta que actualicemos el parser.</p>
-          <p><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> El riesgo país mostrado es el valor de mercado más reciente disponible; el EMBI+ oficial de JP Morgan se publica con cierre diario. Los videos linkeados no son recomendaciones nuestras. Consultá un asesor matriculado en CNV para invertir.</p>
+          <p><strong style="color:#ffb84d">⚠ NO es asesoramiento financiero.</strong> El riesgo país mostrado es el valor de mercado más reciente disponible; el EMBI+ oficial de JP Morgan se publica con cierre diario. Consultá un asesor matriculado en CNV para invertir.</p>
         </div>
       </div>
     </section>
@@ -354,7 +324,7 @@
           <li><a href="calculadoras">Calculadoras</a></li>
           <li><a href="agenda-ar">Agenda AR</a></li>
           <li><a href="datos">Mercados globales</a></li>
-          <li><a href="noticias">Noticias</a></li>
+          <li><a href="panel-argentina">Panel Argentina</a></li>
           <li><a href="mis-portafolios">Portafolio (Beta)</a></li>
           <li><a href="proyectos">Proyectos</a></li>
         </ul>
@@ -367,7 +337,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=51"></script>
+  <script src="../js/main.js?v=52"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/ticker.js?v=7"></script>
   <script src="../js/panel.js?v=19"></script>
@@ -727,69 +697,7 @@
       }
     }
 
-    // === VOCES DEL MERCADO (YouTube) ===
-    async function loadVoces() {
-      const grid = document.getElementById('voces-grid');
-      const filters = document.getElementById('voces-filters');
-      try {
-        const r = await fetch('/api/agenda?source=youtube');
-        if (!r.ok) throw new Error('http ' + r.status);
-        const d = await r.json();
-        const videos = d.videos || [];
-        if (!videos.length) { grid.innerHTML = '<p class="news-error" style="grid-column:1/-1">No pudimos cargar videos. <a href="https://www.youtube.com" target="_blank" style="color:var(--accent)">Ver en YouTube →</a></p>'; return; }
-
-        const channels = ['Todos', ...Array.from(new Set(videos.map(v => v.channel)))];
-        let activeChannel = 'Todos';
-
-        function render() {
-          grid.textContent = '';
-          const list = activeChannel === 'Todos' ? videos : videos.filter(v => v.channel === activeChannel);
-          list.slice(0, 18).forEach(v => {
-            const a = document.createElement('a');
-            a.className = 'voces-card';
-            a.href = v.link;
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-
-            const thumb = document.createElement('div');
-            thumb.className = 'v-thumb';
-            thumb.style.backgroundImage = "url('" + v.thumbnail.replace(/'/g, '%27') + "')";
-            const play = document.createElement('div'); play.className = 'v-play';
-            const ch = document.createElement('span'); ch.className = 'v-channel'; ch.textContent = v.channel;
-            thumb.append(play, ch);
-            a.appendChild(thumb);
-
-            const body = document.createElement('div');
-            body.className = 'v-body';
-            const dt = document.createElement('p'); dt.className = 'v-date';
-            try { dt.textContent = new Date(v.published).toLocaleDateString('es-AR', { day:'numeric', month:'short', year:'numeric' }); } catch { dt.textContent = ''; }
-            const ti = document.createElement('p'); ti.className = 'v-title'; ti.textContent = v.title;
-            body.append(dt, ti);
-            a.appendChild(body);
-            grid.appendChild(a);
-          });
-        }
-
-        filters.textContent = '';
-        channels.forEach(ch => {
-          const btn = document.createElement('button');
-          btn.className = 'voces-filter' + (ch === activeChannel ? ' active' : '');
-          btn.textContent = ch;
-          btn.addEventListener('click', () => {
-            activeChannel = ch;
-            [...filters.children].forEach(b => b.classList.toggle('active', b.textContent === ch));
-            render();
-          });
-          filters.appendChild(btn);
-        });
-
-        render();
-      } catch (err) {
-        grid.innerHTML = '<p class="news-error" style="grid-column:1/-1">No pudimos cargar los feeds de YouTube. Intentá refrescar.</p>';
-      }
-    }
-
-    Promise.all([loadRiesgoPais(), loadCountdowns(), loadCronograma(), loadBcraCal(), loadNews(), loadVoces()])
+    Promise.all([loadRiesgoPais(), loadCountdowns(), loadCronograma(), loadBcraCal(), loadNews()])
       .finally(() => {
         // Re-scroll al ancla después de que cargó todo el contenido async,
         // sino el hash inicial scrollea antes de que la página tenga su altura final.

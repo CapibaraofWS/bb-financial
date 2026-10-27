@@ -134,13 +134,13 @@
       <div class="explainer-block" style="border-left:3px solid #ff6b6b">
         <h3>⚠ Cuidado: el "riesgo UVA"</h3>
         <p>El crédito UVA tiene una <strong>letra chica importante</strong>: si tu sueldo no acompaña a la inflación, la cuota se vuelve impagable. Eso pasó en 2018-2020, cuando la inflación se aceleró y los salarios reales cayeron — muchas familias quedaron con cuotas que representaban &gt;40% de su ingreso.</p>
-        <p>Hay un <strong>"seguro" implícito</strong>: si la cuota supera el 10% de tu sueldo, podés pedir extender el plazo del crédito (hasta 25% del plazo original). Pero <strong>no es una solución mágica</strong>, solo te da aire.</p>
+        <p>Hay un <strong>"seguro" implícito</strong>: si la cuota llega a ser más de un 10% mayor que la que habría resultado de ajustarla por salarios (índice CVS), podés pedir extender el plazo del crédito (hasta 25% del plazo original). Pero <strong>no es una solución mágica</strong>, solo te da aire.</p>
         <p><strong>Regla práctica:</strong> antes de tomar un UVA, simulá con una inflación 30% mayor a la actual y asegurate de poder pagar la cuota igual. Si no, está fuera de tus posibilidades.</p>
       </div>
 
       <div class="explainer-block" style="border-left:3px solid #60a5fa">
         <h3>📋 Requisitos típicos</h3>
-        <p>Variar según el banco, pero en general necesitás:</p>
+        <p>Varían según el banco, pero en general necesitás:</p>
         <ul style="padding-left:1.25rem;color:var(--text-muted);font-size:0.88rem;line-height:1.8;margin:0.5rem 0">
           <li><strong style="color:var(--text)">Edad:</strong> 18 a 65 (al finalizar el crédito)</li>
           <li><strong style="color:var(--text)">Antigüedad laboral:</strong> mínimo 1 año en relación de dependencia o 2 años como monotributista</li>
@@ -150,6 +150,15 @@
           <li><strong style="color:var(--text)">Seguro:</strong> seguro de vida obligatorio (cubre saldo si falleces) + seguro de hogar</li>
         </ul>
       </div>
+
+    <section class="bb-faq" data-guia="ampliada" style="margin-top:3rem" aria-labelledby="guia-uva">
+        <h2 id="guia-uva" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo funciona la cuota, paso a paso</h2>
+        <p>El crédito se otorga en pesos, pero el día que se desembolsa se convierte en UVA. Por ejemplo, si te prestan $60 millones y ese día la UVA vale $2.000, tu deuda es de 30.000 UVA. Con el sistema francés, que es el más usado, la cuota medida en UVA es siempre la misma; se paga en pesos, al valor de la UVA del día del pago.</p>
+        <p>Por eso la cuota en pesos sube todos los meses, al ritmo de la inflación. Lo que define si pesa más o menos es cómo se mueve tu ingreso: si los sueldos suben más que los precios, la cuota se lleva una parte cada vez menor del sueldo; si suben menos, una parte cada vez mayor.</p>
+        <p><strong>TEA y costo financiero total.</strong> La tasa que publican los bancos (TEA) se aplica sobre las UVA, es decir, se suma a la inflación. El <strong>costo financiero total</strong> (CFT) incluye además seguros, comisiones e impuestos, y muestra cuánto cuesta el crédito en total. Los bancos están obligados a informarlo antes de firmar.</p>
+        <details><summary>¿Qué pasa si la cuota sube más que mi sueldo?</summary><p>Las normas del Banco Central prevén que, si la cuota llega a ser más de un 10% mayor que la que habría resultado de actualizarla por la evolución de los salarios (el índice CVS), podés pedir que se extienda el plazo del crédito hasta un 25% del original. La cuota baja, pero se pagan más cuotas.</p></details>
+        <details><summary>¿Se puede cancelar antes de tiempo?</summary><p>Sí. Según las normas de protección al usuario del Banco Central, la cancelación total anticipada no lleva comisión cuando ya pasó al menos la cuarta parte del plazo del crédito, o 180 días desde que se otorgó, lo que sea mayor. Antes de eso, el banco puede cobrar una comisión, que tiene que figurar en el contrato.</p></details>
+    </section>
 
       <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin:2rem 0">
         <a href="prestamo" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">💰 Calculadora de cuota →</a>
@@ -169,7 +178,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=51"></script>
+  <script src="../js/main.js?v=52"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script>
   (async function() {

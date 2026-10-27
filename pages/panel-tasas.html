@@ -126,9 +126,13 @@
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estas tasas</h2>
         <p>Todas las tasas de esta página son <strong>nominales anuales</strong> (TNA), como las publica el Banco Central. Para compararlas con la inflación del mes hay que pasarlas a tasa mensual: TNA × 30 ÷ 365. Una TNA de 21% equivale a unos 1,73% por mes.</p>
         <p>La <strong>tasa real</strong> es lo que queda después de descontar la inflación. Si es positiva, el ahorro en pesos gana poder de compra; si es negativa, lo pierde aunque el número en el banco crezca. Es la cuenta que explicamos en <a href="blog/licitacion-del-tesoro-como-leer-resultados">la nota sobre las licitaciones del Tesoro</a>.</p>
+        <p data-guia="ampliada"><strong>Cómo se conectan.</strong> Las tasas en pesos se mueven juntas. Lo que paga el Tesoro en sus licitaciones, lo que se cobra en las cauciones de la bolsa y lo que ofrecen los bancos por los plazos fijos se influyen entre sí: cuando las letras del Tesoro rinden más, los bancos suelen tener que pagar más para no perder depósitos, y cuando rinden menos, los plazos fijos y las cuentas remuneradas acompañan en poco tiempo.</p>
+        <p data-guia="ampliada"><strong>Tasa pasiva y tasa activa.</strong> La pasiva es la que el banco paga cuando le dejás tu plata (plazo fijo, cuenta remunerada); la activa es la que cobra cuando presta (préstamos personales, tarjeta, adelantos). La diferencia entre las dos es parte de cómo gana el banco, y por eso un préstamo cuesta bastante más de lo que rinde un plazo fijo.</p>
         <details><summary>¿Qué diferencia hay entre la TAMAR y la BADLAR?</summary><p>Las dos son promedios de lo que pagan los bancos privados por plazos fijos a 30 a 35 días. La BADLAR mira depósitos de más de $1 millón y la TAMAR, de más de $1.000 millones. La TAMAR se volvió la referencia de los bonos y préstamos a tasa variable.</p></details>
         <details><summary>¿Por qué el riesgo país importa si no tengo bonos?</summary><p>Porque marca cuánto le cuesta a la Argentina, y a sus empresas y provincias, conseguir dólares prestados. Un riesgo país alto encarece el crédito y suele venir acompañado de más presión sobre el dólar. La curva de bonos está en el <a href="visor-bonos-ar">visor de bonos argentinos</a>.</p></details>
         <details><summary>¿Cómo paso de TNA a TEA?</summary><p>La TEA supone que los intereses se reinvierten. Con capitalización mensual, TEA = (1 + TNA × 30 ÷ 365)<sup>365/30</sup> − 1. La <a href="conversion-tasas">calculadora de conversión de tasas</a> hace la cuenta.</p></details>
+        <details><summary>¿Qué es la caución?</summary><p>Un préstamo de muy corto plazo, en general de uno a pocos días, que se hace en la bolsa con títulos como garantía. Quien tiene pesos los presta y cobra una tasa; quien los toma deja bonos o acciones en garantía. Su tasa sirve como termómetro de cuánto cuesta el dinero día a día. Más en la <a href="caucion">calculadora de caución</a>.</p></details>
+        <details><summary>¿Qué es la curva de tasas?</summary><p>Un gráfico de qué tasa pagan los bonos según cuánto falta para que venzan. Si los más largos pagan más que los cortos, la curva tiene pendiente positiva; si pagan menos, suele ser porque el mercado espera que las tasas bajen.</p></details>
       </section>
     </div>
   </main>
@@ -144,7 +148,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=51"></script>
+  <script src="../js/main.js?v=52"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=19"></script>
