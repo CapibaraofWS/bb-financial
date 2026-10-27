@@ -784,6 +784,20 @@ canvas.calc-chart { width: 100% !important; border-radius: 8px; }
 .nav-dropdown-menu a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
 .nav-dropdown-menu a.active { color: var(--accent); background: var(--accent-dim); }
 .nav-dropdown-menu .dd-icon { font-size: 0.9rem; opacity: 0.7; }
+/* Títulos de grupo dentro del menú (los pasos del camino de Nuevos Inversores) */
+.nav-dropdown-menu .dd-titulo { display: block; padding: 0.7rem 0.85rem 0.2rem; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+.nav-dropdown-menu .dd-titulo:first-child { padding-top: 0.35rem; }
+/* Camino de Nuevos Inversores: paso actual y cuál sigue, al final de cada página del camino */
+.camino { max-width: 880px; margin: 2.5rem auto 1.5rem; padding: 1rem 1.2rem; border: 1px solid rgba(74,222,154,0.25); border-radius: 14px; background: var(--accent-dim); }
+.camino-paso { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; }
+.camino-paso b { color: var(--text); font-weight: 500; }
+.camino-barra { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; margin-bottom: 0.7rem; }
+.camino-barra i { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.1); }
+.camino-barra i.hecho { background: var(--accent); }
+.camino-links { display: flex; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; margin: 0; font-size: 0.92rem; }
+.camino-links a { color: var(--accent); text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; }
+.camino-links a:hover { text-decoration: underline; }
+.camino-links span { color: var(--text-subtle); }
 .nav-dropdown-divider {
   height: 1px;
   background: var(--border);

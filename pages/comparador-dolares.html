@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="../css/styles.css?v=19" />
+  <link rel="stylesheet" href="../css/styles.css?v=20" />
   <style>
     .cmp-hero { padding: 3rem 0 1.5rem; text-align: center; }
     .cmp-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; margin-bottom: 0.6rem; }
@@ -86,6 +86,55 @@
     #hist-leyenda b { color: var(--text); font-weight: 500; }
     .hist-nota { font-size: 0.72rem; color: var(--text-subtle); font-family: var(--font-mono); margin-top: 0.6rem; }
 
+    /* Simulador de compra y "qué hubiera pasado" */
+    .sim { max-width: 880px; margin: 0 auto 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem 1.5rem 1.2rem; }
+    .sim h2 { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
+    .sim-ayuda { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+    .sim-monto { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .sim-pesos { display: inline-flex; align-items: center; gap: 0.3rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 0.5rem 0.9rem; }
+    .sim-pesos b { font-family: var(--font-display); font-size: 1.6rem; color: var(--text-muted); font-weight: 400; }
+    .sim-pesos input { background: transparent; border: 0; color: var(--text); font-family: var(--font-display); font-size: 1.6rem; width: 11ch; outline: none; }
+    .sim-pesos:focus-within { border-color: rgba(74,222,154,0.5); }
+    /* Más de 16px, así que tampoco dispara el zoom de iOS (la regla general de styles.css lo deja en 16px) */
+    .sim-pesos input#sim-monto { font-size: 1.6rem !important; }
+    .sim-modos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 1.1rem; }
+    .sim-modos button { text-align: left; padding: 0.8rem 0.9rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted); cursor: pointer; min-height: 64px; }
+    .sim-modos button b { display: block; color: var(--text); font-size: 1rem; font-weight: 500; }
+    .sim-modos button small { font-size: 0.8rem; }
+    .sim-modos button[aria-pressed="true"] { border-color: rgba(74,222,154,0.55); background: var(--accent-dim); }
+    .sim-modos button[aria-pressed="true"] b { color: var(--accent); }
+    .sim-big { font-size: 1.15rem; color: var(--text-muted); margin: 0.2rem 0 0.3rem; }
+    .sim-big b { font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 2.6rem); color: var(--text); font-weight: 400; display: block; line-height: 1.15; }
+    .sim-det { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+    .sim-com { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.6rem 0 0.2rem; color: var(--text-muted); font-size: 0.9rem; }
+    .sim-com input { width: 4.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 0.35rem 0.5rem; font-size: 0.95rem; }
+    .sim-lista { margin-top: 0.8rem; }
+    .sim-lista summary { cursor: pointer; color: var(--accent); font-size: 0.92rem; min-height: 36px; display: flex; align-items: center; }
+    .sim-tabla { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 0.4rem; }
+    .sim-tabla th { text-align: left; font-weight: 500; color: var(--text-subtle); font-size: 0.75rem; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); }
+    .sim-tabla td { padding: 0.45rem 0.4rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .sim-tabla td b { color: var(--text); font-weight: 500; }
+    .sim-tabla .h { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-subtle); }
+    .sim-scroll { max-height: 300px; overflow-y: auto; }
+    .sim-info { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.45rem; }
+    .sim-info li { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; padding-left: 0.9rem; border-left: 2px solid var(--border); }
+    .sim-info li b { color: var(--text); font-weight: 500; }
+    .sim-aviso { margin-top: 1rem; font-size: 0.8rem; color: var(--text-subtle); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 0.8rem; }
+    .pas-fila { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 7.5rem; gap: 0.4rem 1rem; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+    .pas-fila .n { color: var(--text); font-size: 0.95rem; line-height: 1.3; } .pas-fila .n small { display: block; color: var(--text-subtle); font-size: 0.75rem; margin-top: 0.15rem; }
+    .pas-fila .barra { height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; } .pas-fila .barra i { display: block; height: 100%; border-radius: 6px; background: #60a5fa; }
+    .pas-fila.ref .barra i { background: rgba(232,237,245,0.35); }
+    .pas-fila .v { text-align: right; font-family: var(--font-display); font-size: 1.15rem; color: var(--text); } .pas-fila .v small { display: block; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-subtle); }
+    .pas-mas { margin-top: 0.8rem; font-size: 0.9rem; color: var(--text-muted); } .pas-mas a { color: var(--accent); }
+    @media (max-width: 640px) {
+      .sim { padding: 1.1rem 1rem 1rem; }
+      .sim-modos { grid-template-columns: minmax(0, 1fr); }
+      .sim-modos button { min-height: 52px; }
+      .pas-fila { grid-template-columns: minmax(0, 1fr) auto; }
+      .pas-fila .barra { grid-column: 1 / -1; grid-row: 2; }
+      .sim-tabla .h { display: none; }
+    }
+
     .explainer { max-width: 880px; margin: 3rem auto 0; }
     .explain-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
     .explain-card h3 { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.5rem; }
@@ -124,12 +173,25 @@
     <section class="cmp-hero">
       <div class="container">
         <h1>Comparador de Dólares 💵</h1>
-        <p class="sub">Precio actualizado de cada cotización en Argentina, con explicación clara de qué es cada una y de dónde sale su precio.</p>
+        <p class="sub">Cuánto vale hoy cada dólar, cuántos te llevás con tu plata y para qué sirve cada uno, explicado simple.</p>
         <div class="freshness-badge" id="badge">Cargando datos...</div>
       </div>
     </section>
 
     <div class="container">
+      <section class="sim" id="simulador" aria-labelledby="sim-t" style="margin-top:1.5rem">
+        <h2 id="sim-t">¿Cuántos dólares me llevo?</h2>
+        <p class="sim-ayuda">Poné cuántos pesos tenés y elegí cómo comprar. Te mostramos cuántos dólares recibirías con los precios de ahora.</p>
+        <label class="sim-monto" for="sim-monto"><span>Tengo</span><span class="sim-pesos"><b>$</b><input id="sim-monto" type="text" inputmode="numeric" autocomplete="off" value="1.000.000" /></span></label>
+        <div class="sim-modos" id="sim-modos" role="group" aria-label="Cómo comprar">
+          <button type="button" data-m="banco" aria-pressed="true"><b>En el banco</b><small>Dólar oficial</small></button>
+          <button type="button" data-m="mep" aria-pressed="false"><b>Por un broker</b><small>Dólar MEP</small></button>
+          <button type="button" data-m="cripto" aria-pressed="false"><b>En una app cripto</b><small>Dólar cripto</small></button>
+        </div>
+        <div id="sim-res" aria-live="polite"><p class="sim-det">Cargando los precios…</p></div>
+        <p class="sim-aviso">Los precios y las comisiones cambian todo el tiempo y pueden ser distintos en cada banco, broker o app. Esto es solo informativo: confirmá el precio final antes de operar. No es una recomendación de compra.</p>
+      </section>
+
       <div class="dolar-grid" id="dolar-grid"></div>
 
       <section class="hist-card" aria-label="Evolución del dólar">
@@ -161,50 +223,46 @@
 
       <section class="explainer">
         <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;letter-spacing:-0.01em">¿Por qué hay tantos dólares?</h2>
-        <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.7;margin-bottom:1.5rem">En Argentina conviven varios "precios" del dólar al mismo tiempo. Cada uno se determina en un mercado distinto, con compradores, vendedores y reglas diferentes. Entender cuál es cuál te ayuda a decidir <strong style="color:var(--text)">cómo dolarizarte</strong>.</p>
+        <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.7;margin-bottom:1.5rem">En la Argentina hay varios precios del dólar al mismo tiempo, porque se compran en lugares distintos y con reglas distintas. Acá va qué es cada uno, en palabras simples.</p>
 
         <div class="explain-card" style="border-left:3px solid var(--accent)">
-          <h3>💚 Dólar Oficial <span class="tag">Banco / Brou</span></h3>
-          <p>Es el dólar que vendía el banco al público minorista para atesoramiento (cuando había cupo de USD 200/mes). <strong>Lo fija el <span data-term="BCRA">BCRA</span></strong> a través de su política cambiaria. Hoy es la cotización "de referencia" oficial.</p>
-          <p class="source">Fuente: BCRA · Bancos comerciales</p>
+          <h3>💚 Dólar Oficial <span class="tag">En el banco</span></h3>
+          <p>Es el que vende el banco. Se compra desde el home banking o la app, con una cuenta en ese banco. Su precio sale del mercado oficial de cambios, con las reglas del <span data-term="BCRA">Banco Central</span>.</p>
+          <p class="source">Fuente: bancos · Banco Central</p>
         </div>
 
         <div class="explain-card" style="border-left:3px solid var(--text-subtle)">
-          <h3>🌫 Dólar Mayorista <span class="tag">Bancos entre sí</span></h3>
-          <p>El dólar que los <strong>bancos se compran y venden entre sí</strong> en el mercado mayorista (MAE/MULC). Es la referencia más "limpia" del valor oficial sin el spread del minorista. Lo informa el BCRA todos los días.</p>
-          <p class="source">Fuente: BCRA · MULC (Mercado Único y Libre de Cambios)</p>
+          <h3>🌫 Dólar Mayorista <span class="tag">Solo referencia</span></h3>
+          <p>Es el precio al que se compran y venden dólares <strong>los bancos y las empresas grandes</strong>. Una persona no lo puede comprar: sirve para saber cuánto vale el dólar "sin el margen" del banco.</p>
+          <p class="source">Fuente: Banco Central · mercado de cambios</p>
         </div>
 
         <div class="explain-card" style="border-left:3px solid #60a5fa">
-          <h3>💙 Dólar Blue <span class="tag">Mercado paralelo</span></h3>
-          <p>Es el dólar que se compra y vende en el <strong>mercado informal</strong> (cuevas, arbolitos). No está regulado y su precio refleja la oferta/demanda real sin restricciones. Históricamente sirvió como termómetro de tensión cambiaria.</p>
-          <p class="source">Fuente: cuevas / arbolitos relevados por medios financieros</p>
+          <h3>💙 Dólar Blue <span class="tag">Informal</span></h3>
+          <p>Es el dólar de las "cuevas" y los "arbolitos". <strong>Comprarlo o venderlo así no es legal</strong> y tiene riesgos: billetes falsos, robos y ninguna garantía. Se muestra porque mucha gente lo usa como referencia.</p>
+          <p class="source">Fuente: relevamiento de medios financieros</p>
         </div>
 
         <div class="explain-card" style="border-left:3px solid #c084fc">
-          <h3>💜 Dólar MEP (Bolsa) <span class="tag">Legal vía broker</span></h3>
-          <p>Se obtiene <strong>comprando un bono en pesos y vendiéndolo en dólares</strong> en la bolsa local (<span data-term="BYMA">BYMA</span>). Es 100% legal y operás desde tu broker (Cocos, IOL, Balanz, etc.). El "precio" sale de hacer pesos → bono → dólares, todo en el mismo día. <strong>Es la forma más común de dolarizarse hoy</strong>.</p>
-          <p class="source">Fuente: BYMA · Operatoria bursátil con bonos <span data-term="AL30">AL30</span>/<span data-term="GD30">GD30</span></p>
+          <h3>💜 Dólar MEP (Bolsa) <span class="tag">Por internet, en un broker</span></h3>
+          <p>Es el dólar que se compra por internet en un <strong>broker</strong>, una empresa autorizada para operar en la bolsa. Es legal: por detrás, se compra un bono en pesos y se vende en dólares. Los dólares quedan en la cuenta del broker y se pueden pasar a una cuenta en dólares del banco.</p>
+          <p class="source">Fuente: <span data-term="BYMA">BYMA</span> · bonos <span data-term="AL30">AL30</span> y <span data-term="GD30">GD30</span></p>
         </div>
 
         <div class="explain-card" style="border-left:3px solid var(--gold)">
-          <h3>💛 Dólar CCL (Contado con Liqui) <span class="tag">Bolsa con liquidación afuera</span></h3>
-          <p>Similar al MEP pero el dólar te queda en una <strong>cuenta en el exterior</strong> (típicamente en USA). Comprás un bono que cotiza acá y lo vendés en Nueva York. Lo usan empresas y particulares que quieren <strong>sacar plata del país legalmente</strong>.</p>
-          <p class="source">Fuente: BYMA + bolsa de Nueva York · Bonos AL30/GD30 ambos mercados</p>
+          <h3>💛 Dólar CCL (Contado con liqui) <span class="tag">Dólares afuera</span></h3>
+          <p>Parecido al MEP, pero los dólares quedan en una <strong>cuenta en el exterior</strong>. Lo usan sobre todo empresas y personas que necesitan tener la plata fuera del país.</p>
+          <p class="source">Fuente: BYMA y bolsa de Nueva York</p>
         </div>
 
         <div class="explain-card" style="border-left:3px solid #ff6b6b">
-          <h3>💥 Dólar Cripto <span class="tag">USDT en exchanges</span></h3>
-          <p>Es el precio del <strong>stablecoin USDT</strong> (o USDC, DAI) cotizado en pesos en exchanges cripto argentinos (Lemon, Belo, Buenbit, Ripio). Suele estar entre el MEP y el blue. Muy líquido, opera 24/7 pero implica el riesgo de la stablecoin/exchange.</p>
-          <p class="source">Fuente: exchanges cripto locales (Binance P2P, Buenbit, Lemon)</p>
-        </div>
-
-        <div class="info-callout" style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.4rem;margin:1.5rem 0;font-size:0.9rem;color:var(--text-muted);line-height:1.7">
-          <strong style="color:var(--accent)">💡 ¿Cuál te conviene?</strong> Para principiantes que quieren dolarizar ahorros: <strong style="color:var(--text)">MEP</strong> es la opción estándar — legal, accesible desde la app del broker, sin movimientos físicos. El blue solo si necesitás efectivo. CCL si querés que tu plata quede fuera de Argentina. Cripto si priorizás velocidad y operás fines de semana.
+          <h3>💥 Dólar Cripto <span class="tag">En apps cripto</span></h3>
+          <p>Es el precio en pesos de una <strong>moneda digital que sigue al dólar</strong> (USDT o USDC), en apps cripto. Se puede operar todos los días a cualquier hora, pero no es un dólar en un banco: depende de la empresa que emite esa moneda y de la app, y no tiene la garantía de los depósitos.</p>
+          <p class="source">Fuente: apps y exchanges cripto locales</p>
         </div>
 
         <div style="background:rgba(255,107,107,0.04);border:1px solid rgba(255,107,107,0.2);border-left:3px solid #ff6b6b;border-radius:10px;padding:1.1rem 1.4rem;margin:1.5rem 0;font-size:0.9rem;color:var(--text-muted);line-height:1.7">
-          <strong style="color:#ff9999">⚠ Restricción cruzada (Comunicación BCRA "A" 8336):</strong> si comprás <strong style="color:var(--text)">dólar oficial</strong> en el banco para atesoramiento, no podés operar <strong style="color:var(--text)">dólar MEP ni CCL durante los siguientes 90 días</strong>. Funciona también al revés: si operaste MEP/CCL, tampoco podés comprar oficial por 90 días. Antes de elegir, definí cuál te conviene más por monto y conveniencia. <a href="https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8336.pdf" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Ver texto oficial BCRA →</a>
+          <strong style="color:#ff9999">⚠ Una regla importante: la restricción cruzada.</strong> Si comprás <strong style="color:var(--text)">dólar oficial</strong> en el banco, durante los <strong style="color:var(--text)">90 días siguientes no podés comprar ni vender dólar MEP o CCL</strong>, y al revés tampoco. La puso el Banco Central en septiembre de 2025 (Comunicación "A" 8336) y, según la última información publicada, sigue vigente. Estas reglas cambian seguido: confirmalo en tu banco o broker antes de operar. <a href="https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8336.pdf" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Ver la norma del Banco Central →</a>
         </div>
 
         <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem">
@@ -212,8 +270,16 @@
           <a href="inflacion" class="cta-link" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(74,222,154,0.25);border-radius:8px;padding:0.7rem 1.2rem;font-size:0.88rem;font-weight:500;text-decoration:none">🔥 ¿Cuánto perdiste ahorrando en pesos? →</a>
         </div>
       </section>
+
+      <section class="sim" id="que-hubiera-pasado" aria-labelledby="pas-t" style="margin-top:2.5rem">
+        <h2 id="pas-t">¿Qué hubiera pasado?</h2>
+        <p class="sim-ayuda" id="pas-ayuda">Si hace un año ponías tu plata en cada una de estas opciones, esto es lo que tendrías hoy.</p>
+        <div id="pas-lista"><p class="sim-det">Cargando los datos…</p></div>
+        <p class="sim-aviso">Es lo que pasó en los últimos 12 meses, con datos reales; no dice nada de lo que va a pasar. No incluye impuestos ni comisiones. No es una recomendación.</p>
+        <p class="pas-mas">Para seguir leyendo: <a href="blog/dolares-en-el-colchon">Tengo dólares en el colchón, ¿qué hago?</a> · <a href="blog/mito-comprar-dolares-inversion">El mito del dólar como inversión</a></p>
+      </section>
     </div>
-  
+
     <aside class="related-reads">
       <h2>Seguí leyendo</h2>
       <ul>
@@ -241,8 +307,88 @@
 
   <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js" integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK" crossorigin="anonymous"></script>
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=50"></script>
+  <script src="../js/main.js?v=51"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
+  <script>
+  // Simulador de compra y "qué hubiera pasado": precios del momento y datos reales del último año. Muestra números, no recomienda.
+  (async function () {
+    const $ = id => document.getElementById(id);
+    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const usd = n => 'US$ ' + Math.floor(n).toLocaleString('es-AR');
+    const pesos = n => '$' + Math.round(n).toLocaleString('es-AR');
+    const precio = n => '$' + Number(n).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const hora = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) + ' h'; };
+    const tasa = v => Number(v).toLocaleString('es-AR', { maximumFractionDigits: 1 });
+    const fecha = f => { const d = new Date(f + 'T12:00:00'); return isNaN(d) ? f : d.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }); };
+    const traer = u => fetch(u, { signal: AbortSignal.timeout(20000) }).then(r => (r.ok ? r.json() : null)).catch(() => null);
+    const [D, ipc] = await Promise.all([traer('/api/dolar?simulador=1'), traer('/api/indec?ipc=1')]);
+    const estado = { modo: 'banco', monto: 1000000, com: 0 };
+    const INFO = {
+      banco: ['Una cuenta en ese banco (home banking o app).', 'Al instante, en el horario de cada banco.', 'Si comprás dólar oficial, durante 90 días no podés comprar ni vender dólar MEP o CCL (restricción cruzada, más abajo).'],
+      mep: ['Una cuenta en un broker. Se abre por internet y en la mayoría es gratis.', 'En general, los dólares quedan disponibles el mismo día.', 'Si compraste dólar oficial en los últimos 90 días, no podés comprar MEP (restricción cruzada, más abajo).'],
+      cripto: ['Una app cripto y validar tu identidad en ella.', 'Al instante, todos los días y a cualquier hora.', 'Lo que comprás es una moneda digital que sigue al dólar, no un dólar en el banco. No tiene la garantía de los depósitos.'],
+    };
+    const info = m => '<ul class="sim-info"><li><b>Qué necesitás:</b> ' + INFO[m][0] + '</li><li><b>Cuánto tarda:</b> ' + INFO[m][1] + '</li><li><b>Tené en cuenta:</b> ' + INFO[m][2] + '</li></ul>';
+    const rango = (lista, quien) => {
+      const v = lista.map(x => estado.monto / x.precio), lo = Math.min(...v), hi = Math.max(...v);
+      return '<p class="sim-big">Te llevás <b>' + (Math.floor(lo) === Math.floor(hi) ? usd(lo) : 'entre ' + usd(lo) + ' y ' + usd(hi)) + '</b></p>' +
+        '<p class="sim-det">Según ' + quien + '. Precio del dólar: ' + (lista.length > 1 ? 'de ' + precio(Math.min(...lista.map(x => x.precio))) + ' a ' + precio(Math.max(...lista.map(x => x.precio))) : precio(lista[0].precio)) + '.</p>';
+    };
+    const tabla = (lista, titulo, quien) => '<details class="sim-lista"><summary>Ver ' + quien + ' por ' + quien + '</summary><div class="sim-scroll"><table class="sim-tabla"><thead><tr><th>' + titulo + '</th><th>Precio del dólar</th><th>Te llevás</th><th class="h">Dato del</th></tr></thead><tbody>' +
+      lista.map(x => '<tr><td>' + esc(x.nombre) + '</td><td>' + precio(x.precio) + '</td><td><b>' + usd(estado.monto / x.precio) + '</b></td><td class="h">' + hora(x.hora) + '</td></tr>').join('') + '</tbody></table></div></details>';
+    function resultado() {
+      const m = estado.modo, r = $('sim-res');
+      if (!(estado.monto > 0)) { r.innerHTML = '<p class="sim-det">Poné cuántos pesos tenés para ver el resultado.</p>'; return; }
+      if (!D) { r.innerHTML = '<p class="sim-det">No se pudieron cargar los precios. Probá de nuevo en un rato.</p>'; return; }
+      if (m === 'banco') {
+        const L = D.bancos && D.bancos.length ? D.bancos : D.oficial ? [{ nombre: 'Banco Nación (referencia)', precio: D.oficial.precio, hora: D.oficial.hora }] : [];
+        r.innerHTML = L.length ? rango(L, 'el banco') + tabla(L, 'Banco', 'banco') + '<p class="sim-det" style="margin-top:0.4rem;font-size:0.8rem">Aparecen los bancos con precio informado en las últimas 48 horas, en orden alfabético.</p>' + info(m) : '<p class="sim-det">No hay precios de bancos en este momento.</p>';
+      } else if (m === 'mep') {
+        if (!D.mep) { r.innerHTML = '<p class="sim-det">No hay precio del dólar MEP en este momento.</p>'; return; }
+        r.innerHTML = '<p class="sim-big">Te llevás <b id="sim-mep">' + usd(estado.monto * (1 - estado.com / 100) / D.mep.precio) + '</b></p>' +
+          '<p class="sim-det">Al precio de mercado del dólar MEP: ' + precio(D.mep.precio) + ' (dato del ' + hora(D.mep.hora) + '). El precio es el mismo en todos los brokers; lo que cambia es la comisión de cada uno.</p>' +
+          '<label class="sim-com">Comisión de tu broker <input id="sim-com" type="number" min="0" max="5" step="0.1" value="' + estado.com + '" aria-label="Comisión del broker en porcentaje"> %</label>' +
+          '<p class="sim-det" style="font-size:0.85rem">Se compra en cualquier broker habilitado por la CNV; por ejemplo, en orden alfabético: Balanz, Bull Market, Cocos, InvertirOnline o PPI. No recomendamos ninguno: las comisiones están en la <a href="brokers" style="color:var(--accent)">comparación de brokers</a>.</p>' + info(m);
+        $('sim-com').addEventListener('input', e => { estado.com = Math.min(5, Math.max(0, parseFloat(e.target.value) || 0)); $('sim-mep').textContent = usd(estado.monto * (1 - estado.com / 100) / D.mep.precio); });
+      } else {
+        const L = D.apps || [];
+        r.innerHTML = L.length ? rango(L, 'la app') + tabla(L, 'App', 'app') + '<p class="sim-det" style="margin-top:0.4rem;font-size:0.8rem">Precio final con las comisiones que informa cada app, en orden alfabético. Fuente: CriptoYa.</p>' + info(m) : '<p class="sim-det">No hay precios de apps cripto en este momento.</p>';
+      }
+    }
+    // ---- ¿Qué hubiera pasado?
+    function pasado() {
+      const P = D && D.pasado, el = $('pas-lista'), M = estado.monto > 0 ? estado.monto : 1000000;
+      if (!P) { el.innerHTML = '<p class="sim-det">No se pudieron cargar los datos del último año.</p>'; return; }
+      const g = ipc && ipc.general, u = g && g[g.length - 1];
+      const filas = [];
+      if (P.mep) filas.push(['Dólares (MEP)', 'Comprados a ' + precio(P.mep.compraste) + ' y vendidos hoy a ' + precio(P.mep.vendes), M / P.mep.compraste * P.mep.vendes]);
+      if (P.plazoFijo) filas.push(['Plazo fijo, renovado cada 30 días', 'A la tasa promedio de los bancos de cada momento (de ' + tasa(P.plazoFijo.tasaAntes) + '% a ' + tasa(P.plazoFijo.tasaHoy) + '% anual)', M * P.plazoFijo.factor]);
+      if (P.fondos) filas.push(['Fondo money market', 'Como los que usan muchas billeteras virtuales; promedio de ' + P.fondos.cantidad + ' fondos', M * P.fondos.factor]);
+      if (u && u.a != null) filas.push(['Para comparar: los precios', 'Lo que costaba ' + pesos(M) + ' hoy cuesta esto (inflación del INDEC en 12 meses)', M * (1 + u.a / 100), true]);
+      const max = Math.max(...filas.map(f => f[2]));
+      const desde = (P.mep && P.mep.desde) || (P.plazoFijo && P.plazoFijo.desde);
+      $('pas-ayuda').innerHTML = 'Si el ' + esc(fecha(desde)) + ' ponías <b>' + pesos(M) + '</b> en cada una de estas opciones, esto es lo que tendrías hoy:';
+      el.innerHTML = filas.map(([n, d, v, ref]) => '<div class="pas-fila' + (ref ? ' ref' : '') + '"><span class="n">' + esc(n) + '<small>' + esc(d) + '</small></span><span class="barra" aria-hidden="true"><i style="width:' + (v / max * 100).toFixed(1) + '%"></i></span><span class="v">' + pesos(v) + '<small>' + (v >= M ? '+' : '−') + Math.abs((v / M - 1) * 100).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + '%</small></span></div>').join('');
+    }
+    // ---- Monto y modo
+    const inp = $('sim-monto');
+    inp.addEventListener('input', () => {
+      const n = parseInt(inp.value.replace(/\D/g, ''), 10) || 0;
+      estado.monto = Math.min(n, 1e12);
+      const pos = inp.value.length - inp.selectionStart;
+      inp.value = estado.monto ? estado.monto.toLocaleString('es-AR') : '';
+      inp.setSelectionRange(Math.max(0, inp.value.length - pos), Math.max(0, inp.value.length - pos));
+      resultado(); pasado();
+    });
+    $('sim-modos').addEventListener('click', e => {
+      const b = e.target.closest('button[data-m]'); if (!b) return;
+      estado.modo = b.dataset.m;
+      $('sim-modos').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      resultado();
+    });
+    resultado(); pasado();
+  })();
+  </script>
   <script>
   (async function() {
     const grid = document.getElementById('dolar-grid');
@@ -280,7 +426,7 @@
               <span>Compra <strong>$${fmt(d.compra)}</strong></span>
               <span>Venta <strong>$${fmt(d.venta)}</strong></span>
             </div>
-            ${brecha != null ? `<div class="dolar-brecha">Brecha vs oficial: +${brecha.toFixed(1)}%</div>` : ''}
+            ${brecha != null ? `<div class="dolar-brecha">Brecha vs oficial: ${brecha > 0 ? '+' : brecha < 0 ? '−' : ''}${Math.abs(brecha).toFixed(1)}%</div>` : ''}
             <div class="dolar-update">${m.desc} · Actualizado ${date}</div>
           </div>`;
       }).join('');

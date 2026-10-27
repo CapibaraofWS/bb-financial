@@ -285,15 +285,21 @@ window.BB_GLOSARIO = {
       kind: 'dropdown',
       title: 'Nuevos Inversores',
       highlight: true,
+      // Un camino en cuatro pasos, de lo más básico a lo más avanzado (los artículos del blog se recorren con el renglón "Siguiente" de cada página)
       items: [
-        { href: pagesBase + 'empezar-a-invertir', label: 'Empezar a Invertir', icon: '🚀' },
+        { titulo: 'Paso 1 · Entender' },
         { href: pagesBase + 'conceptos',          label: 'Conceptos básicos',  icon: '📖' },
+        { titulo: 'Paso 2 · Cuidar los pesos' },
+        { href: pagesBase + 'cuentas-remuneradas',label: 'Cuentas remuneradas', icon: '💳' },
+        { href: pagesBase + 'comparador-plazos-fijos', label: 'Calculadora de plazo fijo', icon: '💰' },
+        { titulo: 'Paso 3 · Dólares' },
+        { href: pagesBase + 'comparador-dolares', label: 'Tipos de dólar y simulador', icon: '💵' },
+        { titulo: 'Paso 4 · Empezar a invertir' },
+        { href: pagesBase + 'empezar-a-invertir', label: 'Empezar a Invertir', icon: '🚀' },
+        { href: pagesBase + 'test-inversor',      label: 'Test del inversor',   icon: '🧭' },
         { href: pagesBase + 'brokers',            label: 'Brokers Argentina',  icon: '🏦' },
         { href: pagesBase + 'renta-fija',         label: 'Renta Fija',          icon: '📜' },
         { href: pagesBase + 'etfs-fci',           label: 'ETFs y FCI',          icon: '💎' },
-        { href: pagesBase + 'comparador-plazos-fijos', label: 'Calculadora de plazo fijo', icon: '💰' },
-        { href: pagesBase + 'cuentas-remuneradas',label: 'Cuentas remuneradas', icon: '💳' },
-        { href: pagesBase + 'comparador-dolares', label: 'Tipos de dólar',           icon: '💵' },
       ],
     },
     {
@@ -390,8 +396,8 @@ window.BB_GLOSARIO = {
       return `<a href="${g.href}" class="nav-link${active ? ' active' : ''}${g.extraClass ? ' ' + g.extraClass : ''}">${g.label}</a>`;
     }
     // dropdown
-    const anyActive = g.items.some(it => isActive(it.href));
-    const itemsHtml = g.items.map(it => `
+    const anyActive = g.items.some(it => it.href && isActive(it.href));
+    const itemsHtml = g.items.map(it => it.titulo ? `<span class="dd-titulo">${it.titulo}</span>` : `
       <a href="${it.href}" class="${isActive(it.href) ? 'active' : ''}">
         <span class="dd-icon">${it.bandera || bbGlifo(it.href) || it.icon || ''}</span>
         <span>${it.label}${it.beta ? ' <span class="beta-badge">Beta</span>' : ''}</span>
@@ -409,6 +415,35 @@ window.BB_GLOSARIO = {
   }).join('');
 
   nav.innerHTML = html;
+})();
+
+// ============================================================
+// CAMINO "NUEVOS INVERSORES" — al final de cada página del camino, en qué paso está y cuál sigue
+// ============================================================
+(function caminoNuevosInversores() {
+  const PASOS = ['Entender', 'Cuidar los pesos', 'Dólares', 'Empezar a invertir'];
+  const CAMINO = [
+    [1, 'conceptos', 'Conceptos básicos'], [1, 'blog/que-es-la-inflacion', 'Qué es la inflación'],
+    [1, 'blog/caja-ahorro-perdes-plata', 'Por qué la caja de ahorro pierde plata'], [1, 'blog/7-banderas-rojas-estafas', 'Cómo reconocer una estafa'],
+    [2, 'cuentas-remuneradas', 'Cuentas remuneradas'], [2, 'comparador-plazos-fijos', 'Plazo fijo'], [2, 'blog/fci-money-market', 'Fondos money market'],
+    [3, 'comparador-dolares', 'Tipos de dólar y simulador'], [3, 'blog/dolares-en-el-colchon', 'Dólares en el colchón'],
+    [3, 'blog/mito-comprar-dolares-inversion', 'El mito del dólar como inversión'],
+    [4, 'empezar-a-invertir', 'Empezar a invertir'], [4, 'test-inversor', 'Test del inversor'], [4, 'brokers', 'Brokers'],
+    [4, 'renta-fija', 'Renta fija'], [4, 'etfs-fci', 'ETFs y FCI'],
+  ];
+  const aqui = location.pathname.replace(/(?:\/index)?(?:\.html)?$/, '').replace(/\/$/, '');
+  const i = CAMINO.findIndex(c => aqui === '/pages/' + c[1]);
+  const main = document.querySelector('main');
+  if (i < 0 || !main) return;
+  const [paso] = CAMINO[i], ant = CAMINO[i - 1], sig = CAMINO[i + 1];
+  const enlace = (c, txt) => `<a href="/pages/${c[1]}">${txt}</a>`;
+  const nav = document.createElement('nav');
+  nav.className = 'camino container';
+  nav.setAttribute('aria-label', 'Camino para nuevos inversores');
+  nav.innerHTML = `<p class="camino-paso">Camino para empezar · <b>Paso ${paso} de 4: ${PASOS[paso - 1]}</b></p>
+    <div class="camino-barra" aria-hidden="true">${PASOS.map((_, k) => `<i class="${k < paso ? 'hecho' : ''}"></i>`).join('')}</div>
+    <p class="camino-links">${ant ? enlace(ant, '← ' + ant[2]) : '<span></span>'}${sig ? enlace(sig, (sig[0] !== paso ? 'Paso ' + sig[0] + ': ' : 'Siguiente: ') + sig[2] + ' →') : '<span>Llegaste al final del camino</span>'}</p>`;
+  main.appendChild(nav);
 })();
 
 // ============================================================
