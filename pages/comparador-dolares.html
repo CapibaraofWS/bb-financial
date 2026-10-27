@@ -314,7 +314,7 @@
   (async function () {
     const $ = id => document.getElementById(id);
     const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const usd = n => 'US$ ' + Math.floor(n).toLocaleString('es-AR');
+    const usd = n => 'US$ ' + Math.floor(n).toLocaleString('es-AR');
     const pesos = n => '$' + Math.round(n).toLocaleString('es-AR');
     const precio = n => '$' + Number(n).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const hora = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) + ' h'; };
