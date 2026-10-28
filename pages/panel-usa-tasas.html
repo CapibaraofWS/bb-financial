@@ -204,9 +204,13 @@
     // ---- 1. Fed
     { const t = ult(D.techo), l = ult(D.piso), ef = ult(D.efectiva), so = ult(D.sofr);
       let cambio = null; const T = D.techo || []; for (let i = T.length - 1; i > 0; i--) if (T[i].v !== T[i - 1].v) { cambio = { f: T[i].f, d: T[i].v - T[i - 1].v }; break; }
-      const reunion = cal && cal.eventos && cal.eventos.find(e => e.tema === 'tasas' && e.fecha >= hoy);
+      const ahora = new Date().toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+      const pasada = e => e.fecha < hoy || (e.fecha === hoy && ahora >= e.hora.padStart(5, '0'));
+      const reuniones = (cal && cal.eventos || []).filter(e => e.tema === 'tasas');
+      const reunion = reuniones.find(e => !pasada(e)), previa = reuniones.filter(pasada).at(-1);
+      const sinCambio = previa && t && t.f > previa.fecha && (!cambio || cambio.f <= previa.fecha) ? ' En la reunión del ' + P.fechaCorta(previa.fecha) + ' la mantuvo sin cambios.' : '';
       if (t && l) P.tarjeta('k1', { que: 'Tasa de la Fed · rango objetivo', grande: num(l.v, 2) + '–' + num(t.v, 2) + '%',
-        contexto: (cambio ? 'Desde el ' + fecha(cambio.f) + ', cuando ' + (cambio.d > 0 ? 'subió ' : 'bajó ') + num(Math.abs(cambio.d), 2) + ' puntos.' : 'Sin cambios en el último año.') + (reunion ? ' Próxima decisión: ' + P.fechaCorta(reunion.fecha) + ', ' + reunion.hora + ' h (hora argentina).' : ''),
+        contexto: (cambio ? 'Desde el ' + fecha(cambio.f) + ', cuando ' + (cambio.d > 0 ? 'subió ' : 'bajó ') + num(Math.abs(cambio.d), 2) + ' puntos.' : 'Sin cambios en el último año.') + sinCambio + (reunion ? ' Próxima decisión: ' + P.fechaCorta(reunion.fecha) + ', ' + reunion.hora + ' h (hora argentina).' : ''),
         filas: [ef ? ['Tasa efectiva', 'La que se pagaron los bancos, ' + P.fechaCorta(ef.f), num(ef.v, 2) + '%'] : null, so ? ['SOFR', 'Préstamos de un día con bonos de garantía', num(so.v, 2) + '%'] : null],
         fuentes: 'Fuente: Reserva Federal vía ' + FRED('DFEDTARU'), ir: '<a class="ir" href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">Calendario de la Fed ↗</a>' }); }
 
