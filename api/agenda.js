@@ -370,15 +370,72 @@ async function getBcraPrincipales() {
 // tasa=true: el BCRA a veces publica 0 el último día (TAMAR, 16/10/2026); una tasa en 0 es dato faltante
 const pickVar = (map, id, tasa) => (map[id] && Number.isFinite(map[id].valor) && !(tasa && map[id].valor <= 0) ? { valor: map[id].valor, fecha: map[id].fecha } : null);
 
-// Poca liquidez: el último día operó menos del 5% de la mediana de la curva. Su precio
-// puede no ser representativo (Dumrauf, cap. 16: la falta de liquidez deja precios
-// desarbitrados que distorsionan la curva). Se marca, no se saca. Con menos de 4
-// letras con volumen la mediana no dice nada y no se marca ninguna.
+const mediana = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2; };
+
+// Poca liquidez: en los últimos días hábiles operó (mediana) menos del 5% de lo que opera
+// la letra típica de la curva. Su precio puede no ser representativo (Dumrauf, cap. 16: la
+// falta de liquidez deja precios desarbitrados que distorsionan la curva). Se marca, no se
+// saca. Con menos de 4 letras con volumen la mediana no dice nada y no se marca ninguna.
 function marcarLiquidez(bonds) {
-  const v = bonds.map(b => b.volumen).filter(x => x > 0).sort((a, b) => a - b);
-  if (v.length < 4) return;
-  const mediana = v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
-  for (const b of bonds) if (b.volumen != null && b.volumen < mediana * 0.05) b.pocaLiquidez = true;
+  const v = bonds.map(b => b.volumen).filter(x => x > 0);
+  if (v.length < 4) return null;
+  const m = mediana(v);
+  for (const b of bonds) if (b.volumen != null && b.volumen < m * 0.05) b.pocaLiquidez = true;
+  return m;
+}
+
+// Redis (Upstash), como en _usa.js: guarda el volumen de cada rueda, porque ArgentinaDatos
+// solo publica el último día. Sin Redis todo sigue andando con un solo día.
+async function redis(cmd) {
+  const limpia = v => (v || '').trim().replace(/^["']|["']$/g, '');
+  const url = limpia(process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL), token = limpia(process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN);
+  if (!url || !token) return null;
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmd), signal: AbortSignal.timeout(2500) });
+    return r.ok ? (await r.json()).result : null;
+  } catch { return null; }
+}
+
+// Días hábiles en la Argentina (UTC−3, sin horario de verano), con los feriados de ArgentinaDatos.
+const feriadosPorAnio = {};
+async function feriados(anios) {
+  const out = new Set();
+  for (const a of anios) {
+    if (!feriadosPorAnio[a]) {
+      const j = await fetchJson('https://api.argentinadatos.com/v1/feriados/' + a).catch(() => null);
+      if (Array.isArray(j)) feriadosPorAnio[a] = j.map(f => f.fecha);
+    }
+    for (const f of feriadosPorAnio[a] || []) out.add(f);
+  }
+  return out;
+}
+const masDias = (f, n) => new Date(Date.parse(f + 'T12:00:00Z') + n * MS_DAY).toISOString().slice(0, 10);
+const esHabil = (f, fer) => { const d = new Date(f + 'T12:00:00Z').getUTCDay(); return d > 0 && d < 6 && !fer.has(f); };
+const habilDesde = (f, paso, fer) => { let x = masDias(f, paso); while (!esHabil(x, fer)) x = masDias(x, paso); return x; };
+// Rueda a la que corresponde un precio tomado en `ms`: la del día si el mercado ya abrió (11 h), si no la anterior
+function ruedaDe(ms, fer) {
+  const ar = new Date(ms - 3 * 3600e3), dia = ar.toISOString().slice(0, 10);
+  return esHabil(dia, fer) && ar.getUTCHours() >= 11 ? dia : habilDesde(dia, -1, fer);
+}
+
+// Volumen de cada letra: mediana de hasta 5 ruedas completas (las de ArgentinaDatos). La rueda
+// en curso (data912, parcial) solo cuenta para letras que todavía no tienen ninguna completa.
+async function volumenes(ruedaCierre, volCierre, ruedaVivo, volVivo) {
+  let hist = null;
+  try { hist = JSON.parse(await redis(['GET', 'pesos:volumen']) || 'null'); } catch {}
+  hist = hist && typeof hist === 'object' ? hist : {};
+  const antes = JSON.stringify(hist);
+  if (ruedaCierre && Object.keys(volCierre).length) hist[ruedaCierre] = { completa: true, v: volCierre };
+  if (ruedaVivo !== ruedaCierre && Object.keys(volVivo).length && !(hist[ruedaVivo] && hist[ruedaVivo].completa)) hist[ruedaVivo] = { completa: false, v: volVivo };
+  for (const f of Object.keys(hist).sort().reverse().slice(10)) delete hist[f];
+  if (JSON.stringify(hist) !== antes) await redis(['SET', 'pesos:volumen', JSON.stringify(hist), 'EX', String(30 * 86400)]);
+  const fechas = Object.keys(hist).sort().reverse();
+  const completas = fechas.filter(f => hist[f].completa).slice(0, 5), parcial = fechas.find(f => !hist[f].completa);
+  return sym => {
+    let vals = completas.map(f => hist[f].v && hist[f].v[sym]).filter(Number.isFinite);
+    if (!vals.length && parcial) vals = [hist[parcial].v && hist[parcial].v[sym]].filter(Number.isFinite);
+    return vals.length ? { v: mediana(vals), dias: vals.length } : null;
+  };
 }
 
 async function getArPesos() {
@@ -403,6 +460,13 @@ async function getArPesos() {
   // con precio, TNA, TEA y TEM ya calculados. Con el formato viejo (una lista con
   // vpv) esto devolvia 0 bonos y la curva de pesos quedaba vacia.
   if (letras && Array.isArray(letras.letras)) {
+    const ahora = Date.now(), hoy = new Date(ahora - 3 * 3600e3).toISOString().slice(0, 10), anio = +hoy.slice(0, 4);
+    const fer = await feriados(hoy.slice(5, 7) === '12' ? [anio, anio + 1] : [anio]);
+    const ruedaCierre = letras.fechaActualizacion ? ruedaDe(Date.parse(letras.fechaActualizacion), fer) : null;
+    // data912 cotiza el mismo segmento que ArgentinaDatos (su cierre anterior coincide con el de
+    // ArgentinaDatos, 28/10/2026): liquida el día hábil siguiente, y desde ahí se cuentan los días.
+    const ruedaVivo = ruedaDe(ahora, fer), liq = habilDesde(ruedaVivo, 1, fer);
+    const volCierre = {}, volVivo = {};
     const bonds = letras.letras.map(l => {
       const dtm = Number(l.diasAlVencimiento);
       // Solo LECAP (S30S6) y BONCAP (T15E7): cero cupon, comparables en una curva.
@@ -410,20 +474,34 @@ async function getArPesos() {
       if (!/^[ST]\d{2}[A-Z]\d$/.test(l.ticker || '')) return null;
       if (!(l.precioArs > 0) || !(l.teaPorcentaje > 0) || !(dtm >= 4)) return null;
       const tea = l.teaPorcentaje / 100;
-      return {
+      // Lo que paga al vencimiento (condiciones de emisión), implícito en la TEA de ArgentinaDatos
+      const vpv = l.precioArs * Math.pow(1 + tea, dtm / 365);
+      if (Number.isFinite(l.volumenEfectivoArs)) volCierre[l.ticker] = l.volumenEfectivoArs;
+      const b = {
         sym: l.ticker, tipo: 'nominal', vencimiento: l.fechaVencimiento, dtm,
-        price: l.precioArs, pct: Number.isFinite(l.variacionPorcentaje) ? l.variacionPorcentaje : null,
-        vpv: l.precioArs * Math.pow(1 + tea, dtm / 365),   // lo que paga al vencimiento, implicito en la TEA
+        price: l.precioArs, pct: Number.isFinite(l.variacionPorcentaje) ? l.variacionPorcentaje : null, vpv,
         // TNA de ArgentinaDatos: tasa simple base 365, (pago/precio − 1) × 365/días
         tem: l.temPorcentaje / 100, tna: l.tnaPorcentaje / 100, tir: tea,
-        duration: dtm / 365,
-        volumen: Number.isFinite(l.volumenEfectivoArs) ? l.volumenEfectivoArs : null,
+        duration: dtm / 365, precio: 'cierre',
       };
+      // Precio de la rueda en curso: mismas fórmulas, con los días desde la liquidación.
+      // Un salto de más de 10% contra el cierre es un dato mal cargado, no un precio.
+      const q = px[l.ticker], d = Math.round((Date.parse(l.fechaVencimiento + 'T12:00:00Z') - Date.parse(liq + 'T12:00:00Z')) / MS_DAY);
+      if (q && ruedaVivo !== ruedaCierre && Math.abs(q.price / l.precioArs - 1) < 0.1 && d >= 4) {
+        const ratio = vpv / q.price;
+        Object.assign(b, { dtm: d, price: q.price, pct: q.pct, tem: Math.pow(ratio, 30.4 / d) - 1, tna: (ratio - 1) * 365 / d,
+          tir: Math.pow(ratio, 365 / d) - 1, duration: d / 365, precio: 'vivo' });
+        if (Number.isFinite(q.volume)) volVivo[l.ticker] = q.volume * q.price / 100;   // data912 da valor nominal
+      }
+      return b;
     }).filter(Boolean).sort((a, b) => a.dtm - b.dtm);
-    marcarLiquidez(bonds);
+    const vol = await volumenes(ruedaCierre, volCierre, ruedaVivo, volVivo);
+    for (const b of bonds) { const x = vol(b.sym); b.volumen = x ? x.v : null; b.volDias = x ? x.dias : 0; }
+    const volumenMediana = marcarLiquidez(bonds), vivo = bonds.some(b => b.precio === 'vivo');
     return {
-      source: 'ArgentinaDatos (precios de BYMA y condiciones de emisión)',
-      asOf: letras.fechaActualizacion || new Date().toISOString(),
+      source: vivo ? 'BYMA vía data912 (precios) y ArgentinaDatos (condiciones de emisión)' : 'ArgentinaDatos (precios de BYMA y condiciones de emisión)',
+      asOf: vivo ? new Date(ahora).toISOString() : (letras.fechaActualizacion || new Date().toISOString()),
+      vivo, rueda: vivo ? ruedaVivo : ruedaCierre, volumenMediana,
       bonds,
       cer:                 pickVar(bcra, 30),
       rem:                 pickVar(bcra, 29),

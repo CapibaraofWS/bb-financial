@@ -188,7 +188,7 @@
           <p class="ch-sub" id="pesos-sub">Cargando…</p>
           <div class="chart-canvas-wrap"><canvas id="pesos-chart"></canvas></div>
           <div style="background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.18);border-radius:8px;padding:0.85rem 1.1rem;margin-top:1rem;font-size:0.8rem;color:var(--text-muted);line-height:1.6">
-            <strong style="color:#60a5fa">Cómo se calcula.</strong> Las LECAP y BONCAP son <strong>cero cupón capitalizables</strong>: no pagan renta, pagan un único monto al vencimiento. Comparamos el <strong>precio de mercado</strong> contra ese <strong>pago final</strong> (fijado en las condiciones de emisión) y de ahí sale la tasa: <code>TEM = (pago/precio)^(30,4/días) − 1</code>, <code>TEA = (pago/precio)^(365/días) − 1</code> y <code>TNA = (pago/precio − 1) × 365/días</code> (tasa simple: el rendimiento del plazo llevado a un año, sin capitalizar). Son tasas <strong>nominales</strong>: en pesos fijos, sin ajuste por inflación. Los <strong>puntos huecos</strong> son letras con poca liquidez: el último día operaron menos del 5% de lo que opera una letra típica de la curva, así que su precio puede no ser representativo.
+            <strong style="color:#60a5fa">Cómo se calcula.</strong> Las LECAP y BONCAP son <strong>cero cupón capitalizables</strong>: no pagan renta, pagan un único monto al vencimiento. Comparamos el <strong>precio de mercado</strong> del día contra ese <strong>pago final</strong> (fijado en las condiciones de emisión), contando los días desde la liquidación (el día hábil siguiente a la operación), y de ahí sale la tasa: <code>TEM = (pago/precio)^(30,4/días) − 1</code>, <code>TEA = (pago/precio)^(365/días) − 1</code> y <code>TNA = (pago/precio − 1) × 365/días</code> (tasa simple: el rendimiento del plazo llevado a un año, sin capitalizar). Son tasas <strong>nominales</strong>: en pesos fijos, sin ajuste por inflación. Los <strong>puntos huecos</strong> son letras con poca liquidez: en los últimos días hábiles operaron menos del 5% de lo que opera una letra típica de la curva, así que su precio puede no ser representativo.
           </div>
         </div>
 
@@ -208,7 +208,7 @@
           <h3>Detalle</h3>
           <div style="overflow-x:auto">
             <table class="ladder-table" id="pesos-table">
-              <thead><tr><th>Letra/Bono</th><th>Vencim.</th><th>Días</th><th>Precio</th><th>Pago al vto</th><th>TEM</th><th>TNA</th><th>TEA</th><th>Operado</th></tr></thead>
+              <thead><tr><th>Letra/Bono</th><th>Vencim.</th><th>Días</th><th>Precio</th><th>Pago al vto</th><th>TEM</th><th>TNA</th><th>TEA</th><th title="Monto operado por día: mediana de los últimos días hábiles">Operado por día</th></tr></thead>
               <tbody><tr><td colspan="9" class="loading-cell">Cargando…</td></tr></tbody>
             </table>
           </div>
@@ -653,6 +653,7 @@
     // ===== PESOS: curva LECAP/BONCAP + tasa real vs REM =====
     let pesosChart = null, pesosLoaded = false;
     const pct = (x, d=1) => (x==null || !isFinite(x)) ? '—' : (x*100).toFixed(d)+'%';
+    const M = x => Math.round(x / 1e6).toLocaleString('en-US');   // millones de pesos
 
     async function loadPesos() {
       if (pesosLoaded) return; pesosLoaded = true;
@@ -671,9 +672,10 @@
       }
 
       const asOf = data.asOf ? new Date(data.asOf).toLocaleString('es-AR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : '';
-      // ArgentinaDatos publica una vez por día, a la noche, con los precios de cierre
-      const cierre = /ArgentinaDatos/.test(data.source || '');
-      sub.textContent = `${list.length} instrumentos · ${data.source}${asOf ? (cierre ? ' · precios de cierre, actualizados el ' : ' · actualizado ') + asOf : ''}`;
+      // Con precios del día (data912) se muestra la rueda y la hora; si no, el cierre que ArgentinaDatos publica a la noche
+      const rueda = data.rueda ? data.rueda.slice(8, 10) + '/' + data.rueda.slice(5, 7) : '';
+      const hora = data.asOf ? new Date(data.asOf).toLocaleTimeString('es-AR', {hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : '';
+      sub.textContent = `${list.length} instrumentos · ${data.source}` + (data.vivo ? ` · precios de la rueda del ${rueda}, a las ${hora} h` : (asOf ? ' · precios de cierre, actualizados el ' + asOf : ''));
 
       // --- Gráfico: TEA y TNA por meses al vencimiento ---
       const ctx = document.getElementById('pesos-chart').getContext('2d');
@@ -750,7 +752,7 @@
           </p>
         </div>
         <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.55">
-          <code>real hasta el vencimiento = ((1 + TEA) / (1 + inflación esperada))^(días/365) − 1</code>. El REM es una expectativa <em>a 12 meses</em>: la repartimos pareja en el plazo de la letra. La cifra anual supone reinvertir a la misma tasa hasta completar el año.
+          ${ref.volumen > 0 ? `El ${ref.sym} operó $${M(ref.volumen)} M por día ${ref.volDias > 1 ? `(mediana de los últimos ${ref.volDias} días hábiles)` : 'el último día'}${data.volumenMediana ? `; la letra típica de la curva, $${M(data.volumenMediana)} M` : ''}. ` : ''}<code>real hasta el vencimiento = ((1 + TEA) / (1 + inflación esperada))^(días/365) − 1</code>. El REM es una expectativa <em>a 12 meses</em>: la repartimos pareja en el plazo de la letra. La cifra anual supone reinvertir a la misma tasa hasta completar el año.
           ${aptas.every(b => b.dtm < 330) ? 'Hoy ninguna letra con liquidez normal llega a un año, así que usamos la más larga.' : 'Usamos la letra con liquidez normal de plazo más cercano a un año.'}
           ${fuera.length ? `No usamos ${fuera.join(', ')} porque ${fuera.length === 1 ? 'operó' : 'operaron'} poco. ` : ''}El resultado cambia según la letra elegida.
           El REM es del ${data.rem.fecha} y es una <strong>proyección</strong>, no un dato cerrado: si la inflación termina siendo más alta, la tasa real va a ser peor.
@@ -775,15 +777,15 @@
 
       // --- Tabla de detalle ---
       document.querySelector('#pesos-table tbody').innerHTML = list.map(b => `
-        <tr><td class="lt-sym">${b.sym}${b.pocaLiquidez ? ' <span class="lt-poca" title="El último día operó menos del 5% de lo que opera una letra típica de la curva: su precio puede no ser representativo.">poca liquidez</span>' : ''}</td>
+        <tr><td class="lt-sym">${b.sym}${b.pocaLiquidez ? ' <span class="lt-poca" title="En los últimos días hábiles operó menos del 5% de lo que opera una letra típica de la curva: su precio puede no ser representativo.">poca liquidez</span>' : ''}</td>
         <td>${b.vencimiento}</td>
         <td>${b.dtm}</td>
-        <td>$${fmt(b.price, 2)}</td>
+        <td>$${fmt(b.price, 2)}${data.vivo && b.precio === 'cierre' ? '<span title="Sin precio de esta rueda: es el cierre anterior" style="color:var(--text-subtle)">*</span>' : ''}</td>
         <td>$${fmt(b.vpv, 2)}</td>
         <td>${pct(b.tem, 2)}</td>
         <td>${pct(b.tna)}</td>
         <td class="lt-ytm">${pct(b.tir)}</td>
-        <td>${b.volumen > 0 ? '$' + Math.round(b.volumen / 1e6).toLocaleString('en-US') + ' M' : '—'}</td></tr>`).join('');
+        <td>${b.volumen > 0 ? '$' + M(b.volumen) + ' M' : '—'}</td></tr>`).join('');
     }
 
     // Tabs
