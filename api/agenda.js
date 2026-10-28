@@ -370,6 +370,17 @@ async function getBcraPrincipales() {
 // tasa=true: el BCRA a veces publica 0 el último día (TAMAR, 16/10/2026); una tasa en 0 es dato faltante
 const pickVar = (map, id, tasa) => (map[id] && Number.isFinite(map[id].valor) && !(tasa && map[id].valor <= 0) ? { valor: map[id].valor, fecha: map[id].fecha } : null);
 
+// Poca liquidez: el último día operó menos del 5% de la mediana de la curva. Su precio
+// puede no ser representativo (Dumrauf, cap. 16: la falta de liquidez deja precios
+// desarbitrados que distorsionan la curva). Se marca, no se saca. Con menos de 4
+// letras con volumen la mediana no dice nada y no se marca ninguna.
+function marcarLiquidez(bonds) {
+  const v = bonds.map(b => b.volumen).filter(x => x > 0).sort((a, b) => a - b);
+  if (v.length < 4) return;
+  const mediana = v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+  for (const b of bonds) if (b.volumen != null && b.volumen < mediana * 0.05) b.pocaLiquidez = true;
+}
+
 async function getArPesos() {
   const [letras, priceSets, bcra] = await Promise.all([
     fetchJson('https://api.argentinadatos.com/v1/finanzas/letras'),
@@ -403,10 +414,13 @@ async function getArPesos() {
         sym: l.ticker, tipo: 'nominal', vencimiento: l.fechaVencimiento, dtm,
         price: l.precioArs, pct: Number.isFinite(l.variacionPorcentaje) ? l.variacionPorcentaje : null,
         vpv: l.precioArs * Math.pow(1 + tea, dtm / 365),   // lo que paga al vencimiento, implicito en la TEA
+        // TNA de ArgentinaDatos: tasa simple base 365, (pago/precio − 1) × 365/días
         tem: l.temPorcentaje / 100, tna: l.tnaPorcentaje / 100, tir: tea,
         duration: dtm / 365,
+        volumen: Number.isFinite(l.volumenEfectivoArs) ? l.volumenEfectivoArs : null,
       };
     }).filter(Boolean).sort((a, b) => a.dtm - b.dtm);
+    marcarLiquidez(bonds);
     return {
       source: 'ArgentinaDatos (precios de BYMA y condiciones de emisión)',
       asOf: letras.fechaActualizacion || new Date().toISOString(),
@@ -433,10 +447,13 @@ async function getArPesos() {
     return {
       sym: l.ticker, tipo: 'nominal', vencimiento: l.fechaVencimiento, dtm,
       price: q.price, pct: q.pct, vpv: l.vpv,
-      tem, tna: tem * 12, tir: Math.pow(ratio, 1 / years) - 1,
+      // Misma convención que ArgentinaDatos: TNA simple base 365
+      tem, tna: (ratio - 1) * 365 / dtm, tir: Math.pow(ratio, 1 / years) - 1,
       duration: years, // cero cupón: duration = plazo
+      volumen: Number.isFinite(q.volume) ? q.volume * q.price / 100 : null, // data912 da valor nominal
     };
   }).filter(Boolean).sort((a, b) => a.dtm - b.dtm);
+  marcarLiquidez(bonds);
 
   return {
     source: 'precios de mercado + condiciones de emisión (LECAP/BONCAP)',

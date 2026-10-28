@@ -64,6 +64,7 @@
     .ladder-table tbody tr:hover td{background:rgba(255,255,255,0.02);}
     .lt-sym{color:var(--accent);font-weight:600;}
     .lt-law{font-size:0.62rem;color:var(--text-subtle);}
+    .lt-poca{display:inline-block;font-size:0.58rem;letter-spacing:0.04em;padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.35rem;background:rgba(255,184,77,0.12);color:#ffb84d;vertical-align:middle;}
     .lt-ytm{color:#4ade9a;font-weight:600;}
     .badge-law{display:inline-block;font-family:var(--font-mono);font-size:0.58rem;padding:0.1rem 0.4rem;border-radius:10px;letter-spacing:0.05em;}
     .badge-arg{background:rgba(96,165,250,0.12);color:#60a5fa;}
@@ -187,7 +188,7 @@
           <p class="ch-sub" id="pesos-sub">Cargando…</p>
           <div class="chart-canvas-wrap"><canvas id="pesos-chart"></canvas></div>
           <div style="background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.18);border-radius:8px;padding:0.85rem 1.1rem;margin-top:1rem;font-size:0.8rem;color:var(--text-muted);line-height:1.6">
-            <strong style="color:#60a5fa">Cómo se calcula.</strong> Las LECAP y BONCAP son <strong>cero cupón capitalizables</strong>: no pagan renta, pagan un único monto al vencimiento. Comparamos el <strong>precio de mercado</strong> contra ese <strong>pago final</strong> (fijado en las condiciones de emisión) y de ahí sale la tasa: <code>TEM = (pago/precio)^(30,4/días) − 1</code>, <code>TEA = (pago/precio)^(365/días) − 1</code> y <code>TNA = TEM × 12</code>. Son tasas <strong>nominales</strong>: en pesos fijos, sin ajuste por inflación.
+            <strong style="color:#60a5fa">Cómo se calcula.</strong> Las LECAP y BONCAP son <strong>cero cupón capitalizables</strong>: no pagan renta, pagan un único monto al vencimiento. Comparamos el <strong>precio de mercado</strong> contra ese <strong>pago final</strong> (fijado en las condiciones de emisión) y de ahí sale la tasa: <code>TEM = (pago/precio)^(30,4/días) − 1</code>, <code>TEA = (pago/precio)^(365/días) − 1</code> y <code>TNA = (pago/precio − 1) × 365/días</code> (tasa simple: el rendimiento del plazo llevado a un año, sin capitalizar). Son tasas <strong>nominales</strong>: en pesos fijos, sin ajuste por inflación. Los <strong>puntos huecos</strong> son letras con poca liquidez: el último día operaron menos del 5% de lo que opera una letra típica de la curva, así que su precio puede no ser representativo.
           </div>
         </div>
 
@@ -207,8 +208,8 @@
           <h3>Detalle</h3>
           <div style="overflow-x:auto">
             <table class="ladder-table" id="pesos-table">
-              <thead><tr><th>Letra/Bono</th><th>Vencim.</th><th>Días</th><th>Precio</th><th>Pago al vto</th><th>TEM</th><th>TNA</th><th>TEA</th></tr></thead>
-              <tbody><tr><td colspan="8" class="loading-cell">Cargando…</td></tr></tbody>
+              <thead><tr><th>Letra/Bono</th><th>Vencim.</th><th>Días</th><th>Precio</th><th>Pago al vto</th><th>TEM</th><th>TNA</th><th>TEA</th><th>Operado</th></tr></thead>
+              <tbody><tr><td colspan="9" class="loading-cell">Cargando…</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -269,7 +270,7 @@
           <summary>Tasa real: ¿la tasa fija le gana a la inflación?</summary>
           <div class="acc-body">
             <p>Una LECAP que rinde 27% anual no te dice nada por sí sola: lo que importa es cuánto rinde <em>por encima de la inflación</em>. Esa es la <strong>tasa real</strong>: <code>real = (1 + TEA) / (1 + inflación esperada) − 1</code>.</p>
-            <p>En la solapa de pesos comparamos la TEA de cada letra contra el <strong>REM</strong> (Relevamiento de Expectativas de Mercado del BCRA: lo que esperan los economistas para los próximos 12 meses). Si la tasa real da <strong>positiva</strong>, la tasa fija le gana a la inflación proyectada. Si da <strong>negativa</strong>, el mercado está pagando menos que la inflación esperada y tiene más sentido mirar instrumentos ajustados por CER.</p>
+            <p>En la solapa de pesos comparamos la TEA de la letra con liquidez normal de plazo más cercano a un año contra el <strong>REM</strong> (Relevamiento de Expectativas de Mercado del BCRA: lo que esperan los economistas para los próximos 12 meses). Como las letras suelen vencer antes del año, mostramos la tasa real hasta el vencimiento y su equivalente anual. Si da <strong>positiva</strong>, la tasa fija le gana a la inflación proyectada. Si da <strong>negativa</strong>, el mercado está pagando menos que la inflación esperada; los instrumentos ajustados por CER, en cambio, siguen a la inflación.</p>
             <p>Ojo con la trampa: el REM es una <em>expectativa</em>, no un dato. Si la inflación real termina siendo más alta, tu tasa real efectiva va a ser peor que la que muestra el cuadro. La apuesta de comprar tasa fija es justamente que la inflación baje más de lo que el mercado descuenta.</p>
             <span class="cite">Fabozzi, Bond Markets 8e — inflation-linked bonds; BCRA, REM.</span>
           </div>
@@ -663,14 +664,16 @@
       if (!list.length) {
         pesosLoaded = false; // permite reintentar al volver a entrar en la solapa
         sub.textContent = 'No se pudieron cargar las tasas en pesos. Probá de nuevo en unos minutos.';
-        document.querySelector('#pesos-table tbody').innerHTML = '<tr><td colspan="8" class="loading-cell">Sin datos por ahora.</td></tr>';
+        document.querySelector('#pesos-table tbody').innerHTML = '<tr><td colspan="9" class="loading-cell">Sin datos por ahora.</td></tr>';
         document.getElementById('be-block').innerHTML = '<p class="loading-cell">Sin datos para calcular la tasa real.</p>';
         document.getElementById('macro-block').innerHTML = '<p class="loading-cell">Sin datos del BCRA en este momento.</p>';
         return;
       }
 
       const asOf = data.asOf ? new Date(data.asOf).toLocaleString('es-AR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : '';
-      sub.textContent = `${list.length} instrumentos · ${data.source}${asOf ? ' · actualizado ' + asOf : ''}`;
+      // ArgentinaDatos publica una vez por día, a la noche, con los precios de cierre
+      const cierre = /ArgentinaDatos/.test(data.source || '');
+      sub.textContent = `${list.length} instrumentos · ${data.source}${asOf ? (cierre ? ' · precios de cierre, actualizados el ' : ' · actualizado ') + asOf : ''}`;
 
       // --- Gráfico: TEA y TNA por meses al vencimiento ---
       const ctx = document.getElementById('pesos-chart').getContext('2d');
@@ -678,15 +681,16 @@
       pesosChart = new Chart(ctx, {
         type:'scatter',
         data:{ datasets:[
-          { label:'TEA (efectiva anual)', data:list.map(b=>({x:b.dtm/30.4, y:b.tir*100, sym:b.sym})), backgroundColor:'#4ade9a', borderColor:'#4ade9a', showLine:true, pointRadius:6, pointHoverRadius:8, tension:0.2 },
-          { label:'TNA (nominal anual)',  data:list.map(b=>({x:b.dtm/30.4, y:b.tna*100, sym:b.sym})), backgroundColor:'#60a5fa', borderColor:'#60a5fa', showLine:true, pointRadius:5, pointHoverRadius:7, tension:0.2, borderDash:[5,4] },
+          // Las letras con poca liquidez van con el punto hueco
+          { label:'TEA (efectiva anual)', data:list.map(b=>({x:b.dtm/30.4, y:b.tir*100, sym:b.sym, poca:b.pocaLiquidez})), backgroundColor:'#4ade9a', pointBackgroundColor:list.map(b=>b.pocaLiquidez?'#11141a':'#4ade9a'), borderColor:'#4ade9a', showLine:true, pointRadius:6, pointHoverRadius:8, pointBorderWidth:2, tension:0.2 },
+          { label:'TNA (nominal anual)',  data:list.map(b=>({x:b.dtm/30.4, y:b.tna*100, sym:b.sym, poca:b.pocaLiquidez})), backgroundColor:'#60a5fa', pointBackgroundColor:list.map(b=>b.pocaLiquidez?'#11141a':'#60a5fa'), borderColor:'#60a5fa', showLine:true, pointRadius:5, pointHoverRadius:7, pointBorderWidth:2, tension:0.2, borderDash:[5,4] },
         ]},
         options:{
           maintainAspectRatio:false,
           layout:{padding:{right:padRight(), top:10}},
           plugins:{
             legend:{labels:{color:'#7a8599',font:{family:'DM Mono',size:11}}},
-            tooltip:{callbacks:{label:c=>`${c.raw.sym}: ${c.raw.y.toFixed(1)}% · ${c.raw.x.toFixed(1)} meses`}}
+            tooltip:{callbacks:{label:c=>`${c.raw.sym}: ${c.raw.y.toFixed(1)}% · ${c.raw.x.toFixed(1)} meses${c.raw.poca ? ' · poca liquidez' : ''}`}}
           },
           scales:{
             x:{title:{display:true,text:'Meses al vencimiento',color:'#7a8599',font:{family:'DM Mono',size:11}},ticks:{color:'#7a8599',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
@@ -710,31 +714,46 @@
       // (por eso antes aparecía un −1,6% que no quería decir nada).
       const rem = data.rem && isFinite(data.rem.valor) ? data.rem.valor/100 : null;
       const be = document.getElementById('be-block');
-      const ref = list.reduce((mejor, b) => Math.abs(b.dtm-365) < Math.abs(mejor.dtm-365) ? b : mejor, list[0]);
+      // Solo letras de más de 4 meses y con liquidez normal: las de poca liquidez se ven
+      // en la curva, pero su precio puede no ser representativo.
+      const aptas = list.filter(b => !b.pocaLiquidez && b.dtm >= 120);
+      const ref = aptas.reduce((mejor, b) => Math.abs(b.dtm-365) < Math.abs(mejor.dtm-365) ? b : mejor, aptas[0]);
+      const sg = x => (x>=0?'+':'−') + pct(Math.abs(x));
       if (rem == null) {
         be.innerHTML = '<p class="loading-cell">El BCRA no devolvió el REM en este momento.</p>';
-      } else if (ref.dtm < 120) {
-        be.innerHTML = `<p class="loading-cell">Hoy no hay ningún instrumento con plazo cercano a un año (el más largo vence en ${ref.dtm} días), así que la comparación contra el REM no sería representativa.</p>`;
+      } else if (!ref) {
+        be.innerHTML = '<p class="loading-cell">Hoy no hay ninguna letra de más de 4 meses con liquidez normal, así que la comparación contra el REM no sería representativa.</p>';
       } else {
-        const real = (1 + ref.tir) / (1 + rem) - 1;
+        // Real anualizada (supone reinvertir a la misma tasa) y real hasta el vencimiento,
+        // con la inflación del REM repartida pareja en el plazo de la letra.
+        const anual = (1 + ref.tir) / (1 + rem) - 1;
+        const alVto = Math.pow((1 + ref.tir) / (1 + rem), ref.dtm / 365) - 1;
         const meses = Math.round(ref.dtm/30.4);
-        const gana = real >= 0;
+        const gana = alVto >= 0;
         const color = gana ? '#4ade9a' : '#ff6b6b';
+        const otras = aptas.filter(b => b !== ref && b.dtm >= 180).map(b => (1 + b.tir) / (1 + rem) - 1).sort((a, b) => a - b);
+        const fuera = list.filter(b => b.pocaLiquidez && b.dtm >= 120).map(b => b.sym);
+        const rango = !otras.length ? '' : otras.length === 1
+          ? ` Con la otra letra de más de 6 meses, la tasa real anual da ${sg(otras[0])}.`
+          : ` Con las otras letras de más de 6 meses, la tasa real anual va de ${sg(otras[0])} a ${sg(otras[otras.length - 1])}.`;
         be.innerHTML = `
         <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.4rem">
           <div>
-            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem">Tasa real a ~1 año</p>
-            <p style="font-family:var(--font-display);font-size:2.4rem;line-height:1;color:${color}">${(real>=0?'+':'')+pct(real)}</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:0.3rem">Tasa real hasta el vencimiento</p>
+            <p style="font-family:var(--font-display);font-size:2.4rem;line-height:1;color:${color}">${sg(alVto)}</p>
+            <p style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-subtle);margin-top:0.35rem">en ${meses} meses · equivale a ${sg(anual)} anual</p>
           </div>
           <p style="flex:1;min-width:260px;font-size:0.86rem;color:var(--text-muted);line-height:1.65;margin:0">
             El <strong style="color:var(--accent)">${ref.sym}</strong> vence en ${meses} meses y rinde <strong>${pct(ref.tir)}</strong> anual en pesos.
             Los economistas del <strong>REM</strong> esperan <strong>${pct(rem)}</strong> de inflación para los próximos 12 meses.
-            Si le aciertan, tu plata ${gana ? `<strong style="color:${color}">gana ${pct(real)} de poder de compra</strong>` : `<strong style="color:${color}">pierde ${pct(Math.abs(real))} de poder de compra</strong>`} en el año.
+            Si aciertan, en esos ${meses} meses la letra ${gana ? `<strong style="color:${color}">le gana a la inflación por ${pct(alVto)}</strong>` : `<strong style="color:${color}">queda ${pct(Math.abs(alVto))} debajo de la inflación</strong>`}.${rango}
           </p>
         </div>
         <p style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.55">
-          <code>tasa real = (1 + TEA) / (1 + inflación esperada) − 1</code>. Usamos el instrumento de plazo más cercano a un año porque el REM es una expectativa <em>a 12 meses</em>: comparar contra una letra a 10 días daría un número sin sentido económico.
-          El REM es del ${data.rem.fecha} y es una <strong>proyección</strong>, no un dato cerrado — si la inflación termina siendo más alta, tu tasa real efectiva va a ser peor que esta.
+          <code>real hasta el vencimiento = ((1 + TEA) / (1 + inflación esperada))^(días/365) − 1</code>. El REM es una expectativa <em>a 12 meses</em>: la repartimos pareja en el plazo de la letra. La cifra anual supone reinvertir a la misma tasa hasta completar el año.
+          ${aptas.every(b => b.dtm < 330) ? 'Hoy ninguna letra con liquidez normal llega a un año, así que usamos la más larga.' : 'Usamos la letra con liquidez normal de plazo más cercano a un año.'}
+          ${fuera.length ? `No usamos ${fuera.join(', ')} porque ${fuera.length === 1 ? 'operó' : 'operaron'} poco. ` : ''}El resultado cambia según la letra elegida.
+          El REM es del ${data.rem.fecha} y es una <strong>proyección</strong>, no un dato cerrado: si la inflación termina siendo más alta, la tasa real va a ser peor.
         </p>`;
       }
 
@@ -756,14 +775,15 @@
 
       // --- Tabla de detalle ---
       document.querySelector('#pesos-table tbody').innerHTML = list.map(b => `
-        <tr><td class="lt-sym">${b.sym}</td>
+        <tr><td class="lt-sym">${b.sym}${b.pocaLiquidez ? ' <span class="lt-poca" title="El último día operó menos del 5% de lo que opera una letra típica de la curva: su precio puede no ser representativo.">poca liquidez</span>' : ''}</td>
         <td>${b.vencimiento}</td>
         <td>${b.dtm}</td>
         <td>$${fmt(b.price, 2)}</td>
         <td>$${fmt(b.vpv, 2)}</td>
         <td>${pct(b.tem, 2)}</td>
         <td>${pct(b.tna)}</td>
-        <td class="lt-ytm">${pct(b.tir)}</td></tr>`).join('');
+        <td class="lt-ytm">${pct(b.tir)}</td>
+        <td>${b.volumen > 0 ? '$' + Math.round(b.volumen / 1e6).toLocaleString('en-US') + ' M' : '—'}</td></tr>`).join('');
     }
 
     // Tabs
