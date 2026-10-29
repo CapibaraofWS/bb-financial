@@ -17,6 +17,8 @@ window.BBPanel = (function () {
   const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
   const hoyISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
   const fechaCorta = iso => { const [, m, d] = iso.split('-').map(Number); return d + ' ' + MES[m - 1]; };
+  // Cuántos días pasaron desde un dato: varias fuentes oficiales publican con días hábiles de demora
+  const atraso = iso => { const d = Math.round((Date.parse(hoyISO()) - Date.parse(iso)) / 864e5); return d <= 0 ? 'hoy' : d === 1 ? 'ayer' : 'hace ' + d + ' días'; };
   const mesAnio = ym => { const [y, m] = ym.split('-').map(Number); return MES[m - 1].replace(/^./, c => c.toUpperCase()) + ' ' + y; };
   const mesLargo = ym => { const [y, m] = ym.split('-').map(Number); return MESES[m - 1] + ' de ' + y; };
   // "1er semestre 2026*" → "1.er sem. 2026"
@@ -35,6 +37,7 @@ window.BBPanel = (function () {
     emae: () => json('/api/indec?emae=1'),
     cotiz: (casa, dias) => json('/api/argentinadatos?path=cotizaciones/dolares/' + casa + '&dias=' + dias),
     riesgo: dias => json('/api/argentinadatos?path=finanzas/indices/riesgo-pais&dias=' + dias),
+    caucion: () => json('/api/agenda?source=caucion'),
     gob: (ids, n) => json('/api/indec?series=' + ids + '&limit=' + n + '&sort=desc'),
     salarios: () => json('/api/indec?salarios=1'),
     empleo: () => json('/api/indec?empleo=1'),
@@ -395,5 +398,5 @@ window.BBPanel = (function () {
     elegir(nombre[el.dataset.sel] ? el.dataset.sel : inicial && orden.includes(inicial) ? inicial : !usa && orden.includes('06') ? '06' : orden[0]);
   }
 
-  return { API, json, esc, num, pesos, signo, fechaCorta, mesAnio, mesLargo, semCorto, variable, sparkline, franja, agenda, BANDERA_USA, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, ultimo, TEMAS, MES, MESES, DSEM, diasEntre };
+  return { API, json, esc, num, pesos, signo, fechaCorta, atraso, mesAnio, mesLargo, semCorto, variable, sparkline, franja, agenda, BANDERA_USA, exportar, hoyISO, det, gobCols, brillo, mapaCalor, BANDERA, tarjeta, pp, fuente, ejes, seg, corte, mapaProvincias, corto, ultimo, TEMAS, MES, MESES, DSEM, diasEntre };
 })();

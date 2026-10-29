@@ -16,14 +16,14 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Banco Central: base monetaria, depósitos, préstamos y dólares en los bancos — BB Finanzas</title>
-  <meta name="description" content="Cuánto dinero hay en la economía argentina descontada la inflación: base monetaria, billetes, depósitos y préstamos en pesos, depósitos en dólares, plazo fijo contra cuentas a la vista y el balance del BCRA y el Tesoro. Datos del BCRA que se actualizan solos." />
+  <title>Banco Central: reservas, compras de dólares, base monetaria, depósitos y préstamos — BB Finanzas</title>
+  <meta name="description" content="Las reservas internacionales y las compras de dólares del Banco Central, y cuánto dinero hay en la economía argentina descontada la inflación: base monetaria, billetes, depósitos y préstamos en pesos, depósitos en dólares, plazo fijo contra cuentas a la vista y el balance del BCRA y el Tesoro. Datos del BCRA que se actualizan solos." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-bcra" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
   <meta property="og:title" content="El Banco Central y el dinero en la Argentina" />
-  <meta property="og:description" content="Base monetaria, depósitos, préstamos y dólares en los bancos, descontada la inflación." />
+  <meta property="og:description" content="Reservas, compras de dólares, base monetaria, depósitos y préstamos, descontada la inflación." />
   <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/panel-bcra" />
   <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
   <meta property="og:locale" content="es_AR" />
@@ -78,18 +78,21 @@
       <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
       <p class="pa-eyebrow" data-bandera>Panel Argentina · Banco Central</p>
       <h1>El dinero en la economía</h1>
-      <p class="sub">Cuánta plata emitió el Banco Central, cuánto hay depositado y prestado en los bancos y cuántos dólares guardan los ahorristas, descontada la inflación. Las reservas y el dólar están en el <a href="panel-dolar">panel del dólar</a>; las tasas, en el <a href="panel-tasas">de tasas</a>.</p>
+      <p class="sub">Cuántas reservas tiene el Banco Central y cuántos dólares compra, cuánta plata emitió, cuánto hay depositado y prestado en los bancos y cuántos dólares guardan los ahorristas, descontada la inflación. El dólar y las bandas están en el <a href="panel-dolar">panel del dólar</a>; las tasas, en el <a href="panel-tasas">de tasas</a>.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
       <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-cambiario">Flujo de dólares</a><a href="panel-tasas">Tasas</a><a href="panel-bcra" aria-current="page">Banco Central</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-energia">Energía y minería</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-presupuesto">Presupuesto</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a></nav>
 
       <div class="pa-grid" id="kpis">
-        <article class="pa-card"><p class="que">Base monetaria</p><p class="grande">—</p><p class="contexto">Cargando los datos del BCRA…</p></article>
+        <article class="pa-card"><p class="que">Reservas internacionales</p><p class="grande">—</p><p class="contexto">Cargando los datos del BCRA…</p></article>
+        <article class="pa-card"><p class="que">Compras de dólares del BCRA</p><p class="grande">—</p></article>
+        <article class="pa-card"><p class="que">Base monetaria</p><p class="grande">—</p></article>
         <article class="pa-card"><p class="que">Depósitos en pesos</p><p class="grande">—</p></article>
         <article class="pa-card"><p class="que">Préstamos en pesos</p><p class="grande">—</p></article>
         <article class="pa-card"><p class="que">Depósitos en dólares</p><p class="grande">—</p></article>
       </div>
+      <p style="color:var(--text-subtle);font-size:0.8rem;line-height:1.55;margin:-0.5rem 0 1.5rem">El Banco Central publica estos datos con algunos días hábiles de demora: cada tarjeta dice la fecha del último dato y cuántos días pasaron desde entonces.</p>
 
       <section class="pa-graf" aria-labelledby="g-real-t">
         <div class="pa-graf-cab"><div>
@@ -156,7 +159,7 @@
   <script src="../js/main.js?v=53"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=19"></script>
+  <script src="../js/panel.js?v=20"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -176,14 +179,32 @@
     const vari = (s, k) => (s && s[k] ? (s.u[1] / s[k] - 1) * 100 : null);
     const realIa = s => { const n = vari(s, 'a1'); return n != null && ipcIa != null ? ((1 + n / 100) / (1 + ipcIa / 100) - 1) * 100 : null; };
     const fecha = f => P.fechaCorta(f) + (f.slice(0, 4) !== P.hoyISO().slice(0, 4) ? ' de ' + f.slice(0, 4) : '');
+    // El BCRA publica con días hábiles de demora: se aclara cuántos días pasaron desde el último dato
+    const fechaA = f => fecha(f) + ' (' + P.atraso(f) + ')';
     const BCRA = P.fuente('https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp', 'BCRA');
 
     // ---- Tarjetas
-    const k = $('kpis'); k.innerHTML = '<article class="pa-card" id="k1"></article><article class="pa-card" id="k2"></article><article class="pa-card" id="k3"></article><article class="pa-card" id="k4"></article>';
+    const k = $('kpis'); k.innerHTML = '<article class="pa-card" id="kr"></article><article class="pa-card" id="kc"></article><article class="pa-card" id="k1"></article><article class="pa-card" id="k2"></article><article class="pa-card" id="k3"></article><article class="pa-card" id="k4"></article>';
     const tarjeta = (id, que, s, fmt, enPesos, extra) => { if (!s) return; const r = enPesos ? realIa(s) : vari(s, 'a1');
-      P.tarjeta(id, { que, grande: fmt(s.u[1]), contexto: fecha(s.u[0]) + (r != null ? ' · <b class="' + cl(r) + '">' + pc(r) + '</b> en un año' + (enPesos ? ', descontada la inflación' : '') : ''),
+      P.tarjeta(id, { que, grande: fmt(s.u[1]), contexto: fechaA(s.u[0]) + (r != null ? ' · <b class="' + cl(r) + '">' + pc(r) + '</b> en un año' + (enPesos ? ', descontada la inflación' : '') : ''),
         extra: P.sparkline(s.mes.slice(-24).map(([m, v]) => (enPesos ? real(m, v) : v)), { color: '#60a5fa' }),
         filas: [['En pesos corrientes', 'Contra un año atrás', pc(vari(s, 'a1'))], ['En el último mes', '', pc(vari(s, 'd30'))]].slice(enPesos ? 0 : 1).concat(extra || []), fuentes: 'Fuente: ' + BCRA }); };
+    // Reservas brutas y compras de dólares, en millones de dólares
+    const mUSD = v => 'US$' + num(v, 0) + ' M', sgM = v => P.signo(v, 0) + ' M';
+    const R = S[1], C = S[78];
+    if (R) { const d30 = R.d30 != null ? R.u[1] - R.d30 : null, anio = R.ene != null ? R.u[1] - R.ene : null;
+      P.tarjeta('kr', { que: 'Reservas internacionales · brutas', grande: mUSD(R.u[1]),
+        contexto: fechaA(R.u[0]) + (d30 != null ? ' · <b class="' + cl(d30) + '">' + sgM(d30) + '</b> en 30 días' : ''),
+        extra: P.sparkline(R.mes.slice(-24).map(([, v]) => v), { color: '#e8c97a' }),
+        filas: [anio != null ? ['En lo que va del año', 'Contra el cierre de ' + (+R.u[0].slice(0, 4) - 1), sgM(anio), cl(anio)] : null,
+          R.a1 != null ? ['Contra un año atrás', '', sgM(R.u[1] - R.a1), cl(R.u[1] - R.a1)] : null],
+        fuentes: 'Fuente: ' + BCRA, ir: '<a class="ir" href="panel-dolar">Panel del dólar →</a>' }); }
+    // Las compras son un flujo: el mes en curso todavía no está completo, por eso no entra en la línea
+    if (C && C.anio != null) P.tarjeta('kc', { que: 'Compras de dólares del BCRA · en ' + C.u[0].slice(0, 4), grande: mUSD(C.anio),
+      contexto: 'Hasta el ' + fechaA(C.u[0]),
+      extra: P.sparkline(C.mes.slice(-25, -1).map(([, v]) => v), { color: '#4ade9a' }),
+      filas: [['Última compra informada', fecha(C.u[0]), (C.u[1] < 0 ? '−' : '') + mUSD(Math.abs(C.u[1]))], C.s30 != null ? ['En los últimos 30 días', '', mUSD(C.s30)] : null],
+      fuentes: 'Fuente: ' + BCRA });
     tarjeta('k1', 'Base monetaria · dinero emitido por el BCRA', S[15], pesos, true);
     tarjeta('k2', 'Depósitos en pesos · de personas y empresas', S[1526], pesos, true);
     tarjeta('k3', 'Préstamos en pesos · a personas y empresas', S[1341], pesos, true);

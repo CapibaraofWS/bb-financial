@@ -156,7 +156,7 @@
   <script src="../js/main.js?v=53"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=19"></script>
+  <script src="../js/panel.js?v=20"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
@@ -203,8 +203,9 @@
     // ---- Reservas y compras
     const ur = res.at(-1);
     if (ur) {
-      const r30 = ref(res, 30), compAnio = comp.filter(x => x.fecha >= anio).reduce((s, x) => s + x.valor, 0), uc = comp.at(-1);
-      P.tarjeta('k4', { que: 'Reservas del Banco Central', grande: 'US$' + Math.round(ur.valor).toLocaleString('es-AR') + ' M', contexto: P.fechaCorta(ur.fecha) + (r30 ? ' · <b>' + P.signo(ur.valor - r30.valor, 0) + ' M</b> en 30 días' : ''),
+      // 30 días contados desde la fecha del dato, no desde hoy: el BCRA publica las reservas con días de demora
+      const t30 = new Date(Date.parse(ur.fecha) - 30 * 864e5).toISOString().slice(0, 10), r30 = res.filter(x => x.fecha <= t30).at(-1), compAnio = comp.filter(x => x.fecha >= anio).reduce((s, x) => s + x.valor, 0), uc = comp.at(-1);
+      P.tarjeta('k4', { que: 'Reservas del Banco Central', grande: 'US$' + Math.round(ur.valor).toLocaleString('es-AR') + ' M', contexto: P.fechaCorta(ur.fecha) + ' (' + P.atraso(ur.fecha) + ')' + (r30 ? ' · <b>' + P.signo(ur.valor - r30.valor, 0) + ' M</b> en 30 días' : ''),
         filas: [comp.length ? ['Compras del Banco Central en el año', 'Hasta el ' + P.fechaCorta(uc.fecha), 'US$' + Math.round(compAnio).toLocaleString('es-AR') + ' M'] : null,
           uc ? ['Última compra informada', P.fechaCorta(uc.fecha), 'US$' + Math.round(uc.valor).toLocaleString('es-AR') + ' M'] : null], fuentes: 'Fuente: ' + BCRA });
     }

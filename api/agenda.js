@@ -438,6 +438,41 @@ async function volumenes(ruedaCierre, volCierre, ruedaVivo, volVivo) {
   };
 }
 
+// ============================================================
+// CAUCIÓN BURSÁTIL — datos abiertos de BYMA. Tasa promedio ponderada de la rueda en curso
+// para el plazo más corto en pesos (un día hábil). Fuera del horario del mercado BYMA no
+// devuelve operaciones: se sirve la última rueda guardada en Redis, con su fecha.
+// ============================================================
+async function getCaucion() {
+  let lista = null;
+  try {
+    const r = await fetch('https://open.bymadata.com.ar/vanoms-be-core/rest/api/bymadata/free/cauciones', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': UA, 'Accept': 'application/json' },
+      body: JSON.stringify({ excludeZeroPxAndQty: true, T2: true, T1: false, T0: false }), signal: AbortSignal.timeout(6000),
+    });
+    if (r.ok) lista = await r.json();
+  } catch {}
+  // BYMA da las tasas como fracción (0,206 = 20,6% anual) y el monto en pesos
+  const enPesos = (Array.isArray(lista) ? lista : [])
+    .filter(x => x.denominationCcy === 'ARS' && x.daysToMaturity >= 1 && x.vwap > 0 && x.vwap < 5 && x.volumeAmount > 0)
+    .sort((a, b) => a.daysToMaturity - b.daysToMaturity);
+  const fila = x => ({ dias: x.daysToMaturity, vto: x.maturityDate, tna: x.vwap * 100, ultima: x.trade > 0 ? x.trade * 100 : null,
+    hora: /^\d\d:\d\d/.test(x.tradeHour || '') ? x.tradeHour.slice(0, 5) : null, monto: x.volumeAmount });
+  if (enPesos.length) {
+    // Antes de que abra el mercado, lo que haya es de la rueda anterior
+    const ahora = Date.now(), hoy = new Date(ahora - 3 * 3600e3).toISOString().slice(0, 10);
+    const rueda = ruedaDe(ahora, await feriados([+hoy.slice(0, 4)]));
+    const semana = enPesos.find(x => x.daysToMaturity >= 7);
+    const dato = { rueda, corta: fila(enPesos[0]), semana: semana ? fila(semana) : null };
+    await redis(['SET', 'caucion:ultima', JSON.stringify(dato), 'EX', String(10 * 86400)]);
+    return { ...dato, enVivo: rueda === hoy };
+  }
+  let guardado = null;
+  try { guardado = JSON.parse(await redis(['GET', 'caucion:ultima']) || 'null'); } catch {}
+  if (guardado && guardado.corta) return { ...guardado, enVivo: false };
+  throw new Error('BYMA no devolvió cauciones');
+}
+
 async function getArPesos() {
   const [letras, priceSets, bcra] = await Promise.all([
     fetchJson('https://api.argentinadatos.com/v1/finanzas/letras'),
@@ -628,6 +663,7 @@ const HANDLERS = {
   'ar-bonds':            { fn: getArBonds,            cache: 's-maxage=600, stale-while-revalidate=1800' },
   'ar-pesos':            { fn: getArPesos,            cache: 's-maxage=600, stale-while-revalidate=1800' },
   'riesgo-pais':         { fn: getRiesgoPais,         cache: 's-maxage=300, stale-while-revalidate=900' },
+  'caucion':             { fn: getCaucion,            cache: 's-maxage=300, stale-while-revalidate=900' },
   'youtube':             { fn: getYouTubeFeed,        cache: 's-maxage=1800, stale-while-revalidate=3600' },
 };
 

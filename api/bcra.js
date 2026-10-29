@@ -54,8 +54,10 @@ function buildUrl(q) {
 }
 
 // ?endpoint=Panel: las series del panel del Banco Central en una sola respuesta.
-// Por variable: el último dato, el de hace 30 días y un año, y el promedio de cada mes (tres años y medio).
-const PANEL = [15, 16, 17, 19, 1526, 1528, 1532, 1534, 1341, 1564, 1355, 1265, 1266, 1225, 1259, 1221, 25];
+// Por variable: el último dato, el de hace 30 días y un año, el del cierre del año anterior y el promedio
+// de cada mes (tres años y medio). Las compras de dólares (78) son flujos: van sumadas, por mes y en el año.
+const PANEL = [1, 78, 15, 16, 17, 19, 1526, 1528, 1532, 1534, 1341, 1564, 1355, 1265, 1266, 1225, 1259, 1221, 25];
+const SUMA = new Set([78]);
 async function panel(res) {
   const d = new Date(); d.setUTCMonth(d.getUTCMonth() - 42);
   const desde = d.toISOString().slice(0, 7) + '-01';
@@ -68,7 +70,15 @@ async function panel(res) {
     const s = det.map(x => [x.fecha, x.valor]).filter(x => Number.isFinite(x[1])).sort((a, b) => (a[0] < b[0] ? -1 : 1));
     const u = s.at(-1), antes = dias => { const t = new Date(u[0] + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() - dias); const iso = t.toISOString().slice(0, 10), x = s.filter(z => z[0] <= iso).at(-1); return x ? x[1] : null; };
     const mes = {}; for (const [f, v] of s) (mes[f.slice(0, 7)] = mes[f.slice(0, 7)] || []).push(v);
-    series[PANEL[k]] = { u, d30: antes(30), a1: antes(365), mes: Object.entries(mes).map(([m, v]) => [m, Number((v.reduce((a, b) => a + b, 0) / v.length).toPrecision(6))]) };
+    const id = PANEL[k], suma = SUMA.has(id), total = a => a.reduce((x, y) => x + y, 0);
+    const inicio = u[0].slice(0, 4) + '-01-01', cierre = s.filter(z => z[0] < inicio).at(-1);
+    series[id] = { u, d30: antes(30), a1: antes(365), ene: cierre ? cierre[1] : null,
+      mes: Object.entries(mes).map(([m, v]) => [m, Number((suma ? total(v) : total(v) / v.length).toPrecision(6))]) };
+    if (suma) {
+      const t30 = new Date(u[0] + 'T00:00:00Z'); t30.setUTCDate(t30.getUTCDate() - 30);
+      series[id].anio = Number(total(s.filter(z => z[0] >= inicio).map(z => z[1])).toPrecision(6));
+      series[id].s30 = Number(total(s.filter(z => z[0] > t30.toISOString().slice(0, 10)).map(z => z[1])).toPrecision(6));
+    }
   });
   if (Object.keys(series).length < PANEL.length / 2) return res.status(502).json({ error: 'No se pudieron cargar las series del BCRA' });
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=172800');

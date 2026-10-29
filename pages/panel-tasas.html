@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Tasas de interés en la Argentina hoy: TAMAR, plazo fijo y riesgo país — BB Finanzas</title>
-  <meta name="description" content="Las tasas de interés de la Argentina con datos del Banco Central: TAMAR, BADLAR, plazo fijo, préstamos, la tasa real contra la inflación mes a mes y el riesgo país. Se actualiza solo." />
+  <meta name="description" content="Las tasas de interés de la Argentina con datos del Banco Central: TAMAR, BADLAR, plazo fijo, préstamos, la caución de la bolsa, la tasa real contra la inflación mes a mes y el riesgo país. Se actualiza solo." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-tasas" />
   <meta property="og:type" content="website" />
@@ -88,6 +88,7 @@
         <article class="pa-card"><p class="que">Plazo fijo contra la inflación</p><p class="grande">−0,2%</p><p class="contexto">Un mes de plazo fijo contra la inflación de septiembre.</p></article>
         <article class="pa-card"><p class="que">Préstamos personales</p><p class="grande">63%</p><p class="contexto">Tasa nominal anual promedio.</p></article>
         <article class="pa-card"><p class="que">Riesgo país</p><p class="grande">622</p><p class="contexto">Puntos básicos, mediados de octubre de 2026.</p></article>
+        <article class="pa-card"><p class="que">Caución a un día · BYMA</p><p class="grande">—</p><p class="contexto">Tasa de la bolsa, se actualiza durante la rueda.</p></article>
       </div>
 
       <section class="pa-graf" aria-labelledby="g-tasas-t">
@@ -151,19 +152,19 @@
   <script src="../js/main.js?v=53"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
-  <script src="../js/panel.js?v=19"></script>
+  <script src="../js/panel.js?v=20"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
     const hace = d => new Date(Date.now() - d * 864e5).toISOString().slice(0, 10);
-    const [b, ipc, s44, s7, s12, s12largo, rp] = await Promise.all([
-      P.API.bcra(), P.API.ipc(), P.API.serieBcra(44, hace(370)), P.API.serieBcra(7, hace(370)), P.API.serieBcra(12, hace(370)), P.API.serieBcra(12, hace(800)), P.API.riesgo(370),
+    const [b, ipc, s44, s7, s12, s12largo, rp, cau] = await Promise.all([
+      P.API.bcra(), P.API.ipc(), P.API.serieBcra(44, hace(370)), P.API.serieBcra(7, hace(370)), P.API.serieBcra(12, hace(370)), P.API.serieBcra(12, hace(800)), P.API.riesgo(370), P.API.caucion(),
     ]);
     const BCRA = P.fuente('https://www.bcra.gob.ar/estadisticas-indicadores/', 'BCRA');
     const ref = (serie, dias) => serie.find(x => x.fecha >= hace(dias));
     const tam = P.det(s44), bad = P.det(s7), pf = P.det(s12), pfL = P.det(s12largo);
     const v = (id, serie) => P.variable(b, id, serie);
-    const k = $('kpis'); k.innerHTML = '<article class="pa-card" id="k1"></article><article class="pa-card" id="k2"></article><article class="pa-card" id="k3"></article><article class="pa-card" id="k4"></article>';
+    const k = $('kpis'); k.innerHTML = '<article class="pa-card" id="k1"></article><article class="pa-card" id="k2"></article><article class="pa-card" id="k3"></article><article class="pa-card" id="k4"></article><article class="pa-card" id="k5"></article>';
     const tem = tna => tna / 100 * 30 / 365 * 100;   // TNA → tasa de 30 días, en %
 
     const t44 = v(44, tam), t7 = v(7, bad), t12 = v(12, pf), t11 = v(11), t14 = v(14), t13 = v(13), rem = v(29);
@@ -190,6 +191,15 @@
       P.tarjeta('k4', { que: 'Riesgo país', grande: Math.round(u.valor).toLocaleString('es-AR'), clase: r && u.valor < r.valor ? 'mejor' : r && u.valor > r.valor ? 'peor' : '', contexto: 'Puntos básicos · ' + P.fechaCorta(u.fecha) + (r ? ' · ' + P.pp(u.valor - r.valor, true, ' pb') + ' en 30 días' : ''),
         filas: anio.length ? [['Mínimo del año', '', Math.min(...anio).toLocaleString('es-AR') + ' pb'], ['Máximo del año', '', Math.max(...anio).toLocaleString('es-AR') + ' pb']] : [], fuentes: 'Fuente: JP Morgan vía ArgentinaDatos', ir: '<a class="ir" href="visor-bonos-ar">Bonos AR →</a>' });
     }
+    // Caución: BYMA en vivo durante la rueda; si no, la última rueda guardada, con cuántos días pasaron
+    if (cau && cau.corta) { const c = cau.corta;
+      const cuando = cau.enVivo ? 'rueda de hoy' : 'rueda del ' + P.fechaCorta(cau.rueda) + ' (' + P.atraso(cau.rueda) + ')';
+      const monto = v => '$' + (v >= 1e12 ? num(v / 1e12, 2) + ' billones' : num(v / 1e9, 1) + ' mil millones');
+      P.tarjeta('k5', { que: 'Caución a ' + (c.dias === 1 ? 'un día' : c.dias + ' días') + ' · BYMA', grande: num(c.tna) + '%',
+        contexto: 'Tasa nominal anual, promedio ponderado de la ' + cuando + '.',
+        filas: [c.ultima != null ? ['Última operación', c.hora ? c.hora + ' h' : '', num(c.ultima) + '%'] : null, ['Monto operado', 'A ' + (c.dias === 1 ? 'un día' : c.dias + ' días'), monto(c.monto)],
+          cau.semana ? ['Caución a ' + cau.semana.dias + ' días', 'Promedio ponderado', num(cau.semana.tna) + '%'] : null],
+        fuentes: 'Fuente: ' + P.fuente('https://open.bymadata.com.ar/', 'BYMA'), ir: '<a class="ir" href="caucion">Calculadora de caución →</a>' }); }
     P.brillo('#kpis .pa-card');
 
     if (typeof Chart === 'undefined') return;
