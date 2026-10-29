@@ -348,9 +348,9 @@ async function getArBonds() {
 // ============================================================
 const MS_DAY = 86400000;
 
-async function fetchJson(url) {
+async function fetchJson(url, ms = TIMEOUT) {
   const r = await fetch(url, {
-    signal: AbortSignal.timeout(TIMEOUT),
+    signal: AbortSignal.timeout(ms),
     headers: { 'User-Agent': UA, 'Accept': 'application/json' },
   });
   if (!r.ok) throw new Error(url + ' respondió ' + r.status);
@@ -441,7 +441,10 @@ async function volumenes(ruedaCierre, volCierre, ruedaVivo, volVivo) {
 async function getArPesos() {
   const [letras, priceSets, bcra] = await Promise.all([
     fetchJson('https://api.argentinadatos.com/v1/finanzas/letras'),
-    Promise.all(['arg_notes', 'arg_bonds'].map(e => fetchJson(`https://data912.com/live/${e}`).catch(() => []))),
+    // Un reintento por lista: si falla una sola (las LECAP están en arg_notes y las BONCAP en
+    // arg_bonds), la curva quedaba mitad con precios del día y mitad con el cierre (29/10/2026)
+    Promise.all(['arg_notes', 'arg_bonds'].map(e => fetchJson(`https://data912.com/live/${e}`, 4000)
+      .catch(() => fetchJson(`https://data912.com/live/${e}`, 4000)).catch(() => []))),
     getBcraPrincipales().catch(() => ({})),
   ]);
 
@@ -489,12 +492,17 @@ async function getArPesos() {
       const q = px[l.ticker], d = Math.round((Date.parse(l.fechaVencimiento + 'T12:00:00Z') - Date.parse(liq + 'T12:00:00Z')) / MS_DAY);
       if (q && ruedaVivo !== ruedaCierre && Math.abs(q.price / l.precioArs - 1) < 0.1 && d >= 4) {
         const ratio = vpv / q.price;
-        Object.assign(b, { dtm: d, price: q.price, pct: q.pct, tem: Math.pow(ratio, 30.4 / d) - 1, tna: (ratio - 1) * 365 / d,
-          tir: Math.pow(ratio, 365 / d) - 1, duration: d / 365, precio: 'vivo' });
+        b.vivo = { dtm: d, price: q.price, pct: q.pct, tem: Math.pow(ratio, 30.4 / d) - 1, tna: (ratio - 1) * 365 / d,
+          tir: Math.pow(ratio, 365 / d) - 1, duration: d / 365, precio: 'vivo' };
         if (Number.isFinite(q.volume)) volVivo[l.ticker] = q.volume * q.price / 100;   // data912 da valor nominal
       }
       return b;
-    }).filter(Boolean).sort((a, b) => a.dtm - b.dtm);
+    }).filter(Boolean);
+    // Una curva no mezcla días: precios del día solo si los tiene al menos el 80% de las letras.
+    // Si no, todas quedan con el cierre de ArgentinaDatos.
+    const conVivo = bonds.filter(b => b.vivo).length >= Math.ceil(bonds.length * 0.8);
+    for (const b of bonds) { if (conVivo && b.vivo) Object.assign(b, b.vivo); delete b.vivo; }
+    bonds.sort((a, b) => a.dtm - b.dtm);
     const vol = await volumenes(ruedaCierre, volCierre, ruedaVivo, volVivo);
     for (const b of bonds) { const x = vol(b.sym); b.volumen = x ? x.v : null; b.volDias = x ? x.dias : 0; }
     const volumenMediana = marcarLiquidez(bonds), vivo = bonds.some(b => b.precio === 'vivo');

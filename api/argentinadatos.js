@@ -53,7 +53,11 @@ export default async function handler(req, res) {
 
   try {
     const url = `https://api.argentinadatos.com/v1/${path}`;
-    const response = await fetch(url, { signal: AbortSignal.timeout(9000) });
+    // Un reintento si ArgentinaDatos no contesta o da error del servidor: después de cada deploy la
+    // caché arranca vacía y un corte de un momento dejaba en blanco la tarjeta de la brecha (29/10/2026)
+    const pedir = ms => fetch(url, { signal: AbortSignal.timeout(ms) });
+    let response = await pedir(5000).catch(() => null);
+    if (!response || response.status >= 500) { await new Promise(r => setTimeout(r, 500)); response = await pedir(4000); }
     if (!response.ok) return res.status(response.status).json({ error: 'Error desde ArgentinaDatos' });
     let data = await response.json();
     const dias = Math.min(Math.max(parseInt(req.query.dias, 10) || 0, 0), 2000);
