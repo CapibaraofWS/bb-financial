@@ -1,6 +1,7 @@
 // Proxy para BCRA API v4.0
 // Soporta ?endpoint=Monetarias (default) — lista todas las variables con su ultValorInformado
 // La v3 está deprecada — migramos a v4 que es la actual del BCRA (api.bcra.gob.ar/estadisticas/v4.0).
+import zlib from 'node:zlib';
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
 
@@ -85,11 +86,129 @@ async function panel(res) {
   return res.status(200).json({ actualizado: new Date().toISOString(), series });
 }
 
+// ?endpoint=Pagos: Informe de Pagos Minoristas. No está en la API: sale del Excel del informe, que trae la serie
+// completa en cada edición. Se guarda en Redis y se busca uno nuevo dos veces por día; si el BCRA falla o cambia
+// el archivo, sigue el último guardado. Cada serie: [mes, cantidad, monto en millones de pesos].
+const PAGOS_DESDE = '2021-01';
+const PAGOS = [
+  ['pct', /^Transferencias de fondos/, /^Pagos con transferencia interoperables/],
+  ['push', /^Transferencias de fondos/, /^Transferencias inmediatas "push"$/],
+  ['debito', /^Tarjetas$/, /^Tarjetas de débito$/],
+  ['credito', /^Tarjetas$/, /^Tarjetas de crédito$/],
+  ['cajeros', /^Resto$/, /^Extracciones en cajeros automáticos$/],
+  ['cuentas', /^Cuentas de pago/, /^Cuentas de pago$/],
+  ['fondos', /^Cuentas de pago/, /^Saldos en fondos comunes/],
+];
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
+
+// Redis (Upstash), como en agenda.js
+async function redis(cmd) {
+  const limpia = v => (v || '').trim().replace(/^["']|["']$/g, '');
+  const url = limpia(process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL), token = limpia(process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN);
+  if (!url || !token) return null;
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmd), signal: AbortSignal.timeout(2500) });
+    return r.ok ? (await r.json()).result : null;
+  } catch { return null; }
+}
+
+// Un .xlsx es un zip: se leen las entradas desde su directorio central
+function unzip(buf) {
+  let e = buf.length - 22;
+  while (e >= 0 && buf.readUInt32LE(e) !== 0x06054b50) e--;
+  if (e < 0) throw new Error('No es un zip');
+  const out = {};
+  for (let p = buf.readUInt32LE(e + 16), i = buf.readUInt16LE(e + 10); i > 0; i--) {
+    const largo = buf.readUInt16LE(p + 28), nombre = buf.toString('utf8', p + 46, p + 46 + largo), ini = buf.readUInt32LE(p + 42);
+    const datos = ini + 30 + buf.readUInt16LE(ini + 26) + buf.readUInt16LE(ini + 28), z = buf.subarray(datos, datos + buf.readUInt32LE(p + 20));
+    if (nombre.startsWith('xl/') && /\.(xml|rels)$/.test(nombre)) out[nombre] = (buf.readUInt16LE(p + 10) === 8 ? zlib.inflateRawSync(z, { maxOutputLength: 3e7 }) : z).toString('utf8');
+    p += 46 + largo + buf.readUInt16LE(p + 30) + buf.readUInt16LE(p + 32);
+  }
+  return out;
+}
+
+// Hojas del Excel: { nombre: [fila] }, cada fila { número de columna: valor }
+function hojasXlsx(buf) {
+  const z = unzip(buf), sinEntidades = s => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  const col = c => [...c].reduce((n, l) => n * 26 + l.charCodeAt(0) - 64, 0);
+  const textos = [...(z['xl/sharedStrings.xml'] || '').matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => sinEntidades([...m[1].matchAll(/<t[^>]*>([^<]*)<\/t>/g)].map(t => t[1]).join('')).trim());
+  const rels = (z['xl/_rels/workbook.xml.rels'] || '').match(/<Relationship [^>]*>/g) || [], hojas = {};
+  for (const [s] of (z['xl/workbook.xml'] || '').matchAll(/<sheet [^>]*>/g)) {
+    const id = /r:id="([^"]*)"/.exec(s)?.[1], rel = rels.find(r => r.includes('Id="' + id + '"'));
+    const xml = rel && z['xl/' + /Target="([^"]*)"/.exec(rel)[1].replace(/^\/?(xl\/)?/, '')];
+    if (!xml) continue;
+    hojas[sinEntidades(/name="([^"]*)"/.exec(s)[1])] = [...xml.matchAll(/<row [^>]*?(?:\/>|>([\s\S]*?)<\/row>)/g)].map(f => {
+      const fila = {};
+      for (const c of (f[1] || '').matchAll(/<c r="([A-Z]+)\d+"([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+        const v = /<v>([^<]*)<\/v>/.exec(c[3] || '')?.[1];
+        if (v != null) fila[col(c[1])] = /t="s"/.test(c[2]) ? textos[+v] : +v;
+      }
+      return fila;
+    });
+  }
+  return hojas;
+}
+
+// Las columnas se ubican por su título: si el BCRA las mueve sigue andando, y si las renombra o los valores
+// cambian de escala no se guarda nada y queda el último dato bueno.
+function seriesPagos(hojas) {
+  const out = {};
+  for (const [id, hoja, titulo] of PAGOS) {
+    const filas = hojas[Object.keys(hojas).find(n => hoja.test(n))] || [], datos = filas.filter(f => f[1] > 36000 && f[1] < 60000);
+    const cab = filas.slice(0, filas.indexOf(datos[0])), c = +cab.map(f => Object.keys(f).find(k => titulo.test(f[k]))).find(Boolean);
+    if (!c || !cab.some(f => /^Cantidad/.test(f[c]) && /^(Monto|Saldo)/.test(f[c + 1]))) throw new Error('Cambió el Excel: ' + id);
+    const s = datos.map(f => [new Date(Math.round((f[1] - 25569) * 864e5)).toISOString().slice(0, 7), Math.round(f[c]), Math.round(f[c + 1] / 1e6)])
+      .filter(x => x[0] >= PAGOS_DESDE && x[1] > 0 && x[2] > 0);
+    const [a, b] = s.slice(-2).map(x => x[2]);
+    if (s.length < 24 || b > a * 3 || b < a / 3) throw new Error('Valores raros: ' + id);
+    out[id] = s;
+  }
+  return out;
+}
+
+async function bajarPagos(mes) {
+  const url = 'https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Informes/series-informe-mensual-pagos-minoristas-' + mes + '.xlsx';
+  // El servidor del BCRA corta más o menos una de cada tres conexiones (30/10/2026)
+  for (let i = 0; i < 6; i++) {
+    try {
+      const r = await fetch(url, { headers: { 'User-Agent': UA, Accept: '*/*' }, signal: AbortSignal.timeout(8000) });
+      if (r.status === 404) return null;
+      const b = r.ok ? Buffer.from(await r.arrayBuffer()) : null;
+      if (b && b.subarray(0, 2).toString() === 'PK') return b;
+    } catch {}
+    await new Promise(x => setTimeout(x, 300));
+  }
+  return null;
+}
+
+async function pagos(res) {
+  let g = null;
+  try { g = JSON.parse(await redis(['GET', 'pagos:ultimo']) || 'null'); } catch {}
+  const listo = d => { res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=172800'); return res.status(200).json(d); };
+  if (g && Date.now() - g.revisado < 432e5) return listo(g);
+  // El informe sale a fin de mes con datos del mes anterior: se prueba del más nuevo para atrás
+  for (let i = 1; i <= 3; i++) {
+    const d = new Date(); d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth() - i);
+    const mes = d.toISOString().slice(0, 7);
+    if (g && mes <= g.mes) break;
+    try {
+      const b = await bajarPagos(mes);
+      if (!b) continue;
+      const nuevo = { mes, revisado: Date.now(), series: seriesPagos(hojasXlsx(b)) };
+      await redis(['SET', 'pagos:ultimo', JSON.stringify(nuevo)]);
+      return listo(nuevo);
+    } catch (e) { console.error('Pagos minoristas ' + mes + ': ' + e.message); }
+  }
+  if (g) { g.revisado = Date.now(); await redis(['SET', 'pagos:ultimo', JSON.stringify(g)]); return listo(g); }
+  return res.status(502).json({ error: 'No se pudo leer el informe de pagos del BCRA' });
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'bcra' })) return;
   const endpoint = req.query.endpoint || 'Monetarias';
   if (endpoint === 'Panel') return panel(res).catch(() => res.status(500).json({ error: 'No se pudo conectar con BCRA API' }));
+  if (endpoint === 'Pagos') return pagos(res).catch(() => res.status(500).json({ error: 'No se pudo leer el informe de pagos del BCRA' }));
 
   if (!ALLOWED.has(endpoint)) {
     return res.status(400).json({ error: 'Endpoint no permitido', validos: [...ALLOWED] });

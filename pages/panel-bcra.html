@@ -17,13 +17,13 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Banco Central: reservas, compras de dólares, base monetaria, depósitos y préstamos — BB Finanzas</title>
-  <meta name="description" content="Las reservas internacionales y las compras de dólares del Banco Central, y cuánto dinero hay en la economía argentina descontada la inflación: base monetaria, billetes, depósitos y préstamos en pesos, depósitos en dólares, plazo fijo contra cuentas a la vista y el balance del BCRA y el Tesoro. Datos del BCRA que se actualizan solos." />
+  <meta name="description" content="Las reservas internacionales y las compras de dólares del Banco Central, y cuánto dinero hay en la economía argentina descontada la inflación: base monetaria, billetes, depósitos y préstamos en pesos, depósitos en dólares, plazo fijo contra cuentas a la vista el balance del BCRA y el Tesoro y cómo paga la gente: QR, transferencias, tarjetas y cajeros. Datos del BCRA que se actualizan solos." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-bcra" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
   <meta property="og:title" content="El Banco Central y el dinero en la Argentina" />
-  <meta property="og:description" content="Reservas, compras de dólares, base monetaria, depósitos y préstamos, descontada la inflación." />
+  <meta property="og:description" content="Reservas, compras de dólares, base monetaria, depósitos y préstamos, descontada la inflación, y cómo paga la gente." />
   <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/panel-bcra" />
   <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
   <meta property="og:locale" content="es_AR" />
@@ -78,7 +78,7 @@
       <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
       <p class="pa-eyebrow" data-bandera>Panel Argentina · Banco Central</p>
       <h1>El dinero en la economía</h1>
-      <p class="sub">Cuántas reservas tiene el Banco Central y cuántos dólares compra, cuánta plata emitió, cuánto hay depositado y prestado en los bancos y cuántos dólares guardan los ahorristas, descontada la inflación. El dólar y las bandas están en el <a href="panel-dolar">panel del dólar</a>; las tasas, en el <a href="panel-tasas">de tasas</a>.</p>
+      <p class="sub">Cuántas reservas tiene el Banco Central y cuántos dólares compra, cuánta plata emitió, cuánto hay depositado y prestado en los bancos y cuántos dólares guardan los ahorristas, descontada la inflación, y cómo paga la gente. El dólar y las bandas están en el <a href="panel-dolar">panel del dólar</a>; las tasas, en el <a href="panel-tasas">de tasas</a>.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
@@ -130,6 +130,25 @@
         <p class="fuente">Fuente: BCRA, series del informe monetario diario y de activos y pasivos.</p>
       </section>
 
+      <section aria-labelledby="pagos-t" style="margin-top:3rem">
+        <h2 id="pagos-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.5rem">Cómo paga la gente</h2>
+        <p style="color:var(--text-subtle);line-height:1.6;margin:0">Cuántas veces por mes se usa cada medio de pago y cuánta plata mueve. El monto se compara descontada la inflación.</p>
+        <div class="pa-grid" id="pagos-k">
+          <article class="pa-card"><p class="que">Pagos con transferencia</p><p class="grande">—</p><p class="contexto">Cargando el informe del BCRA…</p></article>
+        </div>
+        <p style="color:var(--text-subtle);font-size:0.8rem;line-height:1.55;margin:-0.5rem 0 1.5rem">Sale del Informe de Pagos Minoristas, que el BCRA publica a fin de cada mes. Las transferencias y el QR llegan con un mes de demora; las tarjetas, los cajeros y las billeteras, con dos. Cada tarjeta dice el mes de su dato.</p>
+      </section>
+
+      <section class="pa-graf" aria-labelledby="g-pagos-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-pagos-t">Con qué se paga, mes a mes</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> la cantidad de operaciones de cada mes o la plata que movieron, en pesos de hoy. Las transferencias entre cuentas quedan afuera porque son muchas más y aplastarían las otras líneas. Las líneas de tarjetas cambian de fuente en agosto de 2026: ese salto no es del todo comparable (lo explicamos abajo).</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-pagos" data-titulo="Con qué se paga, mes a mes" data-fuente="BCRA e INDEC">⬇ Imagen</button></div>
+        <div class="pa-chips" id="c-pagos" role="group" aria-label="Medida" style="margin-bottom:0.6rem"></div>
+        <div class="lienzo"><canvas id="g-pagos" aria-label="Operaciones por medio de pago"></canvas></div>
+        <p class="fuente" id="f-pagos">Fuente: BCRA, Informe de Pagos Minoristas.</p>
+      </section>
+
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
         <p>La <strong>base monetaria</strong> es el dinero que crea el Banco Central: billetes más lo que los bancos tienen en sus cuentas del BCRA. Los bancos la multiplican al prestar: por eso los depósitos y los préstamos suman mucho más que la base. Si el dinero crece más que los precios, hay más plata real para gastar o prestar; si crece menos, la economía se "seca" de pesos.</p>
@@ -141,6 +160,8 @@
         <details><summary>¿Qué es la liquidez de los bancos?</summary><p>Qué parte de los depósitos en pesos los bancos tienen disponible (en efectivo, en su cuenta del BCRA o en instrumentos de corto plazo) en lugar de prestada. Si es alta, tienen margen para prestar más.</p></details>
         <details><summary>¿Qué diferencia hay entre reservas brutas y netas?</summary><p>Las brutas son todos los activos en moneda extranjera y oro del Banco Central. Las netas descuentan lo que no es del todo propio, como el swap de monedas con China, los encajes de los depósitos en dólares o deudas de corto plazo. No hay una sola forma oficial de calcular las netas. Las reservas brutas día a día están en el <a href="panel-dolar">panel del dólar</a>.</p></details>
         <details><summary>¿Qué hizo el Banco Central con el oro en 2025?</summary><p>Cubrió el precio de su oro con opciones, una estrategia llamada <em>zero cost collar</em> (collar de costo cero). Compró opciones de venta, que le aseguraban un precio mínimo si el oro bajaba, y las pagó vendiendo opciones de compra, que le ponían un precio máximo si subía. Es decir, se protegía de una caída a cambio de resignar parte de una suba. En 2025 el oro subió más de 60%, pasó esos precios máximos y las opciones vendidas se ejercieron.</p><p>El resultado se cuenta de dos maneras. La Auditoría General de la Nación, al revisar los estados contables de 2025, informó una pérdida de unos US$1.023 millones en las opciones. El BCRA responde que hay que mirarlas junto con el oro que cubrían: así, el resultado neto fue una ganancia de US$2.505 millones, y calcula que se quedó con cerca del 70% de la suba. Las dos cifras no se contradicen: una mira solo las opciones y la otra, las opciones junto con el oro.</p></details>
+        <details><summary>¿Qué es un pago con transferencia?</summary><p>Pagar directo desde la cuenta del banco o la billetera, casi siempre escaneando un QR. La plata sale de la cuenta en el momento, sin pasar por una tarjeta. El QR es interoperable: cualquier banco o billetera puede pagar en cualquier comercio que lo acepte.</p></details>
+        <details><summary>¿Por qué las tarjetas no se comparan contra un año atrás?</summary><p>Porque cambió la forma de medirlas. Desde diciembre de 2025 las tarjetas prepagas, que antes se contaban dentro de crédito, se informan aparte. Y desde agosto de 2026 los datos salen de un régimen informativo nuevo (Comunicación A 8310 del BCRA), que toma todas las operaciones hechas en el país, de residentes y no residentes.</p><p>Por eso en agosto de 2026 el crédito baja y el débito sube de golpe, y parte de ese salto puede ser la medición y no un cambio de hábitos. El informe del BCRA publica igual la variación contra un año atrás (−18,1% en cantidad para crédito en agosto de 2026), pero no compara exactamente lo mismo. Acá la comparación vuelve sola en agosto de 2027, cuando los dos meses tengan la misma fuente.</p></details>
         <details><summary>¿Qué es la base monetaria amplia?</summary><p>La base monetaria más otros pasivos del Banco Central que pueden convertirse rápido en pesos, como los pases con los bancos o las letras que emitió. Sirve para ver cuántos pesos podrían volver a la economía, y no solo los que ya circulan.</p></details>
       </section>
     </div>
@@ -263,6 +284,50 @@
         options: P.ejes(v => 'US$' + num(v, 0), { plugins: { legend: ley, tooltip: { callbacks: { label: c => c.dataset.label + ': US$' + num(c.parsed.y, 1) + ' mil millones' } } },
           scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, maxTicksLimit: 6 }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#9aa5b8', callback: v => 'US$' + num(v, 0) }, grid: { color: 'rgba(255,255,255,0.05)' } } } }) });
     }
+  })();
+
+  // ---- Cómo paga la gente: va aparte para no demorar el resto de la página
+  (async function () {
+    const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
+    const [pg, ipc] = await Promise.all([P.json('/api/bcra?endpoint=Pagos'), P.API.ipc()]);
+    const X = pg && pg.series;
+    if (!X) { $('pagos-k').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudo cargar el informe de pagos del BCRA. Probá de nuevo en un rato.</p>'; return; }
+    const I = Object.fromEntries(((ipc && ipc.general) || []).map(x => [x.p, x.i]));
+    const antes = m => (+m.slice(0, 4) - 1) + m.slice(4), mes = m => P.mesLargo(m).replace(/^./, c => c.toUpperCase());
+    const mill = v => num(v / 1e6, 1) + ' M', bill = v => '$' + num(v / 1e6, 2) + ' billones', pc = v => '<b>' + P.signo(v) + '%</b>';
+    const BCRA = P.fuente('https://www.bcra.gob.ar/publicaciones/informe-de-pagos-minoristas-' + P.mesLargo(pg.mes).replace(/ /g, '-') + '/', 'BCRA');
+    // Las tarjetas cambian de fuente en agosto de 2026: la comparación anual vuelve cuando los dos meses tengan la misma
+    const CORTE = '2026-08', TARJETAS = ['debito', 'credito'];
+    const realIa = (u, a, vu, va) => (I[u] && I[a] ? (vu / va) / (I[u] / I[a]) * 100 - 100 : null);
+    const tarjeta = (el, id, que, color) => { const s = X[id], u = s.at(-1), a = s.find(x => x[0] === antes(u[0])), ok = a && !(TARJETAS.includes(id) && a[0] < CORTE), re = ok ? realIa(u[0], a[0], u[2], a[2]) : null;
+      P.tarjeta(el, { que, grande: mill(u[1]), contexto: mes(u[0]) + (ok ? ' · ' + pc((u[1] / a[1] - 1) * 100) + ' en un año' : ' · sin comparación anual: cambió la fuente'),
+        extra: P.sparkline(s.slice(-24).map(x => x[1]), { color }),
+        filas: [['Monto del mes', '', bill(u[2])], re != null ? ['Monto, descontada la inflación', 'Contra un año atrás', P.signo(re) + '%'] : null], fuentes: 'Fuente: ' + BCRA }); };
+    $('pagos-k').innerHTML = ['pk1', 'pk2', 'pk3', 'pk4', 'pk5', 'pk6'].map(i => '<article class="pa-card" id="' + i + '"></article>').join('');
+    tarjeta('pk1', 'pct', 'Pagos con transferencia · casi todos con QR', '#4ade9a');
+    tarjeta('pk2', 'push', 'Transferencias inmediatas · en pesos', '#60a5fa');
+    tarjeta('pk3', 'debito', 'Tarjeta de débito · operaciones', '#60a5fa');
+    tarjeta('pk4', 'credito', 'Tarjeta de crédito · operaciones', '#e8c97a');
+    tarjeta('pk5', 'cajeros', 'Extracciones en cajeros · operaciones', '#a78bfa');
+    // Billeteras: lo que queda en las cuentas de pago más lo invertido en fondos de dinero desde ellas
+    { const F = Object.fromEntries(X.fondos.map(x => [x[0], x])), s = X.cuentas.filter(x => F[x[0]]).map(x => [x[0], x[2] + F[x[0]][2]]), [m, v] = s.at(-1), a = s.find(x => x[0] === antes(m)), re = a ? realIa(m, a[0], v, a[1]) : null;
+      P.tarjeta('pk6', { que: 'Plata en billeteras · saldos e inversión', grande: bill(v), contexto: mes(m) + (re != null ? ' · ' + pc(re) + ' en un año, descontada la inflación' : ''),
+        extra: P.sparkline(s.slice(-24).map(([q, w]) => (I[q] && I[m] ? w * I[m] / I[q] : null)), { color: '#4ade9a' }),
+        filas: [['En cuentas de pago', mill(X.cuentas.at(-1)[1]) + ' de cuentas con saldo', bill(X.cuentas.at(-1)[2])], ['En fondos de dinero', mill(F[m][1]) + ' de clientes', bill(F[m][2])]], fuentes: 'Fuente: ' + BCRA }); }
+    P.brillo('#pagos-k .pa-card');
+
+    if (typeof Chart === 'undefined') return;
+    const L = [['pct', 'Pagos con transferencia', '#4ade9a'], ['debito', 'Tarjeta de débito', '#60a5fa'], ['credito', 'Tarjeta de crédito', '#e8c97a'], ['cajeros', 'Cajeros', '#a78bfa']];
+    const meses = X.pct.map(x => x[0]).slice(-36), ult = meses.filter(m => I[m]).at(-1), idx = Object.fromEntries(L.map(([id]) => [id, Object.fromEntries(X[id].map(x => [x[0], x]))]));
+    const VISTA = { c: { n: 'Cantidad de operaciones', d: (id, m) => (idx[id][m] ? idx[id][m][1] / 1e6 : null), y: v => num(v, 0) + ' M', t: v => num(v, 1) + ' M' },
+      m: { n: 'Plata, en pesos de hoy', d: (id, m) => (idx[id][m] && I[m] ? idx[id][m][2] * I[ult] / I[m] / 1e6 : null), y: v => '$' + num(v, 0) + ' bill.', t: v => '$' + num(v, 2) + ' billones' } };
+    let v = 'c'; const chips = $('c-pagos');
+    chips.innerHTML = Object.entries(VISTA).map(([k, x]) => '<button type="button" data-t="' + k + '" aria-pressed="' + (k === v) + '">' + x.n + '</button>').join('');
+    const ch = new Chart($('g-pagos'), { type: 'line', data: { labels: meses.map(P.mesAnio), datasets: L.map(([id, n, c]) => ({ label: n, data: meses.map(m => VISTA[v].d(id, m)), borderColor: c, backgroundColor: c, borderWidth: 2.5, pointRadius: 0, tension: 0.25 })) },
+      options: P.ejes(VISTA.c.y, { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + VISTA[v].t(c.parsed.y) } } },
+        scales: { x: { ticks: { color: '#9aa5b8', maxRotation: 0, maxTicksLimit: 7 }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#9aa5b8', callback: c => VISTA[v].y(c) }, grid: { color: 'rgba(255,255,255,0.05)' } } } }) });
+    $('f-pagos').innerHTML = 'Fuente: ' + BCRA + ', Informe de Pagos Minoristas. La plata, en pesos de ' + P.mesLargo(ult) + ' con el IPC del INDEC.';
+    chips.addEventListener('click', e => { const bt = e.target.closest('button'); if (!bt) return; v = bt.dataset.t; chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === bt))); L.forEach(([id], k) => { ch.data.datasets[k].data = meses.map(m => VISTA[v].d(id, m)); }); ch.update(); });
   })();
   </script>
 </body>
