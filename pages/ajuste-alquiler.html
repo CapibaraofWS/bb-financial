@@ -251,7 +251,7 @@
       const hasta = fin < h ? fin : h;
       if (hasta <= d) return pone('Próximo ajuste: ' + mes(a), pesos(actual), previo + 'Todavía no se publicó ninguno de los meses que toma ese ajuste.', lista, fuente);
       const f = serie[hasta] / serie[d], faltan = (+h.slice(0, 4) - +hasta.slice(0, 4)) * 12 + +h.slice(5) - +hasta.slice(5);
-      return pone('Próximo ajuste: ' + mes(a), pesos(actual * f), previo + 'Hasta ' + mes(hasta) + ' acumula ' + P.signo((f - 1) * 100) + '% sobre ' + pesos(actual) + '. ' + (esIcl ? 'Falta conocer el ICL del 1 de ' + mes(h) : (faltan === 1 ? 'Falta publicarse 1 mes de inflación' : 'Faltan publicarse ' + faltan + ' meses de inflación')) + ': el número final va a cambiar.', lista, fuente);
+      return pone('Próximo ajuste: ' + mes(a), pesos(actual * f), previo + 'Hasta ' + mes(hasta) + ' acumula ' + P.signo((f - 1) * 100) + '% sobre ' + pesos(actual) + '. ' + (esIcl ? 'Falta conocer el ICL del 1 de ' + mes(h) : (faltan === 1 ? 'Todavía no se publicó 1 mes de inflación' : 'Todavía no se publicaron ' + faltan + ' meses de inflación')) + ': el número final va a cambiar.', lista, fuente);
     }
     calcular();
   })();
