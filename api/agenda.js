@@ -653,6 +653,110 @@ async function getYouTubeFeed() {
 }
 
 // ============================================================
+// LO QUE DESCUENTA EL MERCADO — inflación y dólar implícitos en los precios de los bonos.
+// Bonos CER cero cupón: pagan 100 × CER(10 hábiles antes del vencimiento) / CER(10 hábiles antes de la emisión).
+// Dólar linked cero cupón: pagan 100 dólares al A3500, en pesos. Cada uno se compara con la curva a tasa fija
+// (LECAP y BONCAP) al mismo plazo: lo implícito es lo que deja indiferente entre una y otra. Solo dentro de esa curva.
+// [emisión, vencimiento]. Las fechas van a mano porque la ficha de BYMA erra por un día hábil en varios bonos
+// (TZXM7, TZXM8, TZXM9, TZXO7): se verificaron contra la TIREA de las licitaciones de Finanzas, que dan igual ±0,02.
+// Un bono nuevo que no esté acá entra con la fecha de BYMA, marcado, y se descarta si se aparta de los vecinos.
+// ============================================================
+const BONOS_CER = {
+  X29E7: ['2026-08-14', '2027-01-29'], X30N6: ['2025-12-15', '2026-11-30'], TZX27: ['2024-02-01', '2027-06-30'], TZX28: ['2024-02-01', '2028-06-30'],
+  TZXA7: ['2025-11-28', '2027-04-30'], TZXD6: ['2024-03-15', '2026-12-15'], TZXD7: ['2024-03-15', '2027-12-15'], TZXD8: ['2026-06-30', '2028-12-15'],
+  TZXM7: ['2024-05-20', '2027-03-31'], TZXM8: ['2026-04-01', '2028-03-31'], TZXM9: ['2026-04-01', '2029-03-28'], TZXO7: ['2026-06-30', '2027-10-29'],
+  TZXS7: ['2026-03-31', '2027-09-30'], TZXS8: ['2026-03-31', '2028-09-29'], TZXY7: ['2025-12-15', '2027-05-31'],
+};
+const RE_CER = /^(X\d{2}[A-Z]\d|TZX(\d\d|[A-Z]\d))$/, RE_DL = /^(D\d{2}[A-Z]\d|TZV(\d\d|[A-Z]\d))$/;
+const MINIMO_OPERADO = 30e6;   // pesos en la rueda: menos que eso, el último precio no dice nada
+async function fichaByma(sym) {
+  let g = null;
+  try { g = JSON.parse(await redis(['GET', 'ficha:' + sym]) || 'null'); } catch {}
+  if (g) return g;
+  const r = await fetch('https://open.bymadata.com.ar/vanoms-be-core/rest/api/bymadata/free/bnown/fichatecnica/especies/general', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': UA, Accept: 'application/json' },
+    body: JSON.stringify({ symbol: sym, 'Content-Type': 'application/json' }), signal: AbortSignal.timeout(6000),
+  });
+  const f = r.ok ? ((await r.json()).data || [])[0] : null;
+  if (!f || !/^\d{4}-\d{2}-\d{2}/.test(f.fechaEmision || '') || !/^\d{4}-\d{2}-\d{2}/.test(f.fechaVencimiento || '')) return null;
+  const d = { emision: f.fechaEmision.slice(0, 10), vence: f.fechaVencimiento.slice(0, 10), cupon0: /CERO CUP|A DESCUENTO/i.test(f.denominacion || '') && !/DUAL/i.test(f.denominacion || '') };
+  await redis(['SET', 'ficha:' + sym, JSON.stringify(d), 'EX', String(30 * 86400)]);
+  return d;
+}
+// Mes del IPC que entra en el CER de una fecha: del 16 al 15 siguiente se reparte el IPC de dos meses antes
+function mesIpc(f) {
+  const [y, m, d] = f.split('-').map(Number), t = y * 12 + (m - 1) - (d >= 16 ? 1 : 2);
+  return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0');
+}
+async function getArMercado() {
+  const [pesos, sets, cerR, techoR] = await Promise.all([
+    getArPesos(),
+    Promise.all(['arg_notes', 'arg_bonds'].map(e => fetchJson(`https://data912.com/live/${e}`, 4000).catch(() => fetchJson(`https://data912.com/live/${e}`, 4000)))),
+    fetchJson('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/30?desde=2024-01-01&limit=3000'),
+    fetchJson('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/1188?limit=1').catch(() => null),
+  ]);
+  const curva = (pesos.bonds || []).filter(b => !b.pocaLiquidez && b.tir > 0).sort((a, b) => a.dtm - b.dtm);
+  const CER = Object.fromEntries((cerR?.results?.[0]?.detalle || []).filter(x => x.valor > 0).map(x => [x.fecha, x.valor]));
+  const fechasCer = Object.keys(CER).sort();
+  if (curva.length < 4 || fechasCer.length < 500) throw new Error('faltan datos');
+  const ahora = Date.now(), hoy = new Date(ahora - 3 * 3600e3).toISOString().slice(0, 10), anio = +hoy.slice(0, 4);
+  const fer = await feriados([2024, 2025, anio, anio + 1, anio + 2].filter((a, i, x) => x.indexOf(a) === i));
+  const liq = habilDesde(ruedaDe(ahora, fer), 1, fer), dias = f => Math.round((Date.parse(f + 'T12:00:00Z') - Date.parse(liq + 'T12:00:00Z')) / MS_DAY);
+  const atras = (f, n) => { for (let i = 0; i < n; i++) f = habilDesde(f, -1, fer); return f; };
+  // Tasa fija al mismo plazo: interpolada entre las dos letras vecinas; fuera de la curva no se calcula
+  const fija = d => { for (let i = 1; i < curva.length; i++) { const [a, b] = [curva[i - 1], curva[i]]; if (d >= a.dtm && d <= b.dtm) return a.tir + (b.tir - a.tir) * (d - a.dtm) / (b.dtm - a.dtm); } return null; };
+  const px = {};
+  for (const x of sets.flat()) if (x && x.c > 0) px[x.symbol] = { p: x.c, operado: (x.v || 0) * x.c / 100 };
+  const ultF = fechasCer.at(-1), ultCer = CER[ultF], refF = atras(liq, 10);
+  if (!CER[refF]) throw new Error('sin CER');
+
+  // ---- Bonos CER
+  let cer = [];
+  for (const sym of Object.keys(px).filter(s => RE_CER.test(s))) {
+    if (px[sym].operado < MINIMO_OPERADO) continue;
+    let datos = BONOS_CER[sym], auto = false;
+    if (!datos) { const f = await fichaByma(sym).catch(() => null); if (!f || !f.cupon0) continue; datos = [f.emision, f.vence]; auto = true; }
+    const [emision, vence] = datos, d = dias(vence), base = CER[atras(emision, 10)], { p } = px[sym];
+    if (!(d >= 20) || !base) continue;
+    const real = Math.pow(100 * CER[refF] / base / p, 365 / d) - 1;
+    if (!(real > -0.2 && real < 0.3)) continue;
+    const fila = { sym, vence, dias: d, precio: p, real, auto };
+    const f = fija(d), t10 = atras(vence, 10), ventana = Math.round((Date.parse(t10) - Date.parse(ultF)) / MS_DAY);
+    // Lo que el CER ya tiene publicado no se descuenta: lo implícito es la inflación que falta conocer
+    if (f != null && ventana >= 30) {
+      const hace = Math.pow(1 + f, d / 365) * p * base / 100;
+      fila.fija = f; fila.mensual = Math.pow(hace / ultCer, 30.4 / ventana) - 1; fila.hasta = mesIpc(t10);
+    }
+    cer.push(fila);
+  }
+  cer.sort((a, b) => a.dias - b.dias);
+  // Un bono que entró solo y queda lejos de sus vecinos tiene mal la fecha de emisión
+  cer = cer.filter((x, i) => { if (!x.auto) return true; const v = cer.filter((y, j) => j !== i && !y.auto).sort((a, b) => Math.abs(a.dias - x.dias) - Math.abs(b.dias - x.dias)).slice(0, 2); return v.length < 2 || Math.abs(x.real - (v[0].real + v[1].real) / 2) < 0.02; });
+
+  // ---- Dólar linked
+  const dolar = [];
+  for (const sym of Object.keys(px).filter(s => RE_DL.test(s))) {
+    if (px[sym].operado < MINIMO_OPERADO) continue;
+    const ficha = await fichaByma(sym).catch(() => null);
+    if (!ficha || !ficha.cupon0) continue;
+    const d = dias(ficha.vence), f = fija(d), { p } = px[sym];
+    if (!(d >= 7) || f == null || !(p > 10000)) continue;
+    dolar.push({ sym, vence: ficha.vence, dias: d, precio: p, fija: f, dolar: p / 100 * Math.pow(1 + f, d / 365) });
+  }
+  dolar.sort((a, b) => a.dias - b.dias);
+  if (!cer.length && !dolar.length) throw new Error('sin bonos');
+  const bcra = await getBcraPrincipales().catch(() => ({})), techo = techoR?.results?.[0]?.detalle?.[0];
+  return {
+    asOf: new Date(ahora).toISOString(), liquidacion: liq, curvaDel: pesos.asOf, vivo: !!pesos.vivo,
+    ipcConocido: mesIpc(ultF), cer, dolar,
+    curva: curva.map(b => ({ sym: b.sym, dias: b.dtm, tir: b.tir })),
+    mayorista: pickVar(bcra, 5), rem: pickVar(bcra, 29), ipc: pickVar(bcra, 27),
+    techo: techo && Number.isFinite(techo.valor) ? { valor: techo.valor, fecha: techo.fecha } : null,
+    fuente: 'Precios de BYMA vía data912; CER, REM y dólar del BCRA; condiciones de emisión de la Secretaría de Finanzas y BYMA',
+  };
+}
+
+// ============================================================
 // HANDLER
 // ============================================================
 const HANDLERS = {
@@ -662,6 +766,7 @@ const HANDLERS = {
   'bonos-ar':            { fn: getBonosAR,            cache: 's-maxage=300, stale-while-revalidate=900' },
   'ar-bonds':            { fn: getArBonds,            cache: 's-maxage=600, stale-while-revalidate=1800' },
   'ar-pesos':            { fn: getArPesos,            cache: 's-maxage=600, stale-while-revalidate=1800' },
+  'ar-mercado':          { fn: getArMercado,          cache: 's-maxage=600, stale-while-revalidate=1800' },
   'riesgo-pais':         { fn: getRiesgoPais,         cache: 's-maxage=300, stale-while-revalidate=900' },
   'caucion':             { fn: getCaucion,            cache: 's-maxage=300, stale-while-revalidate=900' },
   'youtube':             { fn: getYouTubeFeed,        cache: 's-maxage=1800, stale-while-revalidate=3600' },
