@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-adsense-account" content="ca-pub-4539395552565638">
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
+  <title>Economía por provincia: empleo, exportaciones, autos, cuentas y nafta — BB Finanzas</title>
+  <meta name="description" content="Elegí tu provincia y mirá cómo viene: empleo privado registrado, autos y motos patentados, exportaciones, cuánto depende de Nación, precio de la nafta y pobreza en sus ciudades. Con datos oficiales que se actualizan solos." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-provincias" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Finanzas" />
+  <meta property="og:title" content="Tu provincia en números" />
+  <meta property="og:description" content="Empleo, patentamientos, exportaciones, cuentas públicas, nafta y pobreza de cada provincia argentina." />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/panel-provincias" />
+  <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Tu provincia en números — Panel Argentina","url":"https://www.bbfinanzas.com.ar/pages/panel-provincias","inLanguage":"es-AR","isPartOf":{"@id":"https://www.bbfinanzas.com.ar/#sitio"},"publisher":{"@id":"https://www.bbfinanzas.com.ar/#organizacion"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Panel Argentina","item":"https://www.bbfinanzas.com.ar/pages/panel-argentina"},{"@type":"ListItem","position":3,"name":"Tu provincia","item":"https://www.bbfinanzas.com.ar/pages/panel-provincias"}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"¿Qué quiere decir que los ingresos vienen de Nación?","acceptedAnswer":{"@type":"Answer","text":"Las provincias recaudan sus propios impuestos, como Ingresos Brutos, y reciben una parte de impuestos nacionales: la coparticipación y otros recursos. El porcentaje muestra qué parte de sus ingresos totales llega por esa vía."}},
+    {"@type":"Question","name":"¿Por qué la pobreza aparece por ciudad y no por provincia?","acceptedAnswer":{"@type":"Answer","text":"Porque la encuesta del INDEC mide 31 aglomerados urbanos, no provincias enteras. No hay un dato oficial semestral de pobreza para toda una provincia."}}
+  ]}
+  </script>
+  <style>
+    .pv-sel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin: 0 0 1.1rem; }
+    .pv-sel label { font-size: 0.86rem; color: var(--text-muted); }
+    .pv-sel select { min-width: 0; width: 100%; max-width: 420px; min-height: 46px; padding: 0.5rem 0.8rem; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 1rem; }
+    .pv-ciudades { list-style: none; margin: 0.4rem 0 0; padding: 0; font-size: 0.86rem; }
+    .pv-ciudades li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.3rem 0; border-top: 1px solid var(--border); }
+    .pv-ciudades li span:last-child { font-family: var(--font-mono); white-space: nowrap; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/styles.css?v=20" />
+  <link rel="stylesheet" href="../css/panel.css?v=14" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav">
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="empezar-a-invertir" class="nav-link">Empezar a invertir</a>
+        <a href="inflacion" class="nav-link">Inflación</a>
+        <a href="comparador-plazos-fijos" class="nav-link">Plazo fijo</a>
+        <a href="comparador-tasas" class="nav-link">Tasas</a>
+        <a href="comparador-dolares" class="nav-link">Dólar</a>
+        <a href="agenda-ar" class="nav-link">Agenda AR</a>
+        <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
+        <a href="datos" class="nav-link">Mercados globales</a>
+        <a href="panel-argentina" class="nav-link">Panel Argentina</a>
+        <a href="blog" class="nav-link">Blog</a>
+        <a href="atlas" class="nav-link">Atlas</a>
+        <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
+        <a href="contacto" class="nav-link">Contacto</a>
+      </nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="container pa-hero">
+      <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
+      <p class="pa-eyebrow" data-bandera>Panel Argentina · Tu provincia</p>
+      <h1>Tu provincia en números</h1>
+      <p class="sub">Elegí una provincia y mirá cómo viene su empleo, cuántos autos y motos se patentan, cuánto exporta, cuánto depende de Nación y cuánto sale la nafta. Con datos oficiales.</p>
+    </section>
+
+    <div class="container" style="padding-bottom:4rem">
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-cambiario">Flujo de dólares</a><a href="panel-tasas">Tasas</a><a href="panel-expectativas">Qué espera el mercado</a><a href="panel-bcra">Banco Central</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-provincias" aria-current="page">Tu provincia</a><a href="panel-energia">Energía y minería</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-presupuesto">Presupuesto</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="ajuste-alquiler">Ajuste de alquiler</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a></nav>
+
+      <div class="pv-sel">
+        <label for="prov">Elegí tu provincia</label>
+        <select id="prov"></select>
+      </div>
+
+      <div class="pa-grid" id="ficha" aria-live="polite">
+        <article class="pa-card"><p class="que">Cargando los datos de la provincia…</p><p class="grande">—</p></article>
+      </div>
+
+      <section class="pa-graf" aria-labelledby="mapa-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="mapa-t">Cómo está contra las demás</h3>
+          <p class="ayuda" id="mapa-a"></p>
+        </div></div>
+        <div class="pa-seg" id="s-ind" role="group" aria-label="Qué mostrar en el mapa">
+          <button type="button" data-v="empleo" aria-pressed="true">Empleo</button><button type="button" data-v="autos" aria-pressed="false">Autos</button><button type="button" data-v="expo" aria-pressed="false">Exportaciones</button><button type="button" data-v="nacion" aria-pressed="false">Ingresos de Nación</button><button type="button" data-v="resultado" aria-pressed="false">Resultado</button><button type="button" data-v="nafta" aria-pressed="false">Nafta</button>
+        </div>
+        <div id="mapa-caja"><div id="mapa"></div></div>
+        <p class="fuente" id="mapa-f"></p>
+      </section>
+
+      <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
+        <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
+        <p>Cada dato sale de un organismo distinto y llega a su ritmo: el empleo tiene unos meses de atraso, los patentamientos son del mes pasado, las exportaciones se publican por semestre y las cuentas de cada provincia, por año. Por eso cada tarjeta dice de qué fecha es.</p>
+        <p>Comparar provincias en pesos o en cantidades no dice mucho, porque tienen tamaños muy distintos. Por eso el mapa muestra, cuando se puede, cuánto cambió cada una contra un año atrás o qué parte representa de sus propios ingresos.</p>
+        <details><summary>¿Qué quiere decir que los ingresos vienen de Nación?</summary><p>Las provincias recaudan sus propios impuestos, como Ingresos Brutos, y reciben una parte de impuestos nacionales: la coparticipación y otros recursos. El porcentaje muestra qué parte de sus ingresos totales llega por esa vía. Sale de las ejecuciones presupuestarias que publica la Secretaría de Hacienda.</p></details>
+        <details><summary>¿Por qué la pobreza aparece por ciudad y no por provincia?</summary><p>Porque la encuesta del INDEC mide 31 aglomerados urbanos, no provincias enteras. No hay un dato oficial semestral de pobreza para toda una provincia. Por eso la tarjeta muestra las ciudades que se relevan en cada una.</p></details>
+        <details><summary>¿Por qué los patentamientos miran 12 meses?</summary><p>Porque un mes solo engaña: enero concentra muchas altas y otros meses casi no. Sumar los últimos 12 meses y compararlos con los 12 anteriores saca ese efecto.</p></details>
+        <details><summary>¿De dónde sale el precio de la nafta?</summary><p>De lo que declaran las estaciones de servicio a la Secretaría de Energía. Se toma el precio más típico (la mediana) de la nafta súper, con los datos cargados en los últimos 60 días. Si en una provincia actualizaron menos de 3 estaciones, no se muestra. Es una referencia: el precio cambia según la estación y la zona, y puede variar.</p></details>
+        <details><summary>¿Por qué alguna provincia aparece sin dato?</summary><p>Porque ese dato todavía no se publicó, o porque hay muy pocas estaciones con precios recientes. El dato aparece solo cuando la fuente lo publica.</p></details>
+      </section>
+
+      <p style="color:var(--text-subtle);font-size:0.78rem;margin-top:2rem;line-height:1.7">Los datos se muestran tal como los publican los organismos oficiales, salvo los cálculos de variación y participación. Este panel es informativo y no reemplaza a las publicaciones oficiales. Más datos en <a href="panel-argentina" style="color:var(--text-muted)">el resumen del Panel Argentina</a>.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <p>Datos del INDEC, el Banco Central y otras fuentes oficiales.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Finanzas · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a> · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=54"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
+  <script src="../js/chart-mobile.js?v=1"></script>
+  <script src="../js/panel.js?v=20"></script>
+  <script>
+  (async function () {
+    const P = BBPanel, $ = id => document.getElementById(id), esc = P.esc, num = P.num;
+    const [D, emp, pob, geo] = await Promise.all([P.json('/api/indec?provincias=1'), P.API.empleo(), P.API.pobreza(), P.API.geo()]);
+    if (!geo || !geo.provincias) { $('ficha').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los datos. Probá de nuevo en un rato.</p>'; return; }
+    const d = D || {}, nombre = Object.fromEntries(geo.provincias.map(p => [p.cod, p.nombre]));
+    const corto = c => (c === '02' ? 'CABA' : c === '94' ? 'Tierra del Fuego' : nombre[c]);
+    const anual = (a, b) => (a / b - 1) * 100;
+
+    // ---- Lo que el mapa puede mostrar. valores: { código: número }
+    const PR = emp && emp.provincias, n = PR ? PR.fechas.length - 1 : 0;
+    const empleo = PR ? Object.fromEntries(Object.entries(PR.valores).filter(([, v]) => v[n] > 0 && v[n - 12] > 0).map(([c, v]) => [c, anual(v[n], v[n - 12])])) : {};
+    const mapear = (o, f) => Object.fromEntries(Object.entries(o || {}).filter(([c]) => nombre[c]).map(([c, v]) => [c, f(v)]).filter(([, v]) => Number.isFinite(v)));
+    const C = d.cuentas ? d.cuentas.valores : null;
+    const IND = {
+      empleo: { valores: empleo, formato: v => P.signo(v) + '%', ayuda: 'cuánto cambió la cantidad de asalariados registrados del sector privado en cada provincia contra un año atrás.', fuente: 'Secretaría de Trabajo (SIPA), vía datos.gob.ar', ultimo: PR && P.mesLargo(PR.fechas[n]) },
+      autos: { valores: mapear(d.autos && d.autos.valores, v => (v[1] > 0 ? anual(v[0], v[1]) : NaN)), formato: v => P.signo(v) + '%', ayuda: 'cuántos autos se patentaron en los últimos 12 meses contra los 12 anteriores.', fuente: 'Registro de la Propiedad del Automotor (DNRPA)', ultimo: d.autos && P.mesLargo(d.autos.mes) },
+      expo: { valores: mapear(d.exportaciones && d.exportaciones.valores, v => (v[1] > 0 ? anual(v[0], v[1]) : NaN)), formato: v => P.signo(v) + '%', ayuda: 'cuánto cambiaron las exportaciones de cada provincia contra el mismo período del año anterior, en dólares.', fuente: 'INDEC, Origen provincial de las exportaciones', ultimo: d.exportaciones && d.exportaciones.periodo + ' de ' + d.exportaciones.anio },
+      nacion: { valores: mapear(C, v => v.nacion / v.ingresos * 100), formato: v => num(v, 0) + '%', escala: 'nivel', ayuda: 'de cada 100 pesos que ingresaron a la provincia en el año, cuántos llegaron de Nación. No es bueno ni malo por sí solo: depende del tamaño y de la actividad de cada una.', fuente: 'Secretaría de Hacienda, ejecuciones presupuestarias provinciales', ultimo: d.cuentas && String(d.cuentas.anio) },
+      resultado: { valores: mapear(C, v => v.resultado / v.ingresos * 100), formato: v => P.signo(v) + '%', ayuda: 'la diferencia entre lo que la provincia ingresó y lo que gastó en el año, como parte de sus ingresos. Positivo es superávit; negativo, déficit.', fuente: 'Secretaría de Hacienda, ejecuciones presupuestarias provinciales', ultimo: d.cuentas && String(d.cuentas.anio) },
+      nafta: { valores: mapear(d.nafta && d.nafta.valores, v => v[0]), formato: v => P.pesos(v), escala: 'nivel', mejorSiBaja: true, ayuda: 'el precio más común del litro de nafta súper que declaran las estaciones. Puede variar según la estación y la zona.', fuente: 'Secretaría de Energía, precios en surtidor (Res. 314/2016)', ultimo: 'últimos 60 días' },
+    };
+    const puesto = (k, c) => { const o = IND[k].valores, L = Object.keys(o).sort((a, b) => o[b] - o[a]), i = L.indexOf(c); return i < 0 ? '' : 'Puesto ' + (i + 1) + ' de ' + L.length + '.'; };
+
+    // ---- Ficha de la provincia
+    const AGLO = { '02': ['Ciudad Autónoma de Buenos Aires'], '06': ['Partidos del GBA', 'Gran La Plata', 'Mar del Plata', 'Bahía Blanca - Cerri', 'San Nicolás - Villa Constitución'], 10: ['Gran Catamarca'], 14: ['Gran Córdoba', 'Río Cuarto'], 18: ['Corrientes'], 22: ['Gran Resistencia'], 26: ['Comodoro Rivadavia - Rada Tilly', 'Rawson - Trelew'], 30: ['Gran Paraná', 'Concordia'], 34: ['Formosa'], 38: ['Jujuy - Palpalá'], 42: ['Santa Rosa - Toay'], 46: ['La Rioja'], 50: ['Gran Mendoza'], 54: ['Posadas'], 58: ['Neuquén - Plottier'], 62: ['Viedma - Carmen de Patagones'], 66: ['Salta'], 70: ['Gran San Juan'], 74: ['Gran San Luis'], 78: ['Río Gallegos'], 82: ['Gran Rosario', 'Gran Santa Fe'], 86: ['Santiago del Estero - La Banda'], 90: ['Gran Tucumán - Tafí Viejo'], 94: ['Ushuaia - Río Grande'] };
+    const tarjeta = (q, g, t, extra = '') => '<article class="pa-card"><p class="que">' + q + '</p><p class="grande">' + g + '</p><p class="contexto">' + t + '</p>' + extra + '</article>';
+    function ficha(c) {
+      const k = [];
+      if (PR && PR.valores[c] && empleo[c] != null) k.push(tarjeta('Empleo privado registrado · contra un año atrás', P.signo(empleo[c]) + '%', num(PR.valores[c][n], 1) + ' mil asalariados en ' + P.mesLargo(PR.fechas[n]) + '. ' + puesto('empleo', c)));
+      const pat = (x, t) => { const v = d[x] && d[x].valores[c]; return v ? tarjeta(t + ' patentados · últimos 12 meses', num(v[0], 0), (v[1] > 0 ? P.signo(anual(v[0], v[1])) + '% contra los 12 anteriores. ' : '') + 'A ' + P.mesLargo(d[x].mes) + '.') : ''; };
+      if (pat('autos', 'Autos')) k.push(pat('autos', 'Autos'));
+      if (pat('motos', 'Motos')) k.push(pat('motos', 'Motos'));
+      const E = d.exportaciones, ev = E && E.valores[c];
+      if (ev) { const tot = Object.values(E.valores).reduce((a, v) => a + v[0], 0); k.push(tarjeta('Exportaciones · ' + E.periodo + ' de ' + E.anio, 'US$' + num(ev[0], 0) + ' M', (ev[1] > 0 ? P.signo(anual(ev[0], ev[1])) + '% contra un año atrás. ' : '') + num(ev[0] / tot * 100, 1) + '% de las exportaciones por provincia.')); }
+      const cu = C && C[c];
+      k.push(cu ? tarjeta('Ingresos que llegan de Nación · ' + d.cuentas.anio, num(cu.nacion / cu.ingresos * 100, 0) + '%', 'De cada 100 pesos que ingresó. Cerró el año con ' + (cu.resultado >= 0 ? 'superávit' : 'déficit') + ' de ' + num(Math.abs(cu.resultado / cu.ingresos * 100)) + '% de sus ingresos. Sueldos públicos: ' + num(cu.personal / cu.gastos * 100, 0) + '% del gasto.') : tarjeta('Cuentas de la provincia', 'Sin dato', 'Todavía no publicó las cuentas de ' + (d.cuentas ? d.cuentas.anio : 'este año') + '.'));
+      const na = d.nafta && d.nafta.valores[c];
+      if (d.nafta) k.push(na ? tarjeta('Nafta súper · precio más común por litro', P.pesos(na[0]), 'Según ' + na[1] + (na[1] === 1 ? ' estación' : ' estaciones') + ' con precios de los últimos 60 días. Puede variar según la zona.') : tarjeta('Nafta súper', 'Sin dato', 'Muy pocas estaciones actualizaron sus precios en los últimos 60 días.'));
+      const areas = (pob && pob.areas) || [], ciudades = (AGLO[c] || []).map(a => areas.find(x => x.nombre === a)).filter(Boolean);
+      if (ciudades.length) { const s = pob.serie && pob.serie.at(-1); k.push(tarjeta('Pobreza en sus ciudades', num(ciudades[0].pobreza) + '%', esc(ciudades[0].nombre) + (s ? ', ' + esc(P.semCorto(s.semestre)) : '') + '. Mide personas en ciudades, no toda la provincia.', ciudades.length > 1 ? '<ul class="pv-ciudades">' + ciudades.slice(1).map(x => '<li><span>' + esc(x.nombre) + '</span><span>' + num(x.pobreza) + '%</span></li>').join('') + '</ul>' : '')); }
+      $('ficha').innerHTML = k.join('');
+    }
+
+    // ---- Selector y mapa
+    const lista = Object.keys(nombre).sort((a, b) => nombre[a].localeCompare(nombre[b], 'es'));
+    $('prov').innerHTML = lista.map(c => '<option value="' + c + '">' + esc(nombre[c]) + '</option>').join('');
+    const pedida = new URLSearchParams(location.search).get('p');
+    let cod = nombre[pedida] ? pedida : '06', ind = 'empleo';
+    $('prov').value = cod;
+    function mapa() {
+      const I = IND[ind];
+      $('mapa-a').innerHTML = '<strong>Qué ves:</strong> ' + I.ayuda + ' Tocá una provincia para ver su ficha.';
+      $('mapa-f').textContent = 'Fuente: ' + I.fuente + '.';
+      $('mapa').dataset.sel = cod;
+      P.mapaProvincias('mapa', { valores: I.valores, formato: I.formato, escala: I.escala || 'cambio', mejorSiBaja: !!I.mejorSiBaja, etiqueta: I.ayuda, inicial: cod, info: c => (I.valores[c] != null ? esc(puesto(ind, c)) : 'Sin dato.') });
+      if (I.ultimo) P.ultimo('mapa-caja', I.ultimo);
+    }
+    const elegir = c => {
+      if (!nombre[c] || c === cod) return;
+      cod = c; $('prov').value = c; ficha(c);
+      history.replaceState(null, '', location.pathname + '?p=' + c);
+    };
+    $('prov').addEventListener('change', e => { elegir(e.target.value); mapa(); });
+    // El mapa se vuelve a crear al cambiar de indicador: los eventos van en el contenedor. Al pasar el mouse solo cambia el recuadro del mapa.
+    $('mapa-caja').addEventListener('click', e => { const x = e.target.closest('[data-cod]'); if (x) elegir(x.dataset.cod); });
+    $('mapa-caja').addEventListener('keydown', e => { const x = e.target.closest('path[data-cod]'); if (x && (e.key === 'Enter' || e.key === ' ')) elegir(x.dataset.cod); });
+    P.seg('s-ind', v => { ind = v; mapa(); });
+    ficha(cod); mapa();
+  })();
+  </script>
+</body>
+</html>

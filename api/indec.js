@@ -934,10 +934,107 @@ async function crianza(req, res) {
   }
 }
 
+// ?provincias=1: lo que se publica provincia por provincia. Cada fuente se lee por separado; si una falla, sigue la
+// última copia guardada en Redis y las demás no se ven afectadas. El empleo y la pobreza ya salen de ?empleo=1 y ?pobreza=1.
+const PROV_COD = { 'CAPITAL FEDERAL': '02', 'CIUDAD AUTONOMA DE BUENOS AIRES': '02', CIUDAD: '02', 'BUENOS AIRES': '06', CATAMARCA: '10', CORDOBA: '14', CORRIENTES: '18', CHACO: '22', CHUBUT: '26', 'ENTRE RIOS': '30',
+  FORMOSA: '34', JUJUY: '38', 'LA PAMPA': '42', 'LA RIOJA': '46', MENDOZA: '50', MISIONES: '54', NEUQUEN: '58', 'RIO NEGRO': '62', SALTA: '66', 'SAN JUAN': '70', 'SAN LUIS': '74', 'SANTA CRUZ': '78', 'SANTA FE': '82',
+  'SANTIAGO DEL ESTERO': '86', TUCUMAN: '90', 'TIERRA DEL FUEGO': '94' };
+const codProv = s => PROV_COD[String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/,.*$/, '').replace(/\s+/g, ' ').trim()];
+// Patentamientos del Registro del Automotor: últimos 12 meses contra los 12 anteriores. La dirección del CSV incluye el mes: sale de su catálogo.
+async function patentes(dataset, tipo) {
+  const j = await fetch('https://datos.jus.gob.ar/api/3/action/package_show?id=' + dataset, { signal: AbortSignal.timeout(10000), headers: UA }).then(r => r.json());
+  const url = (j.result?.resources || []).map(r => r.url).find(u => /inscripciones-iniciales/.test(u || ''));
+  if (!url || !url.startsWith('https://datos.jus.gob.ar/')) throw new Error('sin archivo');
+  const t = await fetch(url, { signal: AbortSignal.timeout(15000), headers: UA }).then(r => r.text());
+  const F = t.split(/\r?\n/).slice(1).map(l => l.replace(/"/g, '').split(',')).filter(c => c.length >= 7 && c[0] === tipo).map(c => ({ p: c[1] + '-' + c[2].padStart(2, '0'), n: +c[5], cod: c[6] }));
+  const meses = [...new Set(F.map(x => x.p))].sort(), u = meses.at(-1), a12 = meses.slice(-12), p12 = meses.slice(-24, -12);
+  if (meses.length < 36 || new Set(F.filter(x => x.p === u).map(x => x.cod)).size < 24) throw new Error('formato');
+  const out = {};
+  for (const x of F) { if (!/^\d{2}$/.test(x.cod)) continue; const o = out[x.cod] = out[x.cod] || [0, 0]; if (a12.includes(x.p)) o[0] += x.n; else if (p12.includes(x.p)) o[1] += x.n; }
+  return { mes: u, valores: out };
+}
+// Ejecución presupuestaria de cada provincia (Dirección Nacional de Asuntos Provinciales): acumulado anual, en millones de pesos
+async function cuentasProvincias() {
+  const pag = await fetch(ARG + '/economia/sechacienda/coordinacion-fiscal-provincial/ejecucion-presupuestaria-provincial/ejecuciones', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : ''));
+  const url = (pag.match(/https:\/\/www\.argentina\.gob\.ar\/sites\/default\/files\/serie_aif-apnf-\d{4}[\w-]*\.xlsx/) || [])[0];
+  if (!url) throw new Error('sin archivo');
+  const x = await fetch(url, { signal: AbortSignal.timeout(20000), headers: UA });
+  if (!x.ok) throw new Error('archivo');
+  const FILAS = { ingresos: /^VI\. INGRESOS TOTALES/, gastos: /^VII\. GASTOS TOTALES/, resultado: /^VIII\. RESULTADO FINANCIERO/, nacion: /^- De Or[ií]gen Nacional/, regalias: /^- Regal[ií]as/, personal: /^- Personal/ };
+  let anio = null; const valores = {};
+  for (const h of leerXlsx(Buffer.from(await x.arrayBuffer()))) {
+    const cod = codProv(h.nombre), cab = h.filas.find(f => f && String(f[0] ?? '').trim() === 'CONCEPTO');
+    if (!cod || !cab) continue;
+    const c = cab.length - 1; anio = parseInt(cab[c], 10);
+    const o = Object.fromEntries(Object.entries(FILAS).map(([k, re]) => { const f = h.filas.find(r => r && re.test(String(r[0] ?? '').trim())); return [k, f && Number.isFinite(f[c]) ? Math.round(f[c]) : null]; }));
+    if (o.ingresos > 0 && o.gastos > 0 && Math.abs(o.ingresos - o.gastos - o.resultado) < 5) valores[cod] = o;
+  }
+  if (Object.keys(valores).length < 20 || !(anio > 2000)) throw new Error('formato');
+  return { anio, valores };
+}
+// Origen provincial de las exportaciones (INDEC): último semestre publicado contra el mismo del año anterior, en millones de dólares
+async function exportacionesProvincias() {
+  const H = await planillaIndec(null, { pagina: '/Nivel4/Tema/3/2/79', re: /\/ftp\/cuadros\/economia\/opex_anexo_cuadros_\d{2}_\d{2}_\d{2}\.xls/ });
+  const h = H.find(x => /^cuadro ?2$/i.test(x.nombre.trim())), f = h ? h.filas : [], tit = String((f[0] || [])[0] ?? '');
+  const cab = f.find(r => r && r.filter(v => /^20\d\d/.test(String(v ?? ''))).length >= 3) || [], cols = cab.map((v, i) => (/^20\d\d/.test(String(v ?? '')) && !/\//.test(String(v)) ? i : -1)).filter(i => i >= 0);
+  const [cp, ca] = cols.slice(-2), valores = {};
+  for (const r of f) { const cod = r && codProv(r[1]); if (cod && Number.isFinite(r[ca]) && Number.isFinite(r[cp])) valores[cod] = [Math.round(r[ca]), Math.round(r[cp])]; }
+  if (Object.keys(valores).length < 24) throw new Error('formato');
+  return { periodo: ((tit.match(/(Primer|Segundo) semestre/) || tit.match(/A[nñ]o/) || [''])[0]).toLowerCase(), anio: parseInt(String(cab[ca]), 10), valores };
+}
+// Nafta súper: mediana de lo que declaran las estaciones (Res. 314/2016, Secretaría de Energía). Muchas no actualizan:
+// solo cuentan los precios de los últimos 60 días y las provincias con al menos 3 estaciones.
+async function naftaProvincias() {
+  const j = await fetch('https://datos.energia.gob.ar/api/3/action/package_show?id=precios-en-surtidor', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => r.json());
+  const url = j.result?.resources?.[0]?.url;
+  if (!url || !/^https?:\/\/datos\.energia\.gob\.ar\//.test(url)) throw new Error('sin archivo');
+  const x = await fetch(url.replace(/^http:/, 'https:'), { signal: AbortSignal.timeout(24000), headers: UA });
+  if (!x.ok || +(x.headers.get('content-length') || 0) > 3e7) throw new Error('archivo');
+  const t = await x.text();
+  const desde = new Date(Date.now() - 60 * 864e5).toISOString().slice(0, 10), P = {};
+  const campos = /^(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),((?:[^,"]*|"[^"]*")),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),((?:[^,"]*|"[^"]*")),([^,]*),(?:[^,"]*|"[^"]*"),([^,]*),([^,]*)/;
+  for (const l of t.split('\n')) {
+    if (!l.includes('súper')) continue;
+    const m = l.match(campos);
+    if (!m || m[3] !== '2' || !/^"?Nafta \(súper\)/.test(m[2]) || !(m[5] >= desde)) continue;
+    const cod = codProv(m[1].replace(/"/g, '')), v = +m[4];
+    if (cod && v > 200 && v < 20000) (P[cod] = P[cod] || []).push(v);
+  }
+  const valores = {};
+  for (const [cod, a] of Object.entries(P)) if (a.length >= 3) { a.sort((x, y) => x - y); valores[cod] = [a[Math.floor(a.length / 2)], a.length]; }
+  if (Object.keys(valores).length < 15) throw new Error('formato');
+  return { desde, valores };
+}
+async function redis(cmd) {
+  const limpia = v => (v || '').trim().replace(/^["']|["']$/g, '');
+  const url = limpia(process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL), token = limpia(process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN);
+  if (!url || !token) return null;
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmd), signal: AbortSignal.timeout(2500) });
+    return r.ok ? (await r.json()).result : null;
+  } catch { return null; }
+}
+async function provincias(req, res) {
+  let g = null;
+  try { g = JSON.parse(await redis(['GET', 'provincias:ultimo']) || 'null'); } catch {}
+  const fuentes = { autos: () => patentes('estadistica-de-tramites-de-automotores', 'Automotores'), motos: () => patentes('estadistica-de-tramites-de-motovehiculos', 'Motovehículos'),
+    cuentas: cuentasProvincias, exportaciones: exportacionesProvincias, nafta: naftaProvincias };
+  const claves = Object.keys(fuentes), rs = await Promise.allSettled(claves.map(k => fuentes[k]()));
+  const out = {}, mal = [];
+  rs.forEach((r, i) => { if (r.status === 'fulfilled') out[claves[i]] = r.value; else { mal.push(claves[i] + ': ' + r.reason?.message); if (g && g[claves[i]]) out[claves[i]] = g[claves[i]]; } });
+  if (mal.length) console.error('Provincias: ' + mal.join(' | '));
+  if (!Object.keys(out).length) return res.status(502).json({ error: 'No se pudieron leer los datos de las provincias' });
+  if (mal.length < claves.length) await redis(['SET', 'provincias:ultimo', JSON.stringify(out)]);
+  // Si falta una fuente y no hay copia, se vuelve a intentar pronto
+  res.setHeader('Cache-Control', claves.every(k => out[k]) ? 's-maxage=21600, stale-while-revalidate=604800' : 's-maxage=300');
+  return res.status(200).json(out);
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
   if (req.query.pbi) return pbi(req, res);
+  if (req.query.provincias) return provincias(req, res);
   if (req.query.crianza) return crianza(req, res);
   if (req.query.comercio) return comercio(req, res);
   if (req.query.fiscal) return fiscal(req, res);

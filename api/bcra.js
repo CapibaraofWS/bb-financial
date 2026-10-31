@@ -240,17 +240,18 @@ async function itcrm(res) {
   try {
     // El servidor corta algunas conexiones: se reintenta mientras quede tiempo (la función dura 30 s como máximo)
     const fin = Date.now() + 26000;
-    for (let b = null; !b && fin - Date.now() > 4000;) {
+    for (let i = 0, b = null; i < 6 && !b && fin - Date.now() > 4000; i++) {
       try {
         const r = await fetch('https://www.bcra.gob.ar/Pdfs/PublicacionesEstadisticas/ITCRMSerie.xlsx', { headers: { 'User-Agent': UA, Accept: '*/*' }, signal: AbortSignal.timeout(fin - Date.now()) });
         const x = r.ok ? Buffer.from(await r.arrayBuffer()) : null;
         if (x && x.subarray(0, 2).toString() === 'PK') b = x;
-      } catch { await new Promise(x => setTimeout(x, 300)); }
+      } catch {}
       if (b) {
         const d = { ...seriesItcrm(hojasXlsx(b)), revisado: Date.now() };
         await redis(['SET', 'itcrm:ultimo', JSON.stringify(d)]);
         return listo(d);
       }
+      await new Promise(x => setTimeout(x, 300));
     }
   } catch (e) { console.error('ITCRM: ' + e.message); }
   if (!g) return res.status(502).json({ error: 'No se pudo leer el tipo de cambio real del BCRA' });

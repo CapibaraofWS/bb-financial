@@ -711,11 +711,12 @@ async function getArMercado() {
   if (!CER[refF]) throw new Error('sin CER');
 
   // ---- Bonos CER
+  const operados = re => Object.keys(px).filter(s => re.test(s) && px[s].operado >= MINIMO_OPERADO);
+  const fichas = Object.fromEntries(await Promise.all([...operados(RE_CER).filter(s => !BONOS_CER[s]), ...operados(RE_DL)].map(async s => [s, await fichaByma(s).catch(() => null)])));
   let cer = [];
-  for (const sym of Object.keys(px).filter(s => RE_CER.test(s))) {
-    if (px[sym].operado < MINIMO_OPERADO) continue;
+  for (const sym of operados(RE_CER)) {
     let datos = BONOS_CER[sym], auto = false;
-    if (!datos) { const f = await fichaByma(sym).catch(() => null); if (!f || !f.cupon0) continue; datos = [f.emision, f.vence]; auto = true; }
+    if (!datos) { const f = fichas[sym]; if (!f || !f.cupon0) continue; datos = [f.emision, f.vence]; auto = true; }
     const [emision, vence] = datos, d = dias(vence), base = CER[atras(emision, 10)], { p } = px[sym];
     if (!(d >= 20) || !base) continue;
     const real = Math.pow(100 * CER[refF] / base / p, 365 / d) - 1;
@@ -735,9 +736,8 @@ async function getArMercado() {
 
   // ---- Dólar linked
   const dolar = [];
-  for (const sym of Object.keys(px).filter(s => RE_DL.test(s))) {
-    if (px[sym].operado < MINIMO_OPERADO) continue;
-    const ficha = await fichaByma(sym).catch(() => null);
+  for (const sym of operados(RE_DL)) {
+    const ficha = fichas[sym];
     if (!ficha || !ficha.cupon0) continue;
     const d = dias(ficha.vence), f = fija(d), { p } = px[sym];
     if (!(d >= 7) || f == null || !(p > 10000)) continue;

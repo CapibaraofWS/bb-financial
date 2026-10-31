@@ -80,6 +80,7 @@ var BB_GLIFO_DE = {
   'panel-energia': ['sol', '#e8c97a'],         'panel-cambiario': ['dolar', '#4ade9a'],
   'ajuste-alquiler': ['casa', '#64d2ff'],
   'ajuste-alquiler': ['casa', '#64d2ff'],       'panel-expectativas': ['subida', '#e8c97a'],
+  'panel-provincias': ['globo', '#60a5fa'],
   'calculadoras': ['calculadora', '#8e8e93'],
   'linea-de-pobreza': ['casa', '#ff9f7a'],      'panel-argentina': ['barras', '#64d2ff'],
   'panel-pobreza': ['barras', '#ff9f7a'],     'panel-precios': ['barras', '#e8c97a'],
