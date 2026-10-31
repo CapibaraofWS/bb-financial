@@ -982,29 +982,6 @@ async function exportacionesProvincias() {
   if (Object.keys(valores).length < 24) throw new Error('formato');
   return { periodo: ((tit.match(/(Primer|Segundo) semestre/) || tit.match(/A[nñ]o/) || [''])[0]).toLowerCase(), anio: parseInt(String(cab[ca]), 10), valores };
 }
-// Nafta súper: mediana de lo que declaran las estaciones (Res. 314/2016, Secretaría de Energía). Muchas no actualizan:
-// solo cuentan los precios de los últimos 60 días y las provincias con al menos 3 estaciones.
-async function naftaProvincias() {
-  const j = await fetch('https://datos.energia.gob.ar/api/3/action/package_show?id=precios-en-surtidor', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => r.json());
-  const url = j.result?.resources?.[0]?.url;
-  if (!url || !/^https?:\/\/datos\.energia\.gob\.ar\//.test(url)) throw new Error('sin archivo');
-  const x = await fetch(url.replace(/^http:/, 'https:'), { signal: AbortSignal.timeout(24000), headers: UA });
-  if (!x.ok || +(x.headers.get('content-length') || 0) > 3e7) throw new Error('archivo');
-  const t = await x.text();
-  const desde = new Date(Date.now() - 60 * 864e5).toISOString().slice(0, 10), P = {};
-  const campos = /^(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),((?:[^,"]*|"[^"]*")),(?:[^,"]*|"[^"]*"),(?:[^,"]*|"[^"]*"),((?:[^,"]*|"[^"]*")),([^,]*),(?:[^,"]*|"[^"]*"),([^,]*),([^,]*)/;
-  for (const l of t.split('\n')) {
-    if (!l.includes('súper')) continue;
-    const m = l.match(campos);
-    if (!m || m[3] !== '2' || !/^"?Nafta \(súper\)/.test(m[2]) || !(m[5] >= desde)) continue;
-    const cod = codProv(m[1].replace(/"/g, '')), v = +m[4];
-    if (cod && v > 200 && v < 20000) (P[cod] = P[cod] || []).push(v);
-  }
-  const valores = {};
-  for (const [cod, a] of Object.entries(P)) if (a.length >= 3) { a.sort((x, y) => x - y); valores[cod] = [a[Math.floor(a.length / 2)], a.length]; }
-  if (Object.keys(valores).length < 15) throw new Error('formato');
-  return { desde, valores };
-}
 async function redis(cmd) {
   const limpia = v => (v || '').trim().replace(/^["']|["']$/g, '');
   const url = limpia(process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL), token = limpia(process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN);
@@ -1018,7 +995,7 @@ async function provincias(req, res) {
   let g = null;
   try { g = JSON.parse(await redis(['GET', 'provincias:ultimo']) || 'null'); } catch {}
   const fuentes = { autos: () => patentes('estadistica-de-tramites-de-automotores', 'Automotores'), motos: () => patentes('estadistica-de-tramites-de-motovehiculos', 'Motovehículos'),
-    cuentas: cuentasProvincias, exportaciones: exportacionesProvincias, nafta: naftaProvincias };
+    cuentas: cuentasProvincias, exportaciones: exportacionesProvincias };
   const claves = Object.keys(fuentes), rs = await Promise.allSettled(claves.map(k => fuentes[k]()));
   const out = {}, mal = [];
   rs.forEach((r, i) => { if (r.status === 'fulfilled') out[claves[i]] = r.value; else { mal.push(claves[i] + ': ' + r.reason?.message); if (g && g[claves[i]]) out[claves[i]] = g[claves[i]]; } });

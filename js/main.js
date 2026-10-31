@@ -78,7 +78,6 @@ var BB_GLIFO_DE = {
   'panel-bcra': ['banco', '#60a5fa'],          'panel-presupuesto': ['torta', '#e8c97a'],
   'panel-energia': ['sol', '#e8c97a'],
   'panel-energia': ['sol', '#e8c97a'],         'panel-cambiario': ['dolar', '#4ade9a'],
-  'ajuste-alquiler': ['casa', '#64d2ff'],
   'ajuste-alquiler': ['casa', '#64d2ff'],       'panel-expectativas': ['subida', '#e8c97a'],
   'panel-provincias': ['globo', '#60a5fa'],
   'calculadoras': ['calculadora', '#8e8e93'],
