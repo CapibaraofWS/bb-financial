@@ -203,12 +203,70 @@ async function pagos(res) {
   return res.status(502).json({ error: 'No se pudo leer el informe de pagos del BCRA' });
 }
 
+// ?endpoint=ICL: Índice para Contratos de Locación (variable 40). Son más de 2.000 valores diarios: para ajustar un
+// alquiler alcanza con el del día 1 de cada mes y el último publicado (el BCRA lo publica por adelantado hasta el 16).
+async function icl(res) {
+  const r = await fetch('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/40?desde=2020-07-01&limit=3000', { signal: AbortSignal.timeout(12000) });
+  if (!r.ok) throw new Error('BCRA');
+  const s = ((await r.json()).results?.[0]?.detalle || []).filter(x => Number.isFinite(x.valor) && x.valor > 0).map(x => [x.fecha, x.valor]).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+  if (s.length < 1000) throw new Error('serie corta');
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=172800');
+  return res.status(200).json({ meses: s.filter(x => x[0].endsWith('-01')).map(x => [x[0].slice(0, 7), x[1]]), ultimo: s.at(-1) });
+}
+
+// ?endpoint=ITCRM: tipo de cambio real multilateral y bilaterales. No está en la API: sale del Excel del BCRA, que pesa
+// 3,6 MB y tarda en bajar. Se guarda en Redis y se revisa dos veces por día; si falla o cambia el formato, sigue el último bueno.
+const ITCRM_COLS = { itcrm: /^ITCRM/, brasil: /Brasil/, eeuu: /Estados Unidos/, china: /China/ };
+function seriesItcrm(hojas) {
+  const nombre = Object.keys(hojas), diaria = hojas[nombre.find(n => /^ITCRM y bilaterales$/.test(n.trim()))], mensual = hojas[nombre.find(n => /prom\. mens/.test(n))];
+  const fecha = v => new Date(Math.round((v - 25569) * 864e5)).toISOString().slice(0, 10);
+  const leer = filas => {
+    const cab = (filas || []).find(f => Object.values(f).some(v => /^Per[ií]odo/.test(v))) || {};
+    const col = Object.fromEntries(Object.entries(ITCRM_COLS).map(([k, re]) => [k, +Object.keys(cab).find(c => re.test(cab[c]))]));
+    if (Object.values(col).some(c => !c)) throw new Error('Cambió el Excel');
+    const k0 = +Object.keys(cab).find(c => /^Per[ií]odo/.test(cab[c]));
+    return filas.filter(f => f[k0] > 30000 && f[k0] < 60000 && Number.isFinite(f[col.itcrm])).map(f => [fecha(f[k0]), ...Object.values(col).map(c => (Number.isFinite(f[c]) ? Math.round(f[c] * 100) / 100 : null))]);
+  };
+  const m = leer(mensual).map(x => [x[0].slice(0, 7), ...x.slice(1)]), d = leer(diaria).at(-1);
+  const [a, b] = m.slice(-2).map(x => x[1]);
+  if (m.length < 300 || !d || b > a * 1.5 || b < a / 1.5 || d[1] > b * 1.5 || d[1] < b / 1.5) throw new Error('Valores raros');
+  return { mensual: m, ultimo: d };
+}
+async function itcrm(res) {
+  let g = null;
+  try { g = JSON.parse(await redis(['GET', 'itcrm:ultimo']) || 'null'); } catch {}
+  const listo = d => { res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=172800'); return res.status(200).json(d); };
+  if (g && Date.now() - g.revisado < 432e5) return listo(g);
+  try {
+    // El servidor corta algunas conexiones: se reintenta mientras quede tiempo (la función dura 30 s como máximo)
+    const fin = Date.now() + 26000;
+    for (let b = null; !b && fin - Date.now() > 4000;) {
+      try {
+        const r = await fetch('https://www.bcra.gob.ar/Pdfs/PublicacionesEstadisticas/ITCRMSerie.xlsx', { headers: { 'User-Agent': UA, Accept: '*/*' }, signal: AbortSignal.timeout(fin - Date.now()) });
+        const x = r.ok ? Buffer.from(await r.arrayBuffer()) : null;
+        if (x && x.subarray(0, 2).toString() === 'PK') b = x;
+      } catch { await new Promise(x => setTimeout(x, 300)); }
+      if (b) {
+        const d = { ...seriesItcrm(hojasXlsx(b)), revisado: Date.now() };
+        await redis(['SET', 'itcrm:ultimo', JSON.stringify(d)]);
+        return listo(d);
+      }
+    }
+  } catch (e) { console.error('ITCRM: ' + e.message); }
+  if (!g) return res.status(502).json({ error: 'No se pudo leer el tipo de cambio real del BCRA' });
+  g.revisado = Date.now();
+  await redis(['SET', 'itcrm:ultimo', JSON.stringify(g)]);
+  return listo(g);
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'bcra' })) return;
   const endpoint = req.query.endpoint || 'Monetarias';
   if (endpoint === 'Panel') return panel(res).catch(() => res.status(500).json({ error: 'No se pudo conectar con BCRA API' }));
   if (endpoint === 'Pagos') return pagos(res).catch(() => res.status(500).json({ error: 'No se pudo leer el informe de pagos del BCRA' }));
+  if (endpoint === 'ICL') return icl(res).catch(() => res.status(500).json({ error: 'No se pudo conectar con BCRA API' }));
+  if (endpoint === 'ITCRM') return itcrm(res).catch(() => res.status(500).json({ error: 'No se pudo leer el tipo de cambio real del BCRA' }));
 
   if (!ALLOWED.has(endpoint)) {
     return res.status(400).json({ error: 'Endpoint no permitido', validos: [...ALLOWED] });

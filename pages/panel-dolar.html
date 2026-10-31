@@ -16,8 +16,8 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Dólar hoy en la Argentina: bandas, brecha y reservas — BB Finanzas</title>
-  <meta name="description" content="El dólar en la Argentina con datos del Banco Central: el mayorista dentro de las bandas cambiarias, el oficial, MEP, contado con liqui y blue, la brecha, las reservas y las compras del BCRA. Se actualiza solo." />
+  <title>Dólar hoy en la Argentina: bandas, brecha, tipo de cambio real y reservas — BB Finanzas</title>
+  <meta name="description" content="El dólar en la Argentina con datos del Banco Central: el mayorista dentro de las bandas cambiarias, el oficial, MEP, contado con liqui y blue, la brecha, el tipo de cambio real, las reservas y las compras del BCRA. Se actualiza solo." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-dolar" />
   <meta property="og:type" content="website" />
@@ -37,6 +37,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"¿Qué son las bandas cambiarias?","acceptedAnswer":{"@type":"Answer","text":"Son un piso y un techo entre los que el dólar mayorista se mueve libremente. Si llega al techo, el Banco Central vende dólares; si llega al piso, compra. Los dos límites se ajustan todos los meses."}},
+    {"@type":"Question","name":"¿Qué es el tipo de cambio real?","acceptedAnswer":{"@type":"Answer","text":"Mide cuánto cuesta la Argentina comparada con otros países, ya descontada la inflación de acá y la de afuera. El índice multilateral del Banco Central la compara con sus principales socios comerciales, cada uno según cuánto comercia con la Argentina. Más alto quiere decir que el país está más barato en moneda extranjera; más bajo, más caro."}},
     {"@type":"Question","name":"¿Qué es la brecha cambiaria?","acceptedAnswer":{"@type":"Answer","text":"Es la diferencia porcentual entre un dólar financiero o paralelo, como el contado con liquidación o el blue, y el dólar oficial. Una brecha que se agranda suele indicar que más gente busca dólares por fuera del mercado oficial."}}
   ]}
   </script>
@@ -81,7 +82,7 @@
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar" aria-current="page">Dólar</a><a href="panel-cambiario">Flujo de dólares</a><a href="panel-tasas">Tasas</a><a href="panel-bcra">Banco Central</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-energia">Energía y minería</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-presupuesto">Presupuesto</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar" aria-current="page">Dólar</a><a href="panel-cambiario">Flujo de dólares</a><a href="panel-tasas">Tasas</a><a href="panel-bcra">Banco Central</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-energia">Energía y minería</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-presupuesto">Presupuesto</a><a href="panel-pobreza">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="ajuste-alquiler">Ajuste de alquiler</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a></nav>
 
       <div class="pa-grid" id="kpis">
         <article class="pa-card"><p class="que">Dólar mayorista (A 3500)</p><p class="grande">$1.514</p><p class="contexto">Mediados de octubre de 2026. Banco Central.</p></article>
@@ -127,6 +128,19 @@
         </section>
       </div>
 
+      <section class="pa-graf" aria-labelledby="g-tcr-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-tcr-t">El tipo de cambio real</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> cuánto cuesta la Argentina comparada con otros países, ya descontada la inflación de acá y la de afuera. Cuando la línea sube, el país queda más barato en moneda extranjera; cuando baja, más caro. La línea punteada es el promedio desde 1997. Estar arriba o abajo del promedio no dice por sí solo cuál es el valor correcto.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-tcr" data-titulo="Tipo de cambio real" data-fuente="BCRA">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-tcr"></div>
+        <div class="pa-seg" id="s-tcr" role="group" aria-label="Contra quién comparar">
+          <button type="button" data-v="1" aria-pressed="true">Principales socios</button><button type="button" data-v="2" aria-pressed="false">Brasil</button><button type="button" data-v="3" aria-pressed="false">Estados Unidos</button><button type="button" data-v="4" aria-pressed="false">China</button>
+        </div>
+        <div class="lienzo"><canvas id="g-tcr" aria-label="Índice de tipo de cambio real"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA, Índice de Tipo de Cambio Real Multilateral</a>. Promedio de cada mes, base 17 de diciembre de 2015 = 100.</p>
+      </section>
+
       <a class="pa-cta" href="blog/tipo-de-cambio-real-dolar-atrasado">
         <div><b>¿El dólar está atrasado?</b><span>Qué es el tipo de cambio real, qué hace el Banco Central cuando compra y los argumentos de cada lado del debate.</span></div>
         <span class="flecha">Leer →</span>
@@ -136,6 +150,7 @@
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Los dólares, uno por uno</h2>
         <p>El <strong>mayorista</strong> es el que usan los bancos y las empresas para operar entre ellos, y el Banco Central publica todos los días un valor de referencia (la Comunicación A 3500). El <strong>oficial minorista</strong> es el que cobra un banco a una persona. El <strong>MEP</strong> y el <strong>contado con liquidación</strong> se obtienen comprando y vendiendo bonos o acciones en la bolsa: el primero deja los dólares en una cuenta local y el segundo, afuera. El <strong>blue</strong> es el del mercado informal.</p>
         <details><summary>¿Cómo funcionan las bandas?</summary><p>El dólar mayorista flota entre un piso y un techo que se actualizan todos los meses. Dentro de ese rango no hay intervención obligatoria; en los bordes, el Banco Central vende o compra para que el precio no se salga. La distancia al techo es una forma de medir cuánto margen tiene el dólar para subir antes de que intervenga.</p></details>
+        <details><summary>¿Qué es el tipo de cambio real?</summary><p>Mide cuánto cuesta la Argentina comparada con otros países, ya descontada la inflación de acá y la de afuera. Si el dólar queda quieto y acá los precios suben más que afuera, el tipo de cambio real baja: el país se encarece en dólares. El índice multilateral la compara con sus principales socios comerciales, cada uno según cuánto comercia con la Argentina.</p></details>
         <details><summary>¿Por qué las reservas no suben lo mismo que las compras?</summary><p>Porque con las reservas también se pagan deudas, como vencimientos de bonos y cuotas al FMI, y porque su valor cambia con el precio del oro y de otras monedas. Comprar dólares suma, pero no es lo único que mueve el número. Lo explicamos en <a href="blog/tipo-de-cambio-real-dolar-atrasado">la nota sobre el tipo de cambio real</a>.</p></details>
         <details><summary>¿Dónde veo las cotizaciones de ahora?</summary><p>En <a href="comparador-dolares">Dólar hoy</a> están todos los tipos de dólar con su compra, venta y la brecha, actualizados varias veces por día.</p></details>
       </section>
@@ -153,7 +168,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=53"></script>
+  <script src="../js/main.js?v=54"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=20"></script>
@@ -260,6 +275,22 @@
                     y: { position: 'left', ticks: { color: '#9aa5b8', callback: v => Math.round(v / 1000) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } },
                     y2: { position: 'right', ticks: { color: '#4ade9a', callback: v => Math.round(v) + ' M' }, grid: { display: false }, beginAtZero: true } } }) });
     }
+
+    // ---- Tipo de cambio real: cada fila es [mes, multilateral, Brasil, Estados Unidos, China]
+    const R = await P.json('/api/bcra?endpoint=ITCRM');
+    if (R && R.mensual && R.mensual.length > 24) {
+      const M = R.mensual, u = M.at(-1), hace = M.find(x => x[0] === (+u[0].slice(0, 4) - 1) + u[0].slice(4)), prom = k => { const v = M.map(x => x[k]).filter(Number.isFinite); return v.reduce((a, b) => a + b, 0) / v.length; };
+      const media = prom(1), dd = R.ultimo, d = new Date(dd[0] + 'T12:00:00');
+      $('m-tcr').innerHTML = '<div><span>Índice contra los principales socios</span><b>' + num(dd[1]) + '</b><small>Al ' + d.getDate() + ' de ' + P.MESES[d.getMonth()] + ' (' + P.atraso(dd[0]) + '): el BCRA lo publica con atraso</small></div>' +
+        '<div><span>Contra el promedio desde 1997</span><b>' + P.signo((dd[1] / media - 1) * 100) + '%</b><small>Promedio: ' + num(media) + '</small></div>' +
+        (hace ? '<div><span>Contra un año atrás</span><b>' + P.signo((u[1] / hace[1] - 1) * 100) + '%</b><small>' + P.mesAnio(u[0]) + ' contra ' + P.mesAnio(hace[0]) + '</small></div>' : '');
+      if (typeof Chart !== 'undefined') {
+        const armar = k => { const m = prom(k); return [{ label: 'Tipo de cambio real', data: M.map(x => x[k]), borderColor: '#60a5fa', borderWidth: 2, pointRadius: 0, tension: 0.15 }, { label: 'Promedio desde 1997', data: M.map(() => m), borderColor: 'rgba(232,237,245,0.5)', borderDash: [5, 4], borderWidth: 1.5, pointRadius: 0 }]; };
+        const ch = new Chart($('g-tcr'), { type: 'line', data: { labels: M.map(x => P.mesAnio(x[0])), datasets: armar(1) },
+          options: P.ejes(v => num(v, 0), { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + num(c.parsed.y) } } } }) });
+        P.seg('s-tcr', v => { ch.data.datasets = armar(+v); ch.update(); });
+      }
+    } else $('m-tcr').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudo cargar el tipo de cambio real. Probá de nuevo en un rato.</p>';
   })();
   </script>
 </body>

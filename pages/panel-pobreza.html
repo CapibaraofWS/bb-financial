@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Pobreza en la Argentina hoy: datos del INDEC y la UTDT — BB Finanzas</title>
-  <meta name="description" content="Pobreza e indigencia en la Argentina: el último dato oficial del INDEC, la estimación mensual de la UTDT, la evolución desde 2016, por edad y por región, y el valor de las canastas básicas. Actualizado solo." />
+  <meta name="description" content="Pobreza e indigencia en la Argentina: el último dato oficial del INDEC, la estimación mensual de la UTDT, la evolución desde 2016, por edad y por región, el valor de las canastas básicas y cuánto cuesta criar a un chico. Actualizado solo." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-pobreza" />
   <meta property="og:type" content="website" />
@@ -38,6 +38,7 @@
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"¿Cómo mide el INDEC la pobreza?","acceptedAnswer":{"@type":"Answer","text":"Compara el ingreso total de cada hogar, que surge de la Encuesta Permanente de Hogares, con el valor de la canasta básica total que necesita ese hogar según cuántas personas lo forman y sus edades. Si el ingreso no alcanza esa canasta, todas las personas del hogar se cuentan como pobres. Si no alcanza ni la canasta alimentaria, son indigentes."}},
     {"@type":"Question","name":"¿Qué diferencia hay entre el dato del INDEC y el de la UTDT?","acceptedAnswer":{"@type":"Answer","text":"El INDEC publica la pobreza oficial dos veces por año, por semestre calendario. La Universidad Torcuato Di Tella estima todos los meses la pobreza de los últimos seis meses, proyectando la encuesta del INDEC con datos de ingresos y precios. Es una estimación anticipada, no un dato oficial."}},
+    {"@type":"Question","name":"¿Qué es la canasta de crianza?","acceptedAnswer":{"@type":"Answer","text":"Es lo que calcula el INDEC que cuesta por mes criar a un chico de hasta 12 años. Suma los bienes y servicios básicos, que salen de la canasta básica total del Gran Buenos Aires, y el costo del cuidado: las horas que hacen falta según la edad, valoradas con el sueldo de la categoría Asistencia y cuidado de personas de casas particulares."}},
     {"@type":"Question","name":"¿Cuánto necesita una familia para no ser pobre?","acceptedAnswer":{"@type":"Answer","text":"Depende de cuántas personas son y sus edades. En septiembre de 2026, un hogar de dos adultos y dos chicos de 6 y 8 años, el ejemplo que usa el INDEC, necesitaba $1.632.505 por mes en el Gran Buenos Aires para no ser pobre."}}
   ]}
   </script>
@@ -82,7 +83,7 @@
     </section>
 
     <div class="container" style="padding-bottom:4rem">
-      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-cambiario">Flujo de dólares</a><a href="panel-tasas">Tasas</a><a href="panel-bcra">Banco Central</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-energia">Energía y minería</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-presupuesto">Presupuesto</a><a href="panel-pobreza" aria-current="page">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a></nav>
+      <nav class="pa-sub" aria-label="Secciones del Panel Argentina"><a href="panel-argentina"><svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#74acdf"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e"/></svg>Resumen</a><a href="panel-precios">Precios</a><a href="panel-dolar">Dólar</a><a href="panel-cambiario">Flujo de dólares</a><a href="panel-tasas">Tasas</a><a href="panel-bcra">Banco Central</a><a href="panel-actividad">Actividad</a><a href="panel-sectores">Sectores</a><a href="panel-energia">Energía y minería</a><a href="panel-empleo">Empleo y salarios</a><a href="panel-comercio">Comercio exterior</a><a href="panel-fiscal">Cuentas públicas</a><a href="panel-presupuesto">Presupuesto</a><a href="panel-pobreza" aria-current="page">Pobreza</a><span class="sep" aria-hidden="true"></span><a href="linea-de-pobreza">Calculadora de pobreza</a><a href="ajuste-alquiler">Ajuste de alquiler</a><a href="sueldo-vs-promedio">Compará tu sueldo</a><span class="sep" aria-hidden="true"></span><a href="agenda-ar">Agenda AR</a><a href="visor-bonos-ar">Bonos AR</a></nav>
 
       <div class="pa-grid" id="kpis">
         <article class="pa-card"><p class="que">Pobreza · personas</p><p class="grande">32,3%</p><p class="contexto">Primer semestre de 2026. INDEC, 31 aglomerados urbanos.</p></article>
@@ -145,10 +146,24 @@
         <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-43-149" target="_blank" rel="noopener">INDEC, Valorización mensual de la CBA y la CBT</a>.</p>
       </section>
 
+      <section class="pa-graf" aria-labelledby="g-cri-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-cri-t">Cuánto cuesta criar a un chico</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> lo que calcula el INDEC que cuesta por mes un chico de cada edad. Suma los bienes y servicios básicos y el costo del cuidado: el tiempo que hace falta, aunque lo haga un familiar y no se pague. En "A lo largo del tiempo", los pesos de cada mes están pasados a pesos de hoy con la inflación.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-cri" data-titulo="Canasta de crianza por edad" data-fuente="INDEC">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-cri"></div>
+        <div class="pa-seg" id="s-cri" role="group" aria-label="Qué mostrar">
+          <button type="button" data-v="mes" aria-pressed="true">Este mes, por edad</button><button type="button" data-v="tiempo" aria-pressed="false">A lo largo del tiempo</button>
+        </div>
+        <div class="lienzo"><canvas id="g-cri" aria-label="Canasta de crianza por tramo de edad"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/4/43/173" target="_blank" rel="noopener">INDEC, Valorización mensual de la canasta de crianza</a>.</p>
+      </section>
+
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se mide la pobreza</h2>
         <p>La pobreza que publica el INDEC es <strong>por ingresos</strong>. Para cada hogar de la Encuesta Permanente de Hogares, compara lo que gana con lo que cuesta la <strong>canasta básica total</strong>: alimentos, ropa, transporte, educación, salud y otros gastos básicos. Si el ingreso no alcanza, todas las personas del hogar se cuentan como pobres. Si no alcanza ni para la <strong>canasta alimentaria</strong>, son indigentes.</p>
         <p>Como un chico no come lo mismo que un adulto, cada persona cuenta según sus necesidades: un varón de entre 30 y 60 años es un "adulto equivalente", una mujer de entre 30 y 45 años cuenta 0,77 y un chico de 6 años, 0,64. Por eso la línea de pobreza de cada hogar depende de quiénes lo forman.</p>
+        <details><summary>¿Qué es la canasta de crianza?</summary><p>Es lo que calcula el INDEC que cuesta por mes criar a un chico de hasta 12 años. Tiene dos partes. Los bienes y servicios salen de la canasta básica total del Gran Buenos Aires, ajustada por la edad. El cuidado son las horas que hacen falta según la edad y la escolaridad, valoradas con el sueldo de la categoría "Asistencia y cuidado de personas" de casas particulares. Es una referencia de un nivel básico, no lo que gasta cada familia.</p></details>
         <details><summary>¿Por qué la pobreza se publica por semestre?</summary><p>Porque la encuesta necesita una muestra grande para dar un número confiable del país. El INDEC junta dos trimestres y publica el resultado del semestre unos tres meses después de que termina. Por eso existen estimaciones que lo adelantan, como la de la UTDT.</p></details>
         <details><summary>¿Qué es el nowcast de la UTDT?</summary><p>Es una estimación que publica todos los meses el economista Martín González-Rozada, de la Universidad Torcuato Di Tella. Proyecta la encuesta del INDEC con datos más recientes de ingresos y de la canasta, y estima la pobreza de los últimos seis meses, con un margen de error. Es una referencia anticipada, no el dato oficial.</p></details>
         <details><summary>¿La pobreza por ingresos mide todo?</summary><p>No. Mide si el ingreso del mes alcanza para una canasta, no la calidad de la vivienda, el acceso a servicios o la situación de largo plazo. Hay otras mediciones, como las de necesidades básicas insatisfechas o la pobreza multidimensional, que miran esas otras dimensiones.</p></details>
@@ -170,7 +185,7 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=53"></script>
+  <script src="../js/main.js?v=54"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=20"></script>
@@ -253,6 +268,31 @@
           plugins: { legend: leyenda, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + P.pesos(c.parsed.y) } } },
           scales: { x: ejes.x, y: { ticks: { color: '#9aa5b8', callback: v => '$' + Math.round(v / 1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.05)' } } } } });
     }
+
+    // ---- Canasta de crianza: cada mes trae [bienes y servicios, cuidado, total] de cada tramo de edad
+    const [C, ipc] = await Promise.all([P.json('/api/indec?crianza=1'), P.API.ipc()]);
+    if (C && C.serie && C.serie.length > 12) {
+      const S = C.serie, u = S.at(-1), hace = S.find(x => x.p === (+u.p.slice(0, 4) - 1) + u.p.slice(4)), total = (x, i) => x.t[i][2];
+      const I = Object.fromEntries(((ipc && ipc.general) || []).map(x => [x.p, x.i])), iU = I[u.p] || I[Object.keys(I).sort().at(-1)];
+      $('m-cri').innerHTML = C.tramos.map((t, i) => '<div><span>' + esc(t) + '</span><b>' + P.pesos(total(u, i)) + '</b><small>' + P.mesAnio(u.p) + (hace ? ' · ' + P.signo((total(u, i) / total(hace, i) - 1) * 100) + '% en un año' : '') + '</small></div>').join('');
+      if (ok) {
+        let ch = null; const cv = $('g-cri'), plata = v => '$' + Math.round(v / 1000) + 'k';
+        const dibujar = v => {
+          if (ch) ch.destroy();
+          cv.dataset.ultimo = P.mesLargo(u.p);
+          ch = v === 'mes'
+            ? new Chart(cv, { type: 'bar', data: { labels: C.tramos, datasets: [
+                { label: 'Bienes y servicios', data: u.t.map(x => x[0]), backgroundColor: 'rgba(232,201,122,0.85)', stack: 'a' },
+                { label: 'Cuidado', data: u.t.map(x => x[1]), backgroundColor: 'rgba(96,165,250,0.85)', stack: 'a' } ] },
+              options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: leyenda, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + P.pesos(c.parsed.x) } } },
+                scales: { x: { stacked: true, ticks: { color: '#9aa5b8', callback: plata }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { stacked: true, ticks: { color: '#c9d1dd' }, grid: { display: false } } } } })
+            : new Chart(cv, { type: 'line', data: { labels: S.map(x => P.mesAnio(x.p)), datasets: C.tramos.map((t, i) => ({ label: t, data: S.map(x => (I[x.p] && iU ? total(x, i) * iU / I[x.p] : null)), borderColor: ['#ff9f7a', '#60a5fa', '#a78bfa', '#e8c97a'][i], pointRadius: 0, borderWidth: 2, tension: 0.2 })) },
+              options: P.ejes(plata, { plugins: { legend: leyenda, tooltip: { callbacks: { label: c => (c.parsed.y == null ? null : c.dataset.label + ': ' + P.pesos(c.parsed.y)) } } } }) });
+        };
+        dibujar('mes');
+        P.seg('s-cri', dibujar);
+      }
+    } else $('m-cri').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudo cargar la canasta de crianza. Probá de nuevo en un rato.</p>';
   })();
   </script>
 </body>

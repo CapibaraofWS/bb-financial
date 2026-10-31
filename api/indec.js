@@ -435,14 +435,18 @@ const IMIG_GAS = { jubilaciones: ['jubilaciones_pensiones_contributivas'], asign
   energia: ['energia'], transporte: ['transporte'], otrosSubsidios: ['otras_funciones'], salarios: ['salarios'], funcionamiento: ['otros_gastos_funcionamiento'],
   provincias: ['transferencias_corrientes_provincias_educacion', 'transferencias_corrientes_provincias_seguridad_social', 'transferencias_corrientes_provincias_desarrollo_social', 'transferencias_corrientes_provincias_salud', 'transferencias_corrientes_provincias_otras'],
   universidades: ['otros_corrientes_transferencias_universidades'], empresas: ['otros_corrientes_deficit_operativo_empresas_publicas'], otrosCorrientes: ['otros_corrientes_resto'], capital: ['capital_', 'fondo_federal_solidario'] };
-// PBI a precios corrientes del INDEC (millones de pesos, trimestral, en valores anualizados). El nombre del archivo cambia con cada informe.
-async function pibCorriente() {
+// Oferta y demanda globales del INDEC. El nombre del archivo cambia con cada informe.
+async function ofertaDemanda() {
   const tema = await fetch(INDEC + '/Nivel4/Tema/3/9/47', { signal: AbortSignal.timeout(10000), headers: UA }).then(r => (r.ok ? r.text() : ''));
   const ruta = (tema.match(/\/ftp\/cuadros\/economia\/sh_oferta_demanda_\d{2}_\d{2}\.xls/) || [])[0];
   if (!ruta) throw new Error('sin archivo');
   const x = await fetch(INDEC + ruta, { signal: AbortSignal.timeout(15000), headers: UA });
   if (!x.ok) throw new Error('archivo');
-  const s = (leerXls(Buffer.from(await x.arrayBuffer())).find(h => /^cuadro 8$/i.test(h.nombre.trim())) || {}).filas || [];
+  return leerXls(Buffer.from(await x.arrayBuffer()));
+}
+// PBI a precios corrientes del INDEC (millones de pesos, trimestral, en valores anualizados)
+async function pibCorriente() {
+  const s = ((await ofertaDemanda()).find(h => /^cuadro 8$/i.test(h.nombre.trim())) || {}).filas || [];
   const fila = s.find(r => r && String(r[1] || '').trim() === 'Producto Interno Bruto'), anios = s[3] || [], trims = s[4] || [];
   if (!fila) throw new Error('sin PBI');
   let anio = null; const out = [];
@@ -886,9 +890,55 @@ async function externo(req, res) {
   return res.status(200).json(out);
 }
 
+// ?pbi=1: el PBI y lo que lo forma, en millones de pesos de 2004 (cuadro 1 del archivo de oferta y demanda)
+const PBI_FILAS = { pbi: /^Producto Interno Bruto/, consumoPrivado: /^Consumo privado/, consumoPublico: /^Consumo público/, inversion: /^Formación bruta de capital fijo/, exportaciones: /^Exportaciones FOB/, importaciones: /^Importaciones FOB/ };
+async function pbi(req, res) {
+  try {
+    const s = ((await ofertaDemanda()).find(h => /^cuadro 1$/i.test(h.nombre.trim())) || {}).filas || [];
+    const t = s.findIndex(r => r && r.some(v => /^1º trimestre/.test(String(v ?? '')))), anios = s[t - 1] || [], trims = s[t] || [];
+    const cols = []; let anio = null;
+    trims.forEach((v, c) => { const a = parseInt(String(anios[c] ?? ''), 10); if (a > 2000) anio = a; const q = String(v ?? '').match(/^(\d)º trimestre/); if (anio && q) cols.push([c, anio + '-Q' + q[1]]); });
+    const filas = Object.fromEntries(Object.entries(PBI_FILAS).map(([k, re]) => { const r = s.find(x => x && re.test(String(x[1] ?? '').trim())); return [k, r ? cols.map(([c]) => (Number.isFinite(r[c]) ? Math.round(r[c]) : null)) : null]; }));
+    // Trimestres con todas las partes; "resto" es la variación de existencias y la discrepancia estadística
+    const ok = cols.map((_, i) => Object.values(filas).every(f => f && f[i] > 0));
+    const n = ok.lastIndexOf(true) + 1, resto = cols.slice(0, n).map((_, i) => filas.pbi[i] - filas.consumoPrivado[i] - filas.consumoPublico[i] - filas.inversion[i] - filas.exportaciones[i] + filas.importaciones[i]);
+    if (n < 60 || resto.some((v, i) => Math.abs(v) / filas.pbi[i] > 0.15)) throw new Error('formato');
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ fuente: 'INDEC, Oferta y demanda globales', trimestres: cols.slice(0, n).map(c => c[1]), ...Object.fromEntries(Object.entries(filas).map(([k, f]) => [k, f.slice(0, n)])), resto });
+  } catch {
+    return res.status(502).json({ error: 'No se pudo leer el PBI del INDEC' });
+  }
+}
+
+// ?crianza=1: canasta de crianza del INDEC por tramo de edad. Cada mes: [bienes y servicios, cuidado, total] de cada tramo.
+const CRIANZA_TRAMOS = ['Menor de 1 año', '1 a 3 años', '4 a 5 años', '6 a 12 años'];
+async function crianza(req, res) {
+  try {
+    const f = (await planillaIndec('/ftp/cuadros/sociedad/serie_canasta_crianza.xlsx'))[0]?.filas || [], txt = v => String(v ?? '').trim();
+    const cab = f.find(r => r && r.some(v => txt(v) === CRIANZA_TRAMOS[0])) || [], cols = CRIANZA_TRAMOS.map(t => cab.findIndex(v => txt(v) === t));
+    const sub = f.find(r => r && cols.every(c => txt(r[c + 1]) === 'Cuidado' && txt(r[c + 2]) === 'Total'));
+    if (!sub || cols.some(c => c < 0)) throw new Error('formato');
+    const serie = []; let anio = null;
+    for (const r of f) {
+      if (!r) continue;
+      if (Number.isInteger(r[0]) && r[0] > 2000) anio = r[0];
+      const m = MESES_ES.indexOf(txt(r[1]).toLowerCase());
+      if (!anio || m < 0 || !cols.every(c => r[c] > 0 && r[c + 1] > 0 && Math.abs(r[c] + r[c + 1] - r[c + 2]) < 2)) continue;
+      serie.push({ p: anio + '-' + String(m + 1).padStart(2, '0'), t: cols.map(c => [Math.round(r[c]), Math.round(r[c + 1]), Math.round(r[c + 2])]) });
+    }
+    if (serie.length < 24) throw new Error('formato');
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ fuente: 'INDEC, Valorización mensual de la canasta de crianza', tramos: CRIANZA_TRAMOS, serie });
+  } catch {
+    return res.status(502).json({ error: 'No se pudo leer la canasta de crianza del INDEC' });
+  }
+}
+
 export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
+  if (req.query.pbi) return pbi(req, res);
+  if (req.query.crianza) return crianza(req, res);
   if (req.query.comercio) return comercio(req, res);
   if (req.query.fiscal) return fiscal(req, res);
   if (req.query.salarios) return salarios(req, res);
