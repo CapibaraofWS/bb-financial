@@ -658,7 +658,8 @@ async function getYouTubeFeed() {
 // Dólar linked cero cupón: pagan 100 dólares al A3500, en pesos. Cada uno se compara con la curva a tasa fija
 // (LECAP y BONCAP) al mismo plazo: lo implícito es lo que deja indiferente entre una y otra. Solo dentro de esa curva.
 // [emisión, vencimiento]. Las fechas van a mano porque la ficha de BYMA erra por un día hábil en varios bonos
-// (TZXM7, TZXM8, TZXM9, TZXO7): se verificaron contra la TIREA de las licitaciones de Finanzas, que dan igual ±0,02.
+// (TZXM7, TZXM8, TZXM9, TZXO7). Esos, TZXS7, TZXS8, TZXY7 y X29E7 dan la TIREA de las licitaciones de Finanzas ±0,02;
+// los demás no tuvieron licitación en 2026 con qué compararlos y usan la fecha de BYMA.
 // Un bono nuevo que no esté acá entra con la fecha de BYMA, marcado, y se descarta si se aparta de los vecinos.
 // ============================================================
 const BONOS_CER = {
