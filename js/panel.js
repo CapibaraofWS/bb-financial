@@ -190,6 +190,14 @@ window.BBPanel = (function () {
           '<span class="nota">' + esc(i.nota || '') + (i.viene || i.valor ? '' : ' · informe ↗') + '</span></a>').join('') +
         '</div></div>';
     }).join('');
+    // En el celular la lista es vertical: se ven dos fechas pasadas y las que vienen; el resto queda a un toque
+    if (el.nextElementSibling && el.nextElementSibling.classList.contains('pa-mas-fechas')) el.nextElementSibling.remove();
+    if (matchMedia('(max-width: 640px)').matches && dias.length > 5) {
+      const nodos = [...el.children], de = dias.findIndex(d => d.fecha >= hoy), ini = Math.max(0, (de < 0 ? dias.length : de) - 2), fin = Math.min(dias.length, ini + 5);
+      nodos.forEach((n, i) => { n.hidden = i < ini || i >= fin; });
+      el.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-fechas">Ver todas las fechas (' + dias.length + ')</button>');
+      el.nextElementSibling.addEventListener('click', e => { nodos.forEach(n => { n.hidden = false; }); e.currentTarget.remove(); });
+    }
     // Que arranque mostrando el último dato publicado
     const ult = el.querySelectorAll('.pa-dia.paso');
     if (ult.length > 1 && el.scrollWidth > el.clientWidth) el.scrollLeft = Math.max(0, ult[ult.length - 2].offsetLeft - 8);

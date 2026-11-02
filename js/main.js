@@ -920,6 +920,30 @@ bbTrasCarga(function revelar() {
   } catch (e) { /* almacenamiento bloqueado o datos invalidos: no se hace nada */ }
 })();
 
+// Submenú de los paneles: en el celular, un botón con la sección actual que abre la lista completa.
+// Sin JavaScript queda la tira que se desliza de costado.
+document.addEventListener('DOMContentLoaded', function () {
+  var n = document.querySelector('.pa-sub');
+  if (!n) return;
+  var a = n.querySelector('[aria-current="page"]'), b = document.createElement('button'), t = document.createElement('span'), f = document.createElement('b'), v = document.createElement('span');
+  t.textContent = a ? 'Estás en ' : 'Secciones del panel';
+  f.textContent = a ? a.textContent.trim() : '';
+  t.appendChild(f);
+  v.className = 'ver';
+  v.textContent = 'Ver las ' + n.querySelectorAll('a').length + ' secciones ▾';
+  b.type = 'button';
+  b.className = 'pa-sub-abrir';
+  b.setAttribute('aria-expanded', 'false');
+  b.append(t, v);
+  b.addEventListener('click', function () {
+    var abierta = n.classList.toggle('abierta');
+    b.setAttribute('aria-expanded', String(abierta));
+    v.textContent = abierta ? 'Cerrar ▴' : 'Ver las ' + n.querySelectorAll('a').length + ' secciones ▾';
+  });
+  n.classList.add('plegable');
+  n.before(b);
+});
+
 // Submenú del Panel Argentina: en el celular la lista se desliza de costado; que arranque mostrando la sección actual
 document.addEventListener('DOMContentLoaded', function () {
   var a = document.querySelector('.pa-sub [aria-current="page"]');

@@ -245,6 +245,20 @@ a.ic-ev:hover { border-color: var(--t, var(--text-muted)); }
 .ic-mas:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
 @media (max-width: 640px) { .ic-dia { grid-template-columns: 52px minmax(0, 1fr); gap: 0.6rem; padding: 0.6rem; } .ic-evs { grid-template-columns: minmax(0, 1fr); } }
 @media (min-width: 900px) { .pa-sub { flex-wrap: wrap; overflow: visible; } .pa-sub .sep { align-self: auto; height: 26px; } }
+.pa-sub-abrir { display: none; }
+@media (max-width: 899px) {
+  .pa-sub-abrir { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; width: 100%; min-height: 48px; padding: 0.55rem 0.9rem; margin-bottom: 1rem; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); font-size: 0.86rem; text-align: left; cursor: pointer; }
+  .pa-sub-abrir b { color: var(--accent); font-weight: 500; }
+  .pa-sub-abrir .ver { flex: 0 0 auto; color: var(--text); font-size: 0.8rem; }
+  .pa-sub-abrir[aria-expanded="true"] { margin-bottom: 0.5rem; }
+  .pa-sub.plegable { display: none; }
+  .pa-sub.plegable.abierta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; overflow: visible; }
+  .pa-sub.plegable a { justify-content: center; text-align: center; white-space: normal; min-width: 0; padding: 0.45rem 0.5rem; font-size: 0.82rem; line-height: 1.2; }
+  .pa-sub.plegable .sep { grid-column: 1 / -1; height: 1px; margin: 0.15rem 0; }
+}
+.pa-dia[hidden] { display: none; }
+.pa-mas-fechas { display: block; width: 100%; min-height: 44px; margin-top: 0.3rem; border-radius: 12px; border: 1px dashed var(--border); color: var(--text-muted); font-size: 0.84rem; cursor: pointer; }
+.pa-mas-fechas:hover { color: var(--accent); }
 /* Tabla de rendimientos (Panel USA, mercados): en el celular se desliza de costado con la primera columna fija */
 .pa-tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.2rem; }
 .pa-tabla { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 560px; }

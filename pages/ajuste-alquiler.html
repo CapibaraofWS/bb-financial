@@ -37,6 +37,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"¿Qué índice usa mi contrato?","acceptedAnswer":{"@type":"Answer","text":"El que diga el contrato. El artículo 1199 del Código Civil y Comercial, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado. Los más usados son el IPC del INDEC y el ICL del Banco Central."}},
+    {"@type":"Question","name":"¿De dónde sale el número si el mes recién empieza?","acceptedAnswer":{"@type":"Answer","text":"Depende del índice. El Banco Central publica el ICL por adelantado, así que el valor del día 1 ya se conoce. Con el IPC, si el contrato toma los últimos meses publicados, el número también se conoce el día 1. Si toma el período completo, hay que esperar al dato del mes anterior, que el INDEC publica a mediados del mes."}},
     {"@type":"Question","name":"¿Qué es el ICL?","acceptedAnswer":{"@type":"Answer","text":"El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1."}},
     {"@type":"Question","name":"¿Por qué hay dos formas de contar los meses de inflación?","acceptedAnswer":{"@type":"Answer","text":"Porque el IPC de un mes se publica a mediados del mes siguiente. Si el ajuste es el día 1, la inflación del mes anterior todavía no salió: algunos contratos toman los últimos meses publicados y otros esperan el dato del período completo. Hay que mirar qué dice el contrato."}}
   ]}
@@ -68,6 +69,20 @@
     .aq-ley i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 0.3rem; vertical-align: -1px; border: 1px solid transparent; }
     .aq-txt2 { color: var(--text-muted); font-size: 0.9rem; line-height: 1.55; margin-top: 0.5rem; }
     .aq-txt2:empty { display: none; }
+    .aq-cuenta { margin-top: 0.7rem; padding: 0.6rem 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-size: 0.74rem; line-height: 1.5; color: var(--text-subtle); }
+    .aq-cuenta:empty { display: none; }
+    .aq-cuenta b { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.86rem; color: var(--text); overflow-wrap: anywhere; }
+    .aq-op { margin-top: 0.1rem; font-size: 0.82rem; color: var(--text-muted); }
+    .aq-op summary { cursor: pointer; min-height: 32px; }
+    .aq-op[hidden] { display: none; }
+    .aq-op .pa-seg { margin-top: 0.4rem; }
+    @media (max-width: 640px) {
+      .aq-fila { margin-bottom: 0.8rem; }
+      .aq-fila-cal { grid-template-columns: 2.1rem repeat(12, minmax(0, 1fr)); gap: 2px; }
+      .aq-m { height: 22px; font-size: 0.62rem; border-radius: 5px; }
+      .aq-ley { font-size: 0.66rem; gap: 0.2rem 0.6rem; margin-bottom: 0.6rem; }
+      #aq-cal-t { display: none; }
+    }
     .aq-pasos li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
     .aq-pasos li small { display: block; color: var(--text-subtle); font-size: 0.74rem; margin-top: 0.1rem; }
     .aq-pasos li span:last-child { font-family: var(--font-mono); white-space: nowrap; text-align: right; }
@@ -77,7 +92,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="../css/styles.css?v=20" />
-  <link rel="stylesheet" href="../css/panel.css?v=14" />
+  <link rel="stylesheet" href="../css/panel.css?v=15" />
 </head>
 <body>
   <header class="site-header">
@@ -139,13 +154,13 @@
           </div>
         </div>
 
-        <div class="aq-fila" id="aq-modo-f" style="margin-bottom:0">
-          <span class="pf-label" id="aq-modo-t">Qué meses de inflación toma</span>
-          <div class="pa-seg" id="aq-modo" role="group" aria-labelledby="aq-modo-t">
-            <button type="button" data-v="publicados" aria-pressed="true">Los últimos publicados</button><button type="button" data-v="periodo" aria-pressed="false">Los del período completo</button>
+        <details class="aq-op" id="aq-modo-f">
+          <summary>Qué meses de inflación cuenta: <span id="aq-modo-r">los últimos publicados</span></summary>
+          <div class="pa-seg" id="aq-modo" role="group" aria-label="Qué meses de inflación cuenta">
+            <button type="button" data-v="publicados" aria-pressed="true">Los últimos publicados</button><button type="button" data-v="periodo" aria-pressed="false">El período completo</button>
           </div>
           <p class="aq-nota" id="aq-modo-n"></p>
-        </div>
+        </details>
       </section>
 
       <section class="pf-card aq-res" aria-live="polite">
@@ -155,6 +170,7 @@
         <p class="aq-estado" id="aq-estado">Cargando los datos…</p>
         <p class="aq-num" id="aq-num">—</p>
         <p class="aq-txt" id="aq-txt"></p>
+        <div class="aq-cuenta" id="aq-cuenta"></div>
         <p class="aq-txt2" id="aq-txt2"></p>
         <ul class="aq-pasos" id="aq-pasos"></ul>
         <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.6" id="aq-fuente"></p>
@@ -169,6 +185,7 @@
       <p>Un ajuste es una multiplicación. Se toma el valor del índice al final del período, se lo divide por el valor al principio y ese resultado se multiplica por el alquiler. Por ejemplo, si el índice pasó de 100 a 106, el factor es 1,06: un alquiler de $500.000 queda en $530.000.</p>
       <p>Con el <strong>IPC</strong> se usa el índice de cada mes que publica el INDEC. Con el <strong>ICL</strong> se usa el valor del día 1 de cada mes que publica el Banco Central. Si tu contrato empezó otro día del mes, el número exacto puede cambiar un poco.</p>
       <details><summary>¿Qué índice usa mi contrato?</summary><p>El que diga el contrato. El <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/texact.htm" target="_blank" rel="noopener">artículo 1199 del Código Civil y Comercial</a>, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado. Si el tuyo usa otro, como Casa Propia, esta cuenta no aplica.</p></details>
+      <details><summary>¿De dónde sale el número si el mes recién empieza?</summary><p>Depende del índice. El Banco Central publica el <strong>ICL</strong> por adelantado, así que el valor del día 1 ya se conoce. Con el <strong>IPC</strong>, si el contrato toma los últimos meses publicados, el número también se conoce el día 1. Si toma el período completo, hay que esperar al dato del mes anterior, que el INDEC publica a mediados del mes: hasta entonces la calculadora dice "cifra provisoria".</p></details>
       <details><summary>¿Qué es el ICL?</summary><p>El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1. El método está en la <a href="https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7096.pdf" target="_blank" rel="noopener">Comunicación A 7096</a>.</p></details>
       <details><summary>¿Por qué hay dos formas de contar los meses de inflación?</summary><p>Porque el IPC de un mes se publica a mediados del mes siguiente. Si el ajuste es el 1 de abril, la inflación de marzo todavía no salió. Algunos contratos toman los últimos meses publicados (diciembre, enero y febrero); otros esperan el dato del período completo (enero, febrero y marzo). Hay que mirar qué dice el contrato.</p></details>
       <details><summary>¿Por qué dice que el número puede cambiar?</summary><p>Cuando faltan datos para llegar a la fecha del ajuste, la calculadora muestra lo acumulado hasta el último dato publicado. No proyecta la inflación que viene: cuando salga el dato, el número se actualiza solo.</p></details>
@@ -206,14 +223,14 @@
   </footer>
 
   <script src="../js/sanitize.js?v=1"></script>
-  <script src="../js/main.js?v=55"></script>
-  <script src="../js/panel.js?v=20"></script>
+  <script src="../js/main.js?v=56"></script>
+  <script src="../js/panel.js?v=21"></script>
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, pesos = P.pesos;
     const sumar = (ym, n) => { const [y, m] = ym.split('-').map(Number), t = y * 12 + m - 1 + n; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); };
     const hoy = P.hoyISO().slice(0, 7), est = { cada: 3, indice: 'ipc', modo: 'publicados' };
-    let ipc = {}, mensual = {}, icl = {}, proxIpc = null, cargado = false;
+    let ipc = {}, mensual = {}, icl = {}, iclHasta = null, proxIpc = null, cargado = false;
 
     // ---- Formulario. Arranca con un contrato cuyo ajuste cae este mes.
     const ini = sumar(hoy, -3), anioHoy = +hoy.slice(0, 4);
@@ -230,7 +247,7 @@
     // ---- Datos: índice del IPC por mes, valor del ICL el día 1 de cada mes y fecha del próximo IPC
     const [rIpc, rIcl, cal] = await Promise.all([P.API.ipc(), P.json('/api/bcra?endpoint=ICL'), P.API.calendario()]);
     ipc = Object.fromEntries(((rIpc && rIpc.general) || []).map(x => [x.p, x.i])); mensual = Object.fromEntries(((rIpc && rIpc.general) || []).map(x => [x.p, x.m]));
-    icl = Object.fromEntries((rIcl && rIcl.meses) || []); cargado = true;
+    icl = Object.fromEntries((rIcl && rIcl.meses) || []); iclHasta = rIcl && rIcl.ultimo && rIcl.ultimo[0]; cargado = true;
     proxIpc = cal && cal.eventos && cal.eventos.find(e => /^Índice de precios al consumidor/i.test(e.titulo) && e.fecha >= P.hoyISO());
     const ult = o => Object.keys(o).sort().at(-1), mes = ym => P.mesLargo(ym), Mes = ym => mes(ym).replace(/^./, c => c.toUpperCase());
 
@@ -257,8 +274,9 @@
       if (!cargado) return;
       const n = est.cada, esIcl = est.indice === 'icl', serie = esIcl ? icl : ipc, M = monto(), desde = $('aq-anio').value + '-' + $('aq-mes').value;
       $('aq-modo-f').hidden = esIcl;
+      $('aq-modo-r').textContent = est.modo === 'publicados' ? 'los últimos publicados' : 'el período completo';
       $('aq-modo-n').textContent = est.modo === 'publicados' ? 'Para un ajuste de abril, toma diciembre, enero y febrero: marzo todavía no salió el día 1.' : 'Para un ajuste de abril, toma enero, febrero y marzo: el número se conoce a mediados de abril.';
-      const fin = ult(serie), pone = (e, g, t, t2 = '', pasos = '', f = '') => { $('aq-estado').textContent = e; $('aq-num').textContent = g; $('aq-txt').textContent = t; $('aq-txt2').textContent = t2; $('aq-pasos').innerHTML = pasos; $('aq-fuente').innerHTML = f; };
+      const fin = ult(serie), pone = (e, g, t, t2 = '', pasos = '', f = '', c = '') => { $('aq-estado').textContent = e; $('aq-num').textContent = g; $('aq-txt').textContent = t; $('aq-cuenta').innerHTML = c; $('aq-txt2').textContent = t2; $('aq-pasos').innerHTML = pasos; $('aq-fuente').innerHTML = f; };
       if (desde <= hoy) calendario(desde, n); else { $('aq-cal').innerHTML = ''; $('aq-cal-t').textContent = ''; }
       if (!fin) return pone('Sin datos', '—', 'No se pudo cargar el índice. Probá de nuevo en un rato.');
       if (!M) return pone('Falta el monto', '—', 'Cargá el alquiler de ese mes.');
@@ -266,7 +284,10 @@
       if (esIcl && desde < '2020-07') return pone('Revisá la fecha', '—', 'El ICL empezó en julio de 2020. Elegí ese mes o uno posterior.');
       // Mes de inicio y de fin del índice para un ajuste en el mes a
       const ventana = a => (esIcl ? [sumar(a, -n), a] : est.modo === 'publicados' ? [sumar(a, -n - 2), sumar(a, -2)] : [sumar(a, -n - 1), sumar(a, -1)]);
-      const detalle = (d, h) => (esIcl ? 'ICL del 1 de ' + mes(d) + ': ' + num(icl[d], 2) + ' · del 1 de ' + mes(h) + ': ' + num(icl[h], 2) : 'Toma ' + [...Array(n).keys()].map(i => sumar(d, i + 1)).filter(x => mensual[x] != null).map(x => P.MES[+x.slice(5) - 1] + ' ' + P.signo(mensual[x]) + '%').join(' · '));
+      const meses = (d, h) => { const L = []; for (let x = sumar(d, 1); x <= h; x = sumar(x, 1)) if (mensual[x] != null) L.push(P.MES[+x.slice(5) - 1] + ' ' + P.signo(mensual[x]) + '%'); return L.join(' · '); };
+      const detalle = (d, h) => (esIcl ? 'ICL ' + num(icl[d], 2) + ' → ' + num(icl[h], 2) : meses(d, h));
+      // La cuenta con los números que usa: alquiler × índice final ÷ índice inicial
+      const cuenta = (base, d, h) => '<b>' + pesos(base) + ' × ' + num(serie[h], 2) + ' ÷ ' + num(serie[d], 2) + ' = ' + pesos(base * serie[h] / serie[d]) + '</b>' + (esIcl ? 'ICL del 1 de ' + mes(h) + ' ÷ ICL del 1 de ' + mes(d) : 'Índice de ' + mes(h) + ' ÷ índice de ' + mes(d) + '. Inflación de cada mes: ' + P.esc(meses(d, h)));
       // Los ajustes que ya llegaron, uno atrás del otro, hasta donde hay datos
       let a = sumar(desde, n), actual = M; const pasos = [];
       while (a <= hoy) {
@@ -279,22 +300,24 @@
       const lista = pasos.length > 1 ? '<li class="tit"><span>Ajuste por ajuste</span><span></span></li>' + pasos.map(p => '<li><span>' + Mes(p.a) + ' · ' + P.signo((p.f - 1) * 100) + '%<small>' + P.esc(detalle(p.d, p.h)) + '</small></span><span>' + pesos(p.actual) + '</span></li>').join('') : '';
       const fuente = (esIcl ? 'Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA, Índice para Contratos de Locación</a>, datos hasta ' + mes(fin) : 'Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank" rel="noopener">INDEC, Índice de precios al consumidor</a>, datos hasta ' + mes(fin)) + '.';
       const u = pasos.at(-1), [d, h] = ventana(a), completo = serie[d] && serie[h];
-      // Cuándo se conoce lo que falta
-      const cuando = esIcl ? 'El Banco Central publica el ICL a mediados de cada mes.' : proxIpc ? 'El próximo dato de inflación sale el ' + (+proxIpc.fecha.slice(8)) + ' de ' + P.MESES[+proxIpc.fecha.slice(5, 7) - 1] + '.' : '';
+      // Qué falta y cuándo se conoce
+      const falta = esIcl ? 'Falta el ICL del 1 de ' + mes(h) + '.' : 'Falta el IPC de ' + mes(sumar(fin, 1)) + '.';
+      const cuando = esIcl ? 'El Banco Central lo publica a mediados del mes anterior.' : proxIpc ? 'Sale el ' + (+proxIpc.fecha.slice(8)) + ' de ' + P.MESES[+proxIpc.fecha.slice(5, 7) - 1] + '.' : '';
+      const conocido = esIcl ? 'Es definitivo: el Banco Central publica el ICL por adelantado' + (iclHasta ? ', hoy hasta el ' + (+iclHasta.slice(8)) + ' de ' + P.MESES[+iclHasta.slice(5, 7) - 1] : '') + '.' : 'Es definitivo: usa hasta ' + mes(u ? u.h : h) + ', y ese dato ya está publicado.';
       const hasta = fin < h ? fin : h, parcial = !completo && serie[d] && hasta > d ? serie[hasta] / serie[d] : null;
       const proximo = completo ? 'El próximo ajuste es en ' + mes(a) + ': sube ' + num((serie[h] / serie[d] - 1) * 100) + '% y queda en ' + pesos(actual * serie[h] / serie[d]) + '.'
         : parcial ? 'El próximo ajuste es en ' + mes(a) + '. Hasta ' + mes(hasta) + ' acumula ' + P.signo((parcial - 1) * 100) + '%; el número final se conoce más adelante.'
-        : 'El próximo ajuste es en ' + mes(a) + '. Todavía no se publicó ninguno de los meses que toma.';
+        : 'El próximo ajuste es en ' + mes(a) + '. Todavía no se publicó ninguno de los datos que toma.';
 
       // 1. Este mes toca ajuste: es lo primero que se quiere saber
-      if (u && u.a === hoy) return pone('En ' + mes(hoy) + ' toca ajuste', pesos(u.actual), 'Sube ' + num((u.f - 1) * 100) + '% sobre ' + pesos(u.antes) + ': son ' + pesos(u.actual - u.antes) + ' más por mes. ' + detalle(u.d, u.h) + '.', proximo, lista, fuente);
+      if (u && u.a === hoy) return pone('En ' + mes(hoy) + ' toca ajuste', pesos(u.actual), 'Sube ' + num((u.f - 1) * 100) + '% sobre ' + pesos(u.antes) + ': son ' + pesos(u.actual - u.antes) + ' más por mes.', conocido + ' ' + proximo, lista, fuente, cuenta(u.antes, u.d, u.h));
       // 2. Ya llegó el mes del ajuste, pero falta el dato
-      if (a <= hoy) return pone('En ' + mes(a) + ' toca ajuste' + (parcial ? ' · cifra provisoria' : ''), parcial ? pesos(actual * parcial) : '—', (parcial ? 'Es lo que da con lo publicado: ' + P.signo((parcial - 1) * 100) + '% hasta ' + mes(hasta) + '. ' : 'Todavía falta el dato para calcularlo. ') + 'El número final va a cambiar. ' + cuando, '', lista, fuente);
+      if (a <= hoy) return pone('En ' + mes(a) + ' toca ajuste' + (parcial ? ' · cifra provisoria' : ''), parcial ? pesos(actual * parcial) : '—', (parcial ? 'Por ahora sube ' + num((parcial - 1) * 100) + '% sobre ' + pesos(actual) + '. ' : '') + falta + ' ' + cuando + ' Cuando salga, el número se actualiza solo.', '', lista, fuente, parcial ? cuenta(actual, d, hasta) : '');
       // 3. El próximo ajuste está por venir
       const hoyCobra = u ? 'Hoy corresponde ' + pesos(actual) + ', desde el ajuste de ' + mes(u.a) + '. ' : '';
-      if (completo) { const f = serie[h] / serie[d]; return pone('Próximo ajuste: ' + mes(a), pesos(actual * f), hoyCobra + 'Sube ' + num((f - 1) * 100) + '% sobre ' + pesos(actual) + ': son ' + pesos(actual * f - actual) + ' más por mes. ' + detalle(d, h) + '.', '', lista, fuente); }
-      if (parcial) return pone('Próximo ajuste: ' + mes(a) + ' · cifra provisoria', pesos(actual * parcial), hoyCobra + 'Es lo que da con lo publicado: ' + P.signo((parcial - 1) * 100) + '% hasta ' + mes(hasta) + '. El número final va a cambiar. ' + cuando, '', lista, fuente);
-      return pone('Próximo ajuste: ' + mes(a), pesos(actual), hoyCobra + 'Todavía no se publicó ninguno de los meses que toma ese ajuste. ' + cuando, '', lista, fuente);
+      if (completo) { const f = serie[h] / serie[d]; return pone('Próximo ajuste: ' + mes(a), pesos(actual * f), hoyCobra + 'Sube ' + num((f - 1) * 100) + '% sobre ' + pesos(actual) + ': son ' + pesos(actual * f - actual) + ' más por mes.', conocido, lista, fuente, cuenta(actual, d, h)); }
+      if (parcial) return pone('Próximo ajuste: ' + mes(a) + ' · cifra provisoria', pesos(actual * parcial), hoyCobra + 'Por ahora sube ' + num((parcial - 1) * 100) + '% sobre ' + pesos(actual) + '. ' + falta + ' ' + cuando + ' Cuando salga, el número se actualiza solo.', '', lista, fuente, cuenta(actual, d, hasta));
+      return pone('Próximo ajuste: ' + mes(a), pesos(actual), hoyCobra + 'Todavía no se publicó ninguno de los datos que toma ese ajuste. ' + cuando, '', lista, fuente);
     }
     calcular();
   })();
