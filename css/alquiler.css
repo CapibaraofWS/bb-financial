@@ -1,0 +1,59 @@
+/* Calculadora de alquiler: página principal y versión para insertar en otros sitios */
+.aq-app { display: grid; gap: 1rem; align-items: start; }
+@media (min-width: 860px) { .aq-app { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.aq-form, .aq-res { min-width: 0; padding: 1.25rem; }
+.aq-sel { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+.aq-sel select { width: 100%; min-width: 0; min-height: 44px; padding: 0.5rem 0.7rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; }
+.aq-sep { margin-top: 1rem; }
+.pa-seg.aq-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-radius: 14px; margin-bottom: 0.3rem; }
+.pa-seg#aq-cada { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.aq-chips button { min-height: 38px; padding: 0.3rem 0.2rem; border-radius: 10px; }
+.aq-nota { font-size: 0.76rem; color: var(--text-subtle); margin-top: 0.4rem; line-height: 1.5; }
+.aq-op { margin-top: 0.7rem; font-size: 0.82rem; color: var(--text-muted); }
+.aq-op summary, .aq-mas summary { cursor: pointer; min-height: 30px; font-size: 0.82rem; color: var(--text-muted); }
+.aq-op[hidden], .aq-mas[hidden], #aq-modo-f[hidden], .aq-sello[hidden], .aq-comp[hidden], .aq-cuenta[hidden], .aq-comp button[hidden] { display: none; }
+.aq-estado { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.aq-sello { padding: 0.12rem 0.5rem; border-radius: 999px; font-size: 0.64rem; letter-spacing: 0.04em; border: 1px solid currentColor; }
+.aq-sello.si { color: var(--accent); }
+.aq-sello.no { color: #e8c97a; }
+.aq-num { font-family: var(--font-display); font-size: clamp(2.4rem, 9vw, 3.1rem); line-height: 1.05; margin: 0.3rem 0 0.25rem; overflow-wrap: anywhere; color: var(--text); }
+.aq-txt { color: var(--text); font-size: 1rem; line-height: 1.5; }
+.aq-prox { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-top: 0.2rem; }
+.aq-prox:empty { display: none; }
+.aq-cal { display: grid; gap: 3px; margin: 0.8rem 0 0.4rem; }
+.aq-cal:empty, .aq-cal:empty + .aq-ley { display: none; }
+.aq-fila-cal { display: grid; grid-template-columns: 2.2rem repeat(12, minmax(0, 1fr)); gap: 2px; align-items: center; }
+.aq-fila-cal b { font-family: var(--font-mono); font-weight: 400; font-size: 0.7rem; color: var(--text-subtle); }
+.aq-m { display: grid; place-items: center; height: 22px; border-radius: 5px; border: 1px solid transparent; background: rgba(127,127,127,0.1); color: var(--text-subtle); font-family: var(--font-mono); font-size: 0.62rem; }
+.aq-m.hecho { background: rgba(74,222,154,0.16); color: var(--text-muted); }
+.aq-m.ajuste { background: var(--accent); color: var(--bg); font-weight: 500; }
+.aq-m.desde { border: 1px dashed var(--text-muted); color: var(--text); }
+.aq-m.hoy { box-shadow: 0 0 0 2px var(--text); }
+.aq-ley { display: flex; flex-wrap: wrap; gap: 0.15rem 0.7rem; font-size: 0.66rem; color: var(--text-subtle); margin-bottom: 0.5rem; }
+.aq-ley i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 0.25rem; vertical-align: -1px; }
+.aq-ley .c1 { background: var(--accent); } .aq-ley .c2 { background: rgba(74,222,154,0.16); } .aq-ley .c3 { border: 1px dashed var(--text-muted); } .aq-ley .c4 { box-shadow: 0 0 0 2px var(--text); }
+.aq-cuenta { margin-top: 0.4rem; padding: 0.55rem 0.7rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-size: 0.74rem; line-height: 1.5; color: var(--text-subtle); }
+.aq-cuenta b { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.84rem; color: var(--text); overflow-wrap: anywhere; }
+.aq-pasos { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.aq-pasos:empty { display: none; }
+.aq-pasos li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; border-top: 1px solid var(--border); font-size: 0.84rem; color: var(--text-muted); }
+.aq-pasos li.tit { font-size: 0.72rem; color: var(--text-subtle); }
+.aq-pasos li span:last-child { font-family: var(--font-mono); white-space: nowrap; color: var(--text); }
+.aq-nota a { color: var(--text-muted); }
+.aq-comp { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 0.35rem; margin-top: 0.7rem; }
+.aq-comp button { min-height: 38px; padding: 0.3rem 0.4rem; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 0.78rem; cursor: pointer; }
+.aq-comp button:hover { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+.aq-barra { display: none; }
+@media (max-width: 859px) {
+  .aq-barra:not([hidden]) { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60; padding: 0.55rem 0.9rem; border-radius: 12px; border: 1px solid rgba(74,222,154,0.4); background: var(--bg-card); box-shadow: 0 8px 24px rgba(0,0,0,0.45); color: var(--text-muted); font-size: 0.74rem; text-align: left; cursor: pointer; }
+  .aq-barra b { font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; color: var(--text); white-space: nowrap; }
+}
+.aq-codigo { margin-top: 0.7rem; padding: 0.8rem 0.9rem; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-mono); font-size: 0.74rem; line-height: 1.55; color: var(--text-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Versión para insertar: sin menú ni pie, con la marca a la vista */
+body.aq-mini { margin: 0; padding: 0.6rem; background: var(--bg); }
+body.aq-mini .aq-res { position: relative; overflow: hidden; }
+body.aq-mini .aq-res::after { content: 'BB Finanzas'; position: absolute; right: 0.6rem; top: 2.4rem; font-family: var(--font-display); font-size: 2.4rem; color: var(--text); opacity: 0.06; transform: rotate(-8deg); pointer-events: none; }
+body.aq-mini[data-tema="claro"] { --bg: #ffffff; --bg-card: #f5f6f8; --text: #14181f; --text-muted: #46505e; --text-subtle: #667080; --border: rgba(20,24,31,0.14); --accent: #0f8f58; --accent-dim: rgba(15,143,88,0.12); }
+.aq-marca { display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.6rem; padding: 0.3rem; font-size: 0.78rem; color: var(--text-subtle); text-decoration: none; }
+.aq-marca b { color: var(--accent); font-weight: 600; }

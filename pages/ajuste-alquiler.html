@@ -16,14 +16,14 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
-  <title>Calculadora de ajuste de alquiler por IPC o ICL — BB Finanzas</title>
-  <meta name="description" content="Cargá el alquiler, desde qué mes rige y cada cuánto ajusta: te muestra en qué mes toca el aumento y de cuánto es, con el IPC del INDEC o el ICL del Banco Central. Gratis y sin registro." />
+  <title>Calculadora de alquiler: aumento por IPC, ICL y otros índices — BB Finanzas</title>
+  <meta name="description" content="Calculá cuánto aumenta el alquiler y en qué mes toca: cargá el monto, el inicio del contrato y el índice (IPC, ICL, CER, UVA, salarios, RIPTE, IPIM o ICC). Gratis, sin registro y con los datos oficiales del mes." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/ajuste-alquiler" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="BB Finanzas" />
-  <meta property="og:title" content="¿Cuánto aumenta el alquiler y cuándo toca?" />
-  <meta property="og:description" content="Con el IPC del INDEC o el ICL del Banco Central, ajuste por ajuste y con los datos publicados." />
+  <meta property="og:title" content="¿Cuánto aumenta el alquiler? Calculadora con IPC, ICL y más índices" />
+  <meta property="og:description" content="Con IPC, ICL, CER, UVA, salarios, RIPTE, IPIM o ICC. Cargá el alquiler y mirá el mes del aumento y cuánto queda." />
   <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/ajuste-alquiler" />
   <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
   <meta property="og:locale" content="es_AR" />
@@ -37,56 +37,12 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"¿Qué índice usa mi contrato?","acceptedAnswer":{"@type":"Answer","text":"El que diga el contrato. El artículo 1199 del Código Civil y Comercial, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado. Los más usados son el IPC del INDEC y el ICL del Banco Central."}},
-    {"@type":"Question","name":"¿De dónde sale el número si el mes recién empieza?","acceptedAnswer":{"@type":"Answer","text":"Depende del índice. El Banco Central publica el ICL por adelantado, así que el valor del día 1 ya se conoce. Con el IPC, si el contrato toma los últimos meses publicados, el número también se conoce el día 1. Si toma el período completo, hay que esperar al dato del mes anterior, que el INDEC publica a mediados del mes."}},
+    {"@type":"Question","name":"¿De dónde sale el número si el mes recién empieza?","acceptedAnswer":{"@type":"Answer","text":"Depende del índice. El Banco Central publica el ICL, el CER y la UVA por adelantado, así que el valor del día 1 ya se conoce. Con los índices del INDEC, si el contrato toma los últimos datos publicados, el número también se conoce. Si toma el período completo, hay que esperar el dato del mes anterior."}},
     {"@type":"Question","name":"¿Qué es el ICL?","acceptedAnswer":{"@type":"Answer","text":"El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1."}},
-    {"@type":"Question","name":"¿Por qué hay dos formas de contar los meses de inflación?","acceptedAnswer":{"@type":"Answer","text":"Porque el IPC de un mes se publica a mediados del mes siguiente. Si el ajuste es el día 1, la inflación del mes anterior todavía no salió: algunos contratos toman los últimos meses publicados y otros esperan el dato del período completo. Hay que mirar qué dice el contrato."}}
+    {"@type":"Question","name":"¿Qué monto tengo que cargar?","acceptedAnswer":{"@type":"Answer","text":"El alquiler que se paga hoy. Si preferís cargar el monto con el que empezó el contrato, en Más opciones elegí El del inicio y hace todos los ajustes, uno atrás del otro."}}
   ]}
   </script>
-  <style>
-    .pf { min-width: 0; }
-    .aq-sel { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 0.5rem; margin-bottom: 1.1rem; }
-    .aq-sel select { width: 100%; min-width: 0; min-height: 44px; padding: 0.5rem 0.7rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; }
-    .aq-fila { margin-bottom: 1.1rem; }
-    .aq-fila .pa-seg { display: flex; flex-wrap: wrap; }
-    .aq-nota { font-size: 0.78rem; color: var(--text-subtle); margin-top: 0.5rem; line-height: 1.5; }
-    .aq-res { margin-top: 1.25rem; }
-    .aq-estado { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-    .aq-num { font-family: var(--font-display); font-size: clamp(2.2rem, 8vw, 3rem); line-height: 1.05; margin: 0.3rem 0 0.4rem; overflow-wrap: anywhere; }
-    .aq-txt { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
-    .aq-pasos { list-style: none; padding: 0; margin: 1rem 0 0; }
-    .aq-pasos:empty { display: none; }
-    .aq-pasos li.tit { font-size: 0.74rem; color: var(--text-subtle); }
-    .aq-cal { display: grid; gap: 4px; margin: 0.15rem 0 0.5rem; }
-    .aq-cal:empty { display: none; }
-    .aq-fila-cal { display: grid; grid-template-columns: 2.5rem repeat(12, minmax(0, 1fr)); gap: 3px; align-items: center; }
-    .aq-fila-cal b { font-family: var(--font-mono); font-weight: 400; font-size: 0.72rem; color: var(--text-subtle); }
-    .aq-m { display: grid; place-items: center; height: 26px; border-radius: 6px; border: 1px solid transparent; background: rgba(255,255,255,0.04); color: var(--text-subtle); font-family: var(--font-mono); font-size: 0.68rem; }
-    .aq-m.hecho { background: rgba(74,222,154,0.12); color: var(--text-muted); }
-    .aq-m.ajuste { background: var(--accent); color: var(--bg); font-weight: 500; }
-    .aq-m.desde { border: 1px dashed var(--text-muted); color: var(--text); }
-    .aq-m.hoy { box-shadow: 0 0 0 2px var(--text); }
-    .aq-ley { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; font-size: 0.72rem; color: var(--text-subtle); margin: 0 0 0.9rem; }
-    .aq-ley i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 0.3rem; vertical-align: -1px; border: 1px solid transparent; }
-    .aq-txt2 { color: var(--text-muted); font-size: 0.9rem; line-height: 1.55; margin-top: 0.5rem; }
-    .aq-txt2:empty { display: none; }
-    .aq-cuenta { margin-top: 0.7rem; padding: 0.6rem 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-size: 0.74rem; line-height: 1.5; color: var(--text-subtle); }
-    .aq-cuenta:empty { display: none; }
-    .aq-cuenta b { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.86rem; color: var(--text); overflow-wrap: anywhere; }
-    .aq-op { margin-top: 0.1rem; font-size: 0.82rem; color: var(--text-muted); }
-    .aq-op summary { cursor: pointer; min-height: 32px; }
-    .aq-op[hidden] { display: none; }
-    .aq-op .pa-seg { margin-top: 0.4rem; }
-    @media (max-width: 640px) {
-      .aq-fila { margin-bottom: 0.8rem; }
-      .aq-fila-cal { grid-template-columns: 2.1rem repeat(12, minmax(0, 1fr)); gap: 2px; }
-      .aq-m { height: 22px; font-size: 0.62rem; border-radius: 5px; }
-      .aq-ley { font-size: 0.66rem; gap: 0.2rem 0.6rem; margin-bottom: 0.6rem; }
-      #aq-cal-t { display: none; }
-    }
-    .aq-pasos li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
-    .aq-pasos li small { display: block; color: var(--text-subtle); font-size: 0.74rem; margin-top: 0.1rem; }
-    .aq-pasos li span:last-child { font-family: var(--font-mono); white-space: nowrap; text-align: right; }
-  </style>
+  <link rel="stylesheet" href="../css/alquiler.css?v=1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -120,77 +76,48 @@
   </header>
 
   <main>
-    <div class="container">
-    <div class="pf">
-      <div class="pf-hero" style="padding:0 1rem">
-        <div style="text-align:left"><a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a></div>
-        <p class="pa-eyebrow" style="text-align:center" data-bandera>Panel Argentina · Calculadora</p>
-        <h1>¿Cuánto aumenta el alquiler y cuándo toca?</h1>
-        <p>Cargá el monto, desde qué mes rige y cada cuánto ajusta. Te mostramos el mes del aumento y cuánto queda.</p>
-      </div>
+    <div class="container" style="padding-top:1.5rem">
+      <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
+      <h1 style="font-family:var(--font-display);font-weight:400;font-size:clamp(1.8rem,6vw,2.6rem);line-height:1.1;margin:0.6rem 0 0.3rem">¿Cuánto aumenta el alquiler?</h1>
+      <p style="color:var(--text-muted);margin:0 0 1rem">Cargá el alquiler, el inicio del contrato y el índice. Te decimos en qué mes toca el aumento y cuánto queda.</p>
 
-      <section class="pf-card" aria-label="Datos del contrato">
-        <label class="pf-label" for="aq-monto">Alquiler que se cobra o se paga por mes</label>
-        <div class="pf-monto"><span aria-hidden="true">$</span><input id="aq-monto" type="text" inputmode="numeric" autocomplete="off" value="500.000" /></div>
+      <div class="aq-app" id="aq-raiz"><p class="aq-nota">Cargando la calculadora…</p></div>
 
-        <span class="pf-label" id="aq-desde-t" style="margin-top:1.1rem">Desde qué mes rige ese monto</span>
-        <div class="aq-sel" role="group" aria-labelledby="aq-desde-t">
-          <select id="aq-mes" aria-label="Mes"></select>
-          <select id="aq-anio" aria-label="Año"></select>
+      <p style="font-size:0.76rem;color:var(--text-subtle);margin-top:0.8rem;line-height:1.6">Es una cuenta orientativa: vale lo que dice tu contrato, que puede usar otras fechas o redondear distinto. Los índices pueden revisarse. Lo que cargás queda en tu navegador, salvo que elijas compartirlo.</p>
+
+      <section class="pa-graf" aria-labelledby="g-aq-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-aq-t">Cuánto subió cada índice</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> arriba, la suba en 12 meses con el último dato de cada índice. En el gráfico, todos arrancan del mismo mes: cada línea llega hasta su último dato.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-aq" data-titulo="Cuánto subió cada índice" data-fuente="INDEC, BCRA y Secretaría de Trabajo">⬇ Imagen</button></div>
+        <div class="pa-mini" id="aq-cards"></div>
+        <div class="pa-seg" id="s-aq" role="group" aria-label="Período">
+          <button type="button" data-v="12" aria-pressed="true">12 meses</button><button type="button" data-v="24" aria-pressed="false">24 meses</button>
         </div>
-        <p class="aq-nota" style="margin:-0.6rem 0 1.1rem">Es el mes del último aumento, o el del inicio del contrato si todavía no hubo ninguno.</p>
-
-        <div class="aq-fila">
-          <span class="pf-label" id="aq-cada-t">Cada cuánto ajusta</span>
-          <div class="pa-seg" id="aq-cada" role="group" aria-labelledby="aq-cada-t">
-            <button type="button" data-v="3" aria-pressed="true">3 meses</button><button type="button" data-v="4" aria-pressed="false">4 meses</button><button type="button" data-v="6" aria-pressed="false">6 meses</button><button type="button" data-v="12" aria-pressed="false">12 meses</button>
-          </div>
-        </div>
-
-        <div class="aq-fila">
-          <span class="pf-label" id="aq-ind-t">Con qué índice</span>
-          <div class="pa-seg" id="aq-indice" role="group" aria-labelledby="aq-ind-t">
-            <button type="button" data-v="ipc" aria-pressed="true">IPC (inflación)</button><button type="button" data-v="icl" aria-pressed="false">ICL (Banco Central)</button>
-          </div>
-        </div>
-
-        <details class="aq-op" id="aq-modo-f">
-          <summary>Qué meses de inflación cuenta: <span id="aq-modo-r">los últimos publicados</span></summary>
-          <div class="pa-seg" id="aq-modo" role="group" aria-label="Qué meses de inflación cuenta">
-            <button type="button" data-v="publicados" aria-pressed="true">Los últimos publicados</button><button type="button" data-v="periodo" aria-pressed="false">El período completo</button>
-          </div>
-          <p class="aq-nota" id="aq-modo-n"></p>
-        </details>
+        <div class="lienzo"><canvas id="g-aq" aria-label="Variación acumulada de cada índice"></canvas></div>
+        <p class="fuente">Fuentes: <a href="https://www.indec.gob.ar/" target="_blank" rel="noopener">INDEC</a>, <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">Banco Central</a> y <a href="https://www.argentina.gob.ar/trabajo/seguridadsocial/ripte" target="_blank" rel="noopener">Secretaría de Trabajo</a>.</p>
       </section>
 
-      <section class="pf-card aq-res" aria-live="polite">
-        <div class="aq-cal" id="aq-cal" role="img"></div>
-        <div class="aq-ley" aria-hidden="true"><span><i style="background:var(--accent)"></i>Toca ajuste</span><span><i style="background:rgba(74,222,154,0.12)"></i>Ya ajustó</span><span><i style="border:1px dashed var(--text-muted)"></i>Rige el monto</span><span><i style="box-shadow:0 0 0 2px var(--text)"></i>Este mes</span></div>
-        <p class="aq-nota" id="aq-cal-t" style="margin:0 0 1rem"></p>
-        <p class="aq-estado" id="aq-estado">Cargando los datos…</p>
-        <p class="aq-num" id="aq-num">—</p>
-        <p class="aq-txt" id="aq-txt"></p>
-        <div class="aq-cuenta" id="aq-cuenta"></div>
-        <p class="aq-txt2" id="aq-txt2"></p>
-        <ul class="aq-pasos" id="aq-pasos"></ul>
-        <p style="font-size:0.75rem;color:var(--text-subtle);margin-top:0.9rem;line-height:1.6" id="aq-fuente"></p>
+      <section class="pa-graf" aria-labelledby="aq-sumar-t">
+        <h3 id="aq-sumar-t" style="margin-top:0">Sumá la calculadora a tu sitio</h3>
+        <p class="ayuda">Si tenés una inmobiliaria, un estudio o un blog, podés ponerla gratis en tu página. Copiá este código: se actualiza sola y muestra la marca de BB Finanzas.</p>
+        <div class="pa-seg" id="s-tema" role="group" aria-label="Color">
+          <button type="button" data-v="oscuro" aria-pressed="true">Oscura</button><button type="button" data-v="claro" aria-pressed="false">Clara</button>
+        </div>
+        <pre class="aq-codigo" id="aq-codigo"></pre>
+        <div class="aq-comp" style="max-width:220px"><button type="button" id="aq-copiar-codigo">Copiar el código</button></div>
       </section>
-
-      <p style="font-size:0.78rem;color:var(--text-subtle);text-align:center;margin-top:1rem;line-height:1.6;padding:0 1rem">Es una cuenta orientativa: lo que vale es lo que dice tu contrato, que puede usar otras fechas o redondear distinto. Los índices se revisan y pueden variar. La cuenta se hace en tu navegador: lo que cargás no se envía a ningún lado.</p>
-    </div>
     </div>
 
     <section class="container bb-faq" aria-labelledby="aq-como-t">
       <h2 id="aq-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
-      <p>Un ajuste es una multiplicación. Se toma el valor del índice al final del período, se lo divide por el valor al principio y ese resultado se multiplica por el alquiler. Por ejemplo, si el índice pasó de 100 a 106, el factor es 1,06: un alquiler de $500.000 queda en $530.000.</p>
-      <p>Con el <strong>IPC</strong> se usa el índice de cada mes que publica el INDEC. Con el <strong>ICL</strong> se usa el valor del día 1 de cada mes que publica el Banco Central. Si tu contrato empezó otro día del mes, el número exacto puede cambiar un poco.</p>
-      <details><summary>¿Qué índice usa mi contrato?</summary><p>El que diga el contrato. El <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/texact.htm" target="_blank" rel="noopener">artículo 1199 del Código Civil y Comercial</a>, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado. Si el tuyo usa otro, como Casa Propia, esta cuenta no aplica.</p></details>
-      <details><summary>¿De dónde sale el número si el mes recién empieza?</summary><p>Depende del índice. El Banco Central publica el <strong>ICL</strong> por adelantado, así que el valor del día 1 ya se conoce. Con el <strong>IPC</strong>, si el contrato toma los últimos meses publicados, el número también se conoce el día 1. Si toma el período completo, hay que esperar al dato del mes anterior, que el INDEC publica a mediados del mes: hasta entonces la calculadora dice "cifra provisoria".</p></details>
+      <p>Un ajuste es una multiplicación: se divide el valor del índice al final del período por el del principio y ese resultado se multiplica por el alquiler. Si el índice pasó de 100 a 106, un alquiler de $500.000 queda en $530.000. En "Ver la cuenta" están los números que usa cada ajuste.</p>
+      <details><summary>¿Qué índice usa mi contrato?</summary><p>El que diga el contrato. El <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/texact.htm" target="_blank" rel="noopener">artículo 1199 del Código Civil y Comercial</a>, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado.</p></details>
+      <details><summary>¿Qué monto tengo que cargar?</summary><p>El alquiler que se paga hoy. Si preferís cargar el monto con el que empezó el contrato, en "Más opciones" elegí "El del inicio" y hace todos los ajustes, uno atrás del otro. Si el ajuste cae este mes, cargá el monto anterior al aumento.</p></details>
+      <details><summary>¿De dónde sale el número si el mes recién empieza?</summary><p>Depende del índice. El Banco Central publica el ICL, el CER y la UVA por adelantado, así que el valor del día 1 ya se conoce. Con los índices del INDEC, si el contrato toma los últimos datos publicados, el número también se conoce. Si toma el período completo, hay que esperar el dato del mes anterior: hasta entonces la calculadora dice "Provisorio".</p></details>
       <details><summary>¿Qué es el ICL?</summary><p>El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1. El método está en la <a href="https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7096.pdf" target="_blank" rel="noopener">Comunicación A 7096</a>.</p></details>
-      <details><summary>¿Por qué hay dos formas de contar los meses de inflación?</summary><p>Porque el IPC de un mes se publica a mediados del mes siguiente. Si el ajuste es el 1 de abril, la inflación de marzo todavía no salió. Algunos contratos toman los últimos meses publicados (diciembre, enero y febrero); otros esperan el dato del período completo (enero, febrero y marzo). Hay que mirar qué dice el contrato.</p></details>
-      <details><summary>¿Por qué dice que el número puede cambiar?</summary><p>Cuando faltan datos para llegar a la fecha del ajuste, la calculadora muestra lo acumulado hasta el último dato publicado. No proyecta la inflación que viene: cuando salga el dato, el número se actualiza solo.</p></details>
-      <details><summary>Ya pasaron varios ajustes. ¿Lo calcula?</summary><p>Sí. Si el mes que cargaste es de hace más de un período, hace un ajuste atrás del otro y muestra cuánto quedó en cada uno.</p></details>
-      <details><summary>¿Si el ajuste cae este mes?</summary><p>Si el mes del ajuste es el actual, ese es el resultado principal: cuánto queda el alquiler y cuánto sube. Abajo aparece el ajuste siguiente, con lo que se conozca hasta ese momento.</p></details>
+      <details><summary>Mi contrato usa Casa Propia o CAC. ¿Sirve?</summary><p>Por ahora no están, porque no encontramos una fuente que se actualice sola y sea confiable. Preferimos no mostrar un número que no podamos controlar. El ICC de la lista es el del INDEC: no es el mismo que el de la Cámara de la Construcción.</p></details>
+      <details><summary>¿Por qué el ICL usa el día 1?</summary><p>El ICL, el CER y la UVA se publican día por día. La calculadora usa el valor del día 1 de cada mes: si el contrato empezó otro día, el número exacto puede cambiar un poco.</p></details>
     </section>
 
     <aside class="related-reads">
@@ -206,7 +133,7 @@
       </li>
       <li>
         <a href="inflacion">Calculadora de inflación</a>
-        <p>Cuánto vale hoy un precio de otro año, con el IPC del INDEC.</p>
+        <p>Cuánto vale hoy un precio de otro año, y Mi inflación según tu gasto.</p>
       </li>
       </ul>
     </aside>
@@ -224,103 +151,22 @@
 
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=56"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
+  <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=21"></script>
+  <script src="../js/alquiler.js?v=1"></script>
   <script>
-  (async function () {
-    const P = BBPanel, $ = id => document.getElementById(id), num = P.num, pesos = P.pesos;
-    const sumar = (ym, n) => { const [y, m] = ym.split('-').map(Number), t = y * 12 + m - 1 + n; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); };
-    const hoy = P.hoyISO().slice(0, 7), est = { cada: 3, indice: 'ipc', modo: 'publicados' };
-    let ipc = {}, mensual = {}, icl = {}, iclHasta = null, proxIpc = null, cargado = false;
-
-    // ---- Formulario. Arranca con un contrato cuyo ajuste cae este mes.
-    const ini = sumar(hoy, -3), anioHoy = +hoy.slice(0, 4);
-    $('aq-mes').innerHTML = P.MESES.map((m, i) => '<option value="' + String(i + 1).padStart(2, '0') + '">' + m.replace(/^./, c => c.toUpperCase()) + '</option>').join('');
-    for (let y = anioHoy; y >= 2020; y--) $('aq-anio').insertAdjacentHTML('beforeend', '<option value="' + y + '">' + y + '</option>');
-    $('aq-mes').value = ini.slice(5); $('aq-anio').value = ini.slice(0, 4);
-    const monto = () => Number($('aq-monto').value.replace(/\D/g, '')) || 0;
-    $('aq-monto').addEventListener('input', e => { const v = monto(); e.target.value = v ? Math.min(v, 1e10).toLocaleString('es-AR') : ''; calcular(); });
-    ['aq-mes', 'aq-anio'].forEach(id => $(id).addEventListener('change', () => calcular()));
-    P.seg('aq-cada', v => { est.cada = +v; calcular(); });
-    P.seg('aq-indice', v => { est.indice = v; calcular(); });
-    P.seg('aq-modo', v => { est.modo = v; calcular(); });
-
-    // ---- Datos: índice del IPC por mes, valor del ICL el día 1 de cada mes y fecha del próximo IPC
-    const [rIpc, rIcl, cal] = await Promise.all([P.API.ipc(), P.json('/api/bcra?endpoint=ICL'), P.API.calendario()]);
-    ipc = Object.fromEntries(((rIpc && rIpc.general) || []).map(x => [x.p, x.i])); mensual = Object.fromEntries(((rIpc && rIpc.general) || []).map(x => [x.p, x.m]));
-    icl = Object.fromEntries((rIcl && rIcl.meses) || []); iclHasta = rIcl && rIcl.ultimo && rIcl.ultimo[0]; cargado = true;
-    proxIpc = cal && cal.eventos && cal.eventos.find(e => /^Índice de precios al consumidor/i.test(e.titulo) && e.fecha >= P.hoyISO());
-    const ult = o => Object.keys(o).sort().at(-1), mes = ym => P.mesLargo(ym), Mes = ym => mes(ym).replace(/^./, c => c.toUpperCase());
-
-    // Una fila de cajitas por año: el mes del monto, los ajustes pasados y los que vienen
-    function calendario(desde, n) {
-      const hasta = (anioHoy + 1) + '-12', ajustes = new Set();
-      for (let a = sumar(desde, n); a <= hasta; a = sumar(a, n)) ajustes.add(a);
-      const prim = Math.max(+desde.slice(0, 4), anioHoy - 1), filas = [];
-      for (let y = prim; y <= anioHoy + 1; y++) {
-        const cajas = P.MES.map((m, i) => {
-          const p = y + '-' + String(i + 1).padStart(2, '0'), c = ajustes.has(p) ? (p < hoy ? 'hecho' : 'ajuste') : '';
-          const que = (p === desde ? 'Rige el monto. ' : '') + (ajustes.has(p) ? 'Toca ajuste. ' : '') + (p === hoy ? 'Este mes.' : '');
-          return '<span class="aq-m ' + c + (p === hoy ? ' hoy' : '') + (p === desde ? ' desde' : '') + '" title="' + Mes(p) + (que ? ': ' + que.trim() : '') + '">' + m.charAt(0).toUpperCase() + '</span>';
-        }).join('');
-        filas.push('<div class="aq-fila-cal"><b>' + y + '</b>' + cajas + '</div>');
-      }
-      $('aq-cal').innerHTML = filas.join('');
-      const vienen = [...ajustes].filter(a => a >= hoy).slice(0, 3).map(mes);
-      $('aq-cal').setAttribute('aria-label', 'Meses de ajuste: ' + vienen.join(', '));
-      $('aq-cal-t').textContent = vienen.length ? 'Toca ajuste en ' + vienen.slice(0, -1).join(', ') + (vienen.length > 1 ? ' y ' : '') + vienen.at(-1) + '.' : '';
-    }
-
-    function calcular() {
-      if (!cargado) return;
-      const n = est.cada, esIcl = est.indice === 'icl', serie = esIcl ? icl : ipc, M = monto(), desde = $('aq-anio').value + '-' + $('aq-mes').value;
-      $('aq-modo-f').hidden = esIcl;
-      $('aq-modo-r').textContent = est.modo === 'publicados' ? 'los últimos publicados' : 'el período completo';
-      $('aq-modo-n').textContent = est.modo === 'publicados' ? 'Para un ajuste de abril, toma diciembre, enero y febrero: marzo todavía no salió el día 1.' : 'Para un ajuste de abril, toma enero, febrero y marzo: el número se conoce a mediados de abril.';
-      const fin = ult(serie), pone = (e, g, t, t2 = '', pasos = '', f = '', c = '') => { $('aq-estado').textContent = e; $('aq-num').textContent = g; $('aq-txt').textContent = t; $('aq-cuenta').innerHTML = c; $('aq-txt2').textContent = t2; $('aq-pasos').innerHTML = pasos; $('aq-fuente').innerHTML = f; };
-      if (desde <= hoy) calendario(desde, n); else { $('aq-cal').innerHTML = ''; $('aq-cal-t').textContent = ''; }
-      if (!fin) return pone('Sin datos', '—', 'No se pudo cargar el índice. Probá de nuevo en un rato.');
-      if (!M) return pone('Falta el monto', '—', 'Cargá el alquiler de ese mes.');
-      if (desde > hoy) return pone('Revisá la fecha', '—', 'Ese mes todavía no llegó. Elegí el mes desde el que rige ese monto.');
-      if (esIcl && desde < '2020-07') return pone('Revisá la fecha', '—', 'El ICL empezó en julio de 2020. Elegí ese mes o uno posterior.');
-      // Mes de inicio y de fin del índice para un ajuste en el mes a
-      const ventana = a => (esIcl ? [sumar(a, -n), a] : est.modo === 'publicados' ? [sumar(a, -n - 2), sumar(a, -2)] : [sumar(a, -n - 1), sumar(a, -1)]);
-      const meses = (d, h) => { const L = []; for (let x = sumar(d, 1); x <= h; x = sumar(x, 1)) if (mensual[x] != null) L.push(P.MES[+x.slice(5) - 1] + ' ' + P.signo(mensual[x]) + '%'); return L.join(' · '); };
-      const detalle = (d, h) => (esIcl ? 'ICL ' + num(icl[d], 2) + ' → ' + num(icl[h], 2) : meses(d, h));
-      // La cuenta con los números que usa: alquiler × índice final ÷ índice inicial
-      const cuenta = (base, d, h) => '<b>' + pesos(base) + ' × ' + num(serie[h], 2) + ' ÷ ' + num(serie[d], 2) + ' = ' + pesos(base * serie[h] / serie[d]) + '</b>' + (esIcl ? 'ICL del 1 de ' + mes(h) + ' ÷ ICL del 1 de ' + mes(d) : 'Índice de ' + mes(h) + ' ÷ índice de ' + mes(d) + '. Inflación de cada mes: ' + P.esc(meses(d, h)));
-      // Los ajustes que ya llegaron, uno atrás del otro, hasta donde hay datos
-      let a = sumar(desde, n), actual = M; const pasos = [];
-      while (a <= hoy) {
-        const [d, h] = ventana(a);
-        if (!serie[d] || !serie[h]) break;
-        const antes = actual; actual *= serie[h] / serie[d];
-        pasos.push({ a, f: serie[h] / serie[d], antes, actual, d, h });
-        a = sumar(a, n);
-      }
-      const lista = pasos.length > 1 ? '<li class="tit"><span>Ajuste por ajuste</span><span></span></li>' + pasos.map(p => '<li><span>' + Mes(p.a) + ' · ' + P.signo((p.f - 1) * 100) + '%<small>' + P.esc(detalle(p.d, p.h)) + '</small></span><span>' + pesos(p.actual) + '</span></li>').join('') : '';
-      const fuente = (esIcl ? 'Fuente: <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA, Índice para Contratos de Locación</a>, datos hasta ' + mes(fin) : 'Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank" rel="noopener">INDEC, Índice de precios al consumidor</a>, datos hasta ' + mes(fin)) + '.';
-      const u = pasos.at(-1), [d, h] = ventana(a), completo = serie[d] && serie[h];
-      // Qué falta y cuándo se conoce
-      const falta = esIcl ? 'Falta el ICL del 1 de ' + mes(h) + '.' : 'Falta el IPC de ' + mes(sumar(fin, 1)) + '.';
-      const cuando = esIcl ? 'El Banco Central lo publica a mediados del mes anterior.' : proxIpc ? 'Sale el ' + (+proxIpc.fecha.slice(8)) + ' de ' + P.MESES[+proxIpc.fecha.slice(5, 7) - 1] + '.' : '';
-      const conocido = esIcl ? 'Es definitivo: el Banco Central publica el ICL por adelantado' + (iclHasta ? ', hoy hasta el ' + (+iclHasta.slice(8)) + ' de ' + P.MESES[+iclHasta.slice(5, 7) - 1] : '') + '.' : 'Es definitivo: usa hasta ' + mes(u ? u.h : h) + ', y ese dato ya está publicado.';
-      const hasta = fin < h ? fin : h, parcial = !completo && serie[d] && hasta > d ? serie[hasta] / serie[d] : null;
-      const proximo = completo ? 'El próximo ajuste es en ' + mes(a) + ': sube ' + num((serie[h] / serie[d] - 1) * 100) + '% y queda en ' + pesos(actual * serie[h] / serie[d]) + '.'
-        : parcial ? 'El próximo ajuste es en ' + mes(a) + '. Hasta ' + mes(hasta) + ' acumula ' + P.signo((parcial - 1) * 100) + '%; el número final se conoce más adelante.'
-        : 'El próximo ajuste es en ' + mes(a) + '. Todavía no se publicó ninguno de los datos que toma.';
-
-      // 1. Este mes toca ajuste: es lo primero que se quiere saber
-      if (u && u.a === hoy) return pone('En ' + mes(hoy) + ' toca ajuste', pesos(u.actual), 'Sube ' + num((u.f - 1) * 100) + '% sobre ' + pesos(u.antes) + ': son ' + pesos(u.actual - u.antes) + ' más por mes.', conocido + ' ' + proximo, lista, fuente, cuenta(u.antes, u.d, u.h));
-      // 2. Ya llegó el mes del ajuste, pero falta el dato
-      if (a <= hoy) return pone('En ' + mes(a) + ' toca ajuste' + (parcial ? ' · cifra provisoria' : ''), parcial ? pesos(actual * parcial) : '—', (parcial ? 'Por ahora sube ' + num((parcial - 1) * 100) + '% sobre ' + pesos(actual) + '. ' : '') + falta + ' ' + cuando + ' Cuando salga, el número se actualiza solo.', '', lista, fuente, parcial ? cuenta(actual, d, hasta) : '');
-      // 3. El próximo ajuste está por venir
-      const hoyCobra = u ? 'Hoy corresponde ' + pesos(actual) + ', desde el ajuste de ' + mes(u.a) + '. ' : '';
-      if (completo) { const f = serie[h] / serie[d]; return pone('Próximo ajuste: ' + mes(a), pesos(actual * f), hoyCobra + 'Sube ' + num((f - 1) * 100) + '% sobre ' + pesos(actual) + ': son ' + pesos(actual * f - actual) + ' más por mes.', conocido, lista, fuente, cuenta(actual, d, h)); }
-      if (parcial) return pone('Próximo ajuste: ' + mes(a) + ' · cifra provisoria', pesos(actual * parcial), hoyCobra + 'Por ahora sube ' + num((parcial - 1) * 100) + '% sobre ' + pesos(actual) + '. ' + falta + ' ' + cuando + ' Cuando salga, el número se actualiza solo.', '', lista, fuente, cuenta(actual, d, hasta));
-      return pone('Próximo ajuste: ' + mes(a), pesos(actual), hoyCobra + 'Todavía no se publicó ninguno de los datos que toma ese ajuste. ' + cuando, '', lista, fuente);
-    }
-    calcular();
-  })();
+    BBAlquiler.montar({ raiz: 'aq-raiz', abrirCuenta: matchMedia('(min-width: 860px)').matches });
+    (function () {
+      const codigo = document.getElementById('aq-codigo');
+      const armar = t => '<iframe title="Calculadora de alquiler de BB Finanzas" src="https://www.bbfinanzas.com.ar/pages/alquiler-mini' + (t === 'claro' ? '?tema=claro' : '') + '" width="100%" height="680" style="border:0;max-width:980px" loading="lazy" allow="clipboard-write; web-share"></iframe>\n<p><a href="https://www.bbfinanzas.com.ar/pages/ajuste-alquiler">Calculadora de alquiler de BB Finanzas</a></p>';
+      codigo.textContent = armar('oscuro');
+      BBPanel.seg('s-tema', v => { codigo.textContent = armar(v); });
+      document.getElementById('aq-copiar-codigo').addEventListener('click', async e => {
+        const b = e.currentTarget;
+        try { await navigator.clipboard.writeText(codigo.textContent); b.textContent = 'Copiado'; setTimeout(() => { b.textContent = 'Copiar el código'; }, 1800); } catch (err) { prompt('Copiá este código:', codigo.textContent); }
+      });
+    })();
   </script>
 </body>
 </html>

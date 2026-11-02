@@ -203,15 +203,21 @@ async function pagos(res) {
   return res.status(502).json({ error: 'No se pudo leer el informe de pagos del BCRA' });
 }
 
-// ?endpoint=ICL: Índice para Contratos de Locación (variable 40). Son más de 2.000 valores diarios: para ajustar un
-// alquiler alcanza con el del día 1 de cada mes y el último publicado (el BCRA lo publica por adelantado hasta el 16).
+// ?endpoint=ICL: índices para ajustar alquileres que publica el BCRA: ICL (40), CER (30) y UVA (31). Son miles de valores
+// diarios: alcanza con el del día 1 de cada mes y el último publicado (el BCRA los publica por adelantado). Sin el ICL no responde.
 async function icl(res) {
-  const r = await fetch('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/40?desde=2020-07-01&limit=3000', { signal: AbortSignal.timeout(12000) });
-  if (!r.ok) throw new Error('BCRA');
-  const s = ((await r.json()).results?.[0]?.detalle || []).filter(x => Number.isFinite(x.valor) && x.valor > 0).map(x => [x.fecha, x.valor]).sort((a, b) => (a[0] < b[0] ? -1 : 1));
-  if (s.length < 1000) throw new Error('serie corta');
-  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=172800');
-  return res.status(200).json({ meses: s.filter(x => x[0].endsWith('-01')).map(x => [x[0].slice(0, 7), x[1]]), ultimo: s.at(-1) });
+  const serie = async id => {
+    const r = await fetch('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/' + id + '?desde=2020-01-01&limit=3000', { signal: AbortSignal.timeout(12000) });
+    if (!r.ok) throw new Error('BCRA');
+    const s = ((await r.json()).results?.[0]?.detalle || []).filter(x => Number.isFinite(x.valor) && x.valor > 0).map(x => [x.fecha, x.valor]).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    if (s.length < 1000) throw new Error('serie corta');
+    return s;
+  };
+  const [s, cer, uva] = await Promise.allSettled([serie(40), serie(30), serie(31)]);
+  if (s.status !== 'fulfilled') throw new Error('ICL');
+  const meses = x => x.filter(f => f[0].endsWith('-01')).map(f => [f[0].slice(0, 7), f[1]]);
+  res.setHeader('Cache-Control', cer.status === 'fulfilled' && uva.status === 'fulfilled' ? 's-maxage=21600, stale-while-revalidate=172800' : 's-maxage=300');
+  return res.status(200).json({ meses: meses(s.value), ultimo: s.value.at(-1), cer: cer.status === 'fulfilled' ? meses(cer.value) : null, uva: uva.status === 'fulfilled' ? meses(uva.value) : null });
 }
 
 // ?endpoint=ITCRM y ?endpoint=IPMP: tipo de cambio real y precios de materias primas. No están en la API: salen de Excel del
