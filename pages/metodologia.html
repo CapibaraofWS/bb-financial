@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-adsense-account" content="ca-pub-4539395552565638">
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
+  <title>Cómo calculamos: metodología y fuentes de BB Finanzas</title>
+  <meta name="description" content="De dónde salen los datos de BB Finanzas, con qué fórmulas se calcula cada herramienta, cómo se controla que estén bien y cómo se corrigen los errores." />
+  <meta name="keywords" content="metodología BB Finanzas, fuentes de datos, cómo se calcula, INDEC, BCRA, calculadoras financieras Argentina" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/metodologia" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Finanzas" />
+  <meta property="og:title" content="Cómo calculamos: metodología y fuentes de BB Finanzas" />
+  <meta property="og:description" content="De dónde salen los datos de BB Finanzas, con qué fórmulas se calcula cada herramienta, cómo se controla que estén bien y cómo se corrigen los errores." />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/metodologia" />
+  <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cómo calculamos: metodología y fuentes de BB Finanzas" />
+  <meta name="twitter:description" content="De dónde salen los datos de BB Finanzas, con qué fórmulas se calcula cada herramienta, cómo se controla que estén bien y cómo se corrigen los errores." />
+  <meta name="twitter:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Cómo calculamos — BB Finanzas","url":"https://www.bbfinanzas.com.ar/pages/metodologia","inLanguage":"es-AR","description":"De dónde salen los datos de BB Finanzas, con qué fórmulas se calcula cada herramienta, cómo se controla que estén bien y cómo se corrigen los errores.","dateModified":"2026-11-02","isPartOf":{"@id":"https://www.bbfinanzas.com.ar/#sitio"},"publisher":{"@id":"https://www.bbfinanzas.com.ar/#organizacion"},"author":{"@type":"Person","@id":"https://www.bbfinanzas.com.ar/#bruno","name":"Bruno Behr","url":"https://www.bbfinanzas.com.ar/pages/sobre-el-proyecto"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Sobre el proyecto","item":"https://www.bbfinanzas.com.ar/pages/sobre-el-proyecto"},{"@type":"ListItem","position":3,"name":"Cómo calculamos","item":"https://www.bbfinanzas.com.ar/pages/metodologia"}]}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/styles.css?v=20" />
+  <style>
+    .sp-wrap { max-width: 760px; margin: 0 auto; }
+    .sp-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem 1.75rem; margin-bottom: 1.25rem; }
+    .sp-block h2 { font-family: var(--font-display); font-size: 1.35rem; margin: 0 0 0.9rem; color: var(--text); }
+    .sp-block p { color: var(--text-read, var(--text-muted)); line-height: 1.75; margin-bottom: 0.9rem; }
+    .sp-block p:last-child { margin-bottom: 0; }
+    .sp-block ul { margin: 0 0 0.9rem; padding-left: 1.2rem; color: var(--text-read, var(--text-muted)); line-height: 1.75; }
+    .sp-block li { margin-bottom: 0.45rem; }
+    .sp-block a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed rgba(74,222,154,0.4); }
+    .sp-block a:hover { border-bottom-style: solid; }
+
+    .sp-persona { display: flex; gap: 1.1rem; align-items: flex-start; flex-wrap: wrap; }
+    .sp-avatar {
+      width: 60px; height: 60px; flex: 0 0 60px; border-radius: 14px;
+      background: var(--accent-dim); border: 1px solid rgba(74,222,154,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.5rem; color: var(--accent);
+    }
+    .sp-persona-datos { flex: 1; min-width: 220px; }
+    .sp-nombre { font-family: var(--font-display); font-size: 1.25rem; color: var(--text); margin-bottom: 0.15rem; }
+    .sp-rol { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 0.75rem; }
+    .sp-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.9rem; }
+    .sp-links a {
+      display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px;
+      padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text-muted); font-size: 0.86rem; text-decoration: none;
+    }
+    .sp-links a:hover { border-color: var(--border-hover); color: var(--text); }
+
+    .sp-fuentes { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.7rem; margin-top: 0.4rem; }
+    .sp-fuente { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 0.95rem; }
+    .sp-fuente strong { display: block; color: var(--text); font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .sp-fuente span { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+    .sp-no { border-color: rgba(255,184,77,0.25); background: rgba(255,184,77,0.05); }
+    .sp-no h2 { color: #ffb84d; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="logo" aria-label="BB Finanzas - Inicio"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav">
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="empezar-a-invertir" class="nav-link">Empezar a invertir</a>
+        <a href="inflacion" class="nav-link">Inflación</a>
+        <a href="comparador-plazos-fijos" class="nav-link">Plazo fijo</a>
+        <a href="comparador-tasas" class="nav-link">Tasas</a>
+        <a href="comparador-dolares" class="nav-link">Dólar</a>
+        <a href="agenda-ar" class="nav-link">Agenda AR</a>
+        <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
+        <a href="datos" class="nav-link">Mercados globales</a>
+        <a href="panel-argentina" class="nav-link">Panel Argentina</a>
+        <a href="blog" class="nav-link">Blog</a>
+        <a href="atlas" class="nav-link">Atlas</a>
+        <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
+        <a href="contacto" class="nav-link">Contacto</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="page-breadcrumb"><a href="../">Inicio</a><span>/</span><a href="sobre-el-proyecto">Sobre el proyecto</a><span>/</span>Cómo calculamos</p>
+        <h1 class="page-title">Cómo calculamos</h1>
+        <p class="page-subtitle">De dónde salen los datos de BB Finanzas, con qué fórmulas se calcula cada herramienta, cómo se controla que estén bien y cómo se corrigen los errores.</p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:1.5rem;padding-bottom:6rem">
+      <div class="sp-wrap">
+
+        <div class="sp-block">
+          <h2>Las reglas del sitio</h2>
+          <ul>
+            <li><strong>Cada dato dice de dónde sale y de qué fecha es.</strong> Muchos organismos publican con atraso: el sitio lo muestra en vez de esconderlo.</li>
+            <li><strong>Lo que no se publicó no se inventa.</strong> Si falta un dato, se muestra lo último conocido con su fecha. Las calculadoras no proyectan inflación ni dólar futuros.</li>
+            <li><strong>Si una fuente falla, queda el último dato bueno.</strong> Cuando un organismo se cae o cambia un archivo, el sitio sigue con el dato anterior o avisa que no pudo cargar, nunca con un número estimado.</li>
+            <li><strong>Las fórmulas son las estándar del tema</strong> y cada herramienta aclara sus supuestos y límites.</li>
+            <li><strong>No se recomienda comprar ni vender nada.</strong> El sitio muestra números y explica cómo leerlos. No es asesoramiento financiero.</li>
+          </ul>
+        </div>
+
+        <div class="sp-block">
+          <h2>De dónde sale cada dato</h2>
+          <p>Los datos salen de organismos oficiales y del mercado, directamente o a través de servicios públicos que los redistribuyen.</p>
+          <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.88rem;color:var(--text-muted)">
+            <thead><tr><th style="text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);color:var(--text-subtle);font-weight:400">Tema</th><th style="text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);color:var(--text-subtle);font-weight:400">Fuente</th><th style="text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);color:var(--text-subtle);font-weight:400">Cada cuánto</th></tr></thead>
+            <tbody>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Inflación, canastas, pobreza, actividad, PBI, comercio exterior</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top"><a href="https://www.indec.gob.ar/" target="_blank" rel="noopener">INDEC</a></td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Según su calendario oficial</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Dólar oficial, reservas, tasas, CER, ICL, tipo de cambio real, REM</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top"><a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">Banco Central</a></td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Diario o mensual</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Dólar MEP, contado con liquidación y blue, riesgo país, plazos fijos</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">ArgentinaDatos</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Diario</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Precios de bonos y letras</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">BYMA, vía data912 y ArgentinaDatos</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Durante la rueda, con demora</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Condiciones de los bonos</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Secretaría de Finanzas, prospectos y BYMA</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Con cada emisión</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Cuentas públicas, deuda y provincias</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Secretarías de Hacienda y de Finanzas</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Mensual, trimestral o anual</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Empleo y salarios</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Secretaría de Trabajo (SIPA), INDEC y RIPTE</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Mensual</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Patentamientos</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Registro de la Propiedad del Automotor</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Mensual</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Confianza del consumidor y estimación mensual de pobreza</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Universidad Torcuato Di Tella</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Mensual</td></tr>
+              <tr><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Estados Unidos</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">BLS, BEA, Reserva Federal (FRED) y Tesoro</td><td style="padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:top">Según cada organismo</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="sp-block">
+          <h2>Cómo se calcula</h2>
+          <ul>
+            <li><strong>Inflación.</strong> Valor de hoy = monto × índice de precios de hoy ÷ índice del mes de origen. Las fuentes de cada período están en <a href="inflacion#fuentes">la calculadora</a>.</li>
+            <li><strong>Mi inflación.</strong> Suma de la suba de 12 meses de cada rubro del INDEC, según el reparto de gasto que carga cada persona. Es una aproximación.</li>
+            <li><strong>Ajuste de alquiler.</strong> Alquiler nuevo = alquiler × índice final ÷ índice inicial, con el IPC o el ICL.</li>
+            <li><strong>Línea de pobreza.</strong> Canasta del INDEC × adultos equivalentes del hogar, con su tabla oficial.</li>
+            <li><strong>Bonos en dólares.</strong> La TIR es la tasa que iguala el precio con el valor presente de los cupones y amortizaciones del prospecto de cada bono.</li>
+            <li><strong>LECAP y BONCAP.</strong> Tasa que surge de comparar el precio con el pago al vencimiento.</li>
+            <li><strong>Bonos CER.</strong> Pagan 100 ajustado por el CER de 10 días hábiles antes de la emisión y del vencimiento. La tasa real sale de comparar ese valor con el precio.</li>
+            <li><strong>Inflación y dólar implícitos.</strong> Lo que deja igual a un bono CER o dólar linked y a uno a tasa fija del mismo plazo. No es un pronóstico.</li>
+          </ul>
+        </div>
+
+        <div class="sp-block">
+          <h2>Cómo se controla</h2>
+          <p>Antes de publicar un dato o una fórmula nueva, el resultado se compara con el informe oficial. Algunos ejemplos:</p>
+          <ul>
+            <li><strong>Bonos CER:</strong> la tasa real se comparó con la que publica la Secretaría de Finanzas. En 8 bonos y 14 resultados de licitaciones de 2026, la diferencia fue de menos de 0,03 puntos.</li>
+            <li><strong>Canasta de crianza:</strong> los valores de septiembre de 2026 se compararon con el informe del INDEC de ese mes.</li>
+            <li><strong>Pagos minoristas:</strong> las variaciones de transferencias, pagos con QR y extracciones se compararon con el informe del Banco Central.</li>
+          </ul>
+          <p>Además, cuando se agrega una fuente se simula qué pasa si se cae o si cambia el archivo.</p>
+        </div>
+
+        <div class="sp-block">
+          <h2>Qué se carga a mano</h2>
+          <p>Casi todo se actualiza solo. Lo que se carga a mano sale de una fuente oficial y se revisa cuando cambia la norma:</p>
+          <ul>
+            <li>Las escalas de Ganancias y las categorías de monotributo.</li>
+            <li>El calendario de pagos de los bonos, según sus prospectos.</li>
+            <li>Las fechas de emisión de los bonos CER. Un bono nuevo que todavía no se verificó aparece marcado con un asterisco.</li>
+          </ul>
+        </div>
+
+        <div class="sp-block">
+          <h2>Errores y correcciones</h2>
+          <p>Si encontrás un número que no cierra, escribí a <a href="mailto:bb.financial10@gmail.com">bb.financial10@gmail.com</a> o por <a href="contacto">cualquiera de estas vías</a>. Se revisa contra la fuente original y, si está mal, se corrige.</p>
+        </div>
+
+        <div class="sp-block">
+          <h2>Quién lo hace</h2>
+          <p>BB Finanzas es un proyecto personal de <a href="sobre-el-proyecto">Bruno Behr</a>. No hay detrás una empresa, un banco ni un broker, y ninguna herramienta está patrocinada. El sitio es gratis y puede mostrar anuncios para sostenerse. Más detalle en la <a href="privacidad">política de privacidad</a> y los <a href="terminos">términos</a>.</p>
+          <p style="font-size:0.82rem;color:var(--text-subtle)">Última revisión de esta página: 2 de noviembre de 2026.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <p>Herramientas financieras gratuitas para tomar mejores decisiones con tu dinero.</p>
+      </div>
+      <nav class="footer-nav">
+        <h3>El proyecto</h3>
+        <ul>
+          <li><a href="sobre-el-proyecto">Sobre el proyecto</a></li>
+          <li><a href="calculadoras">Calculadoras</a></li>
+          <li><a href="conceptos">Conceptos básicos</a></li>
+          <li><a href="blog">Blog</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p style="font-weight:500"><strong style="color:#ffb84d">⚠ Aviso legal:</strong> Este sitio es <strong>educativo</strong>. La información NO constituye asesoramiento financiero, recomendación de inversión ni oferta de compra/venta de instrumentos. Consultá siempre a un asesor matriculado en CNV antes de invertir.</p><p style="margin-top:0.5rem;font-size:0.74rem;color:var(--text-subtle)">Datos de mercado en vivo de fuentes públicas, con posibles retrasos respecto al tiempo real. © 2026 BB Finanzas · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=55"></script>
+  <script src="../js/esqueletos.js?v=2" defer></script>
+</body>
+</html>

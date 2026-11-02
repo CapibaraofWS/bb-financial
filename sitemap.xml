@@ -385,6 +385,12 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://www.bbfinanzas.com.ar/pages/metodologia</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.bbfinanzas.com.ar/pages/sobre-el-proyecto</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>

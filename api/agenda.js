@@ -533,6 +533,20 @@ async function getArPesos() {
       }
       return b;
     }).filter(Boolean);
+    // Una letra recién emitida tarda días en aparecer en ArgentinaDatos (S26F7, 30/10/2026). Si ya se opera, el pago sale de la
+    // ficha de BYMA: TEM capitalizable desde la emisión, con días 30/360 (así da el 156,03 del T30J7).
+    const listadas = new Set(letras.letras.map(l => l.ticker));
+    for (const sym of Object.keys(px).filter(s => /^[ST]\d{2}[A-Z]\d$/.test(s) && !listadas.has(s) && (px[s].volume || 0) * px[s].price / 100 >= MINIMO_OPERADO)) {
+      const f = await fichaByma(sym).catch(() => null), q = px[sym];
+      if (!f || !(f.tem > 0 && f.tem < 10)) continue;
+      const [y1, m1, d1] = f.emision.split('-').map(Number), [y2, m2, d2] = f.vence.split('-').map(Number);
+      const vpv = 100 * Math.pow(1 + f.tem / 100, ((y2 - y1) * 360 + (m2 - m1) * 30 + Math.min(d2, 30) - Math.min(d1, 30)) / 30);
+      const d = Math.round((Date.parse(f.vence + 'T12:00:00Z') - Date.parse(liq + 'T12:00:00Z')) / MS_DAY), ratio = vpv / q.price;
+      if (!(d >= 4) || !(ratio > 1 && ratio < 2)) continue;
+      const vivo = { dtm: d, price: q.price, pct: q.pct, tem: Math.pow(ratio, 30.4 / d) - 1, tna: (ratio - 1) * 365 / d, tir: Math.pow(ratio, 365 / d) - 1, duration: d / 365, precio: 'vivo' };
+      bonds.push({ sym, tipo: 'nominal', vencimiento: f.vence, vpv, ...vivo, vivo });
+      volVivo[sym] = q.volume * q.price / 100;
+    }
     // Una curva no mezcla días: precios del día solo si los tiene al menos el 80% de las letras.
     // Si no, todas quedan con el cierre de ArgentinaDatos.
     const conVivo = bonds.filter(b => b.vivo).length >= Math.ceil(bonds.length * 0.8);
@@ -680,7 +694,8 @@ async function fichaByma(sym) {
   });
   const f = r.ok ? ((await r.json()).data || [])[0] : null;
   if (!f || !/^\d{4}-\d{2}-\d{2}/.test(f.fechaEmision || '') || !/^\d{4}-\d{2}-\d{2}/.test(f.fechaVencimiento || '')) return null;
-  const d = { emision: f.fechaEmision.slice(0, 10), vence: f.fechaVencimiento.slice(0, 10), cupon0: /CERO CUP|A DESCUENTO/i.test(f.denominacion || '') && !/DUAL/i.test(f.denominacion || '') };
+  const tem = parseFloat(((f.interes || '').match(/(\d+[.,]\d+)\s*%/) || [])[1]?.replace(',', '.'));
+  const d = { emision: f.fechaEmision.slice(0, 10), vence: f.fechaVencimiento.slice(0, 10), cupon0: /CERO CUP|A DESCUENTO/i.test(f.denominacion || '') && !/DUAL/i.test(f.denominacion || ''), tem: Number.isFinite(tem) ? tem : null };
   await redis(['SET', 'ficha:' + sym, JSON.stringify(d), 'EX', String(30 * 86400)]);
   return d;
 }

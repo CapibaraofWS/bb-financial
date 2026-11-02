@@ -10,6 +10,11 @@
   },
   "redirects": [
     {
+      "source": "/(vercel\\.json|build\\.mjs|\\.vercelignore)",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
       "source": "/((?!mudanza(?:\\.html)?$).*)",
       "has": [
         {

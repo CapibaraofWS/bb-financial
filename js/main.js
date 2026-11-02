@@ -463,6 +463,7 @@ window.BB_GLOSARIO = {
   div.innerHTML = `
     <span class="footer-contact-label">El proyecto</span>
     <a href="${root}pages/sobre-el-proyecto">👤 Quién está detrás de BB Finanzas</a>
+    <a href="${root}pages/metodologia">🧮 Cómo calculamos</a>
     <a href="${root}pages/privacidad">🔒 Política de privacidad</a>
     <a href="${root}pages/terminos">📄 Términos y condiciones</a>
     <a href="${root}pages/contacto">✉️ Contacto</a>
