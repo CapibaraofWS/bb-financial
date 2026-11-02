@@ -21,6 +21,7 @@ window.BBAlquiler = (function () {
   let cal = null, resultado = null, resVisible = true;
 
   const sumar = (ym, n) => { const [y, m] = ym.split('-').map(Number), t = y * 12 + m - 1 + n; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); };
+  const entre = (a, b) => (+b.slice(0, 4) - +a.slice(0, 4)) * 12 + +b.slice(5) - +a.slice(5);
   const mes = ym => P.mesLargo(ym), Mes = ym => mes(ym).replace(/^./, c => c.toUpperCase());
   const dia = f => (+f.slice(8)) + ' de ' + P.MESES[+f.slice(5, 7) - 1];
 
@@ -49,7 +50,10 @@ window.BBAlquiler = (function () {
     </section>
     <section class="pf-card aq-res" aria-live="polite">
       <p class="aq-estado"><span id="aq-estado">Cargando los datos…</span> <span class="aq-sello" id="aq-sello" hidden></span></p>
-      <p class="aq-num" id="aq-num">—</p>
+      <div class="aq-par" id="aq-par">
+        <div id="aq-antes-c" hidden><span id="aq-antes-t"></span><b id="aq-antes"></b></div>
+        <div><span id="aq-desde-t"></span><p class="aq-num" id="aq-num">—</p></div>
+      </div>
       <p class="aq-txt" id="aq-txt"></p>
       <p class="aq-prox" id="aq-prox"></p>
       <div class="aq-cal" id="aq-cal" role="img"></div>
@@ -85,13 +89,14 @@ window.BBAlquiler = (function () {
   const monto = () => Number($('aq-monto').value.replace(/\D/g, '')) || 0;
   const inicio = () => $('aq-anio').value + '-' + $('aq-mes').value;
 
-  function pone({ estado, sello = '', g = '—', txt = '', prox = '', cuenta = '', nota = '', pasos = '', fuente = '' }) {
+  function pone({ estado, sello = '', antesT = '', antes = '', desdeT = '', g = '—', pendiente = false, txt = '', prox = '', cuenta = '', nota = '', pasos = '', fuente = '' }) {
     $('aq-estado').textContent = estado; $('aq-num').textContent = g; $('aq-txt').textContent = txt; $('aq-prox').textContent = prox;
-    $('aq-sello').textContent = sello; $('aq-sello').hidden = !sello; $('aq-sello').className = 'aq-sello ' + (sello === 'Definitivo' ? 'si' : 'no');
+    $('aq-antes-t').textContent = antesT; $('aq-antes').textContent = antes; $('aq-antes-c').hidden = !antes; $('aq-desde-t').textContent = desdeT; $('aq-par').classList.toggle('pend', pendiente);
+    $('aq-sello').textContent = sello; $('aq-sello').hidden = !sello;
     $('aq-cuenta').innerHTML = cuenta; $('aq-cuenta').hidden = !cuenta; $('aq-nota').textContent = nota; $('aq-pasos').innerHTML = pasos; $('aq-fuente').innerHTML = fuente;
     $('aq-mas').hidden = !cuenta && !nota;
     $('aq-comp').hidden = !resultado;
-    $('aq-barra-t').textContent = estado; $('aq-barra-n').textContent = g;
+    $('aq-barra-t').textContent = resultado ? resultado.titulo : estado; $('aq-barra-n').textContent = resultado ? pesos(resultado.valor) : g;
     verBarra();
   }
   // En el celular el resultado queda abajo del formulario: mientras no se ve, una barra lo muestra
@@ -127,36 +132,24 @@ window.BBAlquiler = (function () {
     }
     const lista = pasos.length > 1 ? '<li class="tit"><span>Ajuste por ajuste</span><span></span></li>' + pasos.map(p => '<li><span>' + Mes(p.a) + ' · ' + P.signo((p.f - 1) * 100) + '%</span><span>' + pesos(p.actual) + '</span></li>').join('') : '';
     const fuente = 'Fuente: <a href="' + I.web + '" target="_blank" rel="noopener">' + I.fuente + '</a>, datos hasta ' + mes(fin) + '.';
-    const u = pasos.at(-1), [d, h] = ventana(a), completo = serie[d] && serie[h], hasta = fin < h ? fin : h, parcial = !completo && serie[d] && hasta > d ? serie[hasta] / serie[d] : null;
-    const ev = I.re && cal && cal.eventos && cal.eventos.find(e => I.re.test(e.titulo) && e.fecha >= P.hoyISO());
-    const falta = diario ? 'Falta el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Falta el dato de ' + mes(sumar(fin, 1)) + '.';
-    const cuando = diario ? 'El Banco Central lo publica a mediados del mes anterior.' : ev ? 'Sale el ' + dia(ev.fecha) + '.' : '';
-    const sobre = (f, base) => 'Sube ' + num((f - 1) * 100) + '%: son ' + pesos(base * f - base) + ' más por mes.';
-    const yaSe = diario ? 'Es definitivo: el Banco Central publica este índice por adelantado.' : 'Es definitivo: ese dato ya está publicado.';
-    const cierre = (titulo, valor, f) => { resultado = { titulo, valor, f, indice: I.t }; };
-
-    // 1. Este mes toca ajuste
-    if (u && u.a === hoy) {
-      cierre('Ajuste de ' + mes(hoy), u.actual, u.f);
-      return pone({ estado: 'En ' + mes(hoy) + ' toca ajuste', sello: 'Definitivo', g: pesos(u.actual), txt: sobre(u.f, u.antes), prox: 'Próximo ajuste: ' + mes(a) + '.', cuenta: cuenta(u.antes, u.d, u.h), nota: yaSe + (est.base === 'actual' ? ' Si ya cobraste este aumento, cargá el monto anterior.' : ''), pasos: lista, fuente });
+    const u = pasos.at(-1), ev = I.re && cal && cal.eventos && cal.eventos.find(e => I.re.test(e.titulo) && e.fecha >= P.hoyISO());
+    // El ajuste que se muestra: el de este mes si ya está; si no, el que sigue
+    const [vd, vh] = ventana(a), aj = u && u.a === hoy ? u : { a, antes: actual, d: vd, h: vh, f: serie[vd] && serie[vh] ? serie[vh] / serie[vd] : null };
+    const comun = { estado: aj.a <= hoy ? 'En ' + mes(aj.a) + ' toca ajuste' : 'Próximo ajuste: ' + mes(aj.a), antesT: 'Hasta ' + mes(sumar(aj.a, -1)), antes: pesos(aj.antes), desdeT: 'Desde ' + mes(aj.a), pasos: lista, fuente };
+    if (aj.f) {
+      const nuevo = aj.antes * aj.f, suba = num((aj.f - 1) * 100) + '%';
+      resultado = { titulo: comun.desdeT, valor: nuevo, linea: 'Sube ' + suba + ' por ' + I.t, texto: comun.desdeT + ' el alquiler queda en ' + pesos(nuevo) + ' (+' + suba + ' por ' + I.t + ').' };
+      const nota = (diario ? 'Es definitivo: el Banco Central publica este índice por adelantado.' : 'Es definitivo: ese dato ya está publicado.') + (aj === u && est.base === 'actual' ? ' Si ya cobraste este aumento, cargá el monto anterior.' : '');
+      return pone({ ...comun, sello: 'Definitivo', g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : '', cuenta: cuenta(aj.antes, aj.d, aj.h), nota });
     }
-    // 2. Ya llegó el mes del ajuste, pero falta el dato
-    if (a <= hoy) {
-      if (parcial) cierre('Ajuste de ' + mes(a) + ' (provisorio)', actual * parcial, parcial);
-      return pone({ estado: 'En ' + mes(a) + ' toca ajuste', sello: 'Provisorio', g: parcial ? pesos(actual * parcial) : '—', txt: parcial ? 'Por ahora sube ' + num((parcial - 1) * 100) + '%.' : falta, prox: parcial ? falta + ' ' + cuando : cuando, cuenta: parcial ? cuenta(actual, d, hasta) : '', nota: 'Cuando salga el dato, el número se actualiza solo.', pasos: lista, fuente });
-    }
-    // 3. El próximo ajuste está por venir
-    const previo = u ? 'Hoy corresponde ' + pesos(actual) + '. ' : '';
-    if (completo) {
-      const f = serie[h] / serie[d];
-      cierre('Ajuste de ' + mes(a), actual * f, f);
-      return pone({ estado: 'Próximo ajuste: ' + mes(a), sello: 'Definitivo', g: pesos(actual * f), txt: sobre(f, actual), prox: previo, cuenta: cuenta(actual, d, h), nota: yaSe, pasos: lista, fuente });
-    }
-    if (parcial) {
-      cierre('Ajuste de ' + mes(a) + ' (provisorio)', actual * parcial, parcial);
-      return pone({ estado: 'Próximo ajuste: ' + mes(a), sello: 'Provisorio', g: pesos(actual * parcial), txt: 'Por ahora sube ' + num((parcial - 1) * 100) + '%.', prox: previo + falta + ' ' + cuando, cuenta: cuenta(actual, d, hasta), nota: 'Cuando salga el dato, el número se actualiza solo.', pasos: lista, fuente });
-    }
-    return pone({ estado: 'Próximo ajuste: ' + mes(a), g: pesos(actual), txt: 'Todavía no se publicó ningún dato de ese período.', prox: previo + cuando, pasos: lista, fuente });
+    // Falta el dato final: lo acumulado se dice como tal, no como si fuera el aumento
+    const { d, h } = aj, lleva = serie[d] && fin > d && fin < h ? serie[fin] / serie[d] : null, nombre = x => (diario ? I.t + ' del 1 de ' + mes(x) : 'índice de ' + mes(x));
+    resultado = { titulo: comun.antesT, valor: aj.antes, linea: 'Ajuste de ' + mes(aj.a) + ' por ' + I.t + ': falta el dato', texto: comun.antesT + ' el alquiler sigue en ' + pesos(aj.antes) + '. El ajuste de ' + mes(aj.a) + ' por ' + I.t + ' todavía no se conoce.' };
+    return pone({ ...comun, g: 'Todavía no se sabe', pendiente: true,
+      txt: lleva ? 'El índice lleva ' + P.signo((lleva - 1) * 100) + '% en ' + entre(d, fin) + ' de ' + n + ' meses.' : '',
+      prox: diario ? 'Se conoce a mediados de ' + mes(sumar(h, -1)) + ', cuando el Banco Central publique el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Se conoce cuando salga el dato de ' + mes(h) + '.' + (ev ? ' El próximo dato sale el ' + dia(ev.fecha) + '.' : ''),
+      cuenta: '<b>' + pesos(aj.antes) + ' × ' + nombre(h) + ' ÷ ' + (serie[d] ? num(serie[d], 2) : nombre(d)) + '</b>' + (lleva ? 'Último dato publicado: ' + nombre(fin) + ' = ' + num(serie[fin], 2) + '.' : 'Todavía no se publicó ningún dato de ese período.'),
+      nota: 'Cuando salga el dato, esta cuenta se completa sola.' });
   }
 
   // ---- Enlace con los datos cargados: en el fragmento (#), que no viaja a ningún servidor al abrirlo
@@ -172,7 +165,6 @@ window.BBAlquiler = (function () {
   }
   const marcar = (id, v) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === String(v))));
 
-  const textoCompartir = () => resultado.titulo + ': el alquiler queda en ' + pesos(resultado.valor) + ' (+' + num((resultado.f - 1) * 100) + '% por ' + resultado.indice + ').';
   function imagen() {
     const c = document.createElement('canvas'); c.width = 1080; c.height = 1080;
     const x = c.getContext('2d'), M_ = 90;
@@ -180,7 +172,7 @@ window.BBAlquiler = (function () {
     x.fillStyle = '#4ade9a'; x.font = '500 40px Outfit, Arial, sans-serif'; x.fillText('Calculadora de alquiler', M_, 170);
     x.fillStyle = '#9aa5b8'; x.font = '400 46px Outfit, Arial, sans-serif'; x.fillText(resultado.titulo, M_, 330);
     x.fillStyle = '#e8edf5'; x.font = '400 150px "DM Serif Display", Georgia, serif'; x.fillText(pesos(resultado.valor), M_, 520, 900);
-    x.fillStyle = '#9aa5b8'; x.font = '400 46px Outfit, Arial, sans-serif'; x.fillText('Sube ' + num((resultado.f - 1) * 100) + '% por ' + resultado.indice, M_, 620);
+    x.fillStyle = '#9aa5b8'; x.font = '400 46px Outfit, Arial, sans-serif'; x.fillText(resultado.linea, M_, 620, 900);
     x.fillStyle = 'rgba(255,255,255,0.12)'; x.fillRect(M_, 880, 900, 2);
     x.fillStyle = '#4ade9a'; x.font = '500 44px Outfit, Arial, sans-serif'; x.fillText('bbfinanzas.com.ar', M_, 960);
     x.fillStyle = '#9aa5b8'; x.font = '400 30px Outfit, Arial, sans-serif'; x.fillText('Cuenta orientativa: vale lo que dice el contrato.', M_, 1010);
@@ -188,7 +180,7 @@ window.BBAlquiler = (function () {
   }
   async function compartir(accion, boton) {
     if (!resultado) return;
-    const url = enlace(), txt = textoCompartir();
+    const url = enlace(), txt = resultado.texto;
     if (window.bbTrack) window.bbTrack('alquiler_compartir', { canal: accion });
     if (accion === 'wpp') return void window.open('https://wa.me/?text=' + encodeURIComponent(txt + ' ' + url), '_blank', 'noopener');
     if (accion === 'x') return void window.open('https://x.com/intent/post?text=' + encodeURIComponent(txt) + '&url=' + encodeURIComponent(url), '_blank', 'noopener');

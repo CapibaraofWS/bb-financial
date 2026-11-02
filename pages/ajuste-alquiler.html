@@ -42,7 +42,7 @@
     {"@type":"Question","name":"¿Qué monto tengo que cargar?","acceptedAnswer":{"@type":"Answer","text":"El alquiler que se paga hoy. Si preferís cargar el monto con el que empezó el contrato, en Más opciones elegí El del inicio y hace todos los ajustes, uno atrás del otro."}}
   ]}
   </script>
-  <link rel="stylesheet" href="../css/alquiler.css?v=1" />
+  <link rel="stylesheet" href="../css/alquiler.css?v=2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -114,7 +114,7 @@
       <p>Un ajuste es una multiplicación: se divide el valor del índice al final del período por el del principio y ese resultado se multiplica por el alquiler. Si el índice pasó de 100 a 106, un alquiler de $500.000 queda en $530.000. En "Ver la cuenta" están los números que usa cada ajuste.</p>
       <details><summary>¿Qué índice usa mi contrato?</summary><p>El que diga el contrato. El <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/texact.htm" target="_blank" rel="noopener">artículo 1199 del Código Civil y Comercial</a>, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado.</p></details>
       <details><summary>¿Qué monto tengo que cargar?</summary><p>El alquiler que se paga hoy. Si preferís cargar el monto con el que empezó el contrato, en "Más opciones" elegí "El del inicio" y hace todos los ajustes, uno atrás del otro. Si el ajuste cae este mes, cargá el monto anterior al aumento.</p></details>
-      <details><summary>¿De dónde sale el número si el mes recién empieza?</summary><p>Depende del índice. El Banco Central publica el ICL, el CER y la UVA por adelantado, así que el valor del día 1 ya se conoce. Con los índices del INDEC, si el contrato toma los últimos datos publicados, el número también se conoce. Si toma el período completo, hay que esperar el dato del mes anterior: hasta entonces la calculadora dice "Provisorio".</p></details>
+      <details><summary>¿De dónde sale el número si el mes recién empieza?</summary><p>Depende del índice. El Banco Central publica el ICL, el CER y la UVA por adelantado, así que el valor del día 1 ya se conoce. Con los índices del INDEC, si el contrato toma los últimos datos publicados, el número también se conoce. Si toma el período completo, hay que esperar el dato del mes anterior: hasta entonces la calculadora muestra el alquiler que sigue vigente y cuánto lleva acumulado el índice.</p></details>
       <details><summary>¿Qué es el ICL?</summary><p>El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1. El método está en la <a href="https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7096.pdf" target="_blank" rel="noopener">Comunicación A 7096</a>.</p></details>
       <details><summary>Mi contrato usa Casa Propia o CAC. ¿Sirve?</summary><p>Por ahora no están, porque no encontramos una fuente que se actualice sola y sea confiable. Preferimos no mostrar un número que no podamos controlar. El ICC de la lista es el del INDEC: no es el mismo que el de la Cámara de la Construcción.</p></details>
       <details><summary>¿Por qué el ICL usa el día 1?</summary><p>El ICL, el CER y la UVA se publican día por día. La calculadora usa el valor del día 1 de cada mes: si el contrato empezó otro día, el número exacto puede cambiar un poco.</p></details>
@@ -154,7 +154,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=21"></script>
-  <script src="../js/alquiler.js?v=1"></script>
+  <script src="../js/alquiler.js?v=2"></script>
   <script>
     BBAlquiler.montar({ raiz: 'aq-raiz', abrirCuenta: matchMedia('(min-width: 860px)').matches });
     (function () {
