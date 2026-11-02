@@ -118,6 +118,32 @@
         <div class="lienzo" style="height:340px"><canvas id="g-uso" aria-label="Importaciones por uso económico"></canvas></div>
       </section>
 
+      <section class="pa-graf" aria-labelledby="g-pc-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-pc-t">Por qué cambian: precios o cantidades</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> cuánto cambiaron las ventas o las compras al exterior contra un año atrás (la línea), separando lo que se debe a los precios internacionales de lo que se debe a las cantidades. Vender más barato no es lo mismo que vender menos toneladas.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-pc" data-titulo="Comercio exterior: precios y cantidades" data-fuente="INDEC">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-pc"></div>
+        <div class="pa-seg" id="s-pc" role="group" aria-label="Qué mostrar">
+          <button type="button" data-v="1" aria-pressed="true">Exportaciones</button><button type="button" data-v="4" aria-pressed="false">Importaciones</button>
+        </div>
+        <div class="lienzo"><canvas id="g-pc" aria-label="Variación de precios y cantidades del comercio exterior"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-2-40" target="_blank" rel="noopener">INDEC, Índices de precios y cantidades del comercio exterior</a>.</p>
+      </section>
+
+      <section class="pa-graf" aria-labelledby="g-ti-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-ti-t">Términos de intercambio y materias primas</h3>
+          <p class="ayuda" id="g-ti-a"></p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-ti" data-titulo="Términos de intercambio y materias primas" data-fuente="INDEC y BCRA">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-ti"></div>
+        <div class="pa-seg" id="s-ti" role="group" aria-label="Qué mostrar">
+          <button type="button" data-v="ti" aria-pressed="true">Términos de intercambio</button><button type="button" data-v="mp" aria-pressed="false">Materias primas</button>
+        </div>
+        <div class="lienzo"><canvas id="g-ti" aria-label="Términos de intercambio y precios de materias primas"></canvas></div>
+        <p class="fuente">Fuentes: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-2-40" target="_blank" rel="noopener">INDEC</a> y <a href="https://www.bcra.gob.ar/estadisticas-indicadores/" target="_blank" rel="noopener">BCRA, Índice de Precios de las Materias Primas</a>.</p>
+      </section>
+
       <section class="pa-graf" aria-labelledby="g-soc-t">
         <div class="pa-graf-cab"><div>
           <h3 id="g-soc-t">Con quién comercia la Argentina</h3>
@@ -141,6 +167,8 @@
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
         <p>El <strong>saldo comercial</strong> es la diferencia entre lo que el país exporta e importa en bienes. Un superávit significa que entraron más dólares por ventas de bienes de los que salieron por compras. No es todo el movimiento de dólares: el turismo, los fletes, las ganancias de las empresas y los pagos de deuda van por otro lado, en la balanza de pagos.</p>
         <p>Para entender un cambio conviene mirar el rubro. Las exportaciones del campo dependen de la cosecha y de los precios internacionales; las de energía, de la producción de petróleo y gas. Del lado de las importaciones, los bienes de capital y los intermedios suelen moverse con la actividad: cuando la economía crece, se importan más máquinas e insumos.</p>
+        <details><summary>¿Qué son los términos de intercambio?</summary><p>Comparan los precios de lo que el país vende con los de lo que compra. Si suben, con las mismas exportaciones se pueden comprar más importaciones. Si bajan, hace falta vender más para comprar lo mismo.</p></details>
+        <details><summary>¿Qué mide el índice de materias primas?</summary><p>El Banco Central sigue los precios internacionales de los productos que exporta la Argentina, como granos, metales e hidrocarburos, en dólares y ponderados por lo que pesa cada uno. Se mueve antes que los datos de comercio, porque son precios del mercado.</p></details>
         <details><summary>¿Qué son las MOA y las MOI?</summary><p>Las manufacturas de origen agropecuario (MOA) son productos del campo con algún proceso industrial, como la harina y el aceite de soja o la carne. Las de origen industrial (MOI) son productos fabricados, como autos, químicos o acero. Los otros dos rubros son los productos primarios (granos, frutas, minerales sin procesar) y los combustibles y la energía.</p></details>
         <details><summary>¿Qué quiere decir que el dato es provisorio?</summary><p>Que el INDEC lo puede corregir. El último mes de exportaciones se publica como estimación y se ajusta cuando llegan todos los registros de la Aduana. Por eso los números de un mes pueden cambiar un poco con el informe siguiente.</p></details>
         <details><summary>¿Cada cuánto se actualiza?</summary><p>Una vez por mes, el día que el INDEC publica el intercambio comercial argentino, unas tres semanas después de terminado el mes. La fecha del próximo informe está en la primera tarjeta y en la <a href="agenda-ar#indec">agenda del INDEC</a>.</p></details>
@@ -276,6 +304,40 @@
           { label: 'Llegan (turistas extranjeros)', data: idx.map(i => suma(i, 1) / 1e6), borderColor: '#60a5fa', borderWidth: 2.5, pointRadius: 0, tension: 0.25 },
           { label: 'Se van (residentes al exterior)', data: idx.map(i => suma(i, 2) / 1e6), borderColor: '#f59e0b', borderWidth: 2.5, pointRadius: 0, tension: 0.25 } ] },
         options: P.ejes(v => num(v, 0) + ' M', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + num(c.parsed.y, 2) + ' millones en 12 meses' } } } }) });
+    }
+
+    // ---- Precios y cantidades (INDEC): [mes, valor, precio, cantidad] de exportaciones y de importaciones
+    {
+    const [IC, MP] = await Promise.all([P.json('/api/indec?ica=1'), P.json('/api/bcra?endpoint=IPMP')]);
+    const S = (IC && IC.serie) || [], hace = p => S.find(x => x[0] === (+p.slice(0, 4) - 1) + p.slice(4));
+    if (S.length > 24) {
+      const ia = (x, c) => { const y = hace(x[0]); return y ? (x[c] / y[c] - 1) * 100 : null; }, d = S.slice(-24), u = S.at(-1);
+      $('m-pc').innerHTML = [['Exportaciones', 1], ['Importaciones', 4]].map(([t, c]) => '<div><span>' + t + ' · ' + P.mesAnio(u[0]) + ' contra un año atrás</span><b>' + P.signo(ia(u, c)) + '%</b><small>Precios: ' + P.signo(ia(u, c + 1)) + '% · cantidades: ' + P.signo(ia(u, c + 2)) + '%</small></div>').join('');
+      const armar = c => [{ type: 'line', label: 'En dólares', data: d.map(x => ia(x, c)), borderColor: '#e8edf5', backgroundColor: '#e8edf5', borderWidth: 2, pointRadius: 2, tension: 0.2, order: 1 },
+        { type: 'bar', label: 'Precios', data: d.map(x => ia(x, c + 1)), backgroundColor: 'rgba(232,201,122,0.85)', order: 2 }, { type: 'bar', label: 'Cantidades', data: d.map(x => ia(x, c + 2)), backgroundColor: 'rgba(96,165,250,0.85)', order: 2 }];
+      const ch = new Chart($('g-pc'), { data: { labels: d.map(x => P.mesAnio(x[0])), datasets: armar(1) }, options: P.ejes(v => v + '%', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + P.signo(c.parsed.y) + '%' } } } }) });
+      P.seg('s-pc', v => { ch.data.datasets = armar(+v); ch.update(); });
+    } else $('m-pc').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los índices de comercio. Probá de nuevo en un rato.</p>';
+
+    // ---- Términos de intercambio (precio de exportación ÷ precio de importación) y materias primas (BCRA)
+    const TI = S.filter(x => x[0] >= '2015-01').map(x => [x[0], x[2] / x[5] * 100]), M = ((MP && MP.mensual) || []).filter(x => x[0] >= '2015-01');
+    const piezas = [];
+    if (TI.length > 12) { const u = TI.at(-1), a = TI.find(x => x[0] === (+u[0].slice(0, 4) - 1) + u[0].slice(4)); piezas.push('<div><span>Términos de intercambio</span><b>' + num(u[1]) + '</b><small>' + P.mesAnio(u[0]) + ', base 2004 = 100' + (a ? ' · ' + P.signo((u[1] / a[1] - 1) * 100) + '% en un año' : '') + '</small></div>'); }
+    if (M.length > 12) { const u = M.at(-1), a = M.find(x => x[0] === (+u[0].slice(0, 4) - 1) + u[0].slice(4)); piezas.push('<div><span>Materias primas (BCRA)</span><b>' + num(u[1]) + '</b><small>' + P.mesAnio(u[0]) + ', base diciembre de 2001 = 100' + (a ? ' · ' + P.signo((u[1] / a[1] - 1) * 100) + '% en un año' : '') + '</small></div>'); }
+    $('m-ti').innerHTML = piezas.join('') || '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar estos datos. Probá de nuevo en un rato.</p>';
+    if (piezas.length) {
+      let g = null; const cv = $('g-ti'), linea = (t, data, c, a = 2) => ({ label: t, data, borderColor: c, borderWidth: a, pointRadius: 0, tension: 0.2 });
+      const dibujar = v => {
+        if (g) g.destroy();
+        const mp = v === 'mp' && M.length > 12;
+        $('g-ti-a').innerHTML = mp ? '<strong>Qué ves:</strong> los precios internacionales de lo que exporta la Argentina, en dólares. Sube cuando esos productos se encarecen en el mundo.' : '<strong>Qué ves:</strong> los precios de lo que la Argentina vende, comparados con los de lo que compra. Si la línea sube, con lo que se exporta se puede comprar más.';
+        g = new Chart(cv, { type: 'line', data: mp ? { labels: M.map(x => P.mesAnio(x[0])), datasets: [linea('Todas', M.map(x => x[1]), '#e8edf5', 2.5), linea('Agro', M.map(x => x[2]), '#60a5fa'), linea('Metales', M.map(x => x[3]), '#a78bfa'), linea('Hidrocarburos', M.map(x => x[4]), '#ff9f7a')] }
+          : { labels: TI.map(x => P.mesAnio(x[0])), datasets: [linea('Términos de intercambio', TI.map(x => x[1]), '#60a5fa', 2.5)] },
+          options: P.ejes(x => num(x, 0), { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + num(c.parsed.y) } } } }) });
+      };
+      dibujar('ti');
+      P.seg('s-ti', dibujar);
+    }
     }
   })();
   </script>

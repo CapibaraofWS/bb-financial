@@ -884,10 +884,39 @@ async function externo(req, res) {
     // Control: la cuenta corriente tiene que ser la suma de sus cuatro partes
     const cc = filas.cuentaCorriente, suma = i => filas.bienes[i] + filas.servicios[i] + filas.primario[i] + filas.secundario[i];
     if (Object.values(filas).every(Boolean) && cols.length > 20 && cc.every((v, i) => v == null || Math.abs(v - suma(i)) < 5)) out.balanza = { trimestres: cols.map(c => c[1]), ...filas };
+    // Deuda externa bruta por sector (cuadro 24): lo que no es Gobierno ni Banco Central es del sector privado
+    const d = ((rBop.value.find(h => /^cuadro 24$/i.test(h.nombre.trim())) || {}).filas) || [], cabD = d.find(r => r && r.filter(v => /^\d{4}T[1-4]/.test(String(v || ''))).length > 8) || [];
+    const colsD = cabD.map((v, i) => [i, (String(v || '').match(/^(\d{4})T([1-4])/) || [])]).filter(c => c[1].length).map(([i, m]) => [i, m[1] + '-Q' + m[2]]);
+    const filaD = t => { const r = d.find(x => x && txt(x[0]) === t); return r ? colsD.map(([i]) => (Number.isFinite(r[i]) ? Math.round(r[i]) : null)) : null; };
+    const total = filaD('Total deuda externa bruta'), gob = filaD('Gobierno general'), bc = filaD('Banco central');
+    if (total && gob && bc && colsD.length > 20 && total.at(-1) > 1e5) out.deudaExterna = { trimestres: colsD.map(c => c[1]), total, gobierno: gob, bcra: bc };
   }
   if (!out.turismo && !out.balanza) return res.status(502).json({ error: 'No se pudieron leer el turismo ni la balanza de pagos' });
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
   return res.status(200).json(out);
+}
+
+// ?ica=1: valor, precio y cantidad de las exportaciones e importaciones (INDEC, mensual, base 2004 = 100).
+// Cada fila: [mes, valor, precio y cantidad de exportaciones, valor, precio y cantidad de importaciones]
+async function ica(req, res) {
+  try {
+    const f = (await planillaIndec('/ftp/cuadros/economia/serie_mensual_indices_comex.xls'))[0]?.filas || [], txt = v => String(v ?? '').trim();
+    const cab = f.find(r => r && r.filter(v => /^(Valor|Precio|Cantidad)$/.test(txt(v))).length >= 6) || [];
+    const cols = cab.map((v, i) => [txt(v), i]).filter(x => /^(Valor|Precio|Cantidad)$/.test(x[0]));
+    if (cols.map(x => x[0]).join() !== 'Valor,Precio,Cantidad,Valor,Precio,Cantidad') throw new Error('formato');
+    const serie = []; let anio = null;
+    for (const r of f) {
+      if (!r) continue;
+      const a = parseInt(txt(r[0]), 10); if (a > 2000) anio = a;
+      const m = MESES_ES.indexOf(txt(r[1]).toLowerCase().replace(/[^a-záéíóú]/g, '')), v = cols.map(([, c]) => r[c]);
+      if (anio && m >= 0 && v.every(x => x > 0)) serie.push([anio + '-' + String(m + 1).padStart(2, '0'), ...v.map(x => Math.round(x * 100) / 100)]);
+    }
+    if (serie.length < 120) throw new Error('formato');
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json({ fuente: 'INDEC, Índices de precios y cantidades del comercio exterior', serie });
+  } catch {
+    return res.status(502).json({ error: 'No se pudieron leer los índices del comercio exterior' });
+  }
 }
 
 // ?pbi=1: el PBI y lo que lo forma, en millones de pesos de 2004 (cuadro 1 del archivo de oferta y demanda)
@@ -1011,6 +1040,7 @@ export default async function handler(req, res) {
   if (denyExternalOrigin(req, res)) return;
   if (await denyRateLimited(req, res, { limit: 60, windowSecs: 60, key: 'indec' })) return;
   if (req.query.pbi) return pbi(req, res);
+  if (req.query.ica) return ica(req, res);
   if (req.query.provincias) return provincias(req, res);
   if (req.query.crianza) return crianza(req, res);
   if (req.query.comercio) return comercio(req, res);

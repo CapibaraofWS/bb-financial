@@ -120,6 +120,16 @@
         <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/35/45" target="_blank" rel="noopener">INDEC, Balanza de pagos</a>. Los últimos trimestres son provisorios.</p>
       </section>
 
+      <section class="pa-graf" aria-labelledby="g-dex-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-dex-t">La deuda externa</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> todo lo que la Argentina le debe al resto del mundo, a valor nominal: el Estado, el Banco Central y el sector privado. Es un saldo a fin de cada trimestre y el INDEC lo publica con unos tres meses de atraso.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-dex" data-titulo="Deuda externa bruta por sector" data-fuente="INDEC">⬇ Imagen</button></div>
+        <div class="pa-mini" id="m-dex"></div>
+        <div class="lienzo"><canvas id="g-dex" aria-label="Deuda externa bruta por sector"></canvas></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/Nivel4/Tema/3/35/45" target="_blank" rel="noopener">INDEC, Balanza de pagos y deuda externa</a>. Sector privado: lo que no es del Gobierno ni del Banco Central.</p>
+      </section>
+
       <section class="bb-faq" style="margin-top:3rem" aria-labelledby="como-t">
         <h2 id="como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo leer estos números</h2>
         <p>El balance cambiario cuenta los dólares cuando efectivamente pasan por el mercado de cambios, no cuando sale el barco o llega la mercadería. Por eso "bienes" no coincide con el saldo comercial del INDEC (que está en <a href="panel-comercio">comercio exterior</a>): una exportación puede cobrarse meses después, y una importación pagarse antes o después. La compra diaria de dólares del Banco Central y las reservas están en el <a href="panel-dolar">panel del dólar</a>.</p>
@@ -236,6 +246,19 @@
         options: P.ejes(v => num(v / 1000, 0) + ' mil M', { scales: { x: { stacked: true, ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }, grid: { display: false } }, y: { stacked: true, ticks: { color: '#9aa5b8', callback: v => 'US$' + num(v / 1000, 0) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } } },
           plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + mu(c.parsed.y) } } } }) });
     }
+
+    // ---- Deuda externa bruta por sector (INDEC, trimestral)
+    const DX = EX && EX.deudaExterna;
+    if (DX && DX.trimestres.length > 8) {
+      const T = DX.trimestres, n = T.length - 1, priv = T.map((_, i) => DX.total[i] - DX.gobierno[i] - DX.bcra[i]), mil = v => 'US$' + num(v / 1000, 1) + ' mil M';
+      const trim = t => { const [y, q] = t.split('-Q'); return (q === '1' || q === '3' ? q + '.er' : q + '.º') + ' trim. ' + y; }, a = DX.total[n - 4];
+      $('m-dex').innerHTML = '<div><span>Total</span><b>' + mil(DX.total[n]) + '</b><small>' + trim(T[n]) + (a ? ' · ' + P.signo((DX.total[n] / a - 1) * 100) + '% en un año' : '') + '</small></div>' +
+        [['Gobierno', DX.gobierno[n]], ['Banco Central', DX.bcra[n]], ['Sector privado', priv[n]]].map(([t, v]) => '<div><span>' + t + '</span><b>' + mil(v) + '</b><small>' + num(v / DX.total[n] * 100, 0) + '% del total</small></div>').join('');
+      const I = T.map((_, i) => i).filter(i => T[i] >= '2016-Q1'), capa = (t, s, c) => ({ type: 'bar', label: t, data: I.map(i => s[i]), backgroundColor: c, stack: 'a' });
+      new Chart($('g-dex'), { data: { labels: I.map(i => trim(T[i])), datasets: [capa('Gobierno', DX.gobierno, '#60a5fa'), capa('Banco Central', DX.bcra, '#e8c97a'), capa('Sector privado', priv, '#a78bfa')] },
+        options: P.ejes(v => num(v / 1000, 0) + ' mil M', { scales: { x: { stacked: true, ticks: { color: '#9aa5b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }, grid: { display: false } }, y: { stacked: true, ticks: { color: '#9aa5b8', callback: v => num(v / 1000, 0) + ' mil M' }, grid: { color: 'rgba(255,255,255,0.05)' } } },
+          plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + mil(c.parsed.y) } } } }) });
+    } else $('m-dex').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudo cargar la deuda externa. Probá de nuevo en un rato.</p>';
   })();
   </script>
 </body>
