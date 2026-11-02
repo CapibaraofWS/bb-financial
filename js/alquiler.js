@@ -17,7 +17,7 @@ window.BBAlquiler = (function () {
     icc: { t: 'ICC', largo: 'Índice del costo de la construcción del INDEC. No es el índice de la Cámara de la Construcción (CAC)', rezago: 2, re: /costo de la construcción/i, fuente: 'INDEC, Índice del costo de la construcción', web: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-33', color: '#22d3ee' },
   };
   const CADA = [1, 2, 3, 4, 6, 12];
-  const datos = {}, hoy = P.hoyISO().slice(0, 7), anioHoy = +hoy.slice(0, 4), est = { cada: 3, indice: 'ipc', modo: 'publicados', base: 'actual' };
+  const datos = {}, hoy = P.hoyISO().slice(0, 7), anioHoy = +hoy.slice(0, 4), est = { cada: 3, indice: 'ipc', modo: 'publicados' };
   let cal = null, resultado = null, resVisible = true;
 
   const sumar = (ym, n) => { const [y, m] = ym.split('-').map(Number), t = y * 12 + m - 1 + n; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); };
@@ -27,29 +27,24 @@ window.BBAlquiler = (function () {
 
   const PLANTILLA = `
     <section class="pf-card aq-form" aria-label="Datos del contrato">
-      <label class="pf-label" for="aq-monto">Alquiler actual, por mes</label>
+      <label class="pf-label" for="aq-monto">Alquiler al inicio del contrato</label>
       <div class="pf-monto"><span aria-hidden="true">$</span><input id="aq-monto" type="text" inputmode="numeric" autocomplete="off" value="500.000" /></div>
       <span class="pf-label aq-sep" id="aq-inicio-t">Inicio del contrato</span>
       <div class="aq-sel" role="group" aria-labelledby="aq-inicio-t"><select id="aq-mes" aria-label="Mes"></select><select id="aq-anio" aria-label="Año"></select></div>
-      <span class="pf-label" id="aq-cada-t">Cada cuántos meses ajusta</span>
+      <p class="aq-nota">¿No tenés ese monto? Cargá lo que pagás hoy y, como inicio, el mes del último aumento.</p>
+      <span class="pf-label aq-sep" id="aq-cada-t">Cada cuántos meses ajusta</span>
       <div class="pa-seg aq-chips" id="aq-cada" role="group" aria-labelledby="aq-cada-t">${CADA.map(n => '<button type="button" data-v="' + n + '" aria-pressed="false">' + n + '</button>').join('')}</div>
       <span class="pf-label aq-sep" id="aq-ind-t">Índice del contrato</span>
       <div class="pa-seg aq-chips" id="aq-indice" role="group" aria-labelledby="aq-ind-t">${Object.entries(INDICES).map(([k, I]) => '<button type="button" data-v="' + k + '" aria-pressed="false">' + I.t + '</button>').join('')}</div>
       <p class="aq-nota" id="aq-ind-n"></p>
-      <details class="aq-op">
-        <summary>Más opciones</summary>
-        <span class="pf-label aq-sep" id="aq-base-t">El monto que cargué es</span>
-        <div class="pa-seg" id="aq-base" role="group" aria-labelledby="aq-base-t"><button type="button" data-v="actual" aria-pressed="true">El de hoy</button><button type="button" data-v="inicial" aria-pressed="false">El del inicio</button></div>
-        <p class="aq-nota" id="aq-base-n"></p>
-        <div id="aq-modo-f">
-          <span class="pf-label aq-sep" id="aq-modo-t">Qué meses cuenta</span>
-          <div class="pa-seg" id="aq-modo" role="group" aria-labelledby="aq-modo-t"><button type="button" data-v="publicados" aria-pressed="true">Los últimos publicados</button><button type="button" data-v="periodo" aria-pressed="false">El período completo</button></div>
-          <p class="aq-nota" id="aq-modo-n"></p>
-        </div>
+      <details class="aq-op" id="aq-op">
+        <summary>Mi contrato cuenta otros meses</summary>
+        <div class="pa-seg" id="aq-modo" role="group" aria-label="Qué meses cuenta"><button type="button" data-v="publicados" aria-pressed="true">Los últimos publicados</button><button type="button" data-v="periodo" aria-pressed="false">El período completo</button></div>
+        <p class="aq-nota" id="aq-modo-n"></p>
       </details>
     </section>
     <section class="pf-card aq-res" aria-live="polite">
-      <p class="aq-estado"><span id="aq-estado">Cargando los datos…</span> <span class="aq-sello" id="aq-sello" hidden></span></p>
+      <p class="aq-estado" id="aq-estado">Cargando los datos…</p>
       <div class="aq-par" id="aq-par">
         <div id="aq-antes-c" hidden><span id="aq-antes-t"></span><b id="aq-antes"></b></div>
         <div><span id="aq-desde-t"></span><p class="aq-num" id="aq-num">—</p></div>
@@ -59,9 +54,7 @@ window.BBAlquiler = (function () {
       <div class="aq-cal" id="aq-cal" role="img"></div>
       <div class="aq-ley" aria-hidden="true"><span><i class="c1"></i>Toca ajuste</span><span><i class="c2"></i>Ya ajustó</span><span><i class="c3"></i>Inicio</span><span><i class="c4"></i>Este mes</span></div>
       <details class="aq-mas" id="aq-mas">
-        <summary>Ver la cuenta</summary>
-        <div class="aq-cuenta" id="aq-cuenta"></div>
-        <p class="aq-nota" id="aq-nota"></p>
+        <summary>Ajuste por ajuste</summary>
         <ul class="aq-pasos" id="aq-pasos"></ul>
         <p class="aq-nota" id="aq-fuente"></p>
       </details>
@@ -89,12 +82,10 @@ window.BBAlquiler = (function () {
   const monto = () => Number($('aq-monto').value.replace(/\D/g, '')) || 0;
   const inicio = () => $('aq-anio').value + '-' + $('aq-mes').value;
 
-  function pone({ estado, sello = '', antesT = '', antes = '', desdeT = '', g = '—', pendiente = false, txt = '', prox = '', cuenta = '', nota = '', pasos = '', fuente = '' }) {
+  function pone({ estado, antesT = '', antes = '', desdeT = '', g = '—', pendiente = false, txt = '', prox = '', pasos = '', fuente = '' }) {
     $('aq-estado').textContent = estado; $('aq-num').textContent = g; $('aq-txt').textContent = txt; $('aq-prox').textContent = prox;
     $('aq-antes-t').textContent = antesT; $('aq-antes').textContent = antes; $('aq-antes-c').hidden = !antes; $('aq-desde-t').textContent = desdeT; $('aq-par').classList.toggle('pend', pendiente);
-    $('aq-sello').textContent = sello; $('aq-sello').hidden = !sello;
-    $('aq-cuenta').innerHTML = cuenta; $('aq-cuenta').hidden = !cuenta; $('aq-nota').textContent = nota; $('aq-pasos').innerHTML = pasos; $('aq-fuente').innerHTML = fuente;
-    $('aq-mas').hidden = !cuenta && !nota;
+    $('aq-pasos').innerHTML = pasos; $('aq-fuente').innerHTML = fuente; $('aq-mas').hidden = !pasos;
     $('aq-comp').hidden = !resultado;
     $('aq-barra-t').textContent = resultado ? resultado.titulo : estado; $('aq-barra-n').textContent = resultado ? pesos(resultado.valor) : g;
     verBarra();
@@ -106,23 +97,18 @@ window.BBAlquiler = (function () {
     const n = est.cada, I = INDICES[est.indice], serie = datos[est.indice] || {}, M = monto(), ini = inicio(), claves = Object.keys(serie).sort(), fin = claves.at(-1);
     const diario = !!I.diario;
     $('aq-ind-n').textContent = I.t + ': ' + I.largo + '.';
-    $('aq-modo-f').hidden = diario;
+    $('aq-op').hidden = diario;
     $('aq-modo-n').textContent = est.modo === 'publicados' ? 'Para un ajuste de abril usa el último dato ya publicado el 1 de abril.' : 'Para un ajuste de abril cuenta enero, febrero y marzo: el número se conoce cuando sale marzo.';
-    $('aq-base-n').textContent = est.base === 'actual' ? 'Calcula el próximo ajuste sobre lo que se paga hoy.' : 'Hace todos los ajustes desde el inicio del contrato, uno atrás del otro.';
     resultado = null;
     if (ini <= hoy) calendario(ini, n); else $('aq-cal').innerHTML = '';
     if (!fin) return pone({ estado: 'Sin datos', txt: 'No se pudo cargar este índice. Probá de nuevo en un rato.' });
     if (!M) return pone({ estado: 'Falta el monto', txt: 'Cargá el alquiler por mes.' });
     if (ini > hoy) return pone({ estado: 'Revisá la fecha', txt: 'El contrato todavía no empezó. Elegí un mes de hoy para atrás.' });
-    if (est.base === 'inicial' && ini < claves[0]) return pone({ estado: 'Revisá la fecha', txt: 'Este índice tiene datos desde ' + mes(claves[0]) + '.' });
+    if (ini < claves[0]) return pone({ estado: 'Revisá la fecha', txt: 'Este índice tiene datos desde ' + mes(claves[0]) + '.' });
     // Mes de inicio y de fin del índice para un ajuste en el mes a
     const ventana = a => (diario ? [sumar(a, -n), a] : est.modo === 'publicados' ? [sumar(a, -n - I.rezago), sumar(a, -I.rezago)] : [sumar(a, -n - 1), sumar(a, -1)]);
-    const meses = (d, h) => { const L = []; for (let x = sumar(d, 1); x <= h; x = sumar(x, 1)) if (serie[x] && serie[sumar(x, -1)]) L.push(P.MES[+x.slice(5) - 1] + ' ' + P.signo((serie[x] / serie[sumar(x, -1)] - 1) * 100) + '%'); return L.join(' · '); };
-    const cuenta = (base, d, h) => '<b>' + pesos(base) + ' × ' + num(serie[h], 2) + ' ÷ ' + num(serie[d], 2) + ' = ' + pesos(base * serie[h] / serie[d]) + '</b>' + (diario ? I.t + ' del 1 de ' + mes(h) + ' ÷ ' + I.t + ' del 1 de ' + mes(d) : 'Índice de ' + mes(h) + ' ÷ índice de ' + mes(d) + (n > 1 ? '. Mes a mes: ' + P.esc(meses(d, h)) : ''));
-    // Con el alquiler de hoy, el primer ajuste que importa es el de este mes o el siguiente. Con el inicial, se recorren todos.
-    let a = sumar(ini, n);
-    if (est.base === 'actual') while (a < hoy) a = sumar(a, n);
-    let actual = M; const pasos = [];
+    // Todos los ajustes desde el inicio: cada uno se aplica sobre el monto que dejó el anterior
+    let a = sumar(ini, n), actual = M; const pasos = [];
     while (a <= hoy) {
       const [d, h] = ventana(a);
       if (!serie[d] || !serie[h]) break;
@@ -130,37 +116,34 @@ window.BBAlquiler = (function () {
       pasos.push({ a, f: serie[h] / serie[d], antes, actual, d, h });
       a = sumar(a, n);
     }
-    const lista = pasos.length > 1 ? '<li class="tit"><span>Ajuste por ajuste</span><span></span></li>' + pasos.map(p => '<li><span>' + Mes(p.a) + ' · ' + P.signo((p.f - 1) * 100) + '%</span><span>' + pesos(p.actual) + '</span></li>').join('') : '';
-    const fuente = 'Fuente: <a href="' + I.web + '" target="_blank" rel="noopener">' + I.fuente + '</a>, datos hasta ' + mes(fin) + '.';
     const u = pasos.at(-1), ev = I.re && cal && cal.eventos && cal.eventos.find(e => I.re.test(e.titulo) && e.fecha >= P.hoyISO());
     // El ajuste que se muestra: el de este mes si ya está; si no, el que sigue
     const [vd, vh] = ventana(a), aj = u && u.a === hoy ? u : { a, antes: actual, d: vd, h: vh, f: serie[vd] && serie[vh] ? serie[vh] / serie[vd] : null };
-    const comun = { estado: aj.a <= hoy ? 'En ' + mes(aj.a) + ' toca ajuste' : 'Próximo ajuste: ' + mes(aj.a), antesT: 'Hasta ' + mes(sumar(aj.a, -1)), antes: pesos(aj.antes), desdeT: 'Desde ' + mes(aj.a), pasos: lista, fuente };
+    const fechas = x => (diario ? '1 ' : '') + P.mesAnio(x), fila = (t, v, e) => '<li><span>' + t + (e ? '<em>' + e + '</em>' : '') + '</span><span>' + v + '</span></li>';
+    const filas = pasos.concat(aj === u ? [] : [aj]).map(p => (p.f ? fila(Mes(p.a) + ' · ' + P.signo((p.f - 1) * 100) + '%', pesos(p.antes * p.f), num(serie[p.h], 2) + ' ÷ ' + num(serie[p.d], 2) + ' (' + fechas(p.h) + ' ÷ ' + fechas(p.d) + ')') : fila(Mes(p.a), '—', 'Todavía no se sabe')));
+    const fuente = 'Fuente: <a href="' + I.web + '" target="_blank" rel="noopener">' + I.fuente + '</a>, datos hasta ' + mes(fin) + '.';
+    const comun = { estado: aj.a <= hoy ? 'En ' + mes(aj.a) + ' toca ajuste' : 'Próximo ajuste: ' + mes(aj.a), antesT: 'Hasta ' + mes(sumar(aj.a, -1)), antes: pesos(aj.antes), desdeT: 'Desde ' + mes(aj.a), pasos: fila(Mes(ini) + ' · inicio', pesos(M)) + filas.join(''), fuente };
     if (aj.f) {
       const nuevo = aj.antes * aj.f, suba = num((aj.f - 1) * 100) + '%';
       resultado = { titulo: comun.desdeT, valor: nuevo, linea: 'Sube ' + suba + ' por ' + I.t, texto: comun.desdeT + ' el alquiler queda en ' + pesos(nuevo) + ' (+' + suba + ' por ' + I.t + ').' };
-      const nota = (diario ? 'Es definitivo: el Banco Central publica este índice por adelantado.' : 'Es definitivo: ese dato ya está publicado.') + (aj === u && est.base === 'actual' ? ' Si ya cobraste este aumento, cargá el monto anterior.' : '');
-      return pone({ ...comun, sello: 'Definitivo', g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : '', cuenta: cuenta(aj.antes, aj.d, aj.h), nota });
+      return pone({ ...comun, g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : '' });
     }
     // Falta el dato final: lo acumulado se dice como tal, no como si fuera el aumento
-    const { d, h } = aj, lleva = serie[d] && fin > d && fin < h ? serie[fin] / serie[d] : null, nombre = x => (diario ? I.t + ' del 1 de ' + mes(x) : 'índice de ' + mes(x));
+    const { d, h } = aj, lleva = serie[d] && fin > d && fin < h ? serie[fin] / serie[d] : null;
     resultado = { titulo: comun.antesT, valor: aj.antes, linea: 'Ajuste de ' + mes(aj.a) + ' por ' + I.t + ': falta el dato', texto: comun.antesT + ' el alquiler sigue en ' + pesos(aj.antes) + '. El ajuste de ' + mes(aj.a) + ' por ' + I.t + ' todavía no se conoce.' };
     return pone({ ...comun, g: 'Todavía no se sabe', pendiente: true,
       txt: lleva ? 'El índice lleva ' + P.signo((lleva - 1) * 100) + '% en ' + entre(d, fin) + ' de ' + n + ' meses.' : '',
-      prox: diario ? 'Se conoce a mediados de ' + mes(sumar(h, -1)) + ', cuando el Banco Central publique el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Se conoce cuando salga el dato de ' + mes(h) + '.' + (ev ? ' El próximo dato sale el ' + dia(ev.fecha) + '.' : ''),
-      cuenta: '<b>' + pesos(aj.antes) + ' × ' + nombre(h) + ' ÷ ' + (serie[d] ? num(serie[d], 2) : nombre(d)) + '</b>' + (lleva ? 'Último dato publicado: ' + nombre(fin) + ' = ' + num(serie[fin], 2) + '.' : 'Todavía no se publicó ningún dato de ese período.'),
-      nota: 'Cuando salga el dato, esta cuenta se completa sola.' });
+      prox: diario ? 'Se conoce a mediados de ' + mes(sumar(h, -1)) + ', cuando el Banco Central publique el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Se conoce cuando salga el dato de ' + mes(h) + '.' + (ev ? ' El próximo dato sale el ' + dia(ev.fecha) + '.' : '') });
   }
 
   // ---- Enlace con los datos cargados: en el fragmento (#), que no viaja a ningún servidor al abrirlo
-  const enlace = () => SITIO + '#' + new URLSearchParams({ monto: monto(), inicio: inicio(), cada: est.cada, indice: est.indice, base: est.base, modo: est.modo });
+  const enlace = () => SITIO + '#' + new URLSearchParams({ monto: monto(), inicio: inicio(), cada: est.cada, indice: est.indice, modo: est.modo });
   function leerEnlace() {
     const q = new URLSearchParams((location.hash || '').slice(1));
     if (+q.get('monto') > 0) $('aq-monto').value = Math.floor(Math.min(+q.get('monto'), 1e10)).toLocaleString('es-AR');
     const f = q.get('inicio'); if (/^20\d\d-(0[1-9]|1[0-2])$/.test(f || '') && f >= '2020-01' && f <= hoy) { $('aq-mes').value = f.slice(5); $('aq-anio').value = f.slice(0, 4); }
     if (CADA.includes(+q.get('cada'))) est.cada = +q.get('cada');
     if (Object.hasOwn(INDICES, q.get('indice') || '')) est.indice = q.get('indice');
-    if (['actual', 'inicial'].includes(q.get('base'))) est.base = q.get('base');
     if (['publicados', 'periodo'].includes(q.get('modo'))) est.modo = q.get('modo');
   }
   const marcar = (id, v) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === String(v))));
@@ -211,18 +194,17 @@ window.BBAlquiler = (function () {
 
   async function montar({ raiz, abrirCuenta = false } = {}) {
     $(raiz).innerHTML = PLANTILLA;
-    const ini = sumar(hoy, -3);
+    const ini = sumar(hoy, -6);
     $('aq-mes').innerHTML = P.MESES.map((m, i) => '<option value="' + String(i + 1).padStart(2, '0') + '">' + m.replace(/^./, c => c.toUpperCase()) + '</option>').join('');
     for (let y = anioHoy; y >= 2020; y--) $('aq-anio').insertAdjacentHTML('beforeend', '<option value="' + y + '">' + y + '</option>');
     $('aq-mes').value = ini.slice(5); $('aq-anio').value = ini.slice(0, 4);
     leerEnlace();
-    marcar('aq-cada', est.cada); marcar('aq-indice', est.indice); marcar('aq-base', est.base); marcar('aq-modo', est.modo);
+    marcar('aq-cada', est.cada); marcar('aq-indice', est.indice); marcar('aq-modo', est.modo);
     if (abrirCuenta) $('aq-mas').open = true;
     $('aq-monto').addEventListener('input', e => { const v = monto(); e.target.value = v ? Math.min(v, 1e10).toLocaleString('es-AR') : ''; calcular(); });
     ['aq-mes', 'aq-anio'].forEach(id => $(id).addEventListener('change', calcular));
     P.seg('aq-cada', v => { est.cada = +v; calcular(); });
     P.seg('aq-indice', v => { est.indice = v; calcular(); });
-    P.seg('aq-base', v => { est.base = v; calcular(); });
     P.seg('aq-modo', v => { est.modo = v; calcular(); });
     if (navigator.share) $('aq-comp').querySelector('[data-c="mas"]').hidden = false;
     $('aq-comp').addEventListener('click', e => { const b = e.target.closest('button'); if (b) compartir(b.dataset.c, b); });

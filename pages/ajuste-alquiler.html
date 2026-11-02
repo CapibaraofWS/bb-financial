@@ -39,10 +39,10 @@
     {"@type":"Question","name":"¿Qué índice usa mi contrato?","acceptedAnswer":{"@type":"Answer","text":"El que diga el contrato. El artículo 1199 del Código Civil y Comercial, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado. Los más usados son el IPC del INDEC y el ICL del Banco Central."}},
     {"@type":"Question","name":"¿De dónde sale el número si el mes recién empieza?","acceptedAnswer":{"@type":"Answer","text":"Depende del índice. El Banco Central publica el ICL, el CER y la UVA por adelantado, así que el valor del día 1 ya se conoce. Con los índices del INDEC, si el contrato toma los últimos datos publicados, el número también se conoce. Si toma el período completo, hay que esperar el dato del mes anterior."}},
     {"@type":"Question","name":"¿Qué es el ICL?","acceptedAnswer":{"@type":"Answer","text":"El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1."}},
-    {"@type":"Question","name":"¿Qué monto tengo que cargar?","acceptedAnswer":{"@type":"Answer","text":"El alquiler que se paga hoy. Si preferís cargar el monto con el que empezó el contrato, en Más opciones elegí El del inicio y hace todos los ajustes, uno atrás del otro."}}
+    {"@type":"Question","name":"¿Qué monto tengo que cargar?","acceptedAnswer":{"@type":"Answer","text":"El alquiler con el que empezó el contrato. La calculadora hace todos los ajustes, uno atrás del otro: cada aumento se aplica sobre el monto que ya había subido. Si no tenés ese monto, cargá lo que pagás hoy y, como inicio, el mes del último aumento."}}
   ]}
   </script>
-  <link rel="stylesheet" href="../css/alquiler.css?v=2" />
+  <link rel="stylesheet" href="../css/alquiler.css?v=3" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -79,7 +79,7 @@
     <div class="container" style="padding-top:1.5rem">
       <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
       <h1 style="font-family:var(--font-display);font-weight:400;font-size:clamp(1.8rem,6vw,2.6rem);line-height:1.1;margin:0.6rem 0 0.3rem">¿Cuánto aumenta el alquiler?</h1>
-      <p style="color:var(--text-muted);margin:0 0 1rem">Cargá el alquiler, el inicio del contrato y el índice. Te decimos en qué mes toca el aumento y cuánto queda.</p>
+      <p style="color:var(--text-muted);margin:0 0 1rem">Cargá con cuánto empezó el contrato, cada cuánto ajusta y el índice. Te decimos cuánto se paga hoy y cuánto desde el próximo aumento.</p>
 
       <div class="aq-app" id="aq-raiz"><p class="aq-nota">Cargando la calculadora…</p></div>
 
@@ -111,9 +111,9 @@
 
     <section class="container bb-faq" aria-labelledby="aq-como-t">
       <h2 id="aq-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
-      <p>Un ajuste es una multiplicación: se divide el valor del índice al final del período por el del principio y ese resultado se multiplica por el alquiler. Si el índice pasó de 100 a 106, un alquiler de $500.000 queda en $530.000. En "Ver la cuenta" están los números que usa cada ajuste.</p>
+      <p>Un ajuste es una multiplicación: se divide el valor del índice al final del período por el del principio y ese resultado se multiplica por el alquiler. Si el índice pasó de 100 a 106, un alquiler de $500.000 queda en $530.000. Cada aumento se aplica sobre el monto que ya había subido. En "Ajuste por ajuste" están los números que usa cada uno.</p>
       <details><summary>¿Qué índice usa mi contrato?</summary><p>El que diga el contrato. El <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/texact.htm" target="_blank" rel="noopener">artículo 1199 del Código Civil y Comercial</a>, con el texto del DNU 70/2023, permite pactar cualquier índice, público o privado.</p></details>
-      <details><summary>¿Qué monto tengo que cargar?</summary><p>El alquiler que se paga hoy. Si preferís cargar el monto con el que empezó el contrato, en "Más opciones" elegí "El del inicio" y hace todos los ajustes, uno atrás del otro. Si el ajuste cae este mes, cargá el monto anterior al aumento.</p></details>
+      <details><summary>¿Qué monto tengo que cargar?</summary><p>El alquiler con el que empezó el contrato. La calculadora hace todos los ajustes, uno atrás del otro: cada aumento se aplica sobre el monto que ya había subido. Si no tenés ese monto, cargá lo que pagás hoy y, como inicio, el mes del último aumento.</p></details>
       <details><summary>¿De dónde sale el número si el mes recién empieza?</summary><p>Depende del índice. El Banco Central publica el ICL, el CER y la UVA por adelantado, así que el valor del día 1 ya se conoce. Con los índices del INDEC, si el contrato toma los últimos datos publicados, el número también se conoce. Si toma el período completo, hay que esperar el dato del mes anterior: hasta entonces la calculadora muestra el alquiler que sigue vigente y cuánto lleva acumulado el índice.</p></details>
       <details><summary>¿Qué es el ICL?</summary><p>El Índice para Contratos de Locación del Banco Central. Combina en partes iguales la inflación (IPC) y los salarios (RIPTE), y se publica día por día. Empezó el 1 de julio de 2020 con valor 1. El método está en la <a href="https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7096.pdf" target="_blank" rel="noopener">Comunicación A 7096</a>.</p></details>
       <details><summary>Mi contrato usa Casa Propia o CAC. ¿Sirve?</summary><p>Por ahora no están, porque no encontramos una fuente que se actualice sola y sea confiable. Preferimos no mostrar un número que no podamos controlar. El ICC de la lista es el del INDEC: no es el mismo que el de la Cámara de la Construcción.</p></details>
@@ -154,7 +154,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=21"></script>
-  <script src="../js/alquiler.js?v=2"></script>
+  <script src="../js/alquiler.js?v=3"></script>
   <script>
     BBAlquiler.montar({ raiz: 'aq-raiz', abrirCuenta: matchMedia('(min-width: 860px)').matches });
     (function () {
