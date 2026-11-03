@@ -100,8 +100,8 @@
       <section class="pa-graf" aria-labelledby="g-real-t">
         <div class="pa-graf-cab"><div>
           <h3 id="g-real-t">Los sueldos, descontada la inflación</h3>
-          <p class="ayuda"><strong>Qué ves:</strong> el poder de compra de los sueldos registrados. Cada línea arranca en 100 al principio del período que elijas: si está por encima de 100, esos sueldos subieron más que los precios; si está por debajo, la inflación les ganó.</p>
-        </div><button type="button" class="pa-bajar" data-exportar="g-real" data-titulo="Sueldos registrados descontada la inflación" data-fuente="INDEC (índice de salarios e IPC)">⬇ Imagen</button></div>
+          <p class="ayuda"><strong>Qué ves:</strong> el poder de compra de los sueldos. Cada línea arranca en 100 al principio del período que elijas: si está por encima de 100, esos sueldos subieron más que los precios; si está por debajo, la inflación les ganó. La línea de los no registrados termina cinco meses antes que las demás: el INDEC la publica con ese rezago, y acá cada dato va en el mes al que corresponde.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-real" data-titulo="Sueldos descontada la inflación" data-fuente="INDEC (índice de salarios e IPC)">⬇ Imagen</button></div>
         <div class="pa-seg" id="s-real" role="group" aria-label="Desde cuándo comparar">
           <button type="button" data-v="todo" aria-pressed="true">Desde 2017</button><button type="button" data-v="60" aria-pressed="false">5 años</button><button type="button" data-v="36" aria-pressed="false">3 años</button><button type="button" data-v="12" aria-pressed="false">1 año</button>
         </div>
@@ -206,7 +206,7 @@
         <p>Para saber si los sueldos <strong>le ganan a la inflación</strong>, la referencia es el índice de salarios del INDEC: compara los sueldos de los mismos puestos de trabajo mes a mes. Si en un año subieron 30% y los precios 25%, el poder de compra mejoró un 4% (1,30 / 1,25 = 1,04), no un 5%: por eso las cuentas de esta página dividen, no restan.</p>
         <p>El <strong>RIPTE</strong> responde otra pregunta: cuánto cobra en promedio un trabajador registrado estable, en pesos y antes de descuentos. Como es un promedio, los sueldos más altos lo tiran para arriba: la mayoría de los asalariados cobra menos que ese valor.</p>
         <details><summary>¿Qué quiere decir trabajo registrado?</summary><p>Que el trabajo está declarado y hace aportes a la seguridad social: asalariados del sector privado y del público, trabajadoras y trabajadores de casas particulares, monotributistas y autónomos. Los datos salen del SIPA, el sistema donde se registran esos aportes. El trabajo no registrado (en negro) no aparece ahí; se estima con la encuesta de hogares del INDEC.</p></details>
-        <details><summary>¿Y los sueldos no registrados?</summary><p>El INDEC también los mide, pero con un rezago de cinco meses: el dato de cada mes refleja lo que pasó cinco meses antes. Por eso esta página compara contra la inflación solo los sueldos registrados, que se miden en el mismo mes que los precios.</p></details>
+        <details><summary>¿Por qué la línea de los no registrados termina antes?</summary><p>Porque el INDEC mide esos sueldos con un rezago de cinco meses: el dato que publica para agosto refleja lo que se cobraba en marzo. Por eso en el gráfico cada dato se compara con la inflación de su mes real. Si se lo comparara con los precios del mes publicado, cuando la inflación es alta la caída se exagera: a comienzos de 2024 marcaría una pérdida de casi dos tercios frente a fines de 2016, cuando con los meses bien ubicados fue de cerca de la mitad.</p></details>
         <details><summary>¿Por qué la desocupación es trimestral?</summary><p>Porque sale de una encuesta a hogares que el INDEC hace durante todo el trimestre en 31 ciudades. Cubre a la población urbana, que es la gran mayoría del país. La fecha del próximo dato está en la tarjeta y en el <a href="panel-argentina">calendario del panel</a>.</p></details>
         <details><summary>¿Por qué hay dos números de trabajo no registrado?</summary><p>Porque se miden distinto. La encuesta de hogares del INDEC pregunta a las personas si les descuentan aportes jubilatorios, en 31 ciudades. Las cuentas nacionales cuentan puestos de trabajo en todo el país (una persona con dos trabajos suma dos) y combinan la encuesta con los registros de aportes. Los dos van en la misma dirección; el de la encuesta sale antes.</p></details>
         <details><summary>¿Por qué el sueldo mediano es más bajo que el promedio?</summary><p>Porque pocos sueldos muy altos suben el promedio, pero no mueven el del medio. Si en una oficina cuatro personas cobran $1 millón y una cobra $6 millones, el promedio es $2 millones y la mediana, $1 millón. Por eso la mediana dice mejor cuánto cobra un trabajador típico.</p></details>
@@ -338,9 +338,11 @@
 
     // ---- Gráfico: sueldos descontada la inflación
     if (IS.length) {
-      const K = [['privado', 'Sector privado registrado', '#a78bfa'], ['publico', 'Sector público', '#60a5fa'], ['registrado', 'Total registrados', '#e8edf5']];
-      const base = IS.filter(x => x.registrado > 0 && IPC[x.p]);
-      const datos = desde => { const s = base.filter(x => x.p >= desde), b = s[0]; return { labels: s.map(x => P.mesAnio(x.p)), sets: K.map(([k]) => s.map(x => x[k] > 0 && b[k] > 0 ? (x[k] / IPC[x.p]) / (b[k] / IPC[b.p]) * 100 : null)) }; };
+      const K = [['privado', 'Sector privado registrado', '#a78bfa'], ['publico', 'Sector público', '#60a5fa'], ['registrado', 'Total registrados', '#e8edf5'], ['noRegistrado', 'Privado no registrado', '#f59e0b']];
+      const base = IS.filter(x => x.registrado > 0 && IPC[x.p]), M = Object.fromEntries(IS.map(x => [x.p, x]));
+      // Los no registrados salen con 5 meses de rezago: el dato publicado en cada mes es el sueldo de cinco meses antes
+      const val = (k, p) => (M[k === 'noRegistrado' ? menos(p, -5) : p] || {})[k];
+      const datos = desde => { const s = base.filter(x => x.p >= desde), b = s[0]; return { labels: s.map(x => P.mesAnio(x.p)), sets: K.map(([k]) => s.map(x => { const v = val(k, x.p), v0 = val(k, b.p); return v > 0 && v0 > 0 ? (v / IPC[x.p]) / (v0 / IPC[b.p]) * 100 : null; })) }; };
       const d0 = datos('2016-12');
       const ch = new Chart($('g-real'), { type: 'line', data: { labels: d0.labels, datasets: K.map(([, t, c], i) => ({ label: t, data: d0.sets[i], borderColor: c, borderWidth: i === 2 ? 1.5 : 2, borderDash: i === 2 ? [5, 4] : [], pointRadius: 0, tension: 0.2 })) },
         options: opc(v => v, { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + num(c.parsed.y) + ' (' + P.signo(c.parsed.y - 100) + '%)' } } } }) });

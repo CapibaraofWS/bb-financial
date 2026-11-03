@@ -186,7 +186,7 @@
         <div class="cb-campo">
           <span class="cb-lupa" aria-hidden="true">🔍</span>
           <input id="cb-input" type="search" autocomplete="off"
-                 placeholder="Escribí lo que necesitás: cuotas, plazo fijo, inflación…"
+                 placeholder="Escribí lo que necesitás: alquiler, IPC, cuotas, plazo fijo…"
                  aria-describedby="cb-estado" />
           <button type="button" class="cb-limpiar" hidden aria-label="Limpiar búsqueda">✕</button>
         </div>
@@ -551,16 +551,17 @@
       'comparador-pix':    'brasil real pix viaje',
       'meta-financiera':   'ahorrar objetivo meta juntar plata cuanto por mes auto viaje',
       'fire':              'retiro temprano jubilarme independencia financiera regla del 4 vivir de rentas',
-      'ajuste-alquiler':   'alquiler contrato ajuste aumento icl ipc inquilino locacion cuanto sube',
-      'salario':           'sueldo aumento paritaria recomposicion cuanto gano real',
-      'sueldo-vs-promedio': 'sueldo promedio ripte salario minimo cuanto gana la gente comparar mi sueldo',
+      'ajuste-alquiler':   'alquiler contrato ajuste aumento icl ipc cer uva ripte ipim icc indice inquilino propietario dueño locacion cuanto sube actualizar alquilar depto departamento casa',
+      'salario':           'sueldo salario real aumento paritaria recomposicion cuanto gano neto bruto ganancias monotributo',
+      'sueldo-vs-promedio': 'sueldo promedio ripte salario minimo smvm mediana cuanto gana la gente comparar mi sueldo',
+      'linea-de-pobreza':  'pobreza pobre indigencia canasta basica cba cbt hogar familia ingreso alcanza indec',
       'conversion-tasas':  'tna tea tem convertir tasa nominal efectiva mensual anual',
       'caucion':           'caucion bursatil plazo corto garantia',
       'roi':               'retorno rentabilidad gane perdi porcentaje inversion',
       'dividendos':        'dividendo yield renta acciones cobro drip',
-      'renta-fija':        'bono on letra tir cupon obligacion negociable',
+      'renta-fija':        'bono on letra lecap boncer cer tir cupon obligacion negociable',
       'visor-bonos':       'treasury eeuu curva tasas tips estados unidos',
-      'visor-bonos-ar':    'al30 gd30 bonar global bopreal bonos argentinos tir duration',
+      'visor-bonos-ar':    'al30 gd30 bonar global bopreal bonos argentinos tir duration cer lecap boncer tasa fija dollar linked',
       'vpn':               'valor presente neto van proyecto flujo descontado',
       'wacc':              'costo de capital promedio ponderado tasa de descuento',
       'ddm':               'dividendos gordon valuacion accion precio justo',
@@ -618,9 +619,13 @@
 
       // Algunas herramientas figuran en dos categorias a proposito (caucion, VPN):
       // se cuentan una sola vez para no decir "2 herramientas" siendo la misma.
+      // Las siglas cortas (cer, ipc, uva) se buscan al principio de una palabra: "cer" no tiene que encontrar "conocer",
+      // pero "inf" sí encuentra "inflación" mientras se escribe. Las largas se buscan también sin el plural: "alquileres" encuentra "alquiler".
+      const coincide = (texto, term) => (term.length <= 3 ? new RegExp('\\b' + term.replace(/[^a-z0-9]/g, '')).test(texto)
+        : texto.includes(term) || (term.length > 4 && texto.includes(term.replace(/(es|s)$/, ''))));
       const encontradas = new Set();
       tarjetas.forEach(t => {
-        const ok = terminos.every(term => t.texto.includes(term));
+        const ok = terminos.every(term => coincide(t.texto, term));
         t.el.hidden = !ok;
         if (ok) encontradas.add(t.href);
       });
@@ -647,6 +652,12 @@
     limpiar.addEventListener('click', () => { input.value = ''; filtrar(''); input.focus(); });
     input.addEventListener('keydown', e => {
       if (e.key === 'Escape') { input.value = ''; filtrar(''); }
+      // Enter abre la primera herramienta que encontró
+      if (e.key === 'Enter' && input.value.trim()) {
+        clearTimeout(timer); filtrar(input.value);
+        const primera = tarjetas.find(t => !t.el.hidden && t.el.offsetParent);
+        if (primera) { e.preventDefault(); location.href = primera.el.href; }
+      }
     });
 
     chips.forEach(chip => chip.addEventListener('click', () => {

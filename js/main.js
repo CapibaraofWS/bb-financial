@@ -307,24 +307,18 @@ window.BB_GLOSARIO = {
     {
       kind: 'dropdown',
       title: 'Herramientas',
+      // Solo las más usadas en el día a día; las demás (interés simple, meta, tasas, ROI, FIRE, VPN, caución,
+      // valuación y carteras) están en la página de calculadoras, que tiene buscador
       items: [
         { href: pagesBase + 'calculadoras',      label: 'Todas las calculadoras', icon: '🧮' },
-        { href: pagesBase + 'interes-compuesto', label: 'Interés Compuesto',      icon: '📈' },
-        { href: pagesBase + 'interes-simple',    label: 'Interés Simple',         icon: '📊' },
-        { href: pagesBase + 'meta-financiera',   label: 'Meta Financiera',        icon: '🎯' },
-        { href: pagesBase + 'prestamo',          label: 'Préstamo',                icon: '💰' },
-        { href: pagesBase + 'inflacion',         label: 'Inflación',               icon: '📉' },
-        { href: pagesBase + 'linea-de-pobreza',  label: 'Línea de pobreza',        icon: '🏠' },
         { href: pagesBase + 'ajuste-alquiler',   label: 'Ajuste de alquiler',      icon: '🔑' },
-        { href: pagesBase + 'salario',           label: 'Salario',                 icon: '💵' },
+        { href: pagesBase + 'inflacion',         label: 'Inflación',               icon: '📉' },
+        { href: pagesBase + 'salario',           label: 'Sueldo real',             icon: '💵' },
         { href: pagesBase + 'sueldo-vs-promedio', label: 'Sueldo vs. promedio',    icon: '👥' },
-        { href: pagesBase + 'conversion-tasas',  label: 'Conversión de Tasas',    icon: '🔄' },
-        { href: pagesBase + 'roi',               label: 'ROI',                     icon: '📊' },
-        { href: pagesBase + 'fire',              label: 'FIRE',                    icon: '🔥' },
-        { href: pagesBase + 'vpn',               label: 'VPN',                     icon: '💎' },
-        { href: pagesBase + 'caucion',           label: 'Caución',                 icon: '⚡' },
-        // Las de valuación y carteras (WACC, DDM, múltiplos, Markowitz, portafolio) viven en su sección de la página de calculadoras
-        { href: pagesBase + 'calculadoras#avanzado', label: 'Avanzado: valuación y carteras', icon: '🔬' },
+        { href: pagesBase + 'comparador-plazos-fijos', label: 'Plazo fijo',        icon: '🏦' },
+        { href: pagesBase + 'prestamo',          label: 'Préstamo',                icon: '💰' },
+        { href: pagesBase + 'interes-compuesto', label: 'Interés Compuesto',      icon: '📈' },
+        { href: pagesBase + 'linea-de-pobreza',  label: 'Línea de pobreza',        icon: '🏠' },
       ],
     },
     {
