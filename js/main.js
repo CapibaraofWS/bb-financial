@@ -957,3 +957,22 @@ document.addEventListener('DOMContentLoaded', function () {
   a.addEventListener('click', function (e) { e.preventDefault(); history.back(); });
   if (ancla.classList.contains('pf-hero')) ancla.prepend(a); else ancla.before(a);
 });
+
+// Centro de las donas: muestra el total y, al pasar el mouse o tocar una porción, su nombre, su valor y qué parte del total es.
+// Se pasa por gráfico: plugins: [bbCentroDona({ titulo: 'Total', fmt: v => '$' + v, pct: true })]
+window.bbCentroDona = function (o) {
+  return { id: 'bbCentroDona', afterDraw: function (ch) {
+    var meta = ch.getDatasetMeta(0), arco = meta.data[0];
+    if (!arco) return;
+    var datos = ch.data.datasets[0].data, total = datos.reduce(function (s, v) { return s + (+v || 0); }, 0);
+    var activo = ch.getActiveElements()[0], v = activo ? +datos[activo.index] : total;
+    var x = arco.x, y = arco.y, ancho = arco.innerRadius * 1.6, c = ch.ctx, e = Math.max(1, Math.min(1.7, arco.innerRadius / 75));
+    c.save(); c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillStyle = '#9aa5b8'; c.font = '400 ' + Math.round(11 * e) + 'px Outfit, sans-serif';
+    c.fillText(activo ? ch.data.labels[activo.index] : o.titulo, x, y - 17 * e, ancho);
+    c.fillStyle = '#e8edf5'; c.font = '400 ' + Math.round(20 * e) + 'px "DM Serif Display", Georgia, serif';
+    c.fillText(o.fmt(v), x, y + 3 * e, ancho);
+    if (activo && o.pct !== false && total > 0) { c.fillStyle = '#9aa5b8'; c.font = '400 ' + Math.round(11 * e) + 'px "DM Mono", monospace'; c.fillText((v / total * 100).toFixed(1).replace('.', ',') + '%', x, y + 23 * e, ancho); }
+    c.restore();
+  } };
+};

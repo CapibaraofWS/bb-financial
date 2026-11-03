@@ -742,16 +742,17 @@
         type: 'doughnut',
         data: {
           labels: ['Aportes obligatorios', 'Ganancias', 'Gastos fijos', 'Discrecional'],
-          datasets: [{ data: chartData, backgroundColor: ['rgba(255,100,100,0.6)','rgba(255,150,50,0.6)','rgba(90,100,120,0.6)','rgba(74,222,154,0.7)'], borderColor: 'var(--bg-card)', borderWidth: 2 }]
+          datasets: [{ data: chartData, backgroundColor: ['rgba(255,100,100,0.6)','rgba(255,150,50,0.6)','rgba(90,100,120,0.6)','rgba(74,222,154,0.7)'], borderColor: 'var(--bg-card)', borderWidth: 2, hoverOffset: 8 }]
         },
         options: {
           responsive: true,
           cutout: '65%',
           plugins: {
             legend: { position: 'bottom', labels: { color:'#7a8599', font:{family:'DM Mono',size:10}, padding:12 } },
-            tooltip: { callbacks: { label: ctx => ctx.label + ': $' + formatUSD(ctx.parsed) + ' (' + ((ctx.parsed/bruto)*100).toFixed(1) + '%)' } }
+            tooltip: { enabled: false }
           }
-        }
+        },
+        plugins: [bbCentroDona({ titulo: 'Sueldo bruto', fmt: v => '$' + formatUSD(v) })]
       });
     }
 

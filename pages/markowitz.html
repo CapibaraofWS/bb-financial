@@ -475,8 +475,9 @@
       donutChart = new Chart(document.getElementById('donutChart'), {
         type:'doughnut',
         data:{ labels:assets.map((a,i)=>a.nombre||CLASS_DATA[a.clase].label.split(' ')[0]),
-          datasets:[{ data:assets.map(a=>a.peso), backgroundColor:COLORS.slice(0,n), borderColor:'var(--bg-card)', borderWidth:2 }] },
-        options:{ cutout:'60%', plugins:{ legend:{position:'bottom',labels:{color:'#7a8599',font:{family:'DM Mono',size:10},padding:8}} } }
+          datasets:[{ data:assets.map(a=>a.peso), backgroundColor:COLORS.slice(0,n), borderColor:'var(--bg-card)', borderWidth:2, hoverOffset:8 }] },
+        options:{ cutout:'60%', plugins:{ legend:{position:'bottom',labels:{color:'#7a8599',font:{family:'DM Mono',size:10},padding:8}}, tooltip:{ enabled:false } } },
+        plugins:[bbCentroDona({ titulo:'Tu cartera', fmt:v => v.toFixed(0) + '%', pct:false })]
       });
 
       if (scatterChart) scatterChart.destroy();
