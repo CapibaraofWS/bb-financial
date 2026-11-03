@@ -147,6 +147,7 @@
         </div>
         <div class="pa-mini" id="m-prod"></div>
         <div class="pa-tabla-wrap"><table class="pa-tabla" id="t-prod"><thead><tr><th>Cargando los precios del INDEC…</th></tr></thead></table></div>
+        <button type="button" class="pa-mas-fechas" id="b-prod" aria-controls="t-prod" aria-expanded="false" style="display:none"></button>
         <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank" rel="noopener">INDEC, Índice de precios al consumidor</a>, precios promedio por región.</p>
       </section>
 
@@ -234,6 +235,22 @@
     const REG = { GBA: 'Gran Buenos Aires', Pampeana: 'la región Pampeana', Noreste: 'el Noreste', Noroeste: 'el Noroeste', Cuyo: 'Cuyo', Patagonia: 'la Patagonia' };
     const GRUPOS = [[/^01\.1\.[1589]/, 'Panadería y almacén'], [/^01\.1\.[23]/, 'Carnes, pescado y fiambres'], [/^01\.1\.4/, 'Lácteos y huevos'], [/^01\.1\.[67]/, 'Frutas y verduras'], [/^01\.2|^02/, 'Bebidas e infusiones'], [/^(05|06|12)/, 'Limpieza e higiene'], [/./, 'Otros']];
     const caja = (t, v, d) => '<div><span>' + t + '</span><b>' + v + '</b><small>' + d + '</small></div>', pct = v => (v == null ? '—' : P.signo(v) + '%');
+    // Plegada muestra los primeros 8 productos; el botón despliega el resto
+    let abierta = false;
+    const plegar = () => {
+      const b = $('b-prod'), filas = [...$('t-prod').tBodies[0].rows], total = filas.filter(f => !f.classList.contains('grupo')).length;
+      let n = 0;
+      for (const f of filas) { const g = f.classList.contains('grupo'); if (!g) n++; f.hidden = !abierta && (g ? n >= 8 : n > 8); }
+      b.style.display = total > 8 ? '' : 'none';
+      b.setAttribute('aria-expanded', abierta);
+      b.innerHTML = (abierta ? 'Ver menos' : 'Ver los ' + total + ' productos') + ' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:0.25rem' + (abierta ? ';transform:rotate(180deg)' : '') + '"><path d="m6 9 6 6 6-6"/></svg>';
+    };
+    $('b-prod').addEventListener('click', e => {
+      // Al plegar, el botón queda en el mismo lugar de la pantalla
+      const b = e.currentTarget, y0 = b.getBoundingClientRect().top;
+      abierta = !abierta; plegar();
+      if (!abierta) window.scrollBy(0, b.getBoundingClientRect().top - y0);
+    });
     P.json('/api/indec?precios=1').then(pr => {
       if (!pr || !pr.regiones || !pr.regiones.GBA) { $('t-prod').innerHTML = '<thead><tr><th>No se pudieron cargar los precios. Probá de nuevo en un rato.</th></tr></thead>'; return; }
       const pinta = r => {
@@ -245,6 +262,7 @@
           if (G.length) h += '<tr class="grupo"><td colspan="4">' + t + '</td></tr>' + G.map(x => '<tr><td>' + esc(x.n) + '<small>' + esc(x.u) + '</small></td><td class="v">' + P.pesos(x.v) + '</td><td class="v">' + pct(x.m) + '</td><td class="v">' + pct(x.a) + '</td></tr>').join('');
         }
         $('t-prod').innerHTML = h + '</tbody>';
+        plegar();
         const C = L.filter(x => x.a != null).sort((a, b) => b.a - a.a), mas = C[0], menos = C.at(-1);
         $('m-prod').innerHTML = (ia != null && C.length ? caja('Subieron más que la inflación', C.filter(x => x.a > ia).length + ' de ' + C.length, 'En un año. La inflación de ' + REG[r] + ' fue ' + num(ia) + '%.') : '') +
           (mas ? caja('Lo que más subió en un año', pct(mas.a), esc(mas.n) + ', ' + esc(mas.u)) : '') +

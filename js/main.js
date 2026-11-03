@@ -951,3 +951,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var n = a.parentElement;
   if (n.scrollWidth > n.clientWidth) n.scrollLeft += a.getBoundingClientRect().left - n.getBoundingClientRect().left - (n.clientWidth - a.offsetWidth) / 2;
 });
+
+// Volver: si se llegó desde otra página del sitio, un botón arriba vuelve al mismo lugar de esa página.
+// Las páginas del panel ya tienen el suyo (data-volver, en panel.js).
+document.addEventListener('DOMContentLoaded', function () {
+  var ref = document.referrer, ancla = document.querySelector('.page-breadcrumb, .pf-hero');
+  if (!ancla || document.querySelector('[data-volver]') || !/^\/pages\/[^/]+$/.test(location.pathname) || history.length < 2) return;
+  if (ref.indexOf(location.origin + '/') !== 0 || new URL(ref).pathname === location.pathname) return;
+  var a = document.createElement('a');
+  a.className = 'bb-volver'; a.href = ref; a.innerHTML = '<i aria-hidden="true">←</i>Volver';
+  a.addEventListener('click', function (e) { e.preventDefault(); history.back(); });
+  if (ancla.classList.contains('pf-hero')) ancla.prepend(a); else ancla.before(a);
+});

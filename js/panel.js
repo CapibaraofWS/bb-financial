@@ -208,10 +208,12 @@ window.BBPanel = (function () {
   const BANDERA_USA = '<svg class="pa-bandera" viewBox="0 0 30 20" width="20" height="14" aria-hidden="true"><rect width="30" height="20" rx="2.5" fill="#fff"/><path d="M0 0h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30V7.7H0zm0 3.07h30v1.54H0zm0 3.08h30v1.54H0zm0 3.08h30v1.54H0zm0 3.07h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/></svg>';
   document.querySelectorAll('[data-bandera]').forEach(e => e.insertAdjacentHTML('afterbegin', e.dataset.bandera === 'usa' ? BANDERA_USA : BANDERA));
 
-  // ---- Volver: si se llegó desde el sitio, vuelve a la página anterior; si no, va al panel
+  // ---- Volver: si se llegó desde el sitio, dice "Volver" y vuelve al mismo lugar de la página anterior; si no, va al panel
+  const desdeSitio = document.referrer.startsWith(location.origin) && history.length > 1;
+  if (desdeSitio) document.querySelectorAll('[data-volver] .t').forEach(t => { t.textContent = 'Volver'; });
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-volver]'); if (!a) return;
-    if (document.referrer.startsWith(location.origin) && history.length > 1) { e.preventDefault(); history.back(); }
+    if (desdeSitio) { e.preventDefault(); history.back(); }
   });
 
   // ---- Brillo e inclinación suave de las tarjetas al pasar el mouse (solo con mouse y sin "reducir movimiento")
