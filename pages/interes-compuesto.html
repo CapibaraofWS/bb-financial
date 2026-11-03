@@ -199,6 +199,7 @@
             <p class="result-label">Capital final</p>
             <p class="result-value" id="res-total">$0</p>
             <p class="result-sub" id="res-sub">—</p>
+            <div id="comp-ic"></div>
           </div>
           <div class="result-row"><span class="label">Capital inicial</span><span class="value" id="res-capital">—</span></div>
           <div class="result-row"><span class="label">Total aportado</span><span class="value" id="res-aportado">—</span></div>
@@ -266,6 +267,15 @@
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=56"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
+  <script src="../js/compartir.js?v=1"></script>
+  <script>
+  BBCompartir.montar(document.getElementById('comp-ic'), { nombre: 'Calculadora de interés compuesto', archivo: 'interes-compuesto', dato: () => {
+    const $ = id => document.getElementById(id), cap = +$('capital').value || 0, ap = +$('aporte').value || 0, t = +$('plazo').value, total = $('res-total').textContent.replace(/^\$/, 'US$ ');
+    if (!(cap + ap > 0) || !(t > 0) || !/[1-9]/.test(total)) return null;
+    const us = v => 'US$ ' + v.toLocaleString('es-AR'), de = 'Con ' + us(cap) + ' iniciales' + (ap > 0 ? ' y ' + us(ap) + ' por mes' : '');
+    return { titulo: de, valor: total, linea: 'en ' + t + ' año' + (t !== 1 ? 's' : '') + ' al ' + $('tasa').value + '% anual', texto: de + ', al ' + $('tasa').value + '% anual, en ' + t + ' año' + (t !== 1 ? 's' : '') + ' se llega a ' + total + '.' };
+  } });
+  </script>
   <script>
     let chart = null;
 

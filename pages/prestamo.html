@@ -329,6 +329,7 @@
               <p class="result-label">Cuota mensual</p>
               <p class="result-value" id="res-cuota">$0</p>
               <p class="result-sub" id="res-cuota-sub">—</p>
+              <div id="comp-prest"></div>
             </div>
 
             <!-- TNA/TEA/CFTEA -->
@@ -430,6 +431,15 @@
   <script src="../js/sanitize.js?v=1"></script>
   <script src="../js/main.js?v=56"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
+  <script src="../js/compartir.js?v=1"></script>
+  <script>
+  BBCompartir.montar(document.getElementById('comp-prest'), { nombre: 'Calculadora de préstamo', archivo: 'prestamo', dato: () => {
+    const $ = id => document.getElementById(id), cap = +$('capital-prest').value, n = +$('plazo-prest').value, cuota = $('res-cuota').textContent.replace(/^\$/, 'US$ ');
+    if (!(cap > 0) || !(n > 0) || !/[1-9]/.test(cuota)) return null;
+    const de = 'Préstamo de US$ ' + cap.toLocaleString('es-AR') + ' en ' + n + ' cuotas';
+    return { titulo: de, valor: cuota, linea: 'de cuota mensual, con TNA de ' + $('tna').value + '%', texto: de + ' con TNA de ' + $('tna').value + '%: la cuota mensual da ' + cuota + '.' };
+  } });
+  </script>
   <script>
     let chart = null;
     let sistemaActual = 'frances';

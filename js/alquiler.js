@@ -184,10 +184,14 @@ window.BBAlquiler = (function () {
     const caja = $('aq-cards'); if (!caja) return;
     const filas = Object.entries(INDICES).map(([k, I]) => { const s = datos[k] || {}, u = Object.keys(s).sort().filter(p => p <= sumar(hoy, 1)).at(-1), a = u && sumar(u, -12); return u && s[a] ? { I, v: (s[u] / s[a] - 1) * 100, u } : null; }).filter(Boolean);
     if (!filas.length) return;
-    caja.innerHTML = filas.map(f => '<div><span>' + f.I.t + '</span><b>' + P.signo(f.v) + '%</b><small>12 meses a ' + P.mesAnio(f.u) + '</small></div>').join('');
+    // Referencia: lo que subieron los alquileres que releva el INDEC en el Gran Buenos Aires (no es un índice de ajuste)
+    const A = datos.alq, ua = A && Object.keys(A).sort().at(-1), aa = ua && sumar(ua, -12);
+    caja.innerHTML = filas.map(f => '<div><span>' + f.I.t + '</span><b>' + P.signo(f.v) + '%</b><small>12 meses a ' + P.mesAnio(f.u) + '</small></div>').join('') +
+      (ua && A[aa] ? '<div class="aq-ref"><span>Alquileres en el IPC · GBA</span><b>' + P.signo((A[ua] / A[aa] - 1) * 100) + '%</b><small>12 meses a ' + P.mesAnio(ua) + '. Referencia: no se usa para ajustar</small></div>' : '');
     if (typeof Chart === 'undefined' || !$('g-aq')) return;
     const m0 = sumar(hoy, -plazo), L = []; for (let m = m0; m <= hoy; m = sumar(m, 1)) L.push(m);
     const ds = Object.entries(INDICES).filter(([k]) => datos[k] && datos[k][m0]).map(([k, I]) => ({ label: I.t, data: L.map(m => (datos[k][m] ? (datos[k][m] / datos[k][m0] - 1) * 100 : null)), borderColor: I.color, backgroundColor: I.color, borderWidth: 2, pointRadius: 0, tension: 0.2 }));
+    if (A && A[m0]) ds.push({ label: 'Alquileres (IPC GBA)', data: L.map(m => (A[m] ? (A[m] / A[m0] - 1) * 100 : null)), borderColor: '#ffffff', backgroundColor: '#ffffff', borderWidth: 2, borderDash: [5, 4], pointRadius: 0, tension: 0.2 });
     if (grafico) grafico.destroy();
     grafico = new Chart($('g-aq'), { type: 'line', data: { labels: L.map(P.mesAnio), datasets: ds }, options: P.ejes(v => v + '%', { plugins: { legend: { labels: { color: '#9aa5b8', boxWidth: 12 } }, tooltip: { callbacks: { label: c => (c.parsed.y == null ? null : c.dataset.label + ': ' + P.signo(c.parsed.y) + '%') } } } }) });
   }
@@ -219,7 +223,8 @@ window.BBAlquiler = (function () {
     datos.ipc = Object.fromEntries(((rIpc && rIpc.general) || []).map(x => [x.p, x.i]));
     if (rBc) { datos.icl = aMapa(rBc.meses || []); if (rBc.cer) datos.cer = aMapa(rBc.cer); if (rBc.uva) datos.uva = aMapa(rBc.uva); }
     calcular(); resumen();
-    const [rOtros, rSal] = await Promise.all([P.API.otrosPrecios(), P.API.salarios()]);
+    const [rOtros, rSal, rAlq] = await Promise.all([P.API.otrosPrecios(), P.API.salarios(), $('aq-cards') ? P.json('/api/indec?alquileres=1') : null]);
+    if (rAlq && rAlq.serie) datos.alq = aMapa(rAlq.serie);
     if (rOtros && rOtros.mayoristas) datos.ipim = aMapa(rOtros.mayoristas.general);
     if (rOtros && rOtros.construccion) datos.icc = aMapa(rOtros.construccion.general);
     if (rSal && rSal.indice) datos.is = Object.fromEntries(rSal.indice.filter(x => x.total > 0).map(x => [x.p, x.total]));

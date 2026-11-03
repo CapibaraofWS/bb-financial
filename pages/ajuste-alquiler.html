@@ -42,7 +42,7 @@
     {"@type":"Question","name":"¿Qué monto tengo que cargar?","acceptedAnswer":{"@type":"Answer","text":"El alquiler con el que empezó el contrato. La calculadora hace todos los ajustes, uno atrás del otro: cada aumento se aplica sobre el monto que ya había subido. Si no tenés ese monto, cargá lo que pagás hoy y, como inicio, el mes del último aumento."}}
   ]}
   </script>
-  <link rel="stylesheet" href="../css/alquiler.css?v=3" />
+  <link rel="stylesheet" href="../css/alquiler.css?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -88,7 +88,7 @@
       <section class="pa-graf" aria-labelledby="g-aq-t">
         <div class="pa-graf-cab"><div>
           <h3 id="g-aq-t">Cuánto subió cada índice</h3>
-          <p class="ayuda"><strong>Qué ves:</strong> arriba, la suba en 12 meses con el último dato de cada índice. En el gráfico, todos arrancan del mismo mes: cada línea llega hasta su último dato.</p>
+          <p class="ayuda"><strong>Qué ves:</strong> arriba, la suba en 12 meses con el último dato de cada índice. En el gráfico, todos arrancan del mismo mes: cada línea llega hasta su último dato. La línea punteada muestra cuánto subieron los alquileres que releva el INDEC en el Gran Buenos Aires: sirve de referencia y no se usa para ajustar contratos.</p>
         </div><button type="button" class="pa-bajar" data-exportar="g-aq" data-titulo="Cuánto subió cada índice" data-fuente="INDEC, BCRA y Secretaría de Trabajo">⬇ Imagen</button></div>
         <div class="pa-mini" id="aq-cards"></div>
         <div class="pa-seg" id="s-aq" role="group" aria-label="Período">
@@ -154,7 +154,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
   <script src="../js/chart-mobile.js?v=1"></script>
   <script src="../js/panel.js?v=21"></script>
-  <script src="../js/alquiler.js?v=3"></script>
+  <script src="../js/alquiler.js?v=4"></script>
   <script>
     BBAlquiler.montar({ raiz: 'aq-raiz', abrirCuenta: matchMedia('(min-width: 860px)').matches });
     (function () {

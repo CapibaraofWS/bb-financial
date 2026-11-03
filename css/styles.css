@@ -1893,3 +1893,8 @@ td[data-skel] { text-align: left !important; padding: 1rem 0.7rem !important; }
 .bb-volver { position: relative; display: inline-flex; align-items: center; height: 38px; padding: 0 0.9rem 0 2.6rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); font-size: 0.82rem; text-decoration: none; overflow: hidden; margin-bottom: 1rem; }
 .bb-volver i { position: absolute; inset: 0 auto 0 0; width: 2.1rem; display: grid; place-items: center; background: rgba(74,222,154,0.1); color: var(--accent); font-style: normal; }
 .bb-volver:hover, .bb-volver:focus-visible { color: var(--text); border-color: rgba(74,222,154,0.4); }
+
+/* Compartir el resultado de una calculadora (js/compartir.js) */
+.bb-comp { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 0.35rem; margin-top: 0.8rem; }
+.bb-comp button { min-height: 38px; padding: 0.3rem 0.4rem; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 0.78rem; cursor: pointer; }
+.bb-comp button:hover, .bb-comp button:focus-visible { color: var(--accent); border-color: rgba(74,222,154,0.4); }

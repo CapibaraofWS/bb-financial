@@ -249,13 +249,38 @@ async function ipcApi() {
   };
 }
 
-// ?precios=1: precio promedio de los productos que releva el IPC (59 en Gran Buenos Aires y 14 en cada región), de la API del INDEC.
-// Si la API falla (por ejemplo, porque venció el token), sigue la última copia guardada en Redis.
-const unidad = t => String(t || '').replace(/^Valor por\s*/i, '').replace(/^Env\.\s*/i, 'envase de ').replace(/^Bot\.\s*/i, 'botella de ').replace(/^Lata\s+/i, 'lata de ')
-  .replace(/\bu$/, 'unidades').replace(/^(Litro|Docena)$/i, x => x.toLowerCase()).trim();
-async function precios(req, res) {
+// Lo que sale solo de la API del INDEC: si la API falla (por ejemplo, porque venció el token), sigue la última copia guardada en Redis
+async function conRespaldo(res, clave, armar) {
   let out = null;
   try {
+    out = await armar();
+    await redis(['SET', clave, JSON.stringify(out)]);
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json(out);
+  } catch {
+    try { out = JSON.parse(await redis(['GET', clave]) || 'null'); } catch {}
+    if (!out) return res.status(502).json({ error: 'No se pudieron leer los datos del INDEC' });
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    return res.status(200).json(out);
+  }
+}
+
+// ?alquileres=1: el índice de "Alquiler de la vivienda" del IPC en Gran Buenos Aires. Es la referencia de cuánto subieron
+// los alquileres que releva el INDEC; no es un índice de ajuste de contratos.
+function alquileres(req, res) {
+  return conRespaldo(res, 'alquileres:ultimo', async () => {
+    const f = await apiIndec('ipc_nacional?select=periodo,valor&region=eq.GBA&codigo=eq.04.1.1&tipo_de_indicador=eq.Indice&periodo=gte.201912&order=periodo');
+    const serie = f.filter(x => /^\d{6}$/.test(x.periodo) && x.valor > 0).map(x => [x.periodo.slice(0, 4) + '-' + x.periodo.slice(4), x.valor]);
+    if (serie.length < 24) throw new Error('formato');
+    return { fuente: 'INDEC, Índice de precios al consumidor: alquiler de la vivienda (Gran Buenos Aires)', url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31', serie };
+  });
+}
+
+// ?precios=1: precio promedio de los productos que releva el IPC (59 en Gran Buenos Aires y 14 en cada región), de la API del INDEC
+const unidad = t => String(t || '').replace(/^Valor por\s*/i, '').replace(/^Env\.\s*/i, 'envase de ').replace(/^Bot\.\s*/i, 'botella de ').replace(/^Lata\s+/i, 'lata de ')
+  .replace(/\bu$/, 'unidades').replace(/^(Litro|Docena)$/i, x => x.toLowerCase()).trim();
+function precios(req, res) {
+  return conRespaldo(res, 'precios:ultimo', async () => {
     const d = new Date(); d.setUTCMonth(d.getUTCMonth() - 16);
     const filas = await apiIndec('ipc_nacional?select=region,codigo,descripcion,tipo_de_indicador_descripcion,periodo,valor&tipo_de_indicador=eq.Precio%20promedio&periodo=gte.' + d.toISOString().slice(0, 7).replace('-', '') + '&order=region,codigo,periodo');
     const S = {};
@@ -269,16 +294,8 @@ async function precios(req, res) {
     for (const x of L) if (x.s[p]) (regiones[x.region] ||= []).push({ c: x.c, n: x.n, u: x.u, v: x.s[p], m: v1(x.s[p], x.s[pm]), a: v1(x.s[p], x.s[pa]) });
     for (const r of Object.values(regiones)) r.sort((a, b) => (a.c < b.c ? -1 : 1));
     if (!(regiones.GBA && regiones.GBA.length >= 40) || Object.keys(regiones).length < 6 || Object.values(regiones).some(r => r.length < 10)) throw new Error('formato');
-    out = { fuente: 'INDEC, Índice de precios al consumidor: precios promedio', url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31', p, regiones };
-    await redis(['SET', 'precios:ultimo', JSON.stringify(out)]);
-    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
-    return res.status(200).json(out);
-  } catch {
-    try { out = JSON.parse(await redis(['GET', 'precios:ultimo']) || 'null'); } catch {}
-    if (!out) return res.status(502).json({ error: 'No se pudieron leer los precios del INDEC' });
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
-    return res.status(200).json(out);
-  }
+    return { fuente: 'INDEC, Índice de precios al consumidor: precios promedio', url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31', p, regiones };
+  });
 }
 
 // ?emae=1: estimador mensual de actividad desde el archivo del INDEC (el portal de datos abiertos a veces lo devuelve vacío)
@@ -1137,6 +1154,7 @@ export default async function handler(req, res) {
   if (req.query.empleo) return empleo(req, res);
   if (req.query.ipc) return ipc(req, res);
   if (req.query.precios) return precios(req, res);
+  if (req.query.alquileres) return alquileres(req, res);
   if (req.query.emae) return emae(req, res);
   if (req.query.canasta) return canasta(req, res);
   if (req.query.pobreza) return pobreza(req, res);
