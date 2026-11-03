@@ -163,14 +163,17 @@ async function ipc(req, res) {
     if (!r.ok) throw new Error();
     const t = new TextDecoder('latin1').decode(await r.arrayBuffer());
     const n = v => { const x = parseFloat(String(v).replace(',', '.')); return Number.isFinite(x) ? x : null; };
-    const general = [], cat = { 'Núcleo': [], Regulados: [], Estacional: [] }, bys = { Bienes: [], Servicios: [] }, div = {}, reg = {};
+    const general = [], cat = { 'Núcleo': [], Regulados: [], Estacional: [] }, bys = { Bienes: [], Servicios: [] }, div = {}, reg = {}, divReg = {};
     for (const linea of t.split(/\r?\n/)) {
       const c = linea.split(';');
       if (c.length < 8 || !/^\d{6}$/.test(c[3])) continue;
       const p = c[3].slice(0, 4) + '-' + c[3].slice(4), fila = { p, m: n(c[5]), a: n(c[6]) };
       const region = c[7].trim();
-      if (c[0] === '0' && region !== 'Nacional') { if (!reg[region] || reg[region].p < p) reg[region] = Object.assign({ region }, fila); continue; }
-      if (region !== 'Nacional') continue;
+      if (region !== 'Nacional') {
+        if (c[0] === '0') { if (!reg[region] || reg[region].p < p) reg[region] = Object.assign({ region }, fila); }
+        else if (/^\d{2}$/.test(c[0]) && p >= ((divReg[region] || {})[c[0]]?.p || '')) (divReg[region] ||= {})[c[0]] = Object.assign({ codigo: c[0] }, fila);
+        continue;
+      }
       if (c[0] === '0') general.push(Object.assign({ i: n(c[4]) }, fila));
       else if (c[2] === 'Categorias') { const k = c[0] === 'Estacional' ? 'Estacional' : c[0] === 'Regulados' ? 'Regulados' : 'Núcleo'; cat[k].push(fila); }
       else if (c[2] === 'Bienes y servicios') (c[0] === 'B' ? bys.Bienes : bys.Servicios).push(fila);
@@ -187,9 +190,94 @@ async function ipc(req, res) {
       bienesServicios: Object.fromEntries(Object.entries(bys).map(([k, v]) => [k, ult(v)])),
       divisiones: Object.values(div).filter(d => d.p === u.p).sort((a, b) => (a.codigo < b.codigo ? -1 : 1)),
       regiones: Object.values(reg).filter(x => x.p === u.p),
+      divisionesRegion: Object.fromEntries(Object.entries(divReg).map(([r, o]) => [r, Object.values(o).filter(d => d.p === u.p).sort((a, b) => (a.codigo < b.codigo ? -1 : 1))])),
     });
   } catch {
-    return res.status(502).json({ error: 'No se pudo leer el IPC del INDEC' });
+    // Si el CSV falla o cambia de formato, lo mismo sale de la API del INDEC (caché corto para volver pronto al CSV)
+    try {
+      const d = await ipcApi();
+      res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+      return res.status(200).json(d);
+    } catch {
+      return res.status(502).json({ error: 'No se pudo leer el IPC del INDEC' });
+    }
+  }
+}
+
+// API del INDEC (api.indec.gob.ar, en beta desde noviembre de 2026): JSON que se actualiza minutos después de cada informe.
+// El token va en la variable INDEC_API de Vercel y vence a los 6 meses: el actual, el 2 de mayo de 2027.
+// Cada pedido devuelve hasta 1000 filas; si hay más, se piden por páginas.
+async function apiIndec(ruta) {
+  const token = (process.env.INDEC_API || '').trim().replace(/^["']|["']$/g, '').replace(/^Bearer\s+/i, '');
+  if (!token) throw new Error('sin token');
+  const filas = [];
+  for (let desde = 0; desde < 5000; desde += 1000) {
+    const r = await fetch('https://api.indec.gob.ar/v1/' + ruta + '&limit=1000&offset=' + desde, { signal: AbortSignal.timeout(12000), headers: { Authorization: 'Bearer ' + token } });
+    if (!r.ok) throw new Error('API del INDEC ' + r.status);
+    const parte = await r.json();
+    if (!Array.isArray(parte)) throw new Error('formato');
+    filas.push(...parte);
+    if (parte.length < 1000) break;
+  }
+  return filas;
+}
+
+// El IPC desde la API, con la misma forma que el del CSV
+async function ipcApi() {
+  const Q = 'ipc_nacional?select=region,codigo,descripcion,periodo,tipo_de_indicador,valor&tipo_de_indicador=in.(Indice,v_m,v_ia)';
+  const ym = p => p.slice(0, 4) + '-' + p.slice(4), n = v => (Number.isFinite(v) ? v : null);
+  // Agrupa por período: { 'AAAA-MM': { p, i, m, a } }
+  const porMes = filas => { const o = {}; for (const f of filas) { const x = (o[f.periodo] ||= { p: ym(f.periodo), i: null, m: null, a: null }); x[{ Indice: 'i', v_m: 'm', v_ia: 'a' }[f.tipo_de_indicador]] = n(f.valor); } return Object.values(o).sort((a, b) => (a.p < b.p ? -1 : 1)); };
+  const general = porMes(await apiIndec(Q + '&region=eq.Nacional&codigo=eq.0&periodo=gte.201701&order=periodo'));
+  const u = general.at(-1);
+  if (!u || general.length < 60 || !(u.m > -5 && u.m < 50)) throw new Error('rango');
+  const [y, m] = u.p.split('-').map(Number), t = y * 12 + m - 1 - 36, desde = Math.floor(t / 12) + String(t % 12 + 1).padStart(2, '0');
+  const [cats, ult] = await Promise.all([
+    apiIndec(Q + '&region=eq.Nacional&codigo=in.(N,R,E,B,S)&periodo=gte.' + desde + '&order=codigo,periodo'),
+    apiIndec(Q + '&periodo=eq.' + u.p.replace('-', '') + '&or=(nivel.eq.División,codigo.eq.0)&order=region,codigo'),
+  ]);
+  const de = cod => porMes(cats.filter(f => f.codigo === cod)).map(({ p, m, a }) => ({ p, m, a }));
+  const divs = r => { const o = {}; for (const f of ult) if (f.region === r && /^\d{2}$/.test(f.codigo) && f.tipo_de_indicador !== 'Indice') Object.assign((o[f.codigo] ||= { codigo: f.codigo, nombre: f.descripcion.trim(), p: u.p }), { [f.tipo_de_indicador === 'v_m' ? 'm' : 'a']: n(f.valor) }); return Object.values(o).sort((a, b) => (a.codigo < b.codigo ? -1 : 1)); };
+  const regiones = [...new Set(ult.map(f => f.region))].filter(r => r !== 'Nacional');
+  const divisiones = divs('Nacional');
+  if (divisiones.length !== 12) throw new Error('formato');
+  return {
+    fuente: 'INDEC, Índice de precios al consumidor (cobertura nacional)', url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31',
+    general, categorias: { 'Núcleo': de('N'), Regulados: de('R'), Estacional: de('E') }, bienesServicios: { Bienes: de('B'), Servicios: de('S') }, divisiones,
+    regiones: regiones.map(r => Object.assign({ region: r, p: u.p }, ...ult.filter(f => f.region === r && f.codigo === '0' && f.tipo_de_indicador !== 'Indice').map(f => ({ [f.tipo_de_indicador === 'v_m' ? 'm' : 'a']: n(f.valor) })))),
+    divisionesRegion: Object.fromEntries(regiones.map(r => [r, divs(r).map(({ codigo, p, m, a }) => ({ codigo, p, m, a }))])),
+  };
+}
+
+// ?precios=1: precio promedio de los productos que releva el IPC (59 en Gran Buenos Aires y 14 en cada región), de la API del INDEC.
+// Si la API falla (por ejemplo, porque venció el token), sigue la última copia guardada en Redis.
+const unidad = t => String(t || '').replace(/^Valor por\s*/i, '').replace(/^Env\.\s*/i, 'envase de ').replace(/^Bot\.\s*/i, 'botella de ').replace(/^Lata\s+/i, 'lata de ')
+  .replace(/\bu$/, 'unidades').replace(/^(Litro|Docena)$/i, x => x.toLowerCase()).trim();
+async function precios(req, res) {
+  let out = null;
+  try {
+    const d = new Date(); d.setUTCMonth(d.getUTCMonth() - 16);
+    const filas = await apiIndec('ipc_nacional?select=region,codigo,descripcion,tipo_de_indicador_descripcion,periodo,valor&tipo_de_indicador=eq.Precio%20promedio&periodo=gte.' + d.toISOString().slice(0, 7).replace('-', '') + '&order=region,codigo,periodo');
+    const S = {};
+    for (const f of filas) if (f.valor > 0 && /^\d{6}$/.test(f.periodo) && f.region && f.codigo)
+      (S[f.region + '|' + f.codigo] ||= { region: f.region, c: f.codigo, n: String(f.descripcion || '').trim(), u: unidad(f.tipo_de_indicador_descripcion), s: {} }).s[f.periodo.slice(0, 4) + '-' + f.periodo.slice(4)] = f.valor;
+    const L = Object.values(S), p = L.flatMap(x => Object.keys(x.s)).sort().at(-1);
+    if (!p) throw new Error('vacío');
+    const antes = k => { const [y, m] = p.split('-').map(Number), t = y * 12 + m - 1 - k; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); };
+    const pm = antes(1), pa = antes(12), v1 = (a, b) => (a && b ? Math.round((a / b - 1) * 1000) / 10 : null);
+    const regiones = {};
+    for (const x of L) if (x.s[p]) (regiones[x.region] ||= []).push({ c: x.c, n: x.n, u: x.u, v: x.s[p], m: v1(x.s[p], x.s[pm]), a: v1(x.s[p], x.s[pa]) });
+    for (const r of Object.values(regiones)) r.sort((a, b) => (a.c < b.c ? -1 : 1));
+    if (!(regiones.GBA && regiones.GBA.length >= 40) || Object.keys(regiones).length < 6 || Object.values(regiones).some(r => r.length < 10)) throw new Error('formato');
+    out = { fuente: 'INDEC, Índice de precios al consumidor: precios promedio', url: 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31', p, regiones };
+    await redis(['SET', 'precios:ultimo', JSON.stringify(out)]);
+    res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+    return res.status(200).json(out);
+  } catch {
+    try { out = JSON.parse(await redis(['GET', 'precios:ultimo']) || 'null'); } catch {}
+    if (!out) return res.status(502).json({ error: 'No se pudieron leer los precios del INDEC' });
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    return res.status(200).json(out);
   }
 }
 
@@ -1048,6 +1136,7 @@ export default async function handler(req, res) {
   if (req.query.salarios) return salarios(req, res);
   if (req.query.empleo) return empleo(req, res);
   if (req.query.ipc) return ipc(req, res);
+  if (req.query.precios) return precios(req, res);
   if (req.query.emae) return emae(req, res);
   if (req.query.canasta) return canasta(req, res);
   if (req.query.pobreza) return pobreza(req, res);

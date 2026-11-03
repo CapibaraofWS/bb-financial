@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Inflación en la Argentina hoy: IPC, núcleo y rubros — BB Finanzas</title>
-  <meta name="description" content="La inflación de la Argentina con los datos del INDEC: el último IPC, la interanual, la inflación núcleo, regulados y estacionales, cada rubro, cada región y un mapa de calor mes a mes desde 2017. Se actualiza solo." />
+  <meta name="description" content="La inflación de la Argentina con los datos del INDEC: el último IPC, la interanual, la inflación núcleo, regulados y estacionales, cada rubro, cada región, el precio promedio de productos básicos y un mapa de calor mes a mes desde 2017. Se actualiza solo." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/panel-precios" />
   <meta property="og:type" content="website" />
@@ -77,7 +77,7 @@
       <a class="pa-volver" href="panel-argentina" data-volver><span class="t">Panel Argentina</span><i aria-hidden="true">←</i></a>
       <p class="pa-eyebrow" data-bandera>Panel Argentina · Precios</p>
       <h1>La inflación, mes a mes</h1>
-      <p class="sub">El índice de precios del INDEC con todas sus aperturas: la inflación de fondo, los precios que fija el Estado, cada rubro y cada región. Se actualiza solo el día que el INDEC publica.</p>
+      <p class="sub">El índice de precios del INDEC con todas sus aperturas: la inflación de fondo, los precios que fija el Estado, cada rubro, cada región y lo que cuestan los productos básicos. Se actualiza solo el día que el INDEC publica.</p>
     </section>
 
     <div class="container" style="padding-bottom:4rem">
@@ -137,6 +137,18 @@
         <p class="fuente">Fuente: INDEC.</p>
       </section>
 
+      <section class="pa-graf" aria-labelledby="t-prod-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="t-prod-t">Cuánto cuestan los productos básicos</h3>
+          <p class="ayuda"><strong>Qué ves:</strong> el precio promedio que relevó el INDEC en cada región, con su presentación, y cuánto cambió en un mes y en un año. En Gran Buenos Aires mide más productos que en el resto. Es un promedio de muchos comercios y sirve como referencia: en cada uno el precio puede ser distinto.</p>
+        </div></div>
+        <div class="pa-seg" id="s-prod" role="group" aria-label="Región">
+          <button type="button" data-v="GBA" aria-pressed="true">Gran Buenos Aires</button><button type="button" data-v="Pampeana" aria-pressed="false">Pampeana</button><button type="button" data-v="Noreste" aria-pressed="false">Noreste</button><button type="button" data-v="Noroeste" aria-pressed="false">Noroeste</button><button type="button" data-v="Cuyo" aria-pressed="false">Cuyo</button><button type="button" data-v="Patagonia" aria-pressed="false">Patagonia</button>
+        </div>
+        <div class="pa-mini" id="m-prod"></div>
+        <div class="pa-tabla-wrap"><table class="pa-tabla" id="t-prod"><thead><tr><th>Cargando los precios del INDEC…</th></tr></thead></table></div>
+        <p class="fuente">Fuente: <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank" rel="noopener">INDEC, Índice de precios al consumidor</a>, precios promedio por región.</p>
+      </section>
 
       <section class="pa-graf" aria-labelledby="g-otros-t">
         <div class="pa-graf-cab"><div>
@@ -217,6 +229,31 @@
     // ---- Mapa de calor
     P.mapaCalor($('calor'), g);
     P.ultimo('calor', P.mesLargo(u.p));
+
+    // ---- Precios promedio de productos, por región (no espera a los gráficos)
+    const REG = { GBA: 'Gran Buenos Aires', Pampeana: 'la región Pampeana', Noreste: 'el Noreste', Noroeste: 'el Noroeste', Cuyo: 'Cuyo', Patagonia: 'la Patagonia' };
+    const GRUPOS = [[/^01\.1\.[1589]/, 'Panadería y almacén'], [/^01\.1\.[23]/, 'Carnes, pescado y fiambres'], [/^01\.1\.4/, 'Lácteos y huevos'], [/^01\.1\.[67]/, 'Frutas y verduras'], [/^01\.2|^02/, 'Bebidas e infusiones'], [/^(05|06|12)/, 'Limpieza e higiene'], [/./, 'Otros']];
+    const caja = (t, v, d) => '<div><span>' + t + '</span><b>' + v + '</b><small>' + d + '</small></div>', pct = v => (v == null ? '—' : P.signo(v) + '%');
+    P.json('/api/indec?precios=1').then(pr => {
+      if (!pr || !pr.regiones || !pr.regiones.GBA) { $('t-prod').innerHTML = '<thead><tr><th>No se pudieron cargar los precios. Probá de nuevo en un rato.</th></tr></thead>'; return; }
+      const pinta = r => {
+        const L = pr.regiones[r] || [], ia = ((ipc.regiones || []).find(x => x.region === r) || {}).a;
+        let h = '<thead><tr><th>Producto</th><th>Precio</th><th>En el mes</th><th>En un año</th></tr></thead><tbody>';
+        const usados = new Set();
+        for (const [re, t] of GRUPOS) {
+          const G = L.filter(x => !usados.has(x) && re.test(x.c)); G.forEach(x => usados.add(x));
+          if (G.length) h += '<tr class="grupo"><td colspan="4">' + t + '</td></tr>' + G.map(x => '<tr><td>' + esc(x.n) + '<small>' + esc(x.u) + '</small></td><td class="v">' + P.pesos(x.v) + '</td><td class="v">' + pct(x.m) + '</td><td class="v">' + pct(x.a) + '</td></tr>').join('');
+        }
+        $('t-prod').innerHTML = h + '</tbody>';
+        const C = L.filter(x => x.a != null).sort((a, b) => b.a - a.a), mas = C[0], menos = C.at(-1);
+        $('m-prod').innerHTML = (ia != null && C.length ? caja('Subieron más que la inflación', C.filter(x => x.a > ia).length + ' de ' + C.length, 'En un año. La inflación de ' + REG[r] + ' fue ' + num(ia) + '%.') : '') +
+          (mas ? caja('Lo que más subió en un año', pct(mas.a), esc(mas.n) + ', ' + esc(mas.u)) : '') +
+          (menos && menos !== mas ? caja(menos.a < 0 ? 'Lo que más bajó en un año' : 'Lo que menos subió en un año', pct(menos.a), esc(menos.n) + ', ' + esc(menos.u)) : '');
+      };
+      pinta('GBA');
+      P.seg('s-prod', pinta);
+      P.ultimo('t-prod', P.mesLargo(pr.p));
+    });
 
     if (typeof Chart === 'undefined') return;
     const pc = v => num(v) + '%';

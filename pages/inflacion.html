@@ -168,6 +168,8 @@
 
     /* ---- Bloques didacticos ---- */
     .bloque { margin-top: 3.5rem; }
+    .mi-region { margin: 0 0 0.4rem; padding-top: 0; border-top: 0; }
+    .mi-region[hidden] { display: none; }
     .mi-rubros { display: grid; gap: 0.2rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 1rem 0 1.1rem; }
     .mi-fila { display: grid; grid-template-columns: minmax(0, 1fr) 3rem; gap: 0.1rem 0.6rem; align-items: center; padding: 0.35rem 0; font-size: 0.86rem; color: var(--text-muted); }
     .mi-fila input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); min-height: 26px; }
@@ -390,6 +392,12 @@
       <section class="bloque" id="mi-inflacion" aria-labelledby="mi-t">
         <h2 id="mi-t">Mi inflación: la que te toca a vos</h2>
         <p>La inflación del INDEC es un promedio: si gastás mucho en alquiler o en remedios, la tuya puede ser otra. Mové cada barra según cuánto de tu gasto se va en ese rubro. Arranca con el reparto de la canasta del INDEC y los porcentajes siempre suman 100: si subís uno, los demás bajan un poco.</p>
+        <div class="conv-fuente mi-region" id="mi-region-c" hidden>
+          <label for="mi-region">Dónde vivís</label>
+          <select id="mi-region">
+            <option value="Nacional">Todo el país</option><option value="GBA">Gran Buenos Aires</option><option value="Pampeana">Región Pampeana</option><option value="Noreste">Noreste</option><option value="Noroeste">Noroeste</option><option value="Cuyo">Cuyo</option><option value="Patagonia">Patagonia</option>
+          </select>
+        </div>
         <div class="conv-frase" id="mi-res" role="status" aria-live="polite">Cargando los rubros…</div>
         <div id="mi-rubros" class="mi-rubros"></div>
         <button type="button" id="mi-volver" class="mi-volver" hidden>Volver al reparto del INDEC</button>
@@ -715,16 +723,24 @@
     if (div.length !== 12 || !u) { $('mi-res').textContent = 'No se pudieron cargar los rubros. Probá de nuevo en un rato.'; return; }
     const nom = { '04': 'Vivienda, luz, gas y agua', '05': 'Equipamiento del hogar', 10: 'Educación', 11: 'Restaurantes y hoteles', 12: 'Otros bienes y servicios' };
     const num = (v, n = 1) => v.toLocaleString('es-AR', { minimumFractionDigits: n, maximumFractionDigits: n });
-    caja.innerHTML = div.map(x => '<label class="mi-fila"><span>' + (nom[x.codigo] || x.nombre).replace(/[<>&]/g, '') + '<small>Subió ' + num(x.a) + '% en un año</small></span><b data-v="' + x.codigo + '"></b><input type="range" min="0" max="60" step="1" value="' + (INICIAL[x.codigo] ?? 8) + '" data-r="' + x.codigo + '" aria-label="Parte del gasto en ' + (nom[x.codigo] || x.nombre).replace(/[<>&"]/g, '') + '"></label>').join('');
+    // Cada región tiene su propia suba por rubro; si falta alguna, queda solo el dato nacional
+    const DR = d.divisionesRegion || {}, REGS = d.regiones || [];
+    const EN = { GBA: 'Gran Buenos Aires', Pampeana: 'la región Pampeana', Noreste: 'el Noreste', Noroeste: 'el Noroeste', Cuyo: 'Cuyo', Patagonia: 'la Patagonia' };
+    const deRegion = r => (r === 'Nacional' ? { L: div, g: u.a, t: 'El dato general del INDEC' } : { L: DR[r], g: (REGS.find(x => x.region === r) || {}).a, t: 'El dato del INDEC para ' + EN[r] });
+    const sirve = r => { const x = deRegion(r); return x.L && x.L.length === 12 && x.g != null; };
+    let R = deRegion('Nacional');
+    if (['GBA', 'Pampeana', 'Noreste', 'Noroeste', 'Cuyo', 'Patagonia'].every(sirve)) $('mi-region-c').hidden = false;
+    caja.innerHTML = div.map(x => '<label class="mi-fila"><span>' + (nom[x.codigo] || x.nombre).replace(/[<>&]/g, '') + '<small data-a="' + x.codigo + '">Subió ' + num(x.a) + '% en un año</small></span><b data-v="' + x.codigo + '"></b><input type="range" min="0" max="60" step="1" value="' + (INICIAL[x.codigo] ?? 8) + '" data-r="' + x.codigo + '" aria-label="Parte del gasto en ' + (nom[x.codigo] || x.nombre).replace(/[<>&"]/g, '') + '"></label>').join('');
     const mes = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][+u.p.slice(5) - 1] + ' de ' + u.p.slice(0, 4);
     function calcular() {
       const V = Object.fromEntries([...caja.querySelectorAll('input')].map(i => [i.dataset.r, +i.value])), suma = Object.values(V).reduce((a, b) => a + b, 0);
       if (!suma) { $('mi-res').textContent = 'Poné algo de gasto en al menos un rubro.'; return; }
       let mia = 0;
-      for (const x of div) { const w = V[x.codigo] / suma; mia += w * x.a; caja.querySelector('[data-v="' + x.codigo + '"]').textContent = Math.round(w * 100) + '%'; }
-      const dif = mia - u.a;
-      $('mi-res').innerHTML = 'Con tu forma de gastar, los precios subieron <strong class="destacado">' + num(mia) + '%</strong> en los 12 meses a ' + mes + '. El dato general del INDEC fue <strong>' + num(u.a) + '%</strong>' + (Math.abs(dif) < 0.05 ? '.' : ': ' + num(Math.abs(dif)) + ' puntos ' + (dif > 0 ? 'más' : 'menos') + ' en tu caso.');
+      for (const x of R.L) { const w = (V[x.codigo] || 0) / suma; mia += w * x.a; caja.querySelector('[data-v="' + x.codigo + '"]').textContent = Math.round(w * 100) + '%'; caja.querySelector('[data-a="' + x.codigo + '"]').textContent = 'Subió ' + num(x.a) + '% en un año'; }
+      const dif = mia - R.g;
+      $('mi-res').innerHTML = 'Con tu forma de gastar, los precios subieron <strong class="destacado">' + num(mia) + '%</strong> en los 12 meses a ' + mes + '. ' + R.t + ' fue <strong>' + num(R.g) + '%</strong>' + (Math.abs(dif) < 0.05 ? '.' : ': ' + num(Math.abs(dif)) + ' puntos ' + (dif > 0 ? 'más' : 'menos') + ' en tu caso.');
     }
+    $('mi-region').addEventListener('change', e => { if (sirve(e.target.value)) { R = deRegion(e.target.value); calcular(); } });
     caja.addEventListener('input', () => { $('mi-volver').hidden = false; calcular(); });
     $('mi-volver').addEventListener('click', e => { caja.querySelectorAll('input').forEach(i => { i.value = INICIAL[i.dataset.r] ?? 8; }); e.currentTarget.hidden = true; calcular(); });
     $('mi-nota').textContent = 'Es una cuenta aproximada: multiplica la suba de 12 meses de cada rubro del INDEC por tu reparto. Con el reparto inicial da cerca del dato oficial, pero no igual, porque el INDEC actualiza el peso de cada rubro según sus precios. Lo que cargás no se envía a ningún lado.';
