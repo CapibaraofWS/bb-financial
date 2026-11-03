@@ -2,6 +2,7 @@
 // ?source=finanzas-news       → últimas noticias de la Secretaría de Finanzas
 // ?source=finanzas-cronograma  → cronograma de licitaciones del Tesoro
 // ?source=bcra-calendario      → calendario de informes BCRA
+// ?source=arca-recaudacion     → informe mensual de recaudación de ARCA (publicado o con fecha estimada)
 // Consolidado en un solo endpoint para no superar el límite de funciones del plan Hobby.
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
@@ -773,9 +774,42 @@ async function getArMercado() {
 }
 
 // ============================================================
+// ARCA: INFORME MENSUAL DE RECAUDACIÓN
+// No tiene calendario publicado: sale los primeros días hábiles del mes siguiente. Se mira si el PDF de cada mes
+// ya está; el que falta va con fecha estimada (el primer día hábil, o hoy si esa fecha ya pasó sin que saliera).
+// ============================================================
+const MESES_ARCA = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+async function getArcaRecaudacion() {
+  const hoy = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);   // hora argentina
+  const [y, m] = hoy.split('-').map(Number);
+  const fer = await feriados([y - 1, y, y + 1]);
+  // k = 0 es el informe del mes en curso (sale el mes que viene); 1 a 3, los anteriores
+  const meses = [0, 1, 2, 3].map(k => {
+    const t = y * 12 + (m - 1) - k, ay = Math.floor(t / 12), am = t % 12 + 1, sig = t + 1;
+    const ini = Math.floor(sig / 12) + '-' + String(sig % 12 + 1).padStart(2, '0') + '-01';
+    return { k, titulo: 'Recaudación tributaria de ' + MESES_ARCA[am - 1], estimada: esHabil(ini, fer) ? ini : habilDesde(ini, 1, fer),
+      url: 'https://www.afip.gob.ar/institucional/documentos/ARCA-Recaudacion-' + String(am).padStart(2, '0') + ay + '.pdf' };
+  });
+  const eventos = await Promise.all(meses.map(async x => {
+    if (x.k === 0) return { fecha: x.estimada, titulo: x.titulo, estimada: true };
+    const r = await fetch(x.url, { method: 'HEAD', headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(TIMEOUT) }).catch(() => null);
+    if (r && r.ok) {
+      const lm = Date.parse(r.headers.get('last-modified') || ''), f = lm ? new Date(lm - 3 * 3600e3).toISOString().slice(0, 10) : null;
+      // Si el archivo se volvió a subir mucho después, vale la fecha en que suele salir
+      return { fecha: f && f >= x.estimada && f <= masDias(x.estimada, 10) ? f : x.estimada, titulo: x.titulo, informe: x.url };
+    }
+    // El del mes pasado puede no haber salido todavía; los más viejos, si no responden, no se muestran
+    return x.k === 1 && r && r.status === 404 ? { fecha: x.estimada < hoy ? hoy : x.estimada, titulo: x.titulo, estimada: true } : null;
+  }));
+  return { source: 'afip.gob.ar/institucional/informes-anteriores', url: 'https://www.afip.gob.ar/institucional/informes-anteriores/' + y + '.asp',
+    eventos: eventos.filter(Boolean).sort((a, b) => (a.fecha < b.fecha ? -1 : 1)) };
+}
+
+// ============================================================
 // HANDLER
 // ============================================================
 const HANDLERS = {
+  'arca-recaudacion':    { fn: getArcaRecaudacion,    cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'finanzas-news':       { fn: getFinanzasNews,       cache: 's-maxage=1800, stale-while-revalidate=3600' },
   'finanzas-cronograma': { fn: getFinanzasCronograma, cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'bcra-calendario':     { fn: getBcraCalendario,     cache: 's-maxage=3600, stale-while-revalidate=21600' },

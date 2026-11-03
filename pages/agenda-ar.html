@@ -184,7 +184,7 @@
         <span class="live-pill">En vivo</span>
         <p class="agenda-hero-eyebrow">Agenda del mercado argentino</p>
         <h1>¿Qué pasa hoy <em>y esta semana?</em></h1>
-        <p>Próximas licitaciones del Tesoro, informes del BCRA, el calendario completo del INDEC y las últimas noticias de la Secretaría de Finanzas. Datos oficiales, actualizados en vivo. Sin tener que abrir 5 pestañas.</p>
+        <p>El calendario económico del INDEC, el Banco Central, el Tesoro y ARCA, el riesgo país y las últimas noticias de la Secretaría de Finanzas. Datos oficiales, actualizados en vivo. Sin tener que abrir 5 pestañas.</p>
       </div>
     </section>
 
@@ -219,56 +219,23 @@
       </div>
     </section>
 
-    <!-- ============== CRONOGRAMA + BCRA SIDE BY SIDE ============== -->
-    <section class="agenda-section" style="padding-top:0">
-      <div class="container">
-        <div class="two-col">
-
-          <div>
-            <div class="agenda-section-head">
-              <div>
-                <h2>Cronograma del Tesoro</h2>
-                <p>Llamados, licitaciones y liquidaciones de letras y bonos.</p>
-              </div>
-              <a class="source-link" href="https://www.argentina.gob.ar/economia/finanzas/licitaciones-de-letras-y-bonos-del-tesoro/cronograma-2026" target="_blank" rel="noopener">Fuente oficial →</a>
-            </div>
-            <div class="timeline" id="cronograma-list">
-              <p class="news-loading">Cargando cronograma…</p>
-            </div>
-          </div>
-
-          <div>
-            <div class="agenda-section-head">
-              <div>
-                <h2>Calendario BCRA</h2>
-                <p>REM, IPOM, IMM y demás informes del Central.</p>
-              </div>
-              <a class="source-link" href="https://www.bcra.gob.ar/calendario-de-informes/" target="_blank" rel="noopener">Fuente oficial →</a>
-            </div>
-            <div class="timeline" id="bcra-list">
-              <p class="news-loading">Cargando calendario BCRA…</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
     <!-- ============== CALENDARIO DEL INDEC ============== -->
+    <!-- Desde el 2026-11-03 es el calendario económico (INDEC, BCRA, Tesoro y ARCA); el marcador conserva el nombre porque el build lo busca -->
     <section class="agenda-section" id="indec" style="padding-top:0;scroll-margin-top:80px">
       <div class="container">
         <div class="agenda-section-head">
           <div>
-            <h2>Calendario del INDEC</h2>
-            <p>Todas sus publicaciones, de un mes atrás a dos meses adelante: inflación, actividad, empleo, pobreza, comercio exterior y más.</p>
+            <h2>Calendario económico</h2>
+            <p>Lo que publican el INDEC, el Banco Central, el Tesoro y ARCA, de un mes atrás a dos meses adelante: inflación, actividad, informes del Central, licitaciones de deuda y recaudación.</p>
           </div>
-          <a class="source-link" href="https://www.indec.gob.ar/indec/web/Calendario-Fecha-0" target="_blank" rel="noopener">Fuente oficial →</a>
         </div>
         <div class="ic-filtros">
           <div class="pa-seg" id="ic-cuando" role="group" aria-label="Qué publicaciones mostrar"><button type="button" data-v="viene" aria-pressed="true">Próximas</button><button type="button" data-v="paso" aria-pressed="false">Ya publicadas</button></div>
-          <div class="pa-chips" id="ic-temas" role="group" aria-label="Filtrar por tema"></div>
+          <div class="pa-chips" id="ic-org" role="group" aria-label="Quién publica"></div>
+          <div class="pa-chips" id="ic-temas" role="group" aria-label="Filtrar por tema" style="display:none"></div>
         </div>
-        <div class="ic-lista" id="ic-lista" aria-live="polite"><p class="news-loading">Cargando el calendario del INDEC…</p></div>
+        <div class="ic-lista" id="ic-lista" aria-live="polite"><p class="news-loading">Cargando el calendario…</p></div>
+        <p style="margin-top:0.9rem;font-size:0.78rem;line-height:1.55;color:var(--text-subtle)">Fuentes: <a href="https://www.indec.gob.ar/indec/web/Calendario-Fecha-0" target="_blank" rel="noopener">INDEC</a>, <a href="https://www.bcra.gob.ar/calendario-de-informes/" target="_blank" rel="noopener">Banco Central</a>, <a href="https://www.argentina.gob.ar/economia/finanzas/licitaciones-de-letras-y-bonos-del-tesoro" target="_blank" rel="noopener">Secretaría de Finanzas</a> y <a href="https://www.afip.gob.ar/institucional/informes-anteriores/2026.asp" target="_blank" rel="noopener">ARCA</a>. ARCA no publica calendario: su informe de recaudación suele salir los primeros días hábiles de cada mes, así que esa fecha es estimada hasta que aparece.</p>
       </div>
     </section>
 
@@ -293,7 +260,7 @@
       <div class="container">
     <section class="container bb-faq" id="guia-agenda" aria-labelledby="guia-agenda-t">
       <h2 id="guia-agenda-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo usar la agenda</h2>
-      <p>La agenda junta en una pantalla las fechas que mueven el mercado argentino en pesos. Arriba está el <strong>riesgo país</strong>; después, los próximos eventos; el <strong>cronograma del Tesoro</strong> con sus llamados, licitaciones y liquidaciones; el <strong>calendario del Banco Central</strong> con sus informes; el <strong>calendario del INDEC</strong>, con todo lo que publica y filtros por tema, y las noticias oficiales de la Secretaría de Finanzas.</p>
+      <p>La agenda junta en una pantalla las fechas que mueven el mercado argentino en pesos. Arriba está el <strong>riesgo país</strong>; después, los próximos eventos; el <strong>calendario económico</strong>, con lo que publican el INDEC, el Banco Central, el Tesoro (llamados, licitaciones y liquidaciones) y ARCA, con filtros por organismo y por tema, y las noticias oficiales de la Secretaría de Finanzas.</p>
       <p>Sirve para anticiparse. Una licitación del Tesoro puede mover las tasas de las letras y, detrás, las de plazos fijos y billeteras. El REM muestra qué inflación y qué dólar esperan las consultoras. Y el día que se publica la inflación cambian los cálculos de casi todo lo que ajusta por precios.</p>
       <details><summary>¿Qué es el riesgo país?</summary><p>Es la tasa extra que piden los inversores por prestarle a la Argentina en dólares, comparada con lo que rinden los bonos del Tesoro de Estados Unidos. Se mide en puntos básicos: 100 puntos son un punto porcentual. El índice oficial lo calcula JP Morgan al cierre del día; la estimación del día se arma con los precios de los bonos argentinos en dólares.</p></details>
       <details><summary>¿Qué es una licitación del Tesoro?</summary><p>Es la subasta en la que el Tesoro coloca letras y bonos en pesos para pagar los que vencen. Hay, en general, dos por mes. Cómo se leen sus resultados, qué es el rollover y qué instrumentos se ofrecen está en <a href="blog/licitacion-del-tesoro-como-leer-resultados">Licitación del Tesoro: cómo leer los resultados</a>.</p></details>
@@ -343,21 +310,42 @@
   <script src="../js/panel.js?v=21"></script>
   <script>
   /* ============== CALENDARIO DEL INDEC ============== */
+  // Calendario económico: INDEC, Banco Central, cronograma del Tesoro y recaudación de ARCA en una sola lista
   (async function () {
     const P = window.BBPanel, lista = document.getElementById('ic-lista');
     if (!P || !lista) return;
-    const cal = await P.API.calendario();
-    if (!cal || !Array.isArray(cal.eventos) || !cal.eventos.length) {
-      lista.innerHTML = '<p class="news-error">No pudimos cargar el calendario del INDEC. <a href="https://www.indec.gob.ar/indec/web/Calendario-Fecha-0" target="_blank" rel="noopener" style="color:var(--accent)">Fuente oficial →</a></p>';
+    const [cal, bc, te, ar] = await Promise.all([P.API.calendario(), P.json('/api/agenda?source=bcra-calendario'), P.json('/api/agenda?source=finanzas-cronograma'), P.json('/api/agenda?source=arca-recaudacion')]);
+    const hoy = P.hoyISO(), hora = new Date().toTimeString().slice(0, 5);
+    const desde = new Date(Date.now() - 35 * 864e5).toISOString().slice(0, 10), hasta = new Date(Date.now() + 70 * 864e5).toISOString().slice(0, 10);
+    const ORG = { indec: ['INDEC', ''], bcra: ['Banco Central', '#60a5fa'], tesoro: ['Tesoro', '#e8c97a'], arca: ['ARCA', '#f472b6'] };
+    const TESORO = { llamado: 'Llamado a licitación de letras y bonos', licitacion: 'Licitación de letras y bonos del Tesoro', liquidacion: 'Liquidación de la licitación' };
+    const ev = [];
+    if (cal && Array.isArray(cal.eventos)) for (const e of cal.eventos) ev.push(Object.assign({ org: 'indec' }, e, P.corto(e.titulo)));
+    if (bc) for (const e of [...(bc.past || []), ...(bc.upcoming || [])]) if (!e.isDaily && e.iso) ev.push({ org: 'bcra', fecha: e.iso, nombre: e.report, titulo: e.report, nota: 'Al cierre del día' });
+    if (te) for (const e of [...(te.past || []), ...(te.upcoming || [])]) if (TESORO[e.type] && e.iso) ev.push({ org: 'tesoro', fecha: e.iso, nombre: TESORO[e.type], titulo: TESORO[e.type] });
+    if (ar && Array.isArray(ar.eventos)) for (const e of ar.eventos) ev.push({ org: 'arca', fecha: e.fecha, nombre: e.titulo, titulo: e.titulo, informe: e.informe, estimada: e.estimada });
+    const vistos = new Set();
+    const todos = ev.filter(e => e.fecha >= desde && e.fecha <= hasta && !vistos.has(e.org + e.fecha + e.nombre) && vistos.add(e.org + e.fecha + e.nombre))
+      .sort((a, b) => (a.fecha + (a.hora || '99') < b.fecha + (b.hora || '99') ? -1 : 1));
+    if (!todos.length) {
+      lista.innerHTML = '<p class="news-error">No pudimos cargar el calendario. <a href="https://www.indec.gob.ar/indec/web/Calendario-Fecha-0" target="_blank" rel="noopener" style="color:var(--accent)">Calendario del INDEC →</a></p>';
       return;
     }
-    const hoy = P.hoyISO(), hora = new Date().toTimeString().slice(0, 5);
-    const yaSalio = e => e.fecha < hoy || (e.fecha === hoy && hora >= e.hora);
-    const ev = cal.eventos.map(e => Object.assign({}, e, P.corto(e.titulo)));
-    const TEMAS = [['todos', 'Todos'], ['precios', 'Precios'], ['actividad', 'Actividad'], ['empleo', 'Empleo'], ['pobreza', 'Pobreza'], ['comercio', 'Comercio'], ['otro', 'Otros']];
-    let cuando = 'viene', tema = 'todos', todo = false;
-    const chips = document.getElementById('ic-temas');
+    // El INDEC publica a una hora; lo demás se cuenta como publicado desde el día siguiente (o cuando aparece el informe)
+    const yaSalio = e => e.fecha < hoy || (e.fecha === hoy && (e.org === 'indec' ? hora >= e.hora : !!e.informe));
+    const TEMAS = [['todos', 'Todos los temas'], ['precios', 'Precios'], ['actividad', 'Actividad'], ['empleo', 'Empleo'], ['pobreza', 'Pobreza'], ['comercio', 'Comercio'], ['otro', 'Otros']];
+    let cuando = 'viene', org = 'todos', tema = 'todos', todo = false;
+    const chipsOrg = document.getElementById('ic-org'), chips = document.getElementById('ic-temas');
+    chipsOrg.innerHTML = [['todos', 'Todos']].concat(Object.entries(ORG).map(([k, v]) => [k, v[0]])).map(([k, t]) => '<button type="button" data-o="' + k + '" aria-pressed="' + (k === 'todos') + '">' + t + '</button>').join('');
     chips.innerHTML = TEMAS.map(([k, t]) => '<button type="button" data-t="' + k + '" aria-pressed="' + (k === 'todos') + '">' + t + '</button>').join('');
+    chipsOrg.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      org = b.dataset.o; tema = 'todos'; todo = false;
+      chipsOrg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.t === 'todos')));
+      chips.style.display = org === 'indec' ? '' : 'none';   // los temas son del INDEC
+      pintar();
+    });
     chips.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return;
       tema = b.dataset.t; todo = false;
@@ -366,22 +354,23 @@
     });
     P.seg('ic-cuando', v => { cuando = v; todo = false; pintar(); });
     const LIMITE = 8;   // días que se ven de entrada; el resto, con "Ver más"
+    const chip = e => (e.org === 'indec' ? P.esc(P.TEMAS[e.tema] || 'INDEC') + ' · ' + P.esc(e.hora) + ' h' : ORG[e.org][0] + (e.estimada ? ' · fecha estimada' : ''));
     function pintar() {
-      let s = ev.filter(e => (cuando === 'viene' ? !yaSalio(e) : yaSalio(e)) && (tema === 'todos' || e.tema === tema));
+      let s = todos.filter(e => (cuando === 'viene' ? !yaSalio(e) : yaSalio(e)) && (org === 'todos' || e.org === org) && (tema === 'todos' || e.tema === tema));
       if (cuando === 'paso') s = s.reverse();
       const dias = [];
       for (const e of s) { let d = dias[dias.length - 1]; if (!d || d.fecha !== e.fecha) dias.push(d = { fecha: e.fecha, items: [] }); d.items.push(e); }
       const ver = todo ? dias : dias.slice(0, LIMITE);
-      if (!ver.length) { lista.innerHTML = '<p class="news-error">No hay publicaciones de este tema en el período.</p>'; return; }
+      if (!ver.length) { lista.innerHTML = '<p class="news-error">No hay publicaciones con este filtro en el período.</p>'; return; }
       lista.innerHTML = ver.map(d => {
         const [y, m, dd] = d.fecha.split('-').map(Number), dif = P.diasEntre(hoy, d.fecha);
         const falta = dif === 0 ? 'Hoy' : dif === 1 ? 'Mañana' : dif === -1 ? 'Ayer' : dif > 1 ? 'En ' + dif + ' días' : 'Hace ' + (-dif) + ' días';
         return '<div class="ic-dia' + (dif === 0 ? ' hoy' : '') + '"><div class="ic-fecha" aria-label="' + dd + ' de ' + P.MESES[m - 1] + '"><span class="dsem">' + P.DSEM[new Date(y, m - 1, dd).getDay()] + '</span><b>' + dd + '</b><span class="mes">' + P.MES[m - 1] + '</span></div>' +
           '<div class="ic-evs"><span class="ic-falta">' + falta + '</span>' + d.items.map(e => {
             const link = e.informe && yaSalio(e), tag = link ? 'a' : 'div';
-            return '<' + tag + ' class="ic-ev t-' + P.esc(e.tema) + '"' + (link ? ' href="' + P.esc(e.informe) + '" target="_blank" rel="noopener"' : '') + ' title="' + P.esc(e.titulo) + '">' +
-              '<span class="chip">' + P.esc(P.TEMAS[e.tema] || 'INDEC') + ' · ' + P.esc(e.hora) + ' h</span><span class="nombre">' + P.esc(e.nombre) + '</span>' +
-              (e.periodo || link ? '<span class="nota">' + P.esc(e.periodo) + (link ? (e.periodo ? ' · ' : '') + 'informe ↗' : '') + '</span>' : '') + '</' + tag + '>';
+            const nota = [e.org === 'indec' ? e.periodo : e.estimada ? 'Suele salir los primeros días hábiles' : e.nota, link ? 'informe ↗' : ''].filter(Boolean).join(' · ');
+            return '<' + tag + ' class="ic-ev' + (e.org === 'indec' ? ' t-' + P.esc(e.tema) : '') + '"' + (ORG[e.org][1] ? ' style="--t:' + ORG[e.org][1] + '"' : '') + (link ? ' href="' + P.esc(e.informe) + '" target="_blank" rel="noopener"' : '') + ' title="' + P.esc(e.titulo) + '">' +
+              '<span class="chip">' + chip(e) + '</span><span class="nombre">' + P.esc(e.nombre) + '</span>' + (nota ? '<span class="nota">' + P.esc(nota) + '</span>' : '') + '</' + tag + '>';
           }).join('') + '</div></div>';
       }).join('') + (dias.length > ver.length ? '<button type="button" class="ic-mas">Ver ' + (dias.length - ver.length) + ' días más</button>' : '');
       const mas = lista.querySelector('.ic-mas');
@@ -491,82 +480,6 @@
         div.append(eye, nm, dd, dt);
         grid.appendChild(div);
       });
-    }
-
-    // === CRONOGRAMA TIMELINE ===
-    async function loadCronograma() {
-      const list = document.getElementById('cronograma-list');
-      try {
-        const r = await fetch('/api/agenda?source=finanzas-cronograma');
-        if (!r.ok) throw new Error('http ' + r.status);
-        const d = await r.json();
-        const events = (d.upcoming || []).slice(0, 10);
-        list.textContent = '';
-        if (!events.length) { list.innerHTML = '<p class="news-error">Sin próximos eventos en el cronograma.</p>'; return; }
-        const today = new Date(); today.setHours(0,0,0,0);
-        events.forEach(e => {
-          const chip = dayMonthChip(e.iso);
-          const isToday = daysFromNow(e.iso) === 0;
-          const row = document.createElement('div');
-          row.className = 'timeline-row' + (isToday ? ' today' : '');
-          row.innerHTML = `
-            <div class="tl-date"><span class="tl-day"></span><span class="tl-mon"></span></div>
-            <div class="tl-title"></div>
-            <span class="tl-pill"></span>`;
-          row.querySelector('.tl-day').textContent = chip.day;
-          row.querySelector('.tl-mon').textContent = chip.mon;
-          const title = row.querySelector('.tl-title');
-          title.textContent = e.label;
-          const meta = document.createElement('span'); meta.className = 'tl-meta';
-          const d2 = daysFromNow(e.iso);
-          meta.textContent = d2 === 0 ? 'Hoy' : d2 === 1 ? 'Mañana' : 'En ' + d2 + ' días · ' + fmtDateLong(e.iso);
-          title.appendChild(meta);
-          const pill = row.querySelector('.tl-pill');
-          pill.className = 'tl-pill ' + e.type;
-          pill.textContent = e.type;
-          list.appendChild(row);
-        });
-      } catch (err) {
-        list.innerHTML = '<p class="news-error">No pudimos cargar el cronograma. <a href="https://www.argentina.gob.ar/economia/finanzas/licitaciones-de-letras-y-bonos-del-tesoro/cronograma-2026" target="_blank" rel="noopener" style="color:var(--accent)">Fuente oficial →</a></p>';
-      }
-    }
-
-    // === BCRA CALENDARIO ===
-    async function loadBcraCal() {
-      const list = document.getElementById('bcra-list');
-      try {
-        const r = await fetch('/api/agenda?source=bcra-calendario');
-        if (!r.ok) throw new Error('http ' + r.status);
-        const d = await r.json();
-        const events = (d.upcoming || []).slice(0, 10);
-        list.textContent = '';
-        if (!events.length) { list.innerHTML = '<p class="news-error">Sin próximos informes en el calendario BCRA.</p>'; return; }
-        events.forEach(e => {
-          const chip = dayMonthChip(e.iso);
-          const isToday = daysFromNow(e.iso) === 0;
-          const isKey = /relevamiento|política monetaria|monetario mensual|estabilidad/i.test(e.report);
-          const row = document.createElement('div');
-          row.className = 'timeline-row' + (isToday ? ' today' : '');
-          row.innerHTML = `
-            <div class="tl-date"><span class="tl-day"></span><span class="tl-mon"></span></div>
-            <div class="tl-title"></div>
-            <span class="tl-pill"></span>`;
-          row.querySelector('.tl-day').textContent = chip.day;
-          row.querySelector('.tl-mon').textContent = chip.mon;
-          const title = row.querySelector('.tl-title');
-          title.textContent = e.report;
-          const meta = document.createElement('span'); meta.className = 'tl-meta';
-          const d2 = daysFromNow(e.iso);
-          meta.textContent = d2 === 0 ? 'Hoy' : d2 === 1 ? 'Mañana' : 'En ' + d2 + ' días · ' + fmtDateLong(e.iso);
-          title.appendChild(meta);
-          const pill = row.querySelector('.tl-pill');
-          pill.className = 'tl-pill ' + (isKey ? 'bcra-key' : 'bcra');
-          pill.textContent = isKey ? 'Clave' : 'BCRA';
-          list.appendChild(row);
-        });
-      } catch (err) {
-        list.innerHTML = '<p class="news-error">No pudimos cargar el calendario del BCRA. <a href="https://www.bcra.gob.ar/calendario-de-informes/" target="_blank" rel="noopener" style="color:var(--accent)">Fuente oficial →</a></p>';
-      }
     }
 
     // === NEWS FINANZAS ===
@@ -697,7 +610,7 @@
       }
     }
 
-    Promise.all([loadRiesgoPais(), loadCountdowns(), loadCronograma(), loadBcraCal(), loadNews()])
+    Promise.all([loadRiesgoPais(), loadCountdowns(), loadNews()])
       .finally(() => {
         // Re-scroll al ancla después de que cargó todo el contenido async,
         // sino el hash inicial scrollea antes de que la página tenga su altura final.
