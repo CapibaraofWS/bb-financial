@@ -328,8 +328,10 @@ async function getArBonds() {
     headers: { 'User-Agent': UA, 'Accept': 'application/json' },
   });
   if (!r.ok) throw new Error('Fuente de bonos respondió ' + r.status);
-  const all = await r.json();
-  const map = Object.fromEntries((Array.isArray(all) ? all : []).map(b => [b.symbol, b]));
+  const all = await r.json(), fer = await feriados([new Date().getUTCFullYear()]).catch(() => new Set());
+  // A primera hora data912 no lista todos: lo que falta sale de la memoria de la rueda (ver memoriaBonos)
+  const lista = await memoriaBonos(Array.isArray(all) ? all : [], fer).then(m => m.lista).catch(() => all);
+  const map = Object.fromEntries((Array.isArray(lista) ? lista : []).map(b => [b.symbol, b]));
   const bonds = AR_BOND_SYMBOLS.map(([sym, usdSym]) => {
     const d = map[usdSym] || null; // serie D = USD MEP
     if (!d) return { sym, price: null };
@@ -701,6 +703,31 @@ async function fichaByma(sym) {
   await redis(['SET', 'ficha:' + sym, JSON.stringify(d), 'EX', String(30 * 86400)]);
   return d;
 }
+// Cotizaciones de data912 con memoria (Redis, últimas 3 ruedas). Antes de que abra la rueda data912 lista solo una parte
+// de los bonos (el 5/11/2026 a las 10 h, 100 de 205) y con el volumen en cero, aunque el precio y la variación son los del
+// cierre anterior. Se guarda la última cotización de cada bono por rueda con el volumen más alto visto:
+// - un bono que falta se completa con lo guardado de la misma rueda; si no hay, con el cierre de la rueda anterior y sin variación;
+// - la liquidez es lo más alto entre lo operado en la rueda y en la anterior, así a primera hora no queda todo como "poco volumen".
+async function memoriaBonos(lista, fer) {
+  const rueda = ruedaDe(Date.now(), fer);
+  let h = null;
+  try { h = JSON.parse(await redis(['GET', 'bonos:rueda']) || 'null'); } catch {}
+  h = h && typeof h === 'object' ? h : {};
+  const antes = JSON.stringify(h), act = h[rueda] || {};
+  for (const x of lista) if (x && x.symbol && x.c > 0) {
+    const g = act[x.symbol];
+    act[x.symbol] = [x.c, Number.isFinite(x.pct_change) ? x.pct_change : 0, Math.max(x.v || 0, g ? g[2] : 0)];
+  }
+  if (Object.keys(act).length) h[rueda] = act;
+  for (const f of Object.keys(h).sort().reverse().slice(3)) delete h[f];
+  if (JSON.stringify(h) !== antes) await redis(['SET', 'bonos:rueda', JSON.stringify(h), 'EX', String(20 * 86400)]);
+  const prev = h[Object.keys(h).filter(f => f < rueda).sort().at(-1)] || {}, vistos = new Set(lista.map(x => x && x.symbol));
+  const completa = [...lista.filter(x => x && x.symbol)];
+  for (const [s, g] of Object.entries(act)) if (!vistos.has(s)) completa.push({ symbol: s, c: g[0], pct_change: g[1], v: g[2], guardado: true });
+  for (const [s, g] of Object.entries(prev)) if (!vistos.has(s) && !act[s]) completa.push({ symbol: s, c: g[0], pct_change: 0, v: 0, guardado: true });
+  const operado = (g, s) => (g && g[s] ? g[s][2] * g[s][0] / 100 : 0);
+  return { lista: completa, op: s => { const hoy = operado(act, s); return { hoy, liquidez: Math.max(hoy, operado(prev, s)) }; } };
+}
 // Mes del IPC que entra en el CER de una fecha: del 16 al 15 siguiente se reparte el IPC de dos meses antes
 function mesIpc(f) {
   const [y, m, d] = f.split('-').map(Number), t = y * 12 + (m - 1) - (d >= 16 ? 1 : 2);
@@ -723,13 +750,14 @@ async function getArMercado() {
   const atras = (f, n) => { for (let i = 0; i < n; i++) f = habilDesde(f, -1, fer); return f; };
   // Tasa fija al mismo plazo: interpolada entre las dos letras vecinas; fuera de la curva no se calcula
   const fija = d => { for (let i = 1; i < curva.length; i++) { const [a, b] = [curva[i - 1], curva[i]]; if (d >= a.dtm && d <= b.dtm) return a.tir + (b.tir - a.tir) * (d - a.dtm) / (b.dtm - a.dtm); } return null; };
-  const px = {};
-  for (const x of sets.flat()) if (x && x.c > 0) px[x.symbol] = { p: x.c, operado: (x.v || 0) * x.c / 100 };
+  const px = {}, mem = await memoriaBonos(sets.flat(), fer), op = mem.op;
+  for (const x of mem.lista) if (x && x.c > 0) px[x.symbol] = { p: x.c, operado: (x.v || 0) * x.c / 100 };
   const ultF = fechasCer.at(-1), ultCer = CER[ultF], refF = atras(liq, 10);
   if (!CER[refF]) throw new Error('sin CER');
 
   // ---- Bonos CER
-  const operados = re => Object.keys(px).filter(s => re.test(s) && px[s].operado >= MINIMO_OPERADO);
+  // Los que operaron lo suficiente (en la rueda o en la anterior); si todavía no hay registro de ninguno, todos los que tienen precio
+  const operados = re => { const L = Object.keys(px).filter(s => re.test(s)), conVolumen = L.filter(s => op(s).liquidez >= MINIMO_OPERADO); return conVolumen.length >= 3 ? conVolumen : L; };
   const fichas = Object.fromEntries(await Promise.all([...operados(RE_CER).filter(s => !BONOS_CER[s]), ...operados(RE_DL)].map(async s => [s, await fichaByma(s).catch(() => null)])));
   let cer = [];
   for (const sym of operados(RE_CER)) {
@@ -811,8 +839,8 @@ async function getCurvas() {
   // Hoy y la rueda anterior: el CER de 10 hábiles antes de cada liquidación y el último dólar A3500 publicado de cada día
   const cer = { hoy: K.valorEn(CER, fC, cal.atras(liq, 10)), ant: K.valorEn(CER, fC, cal.atras(liqAnt, 10)) };
   const fx = { hoy: FX[fX.at(-1)], ant: FX[fX.at(-2)] };
-  const px = {};
-  for (const x of sets.flat()) if (x && x.c > 0) px[x.symbol] = { p: x.c, pct: Number.isFinite(x.pct_change) ? x.pct_change : 0, vol: (x.v || 0) * x.c / 100 };
+  const px = {}, mem = await memoriaBonos(sets.flat(), fer), op = mem.op;
+  for (const x of mem.lista) if (x && x.c > 0) px[x.symbol] = { p: x.c, pct: Number.isFinite(x.pct_change) ? x.pct_change : 0, vol: (x.v || 0) * x.c / 100 };
   const tamar = { supuesto: K.tamarProyectada(TAM, fT), ultima: TAM[fT.at(-1)], fecha: fT.at(-1) };
   const fichas = {};
   const ficha = async s => (fichas[s] ??= await fichaByma(s).catch(() => null));
@@ -820,8 +848,9 @@ async function getCurvas() {
   // Cada bono: precio de hoy y el de la rueda anterior (cierre = hoy / (1 + variación)), con su liquidación
   const momentos = q => [['', q.p, liq], ['Ant', q.p / (1 + q.pct / 100), liqAnt]];
   const agregar = (g, sym, vence, q, calc, extra = {}) => {
-    // Con menos de $30 millones operados en la rueda, el último precio dice poco: se dibuja hueco y no entra en la curva
-    const fila = { sym, vence, dias: K.dias(liq, vence), precio: q.p, variacion: q.pct, operado: q.vol, poca: q.vol < MINIMO_OPERADO, ...extra };
+    // Con menos de $30 millones operados (en la rueda o en la anterior), el último precio dice poco: se dibuja hueco y no entra en la curva
+    const o = op(sym);
+    const fila = { sym, vence, dias: K.dias(liq, vence), precio: q.p, variacion: q.pct, operado: o.hoy, liquidez: o.liquidez, poca: o.liquidez < MINIMO_OPERADO, ...extra };
     // Todo lo calculado queda dos veces: tasa y tasaAnt, tamarMargen y tamarMargenAnt, etc.
     for (const [k, p, l] of momentos(q)) { const r = calc(p, l, k); if (!r || !Number.isFinite(r.tasa)) return; for (const [c, v] of Object.entries(r)) fila[c + k] = v; }
     if (fila.dias >= 1) out[g].push(fila);
@@ -831,7 +860,7 @@ async function getCurvas() {
   for (const b of pesos.bonds || []) {
     const q = px[b.sym] || { p: b.price, pct: b.pct || 0, vol: b.volumen || 0 };
     agregar('fija', b.sym, b.vencimiento, q, (p, l) => { const d = K.dias(l, b.vencimiento), t = K.tirUnica(b.vpv, p, d); return t == null ? null : { tasa: t, dur: d / 365 / (1 + t), tem: Math.pow(b.vpv / p, 30 / d) - 1, tna: (b.vpv / p - 1) * 365 / d }; },
-      { poca: !!b.pocaLiquidez, operado: b.volumen ?? q.vol });
+      { poca: !!b.pocaLiquidez, liquidez: b.volumen ?? q.vol });
   }
   // ---- Con cupón (TX28, TX31 y TY30P): TIR de los flujos del prospecto; los CER, en términos reales
   for (const [sym, c] of Object.entries(CON_CUPON)) {

@@ -34,14 +34,14 @@
     '<div class="cv-lienzo"><canvas id="cv-g" tabindex="0" role="img" aria-label="Curva de rendimientos de hoy y de la rueda anterior. Con las flechas del teclado se recorre bono por bono."></canvas></div>' +
     '<p class="cv-ley"><span><i style="background:' + VERDE + '"></i>La tasa bajó (el precio subió)</span><span><i style="background:' + CORAL + '"></i>La tasa subió</span><span><i style="background:' + GRIS + '"></i>Sin cambio</span>' +
     '<span><i style="border:1.5px solid ' + GRIS + ';background:none"></i>Rueda anterior o poco volumen</span><span><b class="cv-l1"></b>Curva de hoy</span><span><b class="cv-l2"></b>Curva anterior</span><span>Tamaño: lo operado</span></p>' +
-    '<h3 class="cv-h">Lo operado en la rueda</h3><div class="cv-vol"><canvas id="cv-v" aria-label="Monto operado por bono"></canvas></div>' +
+    '<h3 class="cv-h" id="cv-h">Lo operado en la rueda</h3><div class="cv-vol"><canvas id="cv-v" aria-label="Monto operado por bono"></canvas></div>' +
     '<div class="pa-tabla-wrap"><table class="pa-tabla cv-t" id="cv-t"></table></div>' +
     '<p class="cv-fuente" id="cv-fuente"></p></div>';
 
   // ---- Datos del grupo elegido, con el eje y la tasa que correspondan
   function filas() {
     const hoy = new Date().toISOString().slice(0, 10), dias = v => Math.round((Date.parse(v + 'T12:00:00Z') - Date.parse(hoy + 'T12:00:00Z')) / 864e5);
-    let L = est.g === 'usd' ? (USD || []).map(b => ({ ...b, dias: dias(b.vence), poca: false })) : (D && D.grupos[est.g]) || [];
+    let L = est.g === 'usd' ? (USD || []).map(b => ({ ...b, dias: dias(b.vence), poca: false, liquidez: b.operado })) : (D && D.grupos[est.g]) || [];
     if (est.g === 'duales' && est.pata === 'tamar') L = L.map(b => ({ ...b, tasa: b.tamarMargen, tasaAnt: b.tamarMargenAnt }));
     return L.filter(b => !(est.corto && b.dias < 30) && Number.isFinite(b.tasa)).map(b => ({ ...b, x: est.x === 'dur' ? b.dur : b.dias, y: b.tasa * 100,
       yAnt: Number.isFinite(b.tasaAnt) ? b.tasaAnt * 100 : null, dpb: Number.isFinite(b.tasaAnt) ? Math.round((b.tasa - b.tasaAnt) * 1e4) : null }));
@@ -71,7 +71,7 @@
     },
     afterDatasetsDraw(ch) {
       const meta = ch.getDatasetMeta(3), pts = ch.data.datasets[3].data, c = ch.ctx, area = ch.chartArea, cajas = [];
-      const tope = ch.width < 520 ? 6 : 60, orden = pts.map((p, i) => i).sort((a, b) => (pts[b].operado || 0) - (pts[a].operado || 0));
+      const tope = ch.width < 520 ? 6 : 60, peso = p => p.liquidez ?? p.operado ?? 0, orden = pts.map((p, i) => i).sort((a, b) => peso(pts[b]) - peso(pts[a]));
       c.save(); c.font = '500 10.5px "DM Mono", monospace'; c.textBaseline = 'middle';
       for (const i of orden) {
         if (cajas.length >= tope) break;
@@ -119,7 +119,8 @@
     if (g !== 'usd' && !D) return;
     $('cv-sub').textContent = D ? (D.vivo ? 'Precios de la rueda del ' + fecha(D.rueda) + ' contra el cierre del ' + fecha(D.ruedaAnterior) : 'Cierre del ' + fecha(D.rueda) + ' contra el del ' + fecha(D.ruedaAnterior)) : '';
     const P = filas().map(b => (est.g === 'duales' ? { ...b, tasaCer: (D.grupos.duales.find(x => x.sym === b.sym) || {}).tasa } : b));
-    const maxVol = Math.max(1, ...P.map(p => p.operado || 0));
+    // El tamaño del punto es la liquidez (lo operado hoy o en la rueda anterior); la tira y la tabla muestran lo de hoy
+    const liq = p => p.liquidez ?? p.operado ?? 0, maxVol = Math.max(1, ...P.map(liq));
     const hoyDs = P.map(p => ({ ...p })), antDs = P.map(p => ({ x: p.x, y: p.yAnt }));
 
     // ---- Datos clave
@@ -140,7 +141,7 @@
       { type: 'line', label: 'Curva de hoy', data: curvaHoy, borderColor: 'rgba(232,237,245,0.85)', borderWidth: 2, pointRadius: 0, tension: 0, order: 4 },
       { type: 'line', label: 'Curva anterior', data: curvaAnt, borderColor: 'rgba(154,165,184,0.55)', borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, tension: 0, order: 5 },
       { type: 'scatter', label: 'Rueda anterior', data: antDs, pointRadius: 3, pointBackgroundColor: 'rgba(0,0,0,0)', pointBorderColor: 'rgba(154,165,184,0.7)', pointBorderWidth: 1.2, order: 3 },
-      { type: 'scatter', label: 'Hoy', data: hoyDs, order: 1, pointRadius: hoyDs.map(p => 4 + 8 * Math.sqrt((p.operado || 0) / maxVol)), pointHoverRadius: hoyDs.map(p => 6 + 8 * Math.sqrt((p.operado || 0) / maxVol)),
+      { type: 'scatter', label: 'Hoy', data: hoyDs, order: 1, pointRadius: hoyDs.map(p => 4 + 8 * Math.sqrt(liq(p) / maxVol)), pointHoverRadius: hoyDs.map(p => 6 + 8 * Math.sqrt(liq(p) / maxVol)),
         pointBackgroundColor: hoyDs.map(p => (p.poca ? 'rgba(0,0,0,0)' : color(p))), pointBorderColor: hoyDs.map(color), pointBorderWidth: hoyDs.map(p => (p.poca ? 1.8 : 0)) },
     ];
     const opciones = {
@@ -161,7 +162,8 @@
     else graf = new Chart($('cv-g'), { type: 'scatter', data: { datasets: ds }, options: opciones, plugins: [extras] });
 
     // ---- Tira de volumen, en el orden de los vencimientos
-    const porPlazo = P.slice().sort((a, b) => a.dias - b.dias);
+    const porPlazo = P.slice().sort((a, b) => a.dias - b.dias), sinOperar = !P.some(p => p.operado > 0);
+    $('cv-h').textContent = sinOperar ? 'Lo operado en la rueda: todavía no hay operaciones' : 'Lo operado en la rueda';
     const vd = { labels: porPlazo.map(p => p.sym), datasets: [{ data: porPlazo.map(p => (p.operado || 0) / (g === 'usd' ? 1e3 : 1e6)), backgroundColor: porPlazo.map(p => (p.poca ? 'rgba(232,201,122,0.25)' : 'rgba(232,201,122,0.75)')), borderRadius: 3, maxBarThickness: 26 }] };
     if (gVol) { gVol.data = vd; gVol.options.scales.y.title.text = g === 'usd' ? 'Miles de US$' : 'Millones de $'; gVol.update(); }
     else gVol = new Chart($('cv-v'), { type: 'bar', data: vd, options: { responsive: true, maintainAspectRatio: false, animation: { duration: 350 }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: it => millones(it.raw * (g === 'usd' ? 1e3 : 1e6)) } } },
@@ -201,8 +203,14 @@
   });
   window.addEventListener('bb:usd', () => { USD = window.BBCurvasUSD; if (est.g === 'usd') pintar(); });
 
-  fetch('/api/agenda?source=curvas', { signal: AbortSignal.timeout(30000) }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(j => {
-    if (!j || !j.grupos) { raiz.querySelector('.chart-wrap').insertAdjacentHTML('afterbegin', '<p class="news-error">No se pudieron cargar los precios. Probá de nuevo en un rato.</p>'); return; }
+  // Se actualiza sola: cada 5 minutos mientras la página está a la vista y la rueda abierta (11 a 17 h, días hábiles)
+  const cargar = primera => fetch('/api/agenda?source=curvas', { signal: AbortSignal.timeout(30000) }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(j => {
+    if (!j || !j.grupos) { if (primera) raiz.querySelector('.chart-wrap').insertAdjacentHTML('afterbegin', '<p class="news-error">No se pudieron cargar los precios. Probá de nuevo en un rato.</p>'); return; }
     D = j; pintar();
   });
+  cargar(true);
+  setInterval(() => {
+    const ar = new Date(Date.now() - 3 * 3600e3), h = ar.getUTCHours() + ar.getUTCMinutes() / 60, dia = ar.getUTCDay();
+    if (document.visibilityState === 'visible' && dia > 0 && dia < 6 && h >= 10.9 && h <= 17.3) cargar(false);
+  }, 5 * 60e3);
 })();
