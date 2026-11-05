@@ -997,7 +997,7 @@ async function cierresPropios(filas, mes) {
 // Emisor, cupón y vencimiento de una obligación negociable (ficha de BYMA, guardada 60 días)
 // Nombre del emisor sin "S.A." y en minúsculas, salvo las siglas (palabras sin vocales o conocidas)
 const SIGLAS = new Set(['IRSA', 'MSU', 'BBVA', 'ICBC', 'HSBC', 'AES', 'GEMSA', 'CAPEX', 'ARCOR', 'YPF']), MENORES = new Set(['de', 'del', 'la', 'las', 'los', 'el', 'y', 'e']);
-const tituloEmisor = s => String(s || '').replace(/\s+S\.?\s?A\.?(\s?[A-Z]\.)*\s*$|\s+S\.?R\.?L\.?\s*$/i, '').trim().split(/\s+/)
+const tituloEmisor = s => String(s || '').replace(/\s+SOCIEDAD\s+AN[OÓ]NIMA.*$|\s+S\.?\s?A\.?(\s?[A-Z]\.)*\s*$|\s+S\.?R\.?L\.?\s*$/i, '').trim().split(/\s+/)
   .map((w, i) => (i && MENORES.has(w.toLowerCase()) ? w.toLowerCase() : SIGLAS.has(w) || !/[AEIOUÁÉÍÓÚ]/i.test(w) ? w : w.charAt(0) + w.slice(1).toLowerCase())).join(' ');
 async function fichaOn(sym) {
   let g = null;
@@ -1036,7 +1036,7 @@ async function getPizarra() {
     .map(x => fila(x, 'bon:' + x.symbol, { vol: mem.op(x.symbol).liquidez }));
   const ol = Object.values(O).filter(x => /D$/.test(x.symbol) && x.v > 0).sort((a, b) => monto(b, 100) - monto(a, 100)).slice(0, 12);
   const fichas = await Promise.all(ol.map(x => fichaOn(x.symbol).catch(() => null)));
-  const ons = ol.map((x, i) => fila(x, 'on:' + x.symbol, { vol: monto(x, 100), ...(fichas[i] || {}) }));
+  const ons = ol.map((x, i) => fila(x, 'on:' + x.symbol, { vol: monto(x, 100), ...(fichas[i] ? { ...fichas[i], emisor: tituloEmisor(fichas[i].emisor) } : {}) }));
 
   const todas = [...lider, ...ws, ...cedears, ...usd, ...pesos, ...ons];
   const [refs, propios] = await Promise.all([refsPizarra([...lider, ...ws, ...cedears, ...usd, ...pesos].map(f => f.k), mes), cierresPropios(todas, mes)]);

@@ -57,9 +57,12 @@ Es un proyecto personal e independiente creado por Bruno Behr, estudiante de UAD
 - [Déficit y deuda de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-fiscal): déficit, recaudación por impuesto, gasto por función, intereses, deuda sobre el PBI y gasto federal por estado (Tesoro, USAspending).
 - [Comercio exterior de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-comercio): exportaciones, importaciones y saldo mensual, bienes y servicios, socios (con la Argentina), tasa arancelaria efectiva y dólar.
 - [Mercados de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-mercados): S&P 500, Nasdaq 100, Dow Jones y Russell 2000, los 11 sectores contra el S&P 500, concentración y VIX, con qué hay adentro de cada índice.
+- [Vivienda en Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-vivienda): precio de las casas (Case-Shiller y precio mediano), alquileres, tasa hipotecaria a 30 años, cuota contra el ingreso, años de ingreso por casa, construcción y ventas.
+- [Poder de compra del dólar](https://www.bbfinanzas.com.ar/pages/poder-de-compra-dolar): calculadora de cuánto equivalen hoy los dólares de cualquier año desde 1913, con el IPC de Estados Unidos (BLS).
 - [Agenda económica de Estados Unidos](https://www.bbfinanzas.com.ar/pages/panel-usa-agenda): fechas y horarios en hora argentina de inflación, empleo, PBI, PCE, comercio y reuniones de la Reserva Federal.
 - [Mercados globales](https://www.bbfinanzas.com.ar/pages/datos): materias primas (petróleo, oro, cobre, granos, litio), monedas contra el dólar, criptomonedas con su índice de miedo y codicia, y activos alternativos (fondos inmobiliarios, infraestructura, capital privado).
 - [Visor de bonos de Estados Unidos](https://www.bbfinanzas.com.ar/pages/visor-bonos): curva de rendimientos, TIPS y breakeven.
+- [Pizarra del mercado argentino](https://www.bbfinanzas.com.ar/pages/pizarra): acciones del panel líder, empresas argentinas en Wall Street, CEDEARs, bonos en dólares y en pesos, obligaciones negociables, dólares, brecha, riesgo país y caución, con la variación del día, del mes y del año.
 - [Visor de bonos argentinos](https://www.bbfinanzas.com.ar/pages/visor-bonos-ar): curva de bonos argentinos en dólares (Bonares, Globales, BOPREAL) con TIR y duration calculadas desde precios de mercado.
 - [Mapas de calor](https://www.bbfinanzas.com.ar/pages/mercado): sectores, acciones del S&P 500 y criptomonedas pintados según cuánto suben o bajan, las acciones que más se mueven en el día y las operaciones de los directivos (insider trading).
 

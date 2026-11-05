@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1SF925SGNN');
+    // gtag.js (176 KB) se baja despues de que la pagina cargo, para no competir con el primer pintado
+    addEventListener('load', function(){ setTimeout(function(){ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-1SF925SGNN'; document.head.appendChild(s); }, 1500); });
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-adsense-account" content="ca-pub-4539395552565638">
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
+  <title>¿Cuánto vale hoy un dólar de otro año? Calculadora de inflación en dólares — BB Finanzas</title>
+  <meta name="description" content="Calculá cuánto equivalen hoy los dólares de cualquier año desde 1913 con la inflación oficial de Estados Unidos (IPC del BLS), cuánto poder de compra perdió el dólar y cuánto compra un dólar guardado. Se actualiza sola cada mes." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/poder-de-compra-dolar" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BB Finanzas" />
+  <meta property="og:title" content="¿Cuánto vale hoy un dólar de otro año?" />
+  <meta property="og:description" content="Cuánto equivalen hoy los dólares de cualquier año, con la inflación oficial de Estados Unidos." />
+  <meta property="og:url" content="https://www.bbfinanzas.com.ar/pages/poder-de-compra-dolar" />
+  <meta property="og:image" content="https://www.bbfinanzas.com.ar/img/banner-bb-finanzas-web.jpg?v=2" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Calculadora del poder de compra del dólar","url":"https://www.bbfinanzas.com.ar/pages/poder-de-compra-dolar","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"es-AR","offers":{"@type":"Offer","price":"0","priceCurrency":"ARS"},"isPartOf":{"@id":"https://www.bbfinanzas.com.ar/#sitio"},"publisher":{"@id":"https://www.bbfinanzas.com.ar/#organizacion"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.bbfinanzas.com.ar/"},{"@type":"ListItem","position":2,"name":"Panel Estados Unidos","item":"https://www.bbfinanzas.com.ar/pages/panel-usa"},{"@type":"ListItem","position":3,"name":"Poder de compra del dólar","item":"https://www.bbfinanzas.com.ar/pages/poder-de-compra-dolar"}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"¿De dónde sale el dato?","acceptedAnswer":{"@type":"Answer","text":"Del índice de precios al consumidor de Estados Unidos (CPI-U) que publica el BLS, la oficina de estadísticas laborales, desde 1913. Para cada año se usa el promedio de sus doce meses y, para hoy, el último mes publicado."}},
+    {"@type":"Question","name":"¿Por qué el dólar pierde valor si es una moneda fuerte?","acceptedAnswer":{"@type":"Answer","text":"Porque en Estados Unidos también hay inflación. La Reserva Federal busca que sea de 2% por año: con 2% anual, en 35 años los precios se duplican y un dólar guardado compra la mitad."}},
+    {"@type":"Question","name":"¿Esto vale para los dólares que tengo en la Argentina?","acceptedAnswer":{"@type":"Answer","text":"Mide lo que compra un dólar en Estados Unidos. En la Argentina, lo que compra un dólar depende además del tipo de cambio y de los precios en pesos, así que puede comprar más o menos que antes según el momento."}}
+  ]}
+  </script>
+  <style>
+    .pd-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.1rem; }
+    .pd-fila select { width: 100%; min-height: 46px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 0 0.8rem; font-size: 1rem; font-family: var(--font-body); }
+    .pd-fila select:focus { outline: 0; border-color: var(--accent); }
+    .pd-lista { list-style: none; margin: 1.1rem 0 0; padding: 0; text-align: left; }
+    .pd-lista li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--text-muted); }
+    .pd-lista li b { color: var(--text); font-weight: 500; font-family: var(--font-mono); font-size: 0.85rem; white-space: nowrap; }
+    .pd-ojo { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; border-left: 2px solid var(--gold); padding: 0.2rem 0 0.2rem 0.9rem; margin: 1.2rem 0 0; text-align: left; }
+    .pd-res .bb-comp { justify-content: center; margin-top: 1rem; }
+    .pf-rapidos button.on { color: var(--accent); border-color: rgba(74,222,154,0.4); }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/styles.css?v=20" />
+  <link rel="stylesheet" href="../css/panel.css?v=15" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+      <nav class="main-nav">
+        <a href="../" class="nav-link">Inicio</a>
+        <a href="calculadoras" class="nav-link">Calculadoras</a>
+        <a href="empezar-a-invertir" class="nav-link">Empezar a invertir</a>
+        <a href="inflacion" class="nav-link">Inflación</a>
+        <a href="comparador-plazos-fijos" class="nav-link">Plazo fijo</a>
+        <a href="comparador-tasas" class="nav-link">Tasas</a>
+        <a href="comparador-dolares" class="nav-link">Dólar</a>
+        <a href="agenda-ar" class="nav-link">Agenda AR</a>
+        <a href="visor-bonos-ar" class="nav-link">Bonos AR</a>
+        <a href="datos" class="nav-link">Mercados globales</a>
+        <a href="panel-argentina" class="nav-link">Panel Argentina</a>
+        <a href="blog" class="nav-link">Blog</a>
+        <a href="atlas" class="nav-link">Atlas</a>
+        <a href="sobre-el-proyecto" class="nav-link">Sobre el proyecto</a>
+        <a href="contacto" class="nav-link">Contacto</a>
+      </nav>
+      <button class="menu-toggle"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+    <div class="pf">
+      <div class="pf-hero" style="padding:0 1rem">
+        <div style="text-align:left"><a class="pa-volver" href="panel-usa" data-volver><span class="t">Panel Estados Unidos</span><i aria-hidden="true">←</i></a></div>
+        <p class="pa-eyebrow" style="text-align:center" data-bandera="usa">Panel Estados Unidos · Calculadora</p>
+        <h1>¿Cuánto vale hoy un dólar de otro año?</h1>
+        <p>Con la inflación oficial de Estados Unidos desde 1913, que se actualiza sola cada mes.</p>
+      </div>
+
+      <section class="pf-card" aria-label="Qué querés calcular">
+        <label class="pf-label" for="pd-monto">Monto</label>
+        <div class="pf-monto"><span aria-hidden="true">US$</span><input id="pd-monto" type="text" inputmode="numeric" autocomplete="off" value="100" /></div>
+        <div class="pd-fila">
+          <div><label class="pf-label" for="pd-desde">Dólares del año</label><select id="pd-desde"><option>2001</option></select></div>
+          <div><label class="pf-label" for="pd-hasta">Llevados a</label><select id="pd-hasta"><option value="hoy">Hoy</option></select></div>
+        </div>
+        <div class="pf-rapidos" id="pd-rapidos" style="margin-bottom:0">
+          <button type="button" data-a="1991">1991</button><button type="button" data-a="2001">2001</button><button type="button" data-a="2015">2015</button><button type="button" data-a="2020">2020</button>
+        </div>
+      </section>
+
+      <section class="pf-card pf-res pd-res" style="margin-top:1rem" aria-live="polite">
+        <p class="pf-res-eyebrow" id="pd-eyebrow">Cargando la inflación de Estados Unidos…</p>
+        <p class="pf-res-num" id="pd-num">—</p>
+        <p class="pf-res-det" id="pd-det"></p>
+        <span class="pf-infl" id="pd-chip" hidden></span>
+        <ul class="pd-lista" id="pd-lista"></ul>
+        <div id="pd-comp"></div>
+        <p class="pd-ojo">Mide lo que compra un dólar <strong>en Estados Unidos</strong>. En la Argentina, lo que compra un dólar depende además del tipo de cambio y de los precios en pesos: puede comprar más o menos que antes según el momento.</p>
+      </section>
+
+      <section class="pa-graf" aria-labelledby="g-poder-t">
+        <div class="pa-graf-cab"><div>
+          <h3 id="g-poder-t">Cuánto compra un dólar guardado</h3>
+          <p class="ayuda" id="g-poder-ayuda"><strong>Qué ves:</strong> lo que compran los dólares guardados desde el año elegido, medido en dólares de ese año.</p>
+        </div><button type="button" class="pa-bajar" data-exportar="g-poder" data-titulo="Poder de compra del dólar" data-fuente="BLS (CPI-U)">⬇ Imagen</button></div>
+        <div class="lienzo"><canvas id="g-poder" aria-label="Poder de compra de los dólares guardados"></canvas></div>
+        <p class="fuente">Fuente: BLS, índice de precios al consumidor urbano (CPI-U) sin desestacionalizar, vía <a href="https://fred.stlouisfed.org/series/CPIAUCNS" target="_blank" rel="noopener">FRED</a>. Promedio de cada año.</p>
+      </section>
+
+      <section class="pa-graf" aria-labelledby="t-guardado-t">
+        <h3 id="t-guardado-t">US$ 100 guardados desde…</h3>
+        <p class="ayuda">Cuánto compran hoy, en dólares de aquel año.</p>
+        <div class="pa-tabla-wrap" id="t-guardado"></div>
+      </section>
+    </div>
+    </div>
+
+    <section class="container bb-faq" aria-labelledby="pd-como-t">
+      <h2 id="pd-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
+      <p>Se multiplica el monto por el índice de precios del año de llegada y se divide por el del año de partida. Para cada año se usa el promedio de sus doce meses; para hoy, el último mes que publicó el BLS. Por ejemplo, si el índice pasó de 177 a 340, los precios subieron 92% y US$ 100 de entonces equivalen a US$ 192 de ahora.</p>
+      <p>Esto es información para entender cuánto cambian los precios en dólares. No dice si conviene o no ahorrar en alguna moneda: eso depende de cada caso y de en qué se guarde la plata.</p>
+      <details><summary>¿De dónde sale el dato?</summary><p>Del índice de precios al consumidor de Estados Unidos (CPI-U) que publica el BLS, la oficina de estadísticas laborales, desde 1913. Es el mismo índice que usa la calculadora oficial del BLS. Se actualiza solo cuando sale el dato de cada mes.</p></details>
+      <details><summary>¿Por qué el dólar pierde valor si es una moneda fuerte?</summary><p>Porque en Estados Unidos también hay inflación. La Reserva Federal busca que sea de 2% por año: con 2% anual, en 35 años los precios se duplican y un dólar guardado compra la mitad. La inflación de cada mes está en <a href="panel-usa-precios">Precios de Estados Unidos</a>.</p></details>
+      <details><summary>¿Esto vale para los dólares que tengo en la Argentina?</summary><p>Mide lo que compra un dólar en Estados Unidos. En la Argentina, lo que compra un dólar depende además del tipo de cambio y de los precios en pesos, así que puede comprar más o menos que antes según el momento. Para la inflación en pesos está la <a href="inflacion">calculadora de inflación</a>.</p></details>
+    </section>
+
+    <aside class="related-reads">
+      <h2>Seguí leyendo</h2>
+      <ul>
+      <li><a href="panel-usa-precios">Inflación en Estados Unidos</a><p>IPC, PCE y qué rubros suben más, mes a mes.</p></li>
+      <li><a href="inflacion">Calculadora de inflación en pesos</a><p>Cuánto valen hoy los pesos de otra fecha, con el IPC del INDEC.</p></li>
+      <li><a href="comparador-dolares">Comparador de dólares</a><p>Dónde comprar dólares y a qué precio.</p></li>
+      </ul>
+    </aside>
+    <p style="text-align:center;color:var(--text-subtle);font-size:0.78rem;line-height:1.6;padding:1.5rem 1rem 2.5rem;margin:0">Hecho y revisado por <a href="sobre-el-proyecto" style="color:var(--text-muted)">Bruno Behr</a> · <a href="metodologia" style="color:var(--text-muted)">Cómo calculamos y de dónde salen los datos</a></p>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="../" class="logo"><img src="../assets/logo-bb.svg" alt="BB Finanzas" class="logo-img" width="148" height="38" /></a>
+        <p>Datos de BLS, BEA, la Reserva Federal (FRED) y el Tesoro de Estados Unidos.</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p style="font-size:0.78rem;color:var(--text-subtle)">© 2026 BB Finanzas · <a href="mailto:bb.financial10@gmail.com" style="color:inherit">bb.financial10@gmail.com</a> · <a href="/pages/privacidad" style="color:inherit">Política de privacidad</a> · <a href="/pages/contacto" style="color:inherit">Contacto</a> · <a href="/pages/terminos" style="color:inherit">Términos</a></p></div>
+  </footer>
+
+  <script src="../js/sanitize.js?v=1"></script>
+  <script src="../js/main.js?v=56"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
+  <script src="../js/chart-mobile.js?v=1"></script>
+  <script src="../js/panel.js?v=21"></script>
+  <script src="../js/compartir.js?v=1"></script>
+  <script>
+  (async function () {
+    const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
+    const d = await P.API.usa('dolar');
+    if (!d || !d.ipc || d.ipc.length < 100) { $('pd-eyebrow').textContent = 'No se pudo cargar la inflación de Estados Unidos. Probá de nuevo en un rato.'; return; }
+
+    // Promedio de cada año completo; para hoy, el último mes publicado
+    const ult = d.ipc.at(-1), [uy, um] = ult[0].split('-').map(Number), por = {}, anual = {};
+    for (const [p, v] of d.ipc) (por[p.slice(0, 4)] = por[p.slice(0, 4)] || []).push(v);
+    for (const [a, l] of Object.entries(por)) if (l.length === 12) anual[a] = l.reduce((s, x) => s + x, 0) / 12;
+    const anios = Object.keys(anual).sort(), hoyL = P.MESES[um - 1] + ' de ' + uy;
+    const ipc = a => (a === 'hoy' ? ult[1] : anual[a]), cuando = a => (a === 'hoy' ? uy + (um - 0.5) / 12 : +a + 0.5);
+    const us = v => 'US$ ' + num(v, v >= 100 ? 0 : 2);
+    const opciones = anios.slice().reverse().map(a => '<option>' + a + '</option>').join('');
+    $('pd-desde').innerHTML = opciones; $('pd-desde').value = '2001';
+    $('pd-hasta').innerHTML = '<option value="hoy">Hoy (' + P.MES[um - 1] + ' ' + uy + ')</option>' + opciones;
+    const leer = () => Number(String($('pd-monto').value).replace(/\./g, '').replace(',', '.')) || 0;
+
+    let ch = null, r = null;
+    function calcular() {
+      const m = leer(), a = $('pd-desde').value, h = $('pd-hasta').value, i0 = ipc(a), i1 = ipc(h), haciaL = h === 'hoy' ? 'de hoy' : 'de ' + h;
+      document.querySelectorAll('#pd-rapidos button').forEach(b => b.classList.toggle('on', b.dataset.a === a));
+      if (!(m > 0) || !i0 || !i1) { r = null; $('pd-eyebrow').textContent = 'Cargá un monto en dólares.'; $('pd-num').textContent = '—'; $('pd-det').textContent = ''; $('pd-chip').hidden = true; $('pd-lista').innerHTML = ''; return; }
+      const eq = m * i1 / i0, acum = (i1 / i0 - 1) * 100, n = cuando(h) - cuando(a), prom = n > 0.5 ? (Math.pow(i1 / i0, 1 / n) - 1) * 100 : null;
+      r = { m, a, h, eq, acum };
+      $('pd-eyebrow').innerHTML = '<strong>' + us(m) + '</strong> de ' + a + ' equivalen a';
+      $('pd-num').textContent = us(eq);
+      $('pd-det').textContent = 'en dólares ' + (h === 'hoy' ? 'de ' + hoyL : 'de ' + h) + '.';
+      // Hacia atrás (de 2024 a 2020, por ejemplo) se informa la inflación del período en orden, de lo viejo a lo nuevo
+      const atras = cuando(h) < cuando(a), chip = $('pd-chip');
+      if (!atras && acum > 0.05) { chip.hidden = false; chip.className = 'pf-infl pierde'; chip.textContent = 'El dólar perdió el ' + num((1 - i0 / i1) * 100, 0) + '% de su poder de compra'; }
+      else if (!atras && acum < -0.05) { chip.hidden = false; chip.className = 'pf-infl gana'; chip.textContent = 'Los precios bajaron: el dólar compra un ' + num((i0 / i1 - 1) * 100, 0) + '% más'; }
+      else chip.hidden = true;
+      const filas = atras ? [['Inflación entre ' + h + ' y ' + a, P.signo((i0 / i1 - 1) * 100, 1) + '%']]
+        : [['Inflación acumulada', P.signo(acum, 1) + '%'], prom != null ? ['Promedio por año', num(prom, 1) + '%'] : null, acum > 0.05 ? [us(m) + ' ' + haciaL + ' compran lo que', us(m * i0 / i1) + ' en ' + a] : null];
+      $('pd-lista').innerHTML = filas.filter(Boolean).map(x => '<li><span>' + x[0] + '</span><b>' + x[1] + '</b></li>').join('');
+      grafico(m, a);
+    }
+
+    // Lo que compran los dólares guardados desde el año elegido, en dólares de ese año
+    function grafico(m, a) {
+      const L = anios.filter(y => y >= a), labels = L.concat(['Hoy']), datos = L.map(y => +(m * anual[a] / anual[y]).toFixed(2)).concat([+(m * anual[a] / ult[1]).toFixed(2)]);
+      $('g-poder-t').textContent = 'Cuánto compran ' + us(m) + ' guardados desde ' + a;
+      $('g-poder').dataset.ultimo = hoyL;
+      if (!window.Chart) return;
+      if (ch) { ch.data.labels = labels; ch.data.datasets[0].data = datos; ch.update(); return; }
+      const op = P.ejes(x => 'US$ ' + num(x, 0));
+      op.plugins.legend = { display: false }; op.plugins.tooltip = { callbacks: { label: c => 'Compran lo que ' + us(c.raw) + ' en ' + $('pd-desde').value } };
+      ch = new Chart($('g-poder'), { type: 'line', data: { labels, datasets: [{ data: datos, borderColor: '#ff9f7a', backgroundColor: 'rgba(255,159,122,0.1)', fill: true, borderWidth: 2, pointRadius: 0, tension: 0.2 }] }, options: op });
+    }
+
+    // Tabla fija: US$ 100 guardados desde años que se recuerdan
+    const ref = ['1971', '1991', '2001', '2008', '2015', '2020', '2023'].filter(a => anual[a]);
+    $('t-guardado').innerHTML = '<table class="pa-tabla" style="min-width:0"><thead><tr><th scope="col">Desde</th><th scope="col">Hoy compran lo que</th><th scope="col">Poder de compra perdido</th></tr></thead><tbody>' +
+      ref.map(a => '<tr><td>' + a + '</td><td class="v">' + us(100 * anual[a] / ult[1]) + ' de ' + a + '</td><td class="v">' + num((1 - anual[a] / ult[1]) * 100, 0) + '%</td></tr>').join('') + '</tbody></table>';
+
+    $('pd-monto').addEventListener('input', e => { const v = e.target.value.replace(/\D/g, '').slice(0, 12); e.target.value = v ? Number(v).toLocaleString('es-AR') : ''; calcular(); });
+    $('pd-desde').addEventListener('change', calcular);
+    $('pd-hasta').addEventListener('change', calcular);
+    $('pd-rapidos').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { $('pd-desde').value = b.dataset.a; calcular(); } });
+    calcular();
+
+    BBCompartir.montar($('pd-comp'), { nombre: 'Poder de compra del dólar', archivo: 'poder-de-compra-dolar', dato: () => {
+      if (!r) return null;
+      const hasta = r.h === 'hoy' ? 'hoy' : 'en ' + r.h;
+      return { titulo: us(r.m) + ' de ' + r.a + ' equivalen ' + hasta + ' a', valor: us(r.eq), linea: 'Inflación de EE.UU. acumulada: ' + P.signo(r.acum, 0) + '%', texto: us(r.m) + ' de ' + r.a + ' equivalen ' + hasta + ' a ' + us(r.eq) + ', con la inflación oficial de Estados Unidos (' + P.signo(r.acum, 0) + '% acumulado).' };
+    } });
+  })();
+  </script>
+</body>
+</html>
