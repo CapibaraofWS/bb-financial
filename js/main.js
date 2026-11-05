@@ -953,7 +953,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!ancla || document.querySelector('[data-volver]') || !/^\/pages\/[^/]+$/.test(location.pathname) || history.length < 2) return;
   if (ref.indexOf(location.origin + '/') !== 0 || new URL(ref).pathname === location.pathname) return;
   var a = document.createElement('a');
-  a.className = 'bb-volver'; a.href = ref; a.innerHTML = '<i aria-hidden="true">←</i>Volver';
+  a.className = 'bb-volver'; a.href = ref; a.innerHTML = '<span class="t">Volver</span><i aria-hidden="true">←</i>';
   a.addEventListener('click', function (e) { e.preventDefault(); history.back(); });
   if (ancla.classList.contains('pf-hero')) ancla.prepend(a); else ancla.before(a);
 });

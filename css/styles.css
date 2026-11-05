@@ -1891,8 +1891,11 @@ td[data-skel] { text-align: left !important; padding: 1rem 0.7rem !important; }
 
 /* Botón "Volver" que aparece al llegar desde otra página del sitio (main.js); igual al de las páginas del panel */
 .bb-volver { position: relative; display: inline-flex; align-items: center; height: 38px; padding: 0 0.9rem 0 2.6rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); font-size: 0.82rem; text-decoration: none; overflow: hidden; margin-bottom: 1rem; }
-.bb-volver i { position: absolute; inset: 0 auto 0 0; width: 2.1rem; display: grid; place-items: center; background: rgba(74,222,154,0.1); color: var(--accent); font-style: normal; }
+.bb-volver .t { transition: opacity 0.35s ease; }
+.bb-volver i { position: absolute; inset: 0 auto 0 0; width: 2.1rem; display: grid; place-items: center; background: rgba(74,222,154,0.1); color: var(--accent); font-style: normal; transition: width 0.4s ease; }
 .bb-volver:hover, .bb-volver:focus-visible { color: var(--text); border-color: rgba(74,222,154,0.4); }
+.bb-volver:hover i, .bb-volver:focus-visible i { width: 100%; }
+.bb-volver:hover .t, .bb-volver:focus-visible .t { opacity: 0; }
 
 /* Compartir el resultado de una calculadora (js/compartir.js) */
 .bb-comp { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 0.35rem; margin-top: 0.8rem; }

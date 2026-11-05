@@ -12,6 +12,13 @@
 .pa-sub a { flex: 0 0 auto; padding: 0.5rem 0.95rem; min-height: 40px; display: inline-flex; align-items: center; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); font-size: 0.86rem; text-decoration: none; transition: border-color var(--transition), color var(--transition); }
 .pa-sub a:hover { color: var(--text); border-color: var(--text-subtle); }
 .pa-sub a[aria-current="page"] { background: var(--accent-dim); border-color: rgba(74,222,154,0.4); color: var(--accent); }
+/* Grupos del submenú: datos sin color, calculadoras en dorado, agenda y mercados en celeste */
+.pa-sub a.calc { color: var(--gold); border-color: rgba(232,201,122,0.28); background: rgba(232,201,122,0.05); }
+.pa-sub a.calc:hover { color: #f3dca6; border-color: rgba(232,201,122,0.6); }
+.pa-sub a.calc[aria-current="page"] { background: var(--gold-dim); border-color: rgba(232,201,122,0.55); color: var(--gold); }
+.pa-sub a.merc { color: #8cc8f7; border-color: rgba(140,200,247,0.28); background: rgba(140,200,247,0.05); }
+.pa-sub a.merc:hover { color: #b9ddfa; border-color: rgba(140,200,247,0.6); }
+.pa-sub a.merc[aria-current="page"] { background: rgba(140,200,247,0.13); border-color: rgba(140,200,247,0.55); color: #8cc8f7; }
 
 /* ---- Franja "Últimos datos y lo que viene" */
 .pa-franja { background: linear-gradient(135deg, #0e1318, #11141a); border: 1px solid var(--border); border-radius: 18px; padding: 1.35rem 1.4rem 1rem; }
