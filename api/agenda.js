@@ -6,6 +6,7 @@
 // Consolidado en un solo endpoint para no superar el límite de funciones del plan Hobby.
 import { denyExternalOrigin } from './_security.js';
 import { denyRateLimited } from './_rateLimit.js';
+import * as K from './_curvas.js';
 
 const UA = 'Mozilla/5.0 (compatible; BBFinanzasBot/1.0)';
 const TIMEOUT = 9000;
@@ -316,7 +317,7 @@ async function getBonosAR() {
 // [símbolo que usa la página, símbolo de la serie en USD MEP en la fuente].
 // Soberanos/BONTE siguen la regla sym+'D'; los BOPREAL no (BPOA7 → BPA7D).
 const AR_BOND_SYMBOLS = [
-  ...['AL29','GD29','AL30','GD30','AL35','GD35','AE38','GD38','AL41','GD41','AO27','AO28','AN29'].map(s => [s, s + 'D']),
+  ...['AL29','GD29','AL30','GD30','AL35','GD35','AE38','GD38','AL41','GD41','GD46','AO27','AO28','AO29','AN29'].map(s => [s, s + 'D']),
   ['BPOA7','BPA7D'], ['BPOB7','BPB7D'], ['BPOC7','BPC7D'], ['BPOD7','BPD7D'],
   ['BPOA8','BPA8D'], ['BPOB8','BPB8D'],
 ];
@@ -774,6 +775,107 @@ async function getArMercado() {
 }
 
 // ============================================================
+// CURVAS EN PESOS — tasa fija, CER, dólar linked, TAMAR y duales, hoy y en la rueda anterior (fórmulas en api/_curvas.js).
+// Cada grupo con la tasa que mira el mercado: efectiva anual (fija), real (CER y pata CER de los duales), en dólares
+// (dólar linked) y margen sobre TAMAR. Verificado contra 26 licitaciones de 2026 (TIREA oficial) y contra Bonistas
+// (TX28, TX31 y TY30P).
+// ============================================================
+// Con cupón: pagos del prospecto (Res. 381/2020 para TX28; los demás, ficha de BYMA y resolución de emisión)
+const CON_CUPON = {
+  TX28: { g: 'cer', emision: '2020-09-04', vence: '2028-11-09', pagos: () => K.pagosSemestrales({ fechas: K.semestrales(9, 5, 11, 2021, '2028-11-09'), tasa: 0.0225, cuotas: 10, amortDesde: '2024-05-09' }) },
+  TX31: { g: 'cer', emision: '2022-05-31', vence: '2031-11-30', pagos: () => K.pagosSemestrales({ fechas: K.semestrales(30, 5, 11, 2022, '2031-11-30').filter(f => f >= '2022-11-30'), tasa: 0.025, cuotas: 10, amortDesde: '2027-05-30' }) },
+  TY30P: { g: 'fija', emision: '2025-06-04', vence: '2030-05-30', pagos: () => K.semestrales(30, 5, 11, 2025, '2030-05-30').filter(f => f >= '2025-11-30').map(f => ({ fecha: f, amort: f === '2030-05-30' ? 100 : 0, interes: 14.75 })) },
+};
+// Margen sobre TAMAR fijado en la licitación de emisión (resultados de la Secretaría de Finanzas). El del TMF27 (licitación
+// del 11/2/2026, sin aviso encontrado) se despejó de las reaperturas del 15/4 y del 11/9, que dan 6,516 y 6,531.
+const MARGEN_TAMAR = { TMF27: 6.52, TMF28: 6.50, TMG27: 6, TMG28: 6.90, TML27: 5.40 };
+// Duales CER / TAMAR: pagan lo que más rinda entre el capital ajustado por CER y la TAMAR más este margen
+const DUAL_CER_TAMAR = { TXMJ8: 3, TXMD8: 3, TXMJ9: 3, TXMD9: 3, TXMJ0: 3 };
+const RE_TAMAR = /^TM[A-Z]\d{2}$/, RE_DUAL = /^TXM[A-Z]\d$/;
+async function getCurvas() {
+  const ahora = Date.now(), hoy = new Date(ahora - 3 * 3600e3).toISOString().slice(0, 10), anio = +hoy.slice(0, 4);
+  const [pesos, sets, cerR, tamR, fxR, fer] = await Promise.all([
+    getArPesos(),
+    Promise.all(['arg_notes', 'arg_bonds'].map(e => fetchJson(`https://data912.com/live/${e}`, 4000).catch(() => fetchJson(`https://data912.com/live/${e}`, 4000)))),
+    fetchJson('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/30?desde=2020-01-01&limit=3000'),
+    fetchJson('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/44?desde=2024-12-01&limit=3000'),
+    fetchJson('https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/5?desde=' + (anio - 1) + '-11-01&limit=3000'),
+    feriados([2020, 2021, 2022, 2023, 2024, 2025, anio, anio + 1].filter((a, i, x) => x.indexOf(a) === i)),
+  ]);
+  const serie = r => { const o = {}; for (const x of r?.results?.[0]?.detalle || []) if (x.valor > 0) o[x.fecha] = x.valor; return o; };
+  const CER = serie(cerR), TAM = serie(tamR), FX = serie(fxR);
+  const fC = Object.keys(CER).sort(), fT = Object.keys(TAM).sort(), fX = Object.keys(FX).filter(f => f <= hoy).sort();
+  if (fC.length < 1500 || fT.length < 100 || fX.length < 20) throw new Error('faltan series del BCRA');
+  const cal = K.calendario([...fer]);
+  const liq = habilDesde(ruedaDe(ahora, fer), 1, fer), liqAnt = habilDesde(liq, -1, fer);
+  // Hoy y la rueda anterior: el CER de 10 hábiles antes de cada liquidación y el último dólar A3500 publicado de cada día
+  const cer = { hoy: K.valorEn(CER, fC, cal.atras(liq, 10)), ant: K.valorEn(CER, fC, cal.atras(liqAnt, 10)) };
+  const fx = { hoy: FX[fX.at(-1)], ant: FX[fX.at(-2)] };
+  const px = {};
+  for (const x of sets.flat()) if (x && x.c > 0) px[x.symbol] = { p: x.c, pct: Number.isFinite(x.pct_change) ? x.pct_change : 0, vol: (x.v || 0) * x.c / 100 };
+  const tamar = { supuesto: K.tamarProyectada(TAM, fT), ultima: TAM[fT.at(-1)], fecha: fT.at(-1) };
+  const fichas = {};
+  const ficha = async s => (fichas[s] ??= await fichaByma(s).catch(() => null));
+  const out = { fija: [], cer: [], dl: [], tamar: [], duales: [] };
+  // Cada bono: precio de hoy y el de la rueda anterior (cierre = hoy / (1 + variación)), con su liquidación
+  const momentos = q => [['', q.p, liq], ['Ant', q.p / (1 + q.pct / 100), liqAnt]];
+  const agregar = (g, sym, vence, q, calc, extra = {}) => {
+    // Con menos de $30 millones operados en la rueda, el último precio dice poco: se dibuja hueco y no entra en la curva
+    const fila = { sym, vence, dias: K.dias(liq, vence), precio: q.p, variacion: q.pct, operado: q.vol, poca: q.vol < MINIMO_OPERADO, ...extra };
+    // Todo lo calculado queda dos veces: tasa y tasaAnt, tamarMargen y tamarMargenAnt, etc.
+    for (const [k, p, l] of momentos(q)) { const r = calc(p, l, k); if (!r || !Number.isFinite(r.tasa)) return; for (const [c, v] of Object.entries(r)) fila[c + k] = v; }
+    if (fila.dias >= 1) out[g].push(fila);
+  };
+
+  // ---- Tasa fija: LECAP y BONCAP de la curva en pesos, y el Bonte 2030
+  for (const b of pesos.bonds || []) {
+    const q = px[b.sym] || { p: b.price, pct: b.pct || 0, vol: b.volumen || 0 };
+    agregar('fija', b.sym, b.vencimiento, q, (p, l) => { const d = K.dias(l, b.vencimiento), t = K.tirUnica(b.vpv, p, d); return t == null ? null : { tasa: t, dur: d / 365 / (1 + t), tem: Math.pow(b.vpv / p, 30 / d) - 1, tna: (b.vpv / p - 1) * 365 / d }; },
+      { poca: !!b.pocaLiquidez, operado: b.volumen ?? q.vol });
+  }
+  // ---- Con cupón (TX28, TX31 y TY30P): TIR de los flujos del prospecto; los CER, en términos reales
+  for (const [sym, c] of Object.entries(CON_CUPON)) {
+    const q = px[sym]; if (!q) continue;
+    const pagos = c.pagos(), base = c.g === 'cer' ? K.valorEn(CER, fC, cal.atras(c.emision, 10)) : 1;
+    agregar(c.g, sym, c.vence, q, (p, l, k) => { const coef = c.g === 'cer' ? cer[k ? 'ant' : 'hoy'] / base : 1, r = K.tirFlujos(p / coef, l, pagos); return r && { tasa: r.tir, dur: r.modificada }; }, { cupon: true });
+  }
+  // ---- CER cero cupón (tabla verificada BONOS_CER; uno nuevo entra con la ficha de BYMA)
+  for (const sym of Object.keys(px).filter(s => RE_CER.test(s))) {
+    let d = BONOS_CER[sym], auto = false;
+    if (!d) { const f = await ficha(sym); if (!f || !f.cupon0) continue; d = [f.emision, f.vence]; auto = true; }
+    const base = K.valorEn(CER, fC, cal.atras(d[0], 10));
+    agregar('cer', sym, d[1], px[sym], (p, l, k) => { const dd = K.dias(l, d[1]), t = K.tirUnica(100 * cer[k ? 'ant' : 'hoy'] / base, p, dd); return t == null ? null : { tasa: t, dur: dd / 365 / (1 + t) }; }, { auto });
+  }
+  // ---- Dólar linked cero cupón y el dual TAMAR / dólar linked (TMVE8, por su pata en dólares): TIR en dólares
+  for (const sym of Object.keys(px).filter(s => RE_DL.test(s) || s === 'TMVE8')) {
+    const f = await ficha(sym); if (!f || px[sym].p < 10000) continue;
+    agregar('dl', sym, f.vence, px[sym], (p, l, k) => { const dd = K.dias(l, f.vence), t = K.tirUnica(100 * fx[k ? 'ant' : 'hoy'], p, dd); return t == null ? null : { tasa: t, dur: dd / 365 / (1 + t) }; }, sym === 'TMVE8' ? { dual: 'TAMAR' } : {});
+  }
+  // ---- TAMAR: TIR suponiendo la TAMAR proyectada hasta el vencimiento; se grafica el margen sobre esa TAMAR
+  for (const sym of Object.keys(px).filter(s => RE_TAMAR.test(s) && MARGEN_TAMAR[s] != null)) {
+    const f = await ficha(sym); if (!f) continue;
+    const tp = K.tamarPromedio(TAM, fT, cal.atras(f.emision, 10), cal.atras(f.vence, 10), cal), vpv = K.vpvTamar(f.emision, f.vence, tp.promedio, MARGEN_TAMAR[sym]);
+    agregar('tamar', sym, f.vence, px[sym], (p, l) => { const dd = K.dias(l, f.vence), t = K.tirUnica(vpv, p, dd); return t == null ? null : { tasa: K.comoTamar(t) / 100 - tamar.supuesto / 100, tea: t, dur: dd / 365 / (1 + t) }; },
+      { margenContrato: MARGEN_TAMAR[sym] });
+  }
+  // ---- Duales CER / TAMAR: la tasa real de la pata CER (como informa Finanzas) y, aparte, la pata TAMAR
+  for (const sym of Object.keys(px).filter(s => RE_DUAL.test(s))) {
+    const f = await ficha(sym); if (!f) continue;
+    const margen = DUAL_CER_TAMAR[sym] ?? (f.tem > 0 && f.tem < 10 ? f.tem : null); if (margen == null) continue;
+    const base = K.valorEn(CER, fC, cal.atras(f.emision, 10)), tp = K.tamarPromedio(TAM, fT, cal.atras(f.emision, 10), cal.atras(f.vence, 10), cal), vpvT = K.vpvTamar(f.emision, f.vence, tp.promedio, margen);
+    agregar('duales', sym, f.vence, px[sym], (p, l, k) => {
+      const dd = K.dias(l, f.vence), t = K.tirUnica(100 * cer[k ? 'ant' : 'hoy'] / base, p, dd), tt = K.tirUnica(vpvT, p, dd);
+      return t == null || tt == null ? null : { tasa: t, dur: dd / 365 / (1 + t), tamarTea: tt, tamarMargen: K.comoTamar(tt) / 100 - tamar.supuesto / 100 };
+    }, { margenContrato: margen, auto: DUAL_CER_TAMAR[sym] == null });
+  }
+  for (const g of Object.values(out)) g.sort((a, b) => a.dias - b.dias);
+  if (Object.values(out).reduce((s, g) => s + g.length, 0) < 15) throw new Error('pocos bonos');
+  const rueda = habilDesde(liq, -1, fer);
+  return { asOf: new Date(ahora).toISOString(), rueda, ruedaAnterior: habilDesde(rueda, -1, fer), liquidacion: liq, liquidacionAnterior: liqAnt, vivo: !!pesos.vivo, tamar, cer: { valor: cer.hoy }, dolar: { valor: fx.hoy, fecha: fX.at(-1) }, grupos: out,
+    fuente: 'Precios de BYMA vía data912; CER, TAMAR y dólar A3500 del BCRA; condiciones de emisión de la Secretaría de Finanzas y BYMA' };
+}
+
+// ============================================================
 // ARCA: INFORME MENSUAL DE RECAUDACIÓN
 // No tiene calendario publicado: sale los primeros días hábiles del mes siguiente. Se mira si el PDF de cada mes
 // ya está; el que falta va con fecha estimada (el primer día hábil, o hoy si esa fecha ya pasó sin que saliera).
@@ -810,6 +912,7 @@ async function getArcaRecaudacion() {
 // ============================================================
 const HANDLERS = {
   'arca-recaudacion':    { fn: getArcaRecaudacion,    cache: 's-maxage=3600, stale-while-revalidate=21600' },
+  'curvas':              { fn: getCurvas,             cache: 's-maxage=300, stale-while-revalidate=900' },
   'finanzas-news':       { fn: getFinanzasNews,       cache: 's-maxage=1800, stale-while-revalidate=3600' },
   'finanzas-cronograma': { fn: getFinanzasCronograma, cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'bcra-calendario':     { fn: getBcraCalendario,     cache: 's-maxage=3600, stale-while-revalidate=21600' },

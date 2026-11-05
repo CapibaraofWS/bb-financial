@@ -25,12 +25,19 @@
       "maturity": "2041-07-09",
       "amort": { "start": "2028-01-09", "count": 28, "pct": 3.571428 },
       "coupons": [["2021-07-09", 0.00125], ["2022-07-09", 0.025], ["2029-07-09", 0.035], ["end", 0.04875]]
+    },
+    "2046": {
+      "_fuente": "Decreto 676/2020 y 701/2020, ficha de BYMA (ISIN US040114HW38)",
+      "maturity": "2046-07-09",
+      "amort": { "start": "2025-01-09", "count": 44, "pct": 2.272727 },
+      "coupons": [["2021-07-09", 0.00125], ["2022-07-09", 0.01125], ["2023-07-09", 0.015], ["2024-07-09", 0.03625], ["2027-07-09", 0.04125], ["2028-07-09", 0.04375], ["end", 0.05]]
     }
   },
   "bullets": [
     { "sym": "AO27", "name": "BONTE USD 2027", "law": "Ley Arg.", "maturity": "2027-10-29", "coupon": 0.06,  "freq": 12 },
     { "sym": "AO28", "name": "BONTE USD 2028", "law": "Ley Arg.", "maturity": "2028-10-31", "coupon": 0.06,  "freq": 12 },
-    { "sym": "AN29", "name": "BONTE USD 2029", "law": "Ley Arg.", "maturity": "2029-11-30", "coupon": 0.065, "freq": 2 }
+    { "sym": "AN29", "name": "BONTE USD 2029", "law": "Ley Arg.", "maturity": "2029-11-30", "coupon": 0.065, "freq": 2 },
+    { "sym": "AO29", "name": "BONAR USD oct. 2029", "law": "Ley Arg.", "maturity": "2029-10-31", "coupon": 0.06,  "freq": 12 }
   ],
   "_bopreales": "BOPREAL = bonos del BCRA (no del Tesoro) en USD. Serie 1: cupón 5% anual semestral base 30/360, primer pago 31-oct-2024, amortiza 50% el 30-abr-2027 + 50% el 31-oct-2027; las clases A/B/C/D tienen flujos idénticos y sólo difieren en la opción de rescate anticipado. Serie 4: bullet, cupón 3% anual semestral, primer pago 31-oct-2025, vence 31-oct-2028; clases 4A (con opción de rescate desde 30-abr-2028) y 4B (sin opción). 'chart' marca la clase más líquida de cada serie, la única que se dibuja en el scatter para no superponer 4 puntos idénticos.",
   "boprales": [
@@ -51,6 +58,7 @@
     { "sym": "AE38", "tpl": "2038", "law": "Ley Arg.", "name": "Bonar 2038" },
     { "sym": "GD38", "tpl": "2038", "law": "Ley NY",  "name": "Global 2038" },
     { "sym": "AL41", "tpl": "2041", "law": "Ley Arg.", "name": "Bonar 2041" },
-    { "sym": "GD41", "tpl": "2041", "law": "Ley NY",  "name": "Global 2041" }
+    { "sym": "GD41", "tpl": "2041", "law": "Ley NY",  "name": "Global 2041" },
+    { "sym": "GD46", "tpl": "2046", "law": "Ley NY",  "name": "Global 2046" }
   ]
 }

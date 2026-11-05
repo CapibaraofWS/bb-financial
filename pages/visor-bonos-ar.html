@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png" />
   <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
   <title>Bonos argentinos hoy: precios, TIR y curva en dólares y pesos — BB Finanzas</title>
-  <meta name="description" content="Precios y TIR de los bonos argentinos en dólares (Bonares, Globales y BOPREAL), LECAP y BONCAP en pesos, bonos CER y dólar linked, con la fecha y el monto del próximo pago de cada uno." />
+  <meta name="description" content="Precios y TIR de los bonos argentinos en dólares (Bonares, Globales y BOPREAL) y en pesos (LECAP, BONCAP, CER, dólar linked, TAMAR y duales): la curva de hoy contra la de ayer, lo operado y el próximo pago de cada uno." />
   <meta name="keywords" content="bonos argentinos hoy, AL30, GD30, BOPREAL, LECAP, BONCAP, bonos CER, dólar linked, curva de bonos, TIR, duration, bonares, globales, cuándo paga el AL30" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://www.bbfinanzas.com.ar/pages/visor-bonos-ar" />
@@ -90,6 +90,27 @@
     .tool-info summary{padding:0.75rem 1.1rem;cursor:pointer;font-size:0.85rem;color:var(--text-muted);}
     .tool-info .ti-content{padding:0.85rem 1.1rem 1.1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.7;}
     .tool-info .ti-content code{background:var(--bg);padding:0.05rem 0.35rem;border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);}
+    /* Curvas: hoy contra la rueda anterior (js/curvas.js) */
+    .cv .pa-seg { margin: 0 0 0.8rem; }
+    .cv-sub { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-subtle); margin: 0 0 0.35rem; }
+    .cv-que { font-size: 0.88rem; color: var(--text-muted); line-height: 1.55; margin: 0 0 0.9rem; max-width: 820px; }
+    .cv-ctrl { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; margin: 0.5rem 0 0.4rem; }
+    .cv-ctrl .pa-seg { margin: 0; }
+    .cv-check { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.8rem; color: var(--text-muted); min-height: 36px; cursor: pointer; }
+    .cv-check input { accent-color: var(--accent); width: 16px; height: 16px; }
+    .cv-lienzo { position: relative; height: 440px; }
+    .cv-lienzo canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+    .cv-ley { display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; font-size: 0.74rem; color: var(--text-subtle); margin: 0.6rem 0 1.4rem; }
+    .cv-ley i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 0.35rem; vertical-align: -1px; }
+    .cv-ley b { display: inline-block; width: 18px; height: 0; margin-right: 0.35rem; vertical-align: 3px; }
+    .cv-ley .cv-l1 { border-top: 2px solid rgba(232,237,245,0.85); }
+    .cv-ley .cv-l2 { border-top: 2px dashed rgba(154,165,184,0.7); }
+    .cv-h { font-size: 0.95rem !important; margin: 0 0 0.5rem !important; }
+    .cv-vol { position: relative; height: 160px; margin-bottom: 1.3rem; }
+    .cv-t td small { font-size: 0.66rem; color: var(--text-subtle); }
+    .cv-nota { font-size: 0.72rem; padding: 0.15rem 0.55rem; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); white-space: nowrap; }
+    .cv-fuente { font-size: 0.74rem; color: var(--text-subtle); line-height: 1.6; margin: 0.9rem 0 0; }
+    @media (max-width: 640px) { .cv-lienzo { height: 370px; } .cv-vol { height: 140px; } }
   </style>
 </head>
 <body>
@@ -123,7 +144,7 @@
       <div class="container">
         <p class="page-breadcrumb"><a href="../">Inicio</a><span>/</span>Bonos AR</p>
         <h1 class="page-title">Bonos argentinos hoy</h1>
-        <p class="page-subtitle">Bonares, Globales, BONTES y BOPREAL en dólares; LECAP y BONCAP en pesos; bonos CER y dólar linked. TIR, duration y paridad calculadas en vivo desde precios de mercado con los esquemas reales de cada bono.</p>
+        <p class="page-subtitle">Bonares, Globales, BONTES y BOPREAL en dólares; LECAP, BONCAP, CER, dólar linked, TAMAR y duales en pesos. Las curvas de hoy contra las de la rueda anterior, con las tasas calculadas en vivo desde los precios de mercado y las condiciones de cada bono.</p>
       </div>
     </section>
 
@@ -147,14 +168,20 @@
       </details>
 
       <div class="vb-tabs">
-        <button class="vb-tab active" data-tab="curva">📈 Curva USD &amp; Ladder</button>
+        <button class="vb-tab active" data-tab="curvas">📈 Curvas: hoy contra ayer</button>
+        <button class="vb-tab" data-tab="curva">💲 Dólares: curva y pagos</button>
         <button class="vb-tab" data-tab="pesos">💵 Pesos: LECAP &amp; BONCAP</button>
         <button class="vb-tab" data-tab="cer">📊 CER y dólar linked</button>
         <button class="vb-tab" data-tab="aprender">📚 Centro de Aprendizaje</button>
       </div>
 
       <!-- ===== TAB CURVA ===== -->
-      <div class="vb-panel active" id="panel-curva">
+      <!-- ===== TAB CURVAS (js/curvas.js) ===== -->
+      <div class="vb-panel active" id="panel-curvas">
+        <div id="curvas-raiz" class="cv"><p class="loading-cell" style="padding:2rem 0;color:var(--text-subtle)">Cargando las curvas…</p></div>
+      </div>
+
+      <div class="vb-panel" id="panel-curva">
         <div class="chart-wrap">
           <h3>Curva soberana — TIR × Duration</h3>
           <p class="ch-sub" id="scatter-sub">Cargando precios…</p>
@@ -364,6 +391,7 @@
   <script src="../js/main.js?v=56"></script>
   <script src="../js/esqueletos.js?v=2" defer></script>
   <script src="../js/bond-math.js?v=2"></script>
+  <script src="../js/curvas.js?v=1"></script>
   <script src="../js/ticker.js?v=7"></script>
   <script>
   (function() {
@@ -542,6 +570,13 @@
         return { ...b, kind:'bopreal', law:'BCRA', price: pinfo.price, pct: pinfo.pct_change, bid: pinfo.bid, ask: pinfo.ask, ...m };
       });
       bonds = [...canje, ...bull, ...bops];
+      // Para el gráfico de curvas (js/curvas.js): la TIR con el cierre anterior, con los mismos flujos
+      window.BBCurvasUSD = bonds.filter(b => b.kind !== 'bopreal' || b.chart).map(b => {
+        const sch = b.kind === 'canje' ? buildSchedule(tpls[b.tpl]) : b.kind === 'bullet' ? buildBulletSchedule(b) : buildBopSchedule(b);
+        const ant = isFinite(b.pct) && b.price > 0 ? metrics(b.price / (1 + b.pct / 100), sch).ytm : null;
+        return { sym: b.chartLabel || b.sym, nombre: b.name, vence: b.maturity, precio: b.price, variacion: b.pct, tasa: b.ytm, tasaAnt: ant, dur: b.mod, operado: (prices[b.sym]?.volume || 0) * (b.price || 0) / 100 };
+      }).filter(b => isFinite(b.tasa) && isFinite(b.dur));
+      window.dispatchEvent(new Event('bb:usd'));
 
       renderScatter();
       renderLadder();
