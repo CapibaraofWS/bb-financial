@@ -937,11 +937,123 @@ async function getArcaRecaudacion() {
 }
 
 // ============================================================
+// PIZARRA — panel líder, empresas argentinas en Wall Street, CEDEARs, bonos y obligaciones negociables (data912).
+// % mes y % año: contra el último cierre del mes y del año anteriores. Salen una vez por mes del historial de data912
+// (acciones, CEDEARs y bonos) o de Yahoo (Wall Street) y se guardan en Redis (pizarra:ref, unos 5 KB). Se completan de
+// a 40 por pedido. Las obligaciones negociables no tienen historial en data912: solo la variación del día.
+// ============================================================
+const PANEL_LIDER = ['ALUA', 'BBAR', 'BMA', 'BYMA', 'CEPU', 'COME', 'CRES', 'ECOG', 'EDN', 'GGAL', 'IRSA', 'LOMA', 'METR', 'PAMP', 'SUPV', 'TECO2', 'TGNO4', 'TGSU2', 'TRAN', 'TXAR', 'VALO', 'YPFD'];
+const EN_WALL_STREET = { BBAR: 'BBVA Argentina', BMA: 'Banco Macro', CAAP: 'Corporación América', CEPU: 'Central Puerto', CRESY: 'Cresud', EDN: 'Edenor', GGAL: 'Grupo Galicia', GLOB: 'Globant', IRS: 'IRSA',
+  LOMA: 'Loma Negra', MELI: 'Mercado Libre', PAM: 'Pampa Energía', SUPV: 'Supervielle', TEO: 'Telecom', TGS: 'Transportadora Gas del Sur', TS: 'Tenaris', TX: 'Ternium', VIST: 'Vista Energy', YPF: 'YPF' };
+const SOBERANOS_USD = ['AO27D', 'AO28D', 'AO29D', 'AN29D', 'AL29D', 'GD29D', 'AL30D', 'GD30D', 'AL35D', 'GD35D', 'AE38D', 'GD38D', 'AL41D', 'GD41D', 'GD46D'];
+const CEDEARS_BASE = ['SPY', 'QQQ', 'AAPL', 'MSFT', 'NVDA', 'GOOGL', 'AMZN', 'META', 'TSLA', 'MELI', 'KO', 'BRKB', 'VIST', 'GLOB', 'AMD'];   // si todavía no operó ninguno
+const RE_PESOS = /^([ST]\d{2}[A-Z]\d|X\d{2}[A-Z]\d|TZX(\d\d|[A-Z]\d)|D\d{2}[A-Z]\d|TZV(\d\d|[A-Z]\d)|TM[A-Z]\d{2}|TXM[A-Z]\d|TX\d{2}|TY30P|DICP|PARP|CUAP|TT[A-Z]26)$/;
+
+// [último cierre antes del mes en curso, último cierre antes del año en curso]
+function cierresBase(serie, mes) {
+  const antes = lim => { let r = null; for (const x of serie) { if (x[0] < lim) r = x[1]; else break; } return r; };
+  return [antes(mes + '-01'), antes(mes.slice(0, 4) + '-01-01')];
+}
+async function historialPizarra(k) {
+  const [tipo, s] = k.split(':');
+  if (tipo === 'ws') {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(s) + '?interval=1d&range=2y', {
+      signal: AbortSignal.timeout(6000), headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', Accept: 'application/json' } });
+    if (!r.ok) throw new Error('Yahoo ' + r.status);
+    const res = (await r.json()).chart.result[0], ts = res.timestamp || [], cl = res.indicators.quote[0].close || [], off = (res.meta.gmtoffset || 0) * 1000;
+    return ts.map((t, i) => [new Date(t * 1000 + off).toISOString().slice(0, 10), cl[i]]).filter(x => x[1] > 0);
+  }
+  const a = await fetchJson('https://data912.com/historical/' + { acc: 'stocks', ced: 'cedears', bon: 'bonds' }[tipo] + '/' + encodeURIComponent(s), 6000);
+  return Array.isArray(a) ? a.filter(x => x && /^\d{4}-\d{2}-\d{2}$/.test(x.date) && x.c > 0).map(x => [x.date, x.c]) : [];   // ticker que no tiene: queda sin referencia
+}
+let refsMemoria = null;   // copia en la instancia, por si Redis no contesta
+async function refsPizarra(claves, mes) {
+  let g = refsMemoria && refsMemoria.mes === mes ? refsMemoria : null;
+  if (!g || claves.some(k => !(k in g.r))) try { const r = JSON.parse(await redis(['GET', 'pizarra:ref']) || 'null'); if (r && r.mes === mes && r.r) g = { mes, r: { ...r.r, ...(g ? g.r : {}) } }; } catch {}
+  if (!g) g = { mes, r: {} };
+  refsMemoria = g;
+  const faltan = [...new Set(claves)].filter(k => !(k in g.r)).slice(0, 90);
+  let nuevo = false;
+  for (let i = 0; i < faltan.length; i += 15) {   // de a 15 por vez, para no cargar a data912
+    const lote = faltan.slice(i, i + 15), res = await Promise.all(lote.map(k => historialPizarra(k).then(s => cierresBase(s, mes)).catch(() => null)));   // si falla la red, se vuelve a probar
+    lote.forEach((k, j) => { if (res[j]) { g.r[k] = res[j]; nuevo = true; } });
+  }
+  if (nuevo) await redis(['SET', 'pizarra:ref', JSON.stringify(g), 'EX', String(40 * 86400)]);
+  return g.r;
+}
+// Lo que no tiene historial (letras, bonos en pesos, obligaciones negociables, bonos nuevos): el último precio que vio
+// la página en cada mes (Redis pizarra:cierres, 14 meses). El % mes aparece al mes siguiente y el % año, en enero.
+async function cierresPropios(filas, mes) {
+  let h = null;
+  try { h = JSON.parse(await redis(['GET', 'pizarra:cierres']) || 'null'); } catch {}
+  h = h && typeof h === 'object' ? h : {};
+  const act = h[mes] || (h[mes] = {});
+  for (const f of filas) if (f.k && f.c > 0) act[f.k] = f.c;
+  for (const m of Object.keys(h).sort().reverse().slice(14)) delete h[m];
+  await redis(['SET', 'pizarra:cierres', JSON.stringify(h), 'EX', String(400 * 86400)]);
+  const [y, m] = mes.split('-').map(Number), ant = m === 1 ? (y - 1) + '-12' : y + '-' + String(m - 1).padStart(2, '0');
+  return k => [h[ant] && h[ant][k], h[(y - 1) + '-12'] && h[(y - 1) + '-12'][k]];
+}
+// Emisor, cupón y vencimiento de una obligación negociable (ficha de BYMA, guardada 60 días)
+// Nombre del emisor sin "S.A." y en minúsculas, salvo las siglas (palabras sin vocales o conocidas)
+const SIGLAS = new Set(['IRSA', 'MSU', 'BBVA', 'ICBC', 'HSBC', 'AES', 'GEMSA', 'CAPEX', 'ARCOR', 'YPF']), MENORES = new Set(['de', 'del', 'la', 'las', 'los', 'el', 'y', 'e']);
+const tituloEmisor = s => String(s || '').replace(/\s+S\.?\s?A\.?(\s?[A-Z]\.)*\s*$|\s+S\.?R\.?L\.?\s*$/i, '').trim().split(/\s+/)
+  .map((w, i) => (i && MENORES.has(w.toLowerCase()) ? w.toLowerCase() : SIGLAS.has(w) || !/[AEIOUÁÉÍÓÚ]/i.test(w) ? w : w.charAt(0) + w.slice(1).toLowerCase())).join(' ');
+async function fichaOn(sym) {
+  let g = null;
+  try { g = JSON.parse(await redis(['GET', 'on:' + sym]) || 'null'); } catch {}
+  if (g) return g;
+  const r = await fetch('https://open.bymadata.com.ar/vanoms-be-core/rest/api/bymadata/free/bnown/fichatecnica/especies/general', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': UA, Accept: 'application/json' },
+    body: JSON.stringify({ symbol: sym, 'Content-Type': 'application/json' }), signal: AbortSignal.timeout(5000),
+  });
+  const f = r.ok ? ((await r.json()).data || [])[0] : null;
+  if (!f || !f.emisor) return null;
+  const tasa = parseFloat(((f.interes || '').match(/(\d+[.,]?\d*)\s*%/) || [])[1]?.replace(',', '.'));
+  const d = { emisor: tituloEmisor(f.emisor), vence: /^\d{4}-\d{2}-\d{2}/.test(f.fechaVencimiento || '') ? f.fechaVencimiento.slice(0, 10) : null, cupon: /FIJ/i.test(f.interes || '') && Number.isFinite(tasa) ? tasa : null };
+  await redis(['SET', 'on:' + sym, JSON.stringify(d), 'EX', String(60 * 86400)]);
+  return d;
+}
+
+async function getPizarra() {
+  const vivo = e => fetchJson('https://data912.com/live/' + e, 5000).catch(() => fetchJson('https://data912.com/live/' + e, 5000)).catch(() => []);
+  const [acc, adr, usa, ced, notas, bonos, corp] = await Promise.all(['arg_stocks', 'usa_adrs', 'usa_stocks', 'arg_cedears', 'arg_notes', 'arg_bonds', 'arg_corp'].map(vivo));
+  const ahora = Date.now(), hoy = new Date(ahora - 3 * 3600e3).toISOString().slice(0, 10), mes = hoy.slice(0, 7);
+  const fer = await feriados([+hoy.slice(0, 4)]), rueda = ruedaDe(ahora, fer);
+  const mem = await memoriaBonos([...(Array.isArray(notas) ? notas : []), ...(Array.isArray(bonos) ? bonos : [])], fer);   // completa los bonos que data912 todavía no lista
+  const por = l => Object.fromEntries((Array.isArray(l) ? l : []).filter(x => x && x.symbol && x.c > 0).map(x => [x.symbol, x]));
+  const A = por(acc), W = { ...por(usa), ...por(adr) }, C = por(ced), B = por(mem.lista), O = por(corp);
+  const monto = (x, div = 1) => (x.v || 0) * x.c / div;
+  const fila = (x, k, extra) => ({ s: x.symbol, c: x.c, d: Number.isFinite(x.pct_change) ? x.pct_change : null, k, ...extra });
+
+  const lider = PANEL_LIDER.filter(s => A[s]).map(s => fila(A[s], 'acc:' + s, { vol: monto(A[s]) }));
+  const ws = Object.keys(EN_WALL_STREET).filter(s => W[s]).map(s => fila(W[s], 'ws:' + s, { n: EN_WALL_STREET[s], vol: monto(W[s]) }));
+  let cl = Object.values(C).filter(x => x.v > 0).sort((a, b) => monto(b) - monto(a)).slice(0, 15);
+  if (cl.length < 10) cl = CEDEARS_BASE.filter(s => C[s]).map(s => C[s]);
+  const cedears = cl.map(x => fila(x, 'ced:' + x.symbol, { vol: monto(x) }));
+  const usd = SOBERANOS_USD.filter(s => B[s]).map(s => fila(B[s], 'bon:' + s, { ley: s.startsWith('GD') ? 'Nueva York' : 'Argentina', vol: monto(B[s], 100) }));
+  const pesos = Object.values(B).filter(x => RE_PESOS.test(x.symbol)).sort((a, b) => mem.op(b.symbol).liquidez - mem.op(a.symbol).liquidez).slice(0, 12)
+    .map(x => fila(x, 'bon:' + x.symbol, { vol: mem.op(x.symbol).liquidez }));
+  const ol = Object.values(O).filter(x => /D$/.test(x.symbol) && x.v > 0).sort((a, b) => monto(b, 100) - monto(a, 100)).slice(0, 12);
+  const fichas = await Promise.all(ol.map(x => fichaOn(x.symbol).catch(() => null)));
+  const ons = ol.map((x, i) => fila(x, 'on:' + x.symbol, { vol: monto(x, 100), ...(fichas[i] || {}) }));
+
+  const todas = [...lider, ...ws, ...cedears, ...usd, ...pesos, ...ons];
+  const [refs, propios] = await Promise.all([refsPizarra([...lider, ...ws, ...cedears, ...usd, ...pesos].map(f => f.k), mes), cierresPropios(todas, mes)]);
+  const pct = (c, b) => (b > 0 ? (c / b - 1) * 100 : null);
+  for (const f of todas) { const r = refs[f.k] || [], p = propios(f.k); f.m = pct(f.c, r[0] || p[0]); f.a = pct(f.c, r[1] || p[1]); delete f.k; }
+  if (!lider.length && !usd.length && !pesos.length) throw new Error('sin datos');
+  return { asOf: new Date(ahora).toISOString(), rueda, vivo: rueda === hoy, mes, lider, ws, cedears, usd, pesos, ons,
+    fuente: 'Precios de BYMA y de Nueva York vía data912 (con demora); historial de data912 y Yahoo Finance; fichas de BYMA' };
+}
+
+// ============================================================
 // HANDLER
 // ============================================================
 const HANDLERS = {
   'arca-recaudacion':    { fn: getArcaRecaudacion,    cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'curvas':              { fn: getCurvas,             cache: 's-maxage=300, stale-while-revalidate=900' },
+  'pizarra':             { fn: getPizarra,            cache: 's-maxage=300, stale-while-revalidate=900' },
   'finanzas-news':       { fn: getFinanzasNews,       cache: 's-maxage=1800, stale-while-revalidate=3600' },
   'finanzas-cronograma': { fn: getFinanzasCronograma, cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'bcra-calendario':     { fn: getBcraCalendario,     cache: 's-maxage=3600, stale-while-revalidate=21600' },

@@ -422,6 +422,24 @@ async function globales() {
     casas: casas.map(x => [x.f.slice(0, 7), x.v]) };
 }
 
+// ---- Vivienda: precios (Case-Shiller y precio mediano de venta), alquileres (IPC), hipotecas, construcción y ventas,
+// ingreso de las familias (para cuántos años de ingreso cuesta una casa), propietarios y mora (todo vía FRED)
+async function vivienda() {
+  const f = (id, desde, m) => fred(id, desde, m).catch(() => []), mes = s => s.map(x => [x.f.slice(0, 7), x.v]);
+  const [casas, mediana, alquiler, ipc, hipoteca, hipotecaM, inicios, permisos, ventas, stock, ingreso, propietarios, mora] = await Promise.all([
+    f('CSUSHPISA', '1987-01-01'), f('MSPUS', '1984-01-01'), f('CUSR0000SEHA', '2000-01-01'), f('CPIAUCSL', '2000-01-01'),
+    f('MORTGAGE30US', new Date(Date.now() - 400 * 864e5).toISOString().slice(0, 10)), f('MORTGAGE30US', '1984-01-01', true),
+    f('HOUST', '2000-01-01'), f('PERMIT', '2000-01-01'), f('HSN1F', '2000-01-01'), f('MSACSR', '2000-01-01'),
+    f('MEHOINUSA646N', '1984-01-01'), f('RHORUSQ156N', '1990-01-01'), f('DRSFRMACBS', '2000-01-01'),
+  ]);
+  return { casas: mes(casas), mediana: mes(mediana), alquiler: mes(alquiler), ipc: mes(ipc), hipoteca: hipoteca.map(x => [x.f, x.v]), hipotecaM: mes(hipotecaM),
+    inicios: mes(inicios), permisos: mes(permisos), ventas: mes(ventas), stock: mes(stock), ingreso: ingreso.map(x => [x.f.slice(0, 4), x.v]), propietarios: mes(propietarios), mora: mes(mora) };
+}
+// ---- Poder de compra del dólar: IPC de los consumidores urbanos desde 1913, sin desestacionalizar (BLS vía FRED)
+async function dolar() {
+  return { ipc: (await fred('CPIAUCNS', '1913-01-01')).map(x => [x.f.slice(0, 7), x.v]) };
+}
+
 // ---- Respaldo en Redis (Upstash): si una fuente no contesta, se sirve el último armado completo
 async function redis(cmd) {
   // Acepta los nombres de Upstash y los de la integración de Vercel (KV_*), sin comillas
@@ -438,7 +456,7 @@ async function redis(cmd) {
 const vacias = o => (Array.isArray(o) ? (o.length ? o.reduce((a, x) => a + (x && typeof x === 'object' ? vacias(x) : 0), 0) : 1)
   : o && typeof o === 'object' ? Object.values(o).reduce((a, x) => a + vacias(x), 0) : 0);
 
-const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal, comercio, mercados, globales };
+const MODOS = { resumen, precios, empleo, calendario, actividad, tasas, fiscal, comercio, mercados, globales, vivienda, dolar };
 export async function usa(req, res) {
   const modo = req.query.usa, f = MODOS[modo];
   if (!f) return res.status(400).json({ error: 'Modo no válido' });
