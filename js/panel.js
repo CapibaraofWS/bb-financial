@@ -198,9 +198,10 @@ window.BBPanel = (function () {
       el.insertAdjacentHTML('afterend', '<button type="button" class="pa-mas-fechas">Ver todas las fechas (' + dias.length + ')</button>');
       el.nextElementSibling.addEventListener('click', e => { nodos.forEach(n => { n.hidden = false; }); e.currentTarget.remove(); });
     }
-    // Que arranque mostrando el último dato publicado
+    // Que arranque mostrando el último dato publicado. Se mide después de que el navegador pintó lo que se acaba de
+    // escribir: medir enseguida lo obliga a recalcular la página en el momento
     const ult = el.querySelectorAll('.pa-dia.paso');
-    if (ult.length > 1 && el.scrollWidth > el.clientWidth) el.scrollLeft = Math.max(0, ult[ult.length - 2].offsetLeft - 8);
+    if (ult.length > 1) requestAnimationFrame(() => setTimeout(() => { if (el.scrollWidth > el.clientWidth) el.scrollLeft = Math.max(0, ult[ult.length - 2].offsetLeft - 8); }));
   }
 
   // ---- Bandera argentina en SVG (en Windows el emoji de bandera se ve como "AR")

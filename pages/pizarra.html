@@ -87,6 +87,7 @@
 
       <p class="pz-estado" id="pz-estado">Cargando cotizaciones…</p>
       <div class="pa-grid" id="kpis">
+        <article class="pa-card" id="k-merval"><p class="cargando">Cargando…</p></article>
         <article class="pa-card" id="k-mep"><p class="cargando">Cargando…</p></article>
         <article class="pa-card" id="k-ccl"><p class="cargando">Cargando…</p></article>
         <article class="pa-card" id="k-brecha"><p class="cargando">Cargando…</p></article>
@@ -152,6 +153,7 @@
         <p>El <strong>% día</strong> compara con el cierre de la rueda anterior. El <strong>% mes</strong> y el <strong>% año</strong> comparan con el último precio del mes anterior y del año anterior: en noviembre, el % mes es contra el último día hábil de octubre.</p>
         <p>Las letras, los bonos en pesos y las obligaciones negociables no tienen historial en nuestra fuente. Para esos, la página guarda el último precio de cada mes: el % mes aparece a partir del mes que viene y el % año, desde enero.</p>
         <details><summary>¿Contra qué se calculan el % mes y el % año?</summary><p>Contra el último precio del mes anterior y contra el último precio del año anterior. Salen del historial de cada especie (BYMA vía data912 y, para Wall Street, Yahoo Finance) y se guardan una vez por mes.</p></details>
+        <details><summary>¿Qué es el MSCI Merval?</summary><p>El índice de las acciones líderes de la bolsa porteña. Desde el 19 de octubre de 2026 lo calcula MSCI y reemplazó al S&amp;P Merval, con otra metodología y una base nueva de 100.000 puntos: por eso no se puede comparar directo con los valores de antes, que andaban por los 2,8 millones de puntos.</p></details>
         <details><summary>¿Qué es un CEDEAR?</summary><p>Un certificado que se compra en pesos en la bolsa argentina y representa acciones de empresas o fondos del exterior, como Apple o el S&amp;P 500. Su precio sigue a la acción de afuera y al dólar contado con liquidación: puede subir en pesos aunque la acción baje en dólares, si el dólar sube más.</p></details>
         <details><summary>¿Por qué un bono en dólares puede bajar en el mes sin que nadie lo venda más barato?</summary><p>Porque cuando paga un cupón o devuelve parte del capital, su precio baja en ese monto. Los Bonares y Globales pagan en enero y julio. El % mes y el % año de la tabla no suman lo que el bono pagó en el medio.</p></details>
         <details><summary>¿Qué es la caución?</summary><p>Un préstamo de corto plazo entre inversores en la bolsa, garantizado con títulos. La tasa de la caución es una referencia de lo que paga el peso a pocos días. Más detalle en la <a href="caucion">calculadora de caución</a>.</p></details>
@@ -200,11 +202,28 @@
     const venceAnio = s => '20' + s.slice(2, 4);
     const fechaVto = f => { const [y, m, d] = f.split('-'); return d + '/' + m + '/' + y.slice(2); };
 
+    // MSCI Merval: necesita la pizarra (índice) y los dólares (para pasarlo a dólares); se pinta con lo que haya
+    let piz = null, ccl = null;
+    function merval() {
+      const L = (piz && piz.indices) || [], x = L.find(i => i.s === 'MMSCI'), g = L.find(i => i.s === 'GMSCI'), ini = piz && piz.inicioMerval;
+      if (!x) { if (piz) $('k-merval').innerHTML = '<p class="que">MSCI Merval</p><p class="contexto">Sin datos por ahora.</p>'; return; }
+      const [iy, im, id] = ini ? ini.fecha.split('-') : [];
+      P.tarjeta('k-merval', { que: 'MSCI Merval', grande: P.num(x.c, 0), clase: x.d == null || Math.abs(x.d) < 0.05 ? '' : x.d > 0 ? 'mejor' : 'peor',
+        contexto: (x.d != null ? 'En el día: ' + P.signo(x.d, 1) + '%. ' : '') + 'El índice de las acciones líderes de BYMA desde octubre de 2026.',
+        filas: [ccl ? ['En dólares', 'Dividido por el contado con liquidación', P.num(x.c / ccl, 1)] : null,
+          x.m != null ? ['En el mes', 'Contra el cierre del mes anterior', P.signo(x.m, 1) + '%'] : null,
+          x.a != null ? ['En el año', 'Contra el cierre del año anterior', P.signo(x.a, 1) + '%'] : ini ? ['Desde que empezó', 'Base de ' + P.num(ini.valor, 0) + ' puntos el ' + (+id) + '/' + (+im) + '/' + iy, P.signo((x.c / ini.valor - 1) * 100, 1) + '%'] : null,
+          g ? ['MSCI BYMA General', 'Un panel más amplio de empresas', P.num(g.c, 0) + (g.d != null ? ' · ' + P.signo(g.d, 1) + '%' : '')] : null],
+        fuentes: 'Fuente: BYMA' });
+    }
+
     async function cotizaciones() {
       const d = await fetch('/api/agenda?source=pizarra').then(r => (r.ok ? r.json() : null)).catch(() => null);
       if (!d) { $('pz-estado').textContent = 'No se pudieron cargar las cotizaciones. Probá de nuevo en un rato.'; return; }
+      piz = d; merval();
       const hora = new Date(Date.parse(d.asOf) - 3 * 3600e3).toISOString().slice(11, 16), [y, m, dd] = d.rueda.split('-').map(Number);
-      $('pz-estado').innerHTML = d.vivo ? '<span class="vivo">Rueda en curso</span> · precios de las ' + hora + ' h, con demora' : 'Mercado cerrado · cierre del ' + dd + ' de ' + P.MESES[m - 1] + (y !== +anio ? ' de ' + y : '');
+      $('pz-estado').innerHTML = d.guardado ? 'La fuente de precios no contesta: se muestran los de las ' + hora + ' h del ' + dd + ' de ' + P.MESES[m - 1] + '. Se vuelve a probar sola.'
+        : d.vivo ? '<span class="vivo">Rueda en curso</span> · precios de las ' + hora + ' h, con demora' : 'Mercado cerrado · cierre del ' + dd + ' de ' + P.MESES[m - 1] + (y !== +anio ? ' de ' + y : '');
       tabla('t-lider', [['Acción'], ['Último']].concat(columnas(d.lider)), d.lider.map(x => '<tr>' + nombre(x.s, NOMBRES[x.s]) + '<td class="v">' + precio(x.c) + '</td>' + vars(x, d.lider) + '</tr>'));
       tabla('t-ws', [['Empresa'], ['Último']].concat(columnas(d.ws)), d.ws.map(x => '<tr>' + nombre(x.s, x.n) + '<td class="v">' + precio(x.c, true) + '</td>' + vars(x, d.ws) + '</tr>'));
       tabla('t-usd', [['Bono'], ['Precio']].concat(columnas(d.usd)), d.usd.map(x => '<tr>' + nombre(x.s, (x.ley === 'Nueva York' ? 'Global · ley Nueva York' : 'Bonar · ley argentina') + ' · ' + venceAnio(x.s)) + '<td class="v">' + precio(x.c, true) + '</td>' + vars(x, d.usd) + '</tr>'));
@@ -222,6 +241,7 @@
       const ok = p => p.catch(() => null), t = '&t=' + Math.floor(Date.now() / 3e5);
       const [act, rp, rpH, cau, ...hist] = await Promise.all([ok(P.json('/api/dolar?' + t.slice(1))), ok(P.json('/api/agenda?source=riesgo-pais' + t)), ok(P.API.riesgo(400)), ok(P.json('/api/agenda?source=caucion' + t)), ...CASAS.map(c => ok(P.API.cotiz(c[0], 400)))]);
       const A = Object.fromEntries((Array.isArray(act) ? act : []).map(x => [x.casa, x])), of = A.oficial && A.oficial.venta;
+      if (A.contadoconliqui && A.contadoconliqui.venta > 0) { ccl = A.contadoconliqui.venta; merval(); }
       const filas = [];
       CASAS.forEach(([c, n, sub], i) => { const x = A[c], h = Array.isArray(hist[i]) ? hist[i] : []; if (!x) return;
         const br = of && c !== 'oficial' && c !== 'mayorista' ? (x.venta / of - 1) * 100 : null;

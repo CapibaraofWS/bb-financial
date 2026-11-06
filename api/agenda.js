@@ -937,6 +937,38 @@ async function getArcaRecaudacion() {
 }
 
 // ============================================================
+// MSCI MERVAL — el índice de BYMA desde el 19/10/2026: reemplazó al S&P Merval (Yahoo dejó de actualizar ^MERV), con base
+// 100.000 puntos al 16/10/2026. Datos abiertos de BYMA (index-price): valor, cierre anterior y variación del día, también del MSCI BYMA
+// General. Si BYMA no contesta, se sirve el último guardado en Redis (merval:ultimo).
+// ============================================================
+async function getMerval() {
+  let lista = null;
+  try {
+    const r = await fetch('https://open.bymadata.com.ar/vanoms-be-core/rest/api/bymadata/free/index-price', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': UA, Accept: 'application/json' },
+      body: JSON.stringify({ 'Content-Type': 'application/json' }), signal: AbortSignal.timeout(6000),
+    });
+    if (r.ok) lista = (await r.json()).data;
+  } catch {}
+  const fila = s => {
+    const x = (Array.isArray(lista) ? lista : []).find(i => i && i.symbol === s);
+    if (!x || !(x.price > 0)) return null;
+    const ant = x.previousClosingPrice > 0 ? x.previousClosingPrice : null;
+    return { valor: x.price, anterior: ant, variacion: ant ? (x.price / ant - 1) * 100 : null, fecha: x.date || null };
+  };
+  const merval = fila('MMSCI'), general = fila('GMSCI');
+  if (merval) {
+    const d = { merval, general, inicio: { fecha: '2026-10-16', valor: 100000 } };   // base del índice (Dolarito; se publica desde el 19/10)
+    await redis(['SET', 'merval:ultimo', JSON.stringify(d), 'EX', String(10 * 86400)]);
+    return d;
+  }
+  let g = null;
+  try { g = JSON.parse(await redis(['GET', 'merval:ultimo']) || 'null'); } catch {}
+  if (g && g.merval) return { ...g, guardado: true };
+  throw new Error('BYMA no devolvió los índices');
+}
+
+// ============================================================
 // PIZARRA — panel líder, empresas argentinas en Wall Street, CEDEARs, bonos y obligaciones negociables (data912).
 // % mes y % año: contra el último cierre del mes y del año anteriores. Salen una vez por mes del historial de data912
 // (acciones, CEDEARs y bonos) o de Yahoo (Wall Street) y se guardan en Redis (pizarra:ref, unos 5 KB). Se completan de
@@ -1017,7 +1049,7 @@ async function fichaOn(sym) {
 
 async function getPizarra() {
   const vivo = e => fetchJson('https://data912.com/live/' + e, 5000).catch(() => fetchJson('https://data912.com/live/' + e, 5000)).catch(() => []);
-  const [acc, adr, usa, ced, notas, bonos, corp] = await Promise.all(['arg_stocks', 'usa_adrs', 'usa_stocks', 'arg_cedears', 'arg_notes', 'arg_bonds', 'arg_corp'].map(vivo));
+  const [mv, acc, adr, usa, ced, notas, bonos, corp] = await Promise.all([getMerval().catch(() => null), ...['arg_stocks', 'usa_adrs', 'usa_stocks', 'arg_cedears', 'arg_notes', 'arg_bonds', 'arg_corp'].map(vivo)]);
   const ahora = Date.now(), hoy = new Date(ahora - 3 * 3600e3).toISOString().slice(0, 10), mes = hoy.slice(0, 7);
   const fer = await feriados([+hoy.slice(0, 4)]), rueda = ruedaDe(ahora, fer);
   const mem = await memoriaBonos([...(Array.isArray(notas) ? notas : []), ...(Array.isArray(bonos) ? bonos : [])], fer);   // completa los bonos que data912 todavía no lista
@@ -1038,13 +1070,24 @@ async function getPizarra() {
   const fichas = await Promise.all(ol.map(x => fichaOn(x.symbol).catch(() => null)));
   const ons = ol.map((x, i) => fila(x, 'on:' + x.symbol, { vol: monto(x, 100), ...(fichas[i] ? { ...fichas[i], emisor: tituloEmisor(fichas[i].emisor) } : {}) }));
 
-  const todas = [...lider, ...ws, ...cedears, ...usd, ...pesos, ...ons];
+  // Índices: el MSCI Merval no tiene historial (es de octubre de 2026); el % mes y el % año salen de los cierres que guarda la página
+  const indices = mv ? [['MMSCI', 'MSCI Merval', mv.merval], ['GMSCI', 'MSCI BYMA General', mv.general]].filter(x => x[2])
+    .map(([s, n, x]) => ({ s, n, c: x.valor, d: x.variacion, k: 'idx:' + s })) : [];
+  const todas = [...indices, ...lider, ...ws, ...cedears, ...usd, ...pesos, ...ons];
   const [refs, propios] = await Promise.all([refsPizarra([...lider, ...ws, ...cedears, ...usd, ...pesos].map(f => f.k), mes), cierresPropios(todas, mes)]);
   const pct = (c, b) => (b > 0 ? (c / b - 1) * 100 : null);
   for (const f of todas) { const r = refs[f.k] || [], p = propios(f.k); f.m = pct(f.c, r[0] || p[0]); f.a = pct(f.c, r[1] || p[1]); delete f.k; }
-  if (!lider.length && !usd.length && !pesos.length) throw new Error('sin datos');
-  return { asOf: new Date(ahora).toISOString(), rueda, vivo: rueda === hoy, mes, lider, ws, cedears, usd, pesos, ons,
+  // Si data912 no contesta, la última pizarra completa guardada (Redis pizarra:ultimo, 3 días)
+  if (!lider.length && !usd.length && !pesos.length) {
+    let g = null;
+    try { g = JSON.parse(await redis(['GET', 'pizarra:ultimo']) || 'null'); } catch {}
+    if (g && g.lider) return { ...g, vivo: false, guardado: true };
+    throw new Error('sin datos');
+  }
+  const out = { asOf: new Date(ahora).toISOString(), rueda, vivo: rueda === hoy, mes, indices, inicioMerval: mv ? mv.inicio : null, lider, ws, cedears, usd, pesos, ons,
     fuente: 'Precios de BYMA y de Nueva York vía data912 (con demora); historial de data912 y Yahoo Finance; fichas de BYMA' };
+  await redis(['SET', 'pizarra:ultimo', JSON.stringify(out), 'EX', String(3 * 86400)]);
+  return out;
 }
 
 // ============================================================
@@ -1054,6 +1097,7 @@ const HANDLERS = {
   'arca-recaudacion':    { fn: getArcaRecaudacion,    cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'curvas':              { fn: getCurvas,             cache: 's-maxage=300, stale-while-revalidate=900' },
   'pizarra':             { fn: getPizarra,            cache: 's-maxage=300, stale-while-revalidate=900' },
+  'merval':              { fn: getMerval,             cache: 's-maxage=120, stale-while-revalidate=600' },
   'finanzas-news':       { fn: getFinanzasNews,       cache: 's-maxage=1800, stale-while-revalidate=3600' },
   'finanzas-cronograma': { fn: getFinanzasCronograma, cache: 's-maxage=3600, stale-while-revalidate=21600' },
   'bcra-calendario':     { fn: getBcraCalendario,     cache: 's-maxage=3600, stale-while-revalidate=21600' },

@@ -117,6 +117,18 @@
     return { price, chg };
   }
 
+  // MSCI Merval (BYMA): reemplazó al S&P Merval el 19/10/2026; Yahoo dejó de actualizar ^MERV
+  async function getMerval() {
+    try {
+      const res = await fetch('/api/agenda?source=merval', { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) return null;
+      const m = (await res.json())?.merval;
+      return m && Number.isFinite(m.valor) ? { price: m.valor, chg: m.variacion } : null;
+    } catch {
+      return null;
+    }
+  }
+
   async function getRiesgoPais() {
     try {
       const res = await fetch('/api/agenda?source=riesgo-pais', { signal: AbortSignal.timeout(8000) });
@@ -185,7 +197,7 @@
   /* ---------- Fetch all & render ---------- */
   async function refresh() {
     const results = await Promise.allSettled([
-      getYahoo('^MERV'),
+      getMerval(),
       getYahoo('^NDX'),
       getYahoo('^DJI'),
       getYahoo('^GSPC'),
@@ -197,10 +209,8 @@
     const [merv, ndx, dji, gspc, gc, cl, rp, blue] =
       results.map(r => r.status === 'fulfilled' ? r.value : null);
 
-    const mervUsd = (merv && blue) ? { price: merv.price / blue, chg: merv.chg } : null;
-
     const items = [
-      { flag: '🇦🇷', label: 'MERVAL USD',    priceStr: fmtPrice(mervUsd?.price, '$'),  chg: mervUsd?.chg  },
+      { flag: '🇦🇷', label: 'MSCI MERVAL',   priceStr: merv ? Math.round(merv.price).toLocaleString('es-AR') + ' pts' : '—', chg: merv?.chg },
       { flag: '🇦🇷',  label: 'RIESGO PAÍS',
         priceStr: rp ? Math.round(rp.price).toLocaleString('en-US') + ' pts' : '—',
         chg: rp?.chg != null ? rp.chg : null,

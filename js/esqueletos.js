@@ -39,35 +39,31 @@
     return html + '</span>';
   }
 
-  function comoBloque(el) {
-    const alto = el.getBoundingClientRect().height;
+  function comoBloque(alto) {
     const lineas = alto > 160 ? 4 : 3;
     let html = '<span class="bb-skel-bloque" role="status" aria-label="Cargando datos">';
     for (let i = 0; i < lineas; i++) html += barra(ANCHOS[i % ANCHOS.length], '0.95rem');
     return html + '</span>';
   }
 
-  function transformar(el) {
-    if (el.dataset.skel) return;
+  function transformar(el, alto) {
     const texto = (el.textContent || '').trim();
-    if (!RE_CARGANDO.test(texto)) return;
     // El texto original se conserva para lectores de pantalla
     el.dataset.skel = '1';
     el.dataset.skelTexto = texto;
-    el.innerHTML = (el.tagName === 'TD' ? comoFila(el) : comoBloque(el)) +
+    el.innerHTML = (el.tagName === 'TD' ? comoFila(el) : comoBloque(alto)) +
       '<span class="bb-skel-sr">' + texto + '</span>';
   }
 
   function pasada() {
     // Placeholders de tabla y contenedores marcados como "cargando"
-    document.querySelectorAll(
+    const lista = [...document.querySelectorAll(
       'td.loading-cell, td[colspan], .loading-cell, .news-loading, .loader, ' +
       '.countdown-loading, .loading-card, .wv-cargando'
-    ).forEach(el => {
-      // Un td sin texto de carga es una celda normal: no se toca
-      if (el.tagName === 'TD' && !RE_CARGANDO.test((el.textContent || '').trim())) return;
-      transformar(el);
-    });
+    )].filter(el => !el.dataset.skel && RE_CARGANDO.test((el.textContent || '').trim()));   // un td sin texto de carga es una celda normal
+    // Primero se miden todos y después se escriben: medir y escribir de a uno obliga al navegador a recalcular la página cada vez
+    const altos = lista.map(el => (el.tagName === 'TD' ? 0 : el.getBoundingClientRect().height));
+    lista.forEach((el, i) => transformar(el, altos[i]));
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pasada);

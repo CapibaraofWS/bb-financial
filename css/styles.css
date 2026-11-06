@@ -218,6 +218,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-radius: 50%;
   filter: blur(100px);
   opacity: 0.18;
+  will-change: transform;   /* capa propia: el desplazamiento no obliga a repintar el desenfoque */
 }
 .blob-1 {
   width: 600px; height: 600px;
@@ -1675,16 +1676,24 @@ body .faq-body { color: var(--text-read); }
    alto y la página salta. Un esqueleto con la forma del contenido reserva el
    espacio y el salto no ocurre.
    ============================================================ */
+/* El brillo se mueve con transform (lo resuelve la placa de video); mover background-position obligaba a repintar en cada cuadro */
 .bb-skel {
   display: block;
-  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
-  background-size: 200% 100%;
-  animation: bbSkel 1.4s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-card);
   border-radius: 5px;
 }
+.bb-skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--bg-card-hover), transparent);
+  transform: translateX(-100%);
+  animation: bbSkel 1.4s ease-in-out infinite;
+}
 @keyframes bbSkel {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  to { transform: translateX(100%); }
 }
 .bb-skel-bloque { display: flex; flex-direction: column; gap: 0.7rem; padding: 0.35rem 0; }
 .bb-skel-tabla  { display: flex; flex-direction: column; gap: 0.85rem; padding: 0.35rem 0; width: 100%; }
@@ -1701,7 +1710,8 @@ body .faq-body { color: var(--text-read); }
 td[data-skel] { text-align: left !important; padding: 1rem 0.7rem !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  .bb-skel { animation: none; background: var(--bg-card-hover); }
+  .bb-skel { background: var(--bg-card-hover); }
+  .bb-skel::after { animation: none; display: none; }
 }
 
 /* ============================================================
