@@ -23,6 +23,8 @@ window.BBAlquiler = (function () {
   const sumar = (ym, n) => { const [y, m] = ym.split('-').map(Number), t = y * 12 + m - 1 + n; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); };
   const entre = (a, b) => (+b.slice(0, 4) - +a.slice(0, 4)) * 12 + +b.slice(5) - +a.slice(5);
   const mes = ym => P.mesLargo(ym), Mes = ym => mes(ym).replace(/^./, c => c.toUpperCase());
+  // Los meses que mide un cociente de índices: del siguiente a d hasta h ("junio a septiembre de 2026")
+  const tramo = (d, h) => { const a = sumar(d, 1); return a === h ? mes(h) : a.slice(0, 4) === h.slice(0, 4) ? P.MESES[+a.slice(5) - 1] + ' a ' + mes(h) : mes(a) + ' a ' + mes(h); };
   const dia = f => (+f.slice(8)) + ' de ' + P.MESES[+f.slice(5, 7) - 1];
 
   const PLANTILLA = `
@@ -126,7 +128,17 @@ window.BBAlquiler = (function () {
     if (aj.f) {
       const nuevo = aj.antes * aj.f, suba = num((aj.f - 1) * 100) + '%';
       resultado = { titulo: comun.desdeT, valor: nuevo, linea: 'Sube ' + suba + ' por ' + I.t, texto: comun.desdeT + ' el alquiler queda en ' + pesos(nuevo) + ' (+' + suba + ' por ' + I.t + ').' };
-      return pone({ ...comun, g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : '' });
+      // Qué meses cuenta este ajuste y cuánto daría con el otro criterio (los contratos lo escriben de las dos maneras)
+      let cuenta = '';
+      if (!diario) {
+        const que = { ipc: 'la inflación', is: 'el índice de salarios' }[est.indice] || 'el ' + I.t, pub = est.modo === 'publicados';
+        const [od, oh] = pub ? [sumar(aj.a, -n - 1), sumar(aj.a, -1)] : [sumar(aj.a, -n - I.rezago), sumar(aj.a, -I.rezago)];
+        const fo = serie[od] && serie[oh] ? serie[oh] / serie[od] : null;
+        cuenta = 'Cuenta ' + que + ' de ' + tramo(aj.d, aj.h) + (pub ? ', lo último publicado al 1 de ' + mes(aj.a) + '. ' : '. ') +
+          (pub ? 'Si tu contrato cuenta ' + tramo(od, oh) + (fo ? ', sube ' + num((fo - 1) * 100) + '%' : ', ese dato todavía no salió') + ' (se elige en "Mi contrato cuenta otros meses").'
+            : (fo ? 'Con lo último publicado al 1 de ' + mes(aj.a) + ' (' + tramo(od, oh) + ') sería ' + num((fo - 1) * 100) + '%.' : ''));
+      }
+      return pone({ ...comun, g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: [cuenta, aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : ''].filter(Boolean).join(' ') });
     }
     // Falta el dato final: lo acumulado se dice como tal, no como si fuera el aumento
     const { d, h } = aj, lleva = serie[d] && fin > d && fin < h ? serie[fin] / serie[d] : null;

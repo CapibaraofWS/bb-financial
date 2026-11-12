@@ -289,6 +289,8 @@
       $('m-tcr').innerHTML = '<div><span>Índice contra los principales socios</span><b>' + num(dd[1]) + '</b><small>Al ' + d.getDate() + ' de ' + P.MESES[d.getMonth()] + ' (' + P.atraso(dd[0]) + '): el BCRA lo publica con atraso</small></div>' +
         '<div><span>Contra el promedio desde 1997</span><b>' + P.signo((dd[1] / media - 1) * 100) + '%</b><small>Promedio: ' + num(media) + '</small></div>' +
         (hace ? '<div><span>Contra un año atrás</span><b>' + P.signo((u[1] / hace[1] - 1) * 100) + '%</b><small>' + P.mesAnio(u[0]) + ' contra ' + P.mesAnio(hace[0]) + '</small></div>' : '');
+      // El gráfico es mensual; el dato diario más nuevo va en la misma línea, con su fecha
+      $('g-tcr').dataset.ultimo = P.mesLargo(u[0]) + ' (promedio del mes). Diario: ' + d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ', el BCRA lo publica con atraso';
       if (typeof Chart !== 'undefined') {
         const armar = k => { const m = prom(k); return [{ label: 'Tipo de cambio real', data: M.map(x => x[k]), borderColor: '#60a5fa', borderWidth: 2, pointRadius: 0, tension: 0.15 }, { label: 'Promedio desde 1997', data: M.map(() => m), borderColor: 'rgba(232,237,245,0.5)', borderDash: [5, 4], borderWidth: 1.5, pointRadius: 0 }]; };
         const ch = new Chart($('g-tcr'), { type: 'line', data: { labels: M.map(x => P.mesAnio(x[0])), datasets: armar(1) },
