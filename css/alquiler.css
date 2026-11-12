@@ -7,6 +7,7 @@
 .aq-sep { margin-top: 1rem; }
 .pa-seg.aq-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-radius: 14px; margin-bottom: 0.3rem; }
 .pa-seg#aq-cada { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.pa-seg.aq-chips.dos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .aq-chips button { min-height: 38px; padding: 0.3rem 0.2rem; border-radius: 10px; }
 .aq-nota { font-size: 0.76rem; color: var(--text-subtle); margin-top: 0.4rem; line-height: 1.5; }
 .aq-op { margin-top: 0.7rem; font-size: 0.82rem; color: var(--text-muted); }

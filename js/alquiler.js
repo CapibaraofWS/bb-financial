@@ -39,11 +39,11 @@ window.BBAlquiler = (function () {
       <span class="pf-label aq-sep" id="aq-ind-t">Índice del contrato</span>
       <div class="pa-seg aq-chips" id="aq-indice" role="group" aria-labelledby="aq-ind-t">${Object.entries(INDICES).map(([k, I]) => '<button type="button" data-v="' + k + '" aria-pressed="false">' + I.t + '</button>').join('')}</div>
       <p class="aq-nota" id="aq-ind-n"></p>
-      <details class="aq-op" id="aq-op">
-        <summary>Mi contrato cuenta otros meses</summary>
-        <div class="pa-seg" id="aq-modo" role="group" aria-label="Qué meses cuenta"><button type="button" data-v="publicados" aria-pressed="true">Los últimos publicados</button><button type="button" data-v="periodo" aria-pressed="false">El período completo</button></div>
+      <div id="aq-op">
+        <span class="pf-label aq-sep" id="aq-modo-t">¿Cuándo se cobra el aumento?</span>
+        <div class="pa-seg aq-chips dos" id="aq-modo" role="group" aria-labelledby="aq-modo-t"><button type="button" data-v="publicados" aria-pressed="true">A principio de mes</button><button type="button" data-v="despues" aria-pressed="false">Cuando sale el dato del mes</button></div>
         <p class="aq-nota" id="aq-modo-n"></p>
-      </details>
+      </div>
     </section>
     <section class="pf-card aq-res" aria-live="polite">
       <p class="aq-estado" id="aq-estado">Cargando los datos…</p>
@@ -100,7 +100,10 @@ window.BBAlquiler = (function () {
     const diario = !!I.diario;
     $('aq-ind-n').textContent = I.t + ': ' + I.largo + '.';
     $('aq-op').hidden = diario;
-    $('aq-modo-n').textContent = est.modo === 'publicados' ? 'Para un ajuste de abril usa el último dato ya publicado el 1 de abril.' : 'Para un ajuste de abril cuenta enero, febrero y marzo: el número se conoce cuando sale marzo.';
+    // Dos criterios que nunca se pisan: con el dato publicado al día 1, o con el que sale durante el mes del aumento (uno más nuevo)
+    $('aq-modo-n').textContent = est.modo === 'publicados'
+      ? 'Usa el último dato publicado el día 1 del mes del aumento: el criterio de La Nación y El Cronista.'
+      : 'Espera el dato que se publica durante el mes del aumento (en general, a mediados de mes) y cuenta un mes más nuevo.';
     resultado = null;
     if (ini <= hoy) calendario(ini, n); else $('aq-cal').innerHTML = '';
     if (!fin) return pone({ estado: 'Sin datos', txt: 'No se pudo cargar este índice. Probá de nuevo en un rato.' });
@@ -108,7 +111,9 @@ window.BBAlquiler = (function () {
     if (ini > hoy) return pone({ estado: 'Revisá la fecha', txt: 'El contrato todavía no empezó. Elegí un mes de hoy para atrás.' });
     if (ini < claves[0]) return pone({ estado: 'Revisá la fecha', txt: 'Este índice tiene datos desde ' + mes(claves[0]) + '.' });
     // Mes de inicio y de fin del índice para un ajuste en el mes a
-    const ventana = a => (diario ? [sumar(a, -n), a] : est.modo === 'publicados' ? [sumar(a, -n - I.rezago), sumar(a, -I.rezago)] : [sumar(a, -n - 1), sumar(a, -1)]);
+    // A principio de mes: termina en el último dato publicado el día 1 (rezago meses antes). Cuando sale el dato: uno más nuevo
+    const corre = est.modo === 'despues' ? 1 : 0;
+    const ventana = a => (diario ? [sumar(a, -n), a] : [sumar(a, -n - I.rezago + corre), sumar(a, -I.rezago + corre)]);
     // Todos los ajustes desde el inicio: cada uno se aplica sobre el monto que dejó el anterior
     let a = sumar(ini, n), actual = M; const pasos = [];
     while (a <= hoy) {
@@ -132,20 +137,23 @@ window.BBAlquiler = (function () {
       let cuenta = '';
       if (!diario) {
         const que = { ipc: 'la inflación', is: 'el índice de salarios' }[est.indice] || 'el ' + I.t, pub = est.modo === 'publicados';
-        const [od, oh] = pub ? [sumar(aj.a, -n - 1), sumar(aj.a, -1)] : [sumar(aj.a, -n - I.rezago), sumar(aj.a, -I.rezago)];
+        const [od, oh] = [sumar(aj.d, pub ? 1 : -1), sumar(aj.h, pub ? 1 : -1)];   // la ventana del otro criterio: un mes corrida
         const fo = serie[od] && serie[oh] ? serie[oh] / serie[od] : null;
-        cuenta = 'Cuenta ' + que + ' de ' + tramo(aj.d, aj.h) + (pub ? ', lo último publicado al 1 de ' + mes(aj.a) + '. ' : '. ') +
-          (pub ? 'Si tu contrato cuenta ' + tramo(od, oh) + (fo ? ', sube ' + num((fo - 1) * 100) + '%' : ', ese dato todavía no salió') + ' (se elige en "Mi contrato cuenta otros meses").'
-            : (fo ? 'Con lo último publicado al 1 de ' + mes(aj.a) + ' (' + tramo(od, oh) + ') sería ' + num((fo - 1) * 100) + '%.' : ''));
+        cuenta = 'Cuenta ' + que + ' de ' + tramo(aj.d, aj.h) + (pub ? ', lo último publicado al 1 de ' + mes(aj.a) + '. ' : ': el dato de ' + P.MESES[+aj.h.slice(5) - 1] + ' sale en ' + mes(aj.a) + '. ') +
+          (pub ? 'Si se cobra cuando sale el dato de ' + P.MESES[+oh.slice(5) - 1] + ' (' + tramo(od, oh) + ')' + (fo ? ', sube ' + num((fo - 1) * 100) + '%.' : ', ese número todavía no se conoce.')
+            : (fo ? 'Si se cobra a principio de mes (' + tramo(od, oh) + '), sube ' + num((fo - 1) * 100) + '%.' : ''));
       }
       return pone({ ...comun, g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: [cuenta, aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : ''].filter(Boolean).join(' ') });
     }
     // Falta el dato final: lo acumulado se dice como tal, no como si fuera el aumento
     const { d, h } = aj, lleva = serie[d] && fin > d && fin < h ? serie[fin] / serie[d] : null;
+    // Cobrando cuando sale el dato, mientras no sale: lo que da a principio de mes, con el último publicado
+    const pd = sumar(d, -1), ph = sumar(h, -1), alt = !diario && est.modo === 'despues' && serie[pd] && serie[ph] ? serie[ph] / serie[pd] : null;
     resultado = { titulo: comun.antesT, valor: aj.antes, linea: 'Ajuste de ' + mes(aj.a) + ' por ' + I.t + ': falta el dato', texto: comun.antesT + ' el alquiler sigue en ' + pesos(aj.antes) + '. El ajuste de ' + mes(aj.a) + ' por ' + I.t + ' todavía no se conoce.' };
     return pone({ ...comun, g: 'Todavía no se sabe', pendiente: true,
       txt: lleva ? 'El índice lleva ' + P.signo((lleva - 1) * 100) + '% en ' + entre(d, fin) + ' de ' + n + ' meses.' : '',
-      prox: diario ? 'Se conoce a mediados de ' + mes(sumar(h, -1)) + ', cuando el Banco Central publique el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Se conoce cuando salga el dato de ' + mes(h) + '.' + (ev ? ' El próximo dato sale el ' + dia(ev.fecha) + '.' : '') });
+      prox: diario ? 'Se conoce a mediados de ' + mes(sumar(h, -1)) + ', cuando el Banco Central publique el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Se conoce cuando salga el dato de ' + mes(h) + '.' + (ev ? ' El próximo dato sale el ' + dia(ev.fecha) + '.' : '') +
+        (alt ? ' Si se cobra a principio de mes (' + tramo(pd, ph) + '), sube ' + num((alt - 1) * 100) + '%: ' + pesos(aj.antes * alt) + '.' : '') });
   }
 
   // ---- Enlace con los datos cargados: en el fragmento (#), que no viaja a ningún servidor al abrirlo
@@ -156,7 +164,8 @@ window.BBAlquiler = (function () {
     const f = q.get('inicio'); if (/^20\d\d-(0[1-9]|1[0-2])$/.test(f || '') && f >= '2020-01' && f <= hoy) { $('aq-mes').value = f.slice(5); $('aq-anio').value = f.slice(0, 4); }
     if (CADA.includes(+q.get('cada'))) est.cada = +q.get('cada');
     if (Object.hasOwn(INDICES, q.get('indice') || '')) est.indice = q.get('indice');
-    if (['publicados', 'periodo'].includes(q.get('modo'))) est.modo = q.get('modo');
+    if (q.get('modo') === 'publicados' || q.get('modo') === 'despues') est.modo = q.get('modo');
+    else if (q.get('modo') === 'periodo') est.modo = 'despues';   // enlaces viejos ("el período completo")
   }
   const marcar = (id, v) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === String(v))));
 
