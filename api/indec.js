@@ -670,15 +670,49 @@ const capacidadIndec = H => {
   if (out.length < 24) throw new Error('formato');
   return out;
 };
+// Cuadro 1 del IPI manufacturero y del ISAC: el año (a veces "2026*") y el mes en las primeras columnas, y a continuación
+// el índice de la serie original. El nombre del archivo lleva el año (sh_isac_2026.xls) y se busca en la página del tema.
+const IPI_INDEC = { pagina: '/Nivel4/Tema/3/6/14', re: /\/ftp\/cuadros\/economia\/sh_ipi_manufacturero_\d{4}\.xls/ };
+const ISAC_INDEC = { pagina: '/Nivel4/Tema/3/3/42', re: /\/ftp\/cuadros\/economia\/sh_isac_\d{4}\.xls/ };
+const cuadro1Indec = H => {
+  let anio = null; const out = [];
+  for (const r of (H.find(h => /^cuadro\s*1$/i.test(h.nombre.trim())) || {}).filas || []) {
+    if (!r) continue;
+    for (let i = 0; i < 3; i++) { const a = String(r[i] ?? '').trim().match(/^(\d{4})\*?$/); if (a) anio = a[1]; }
+    const i = r.findIndex((c, k) => k < 4 && MESES_ES.includes(String(c ?? '').trim().toLowerCase()));
+    if (!anio || i < 0 || !Number.isFinite(r[i + 1])) continue;
+    out.push([anio + '-' + String(MESES_ES.indexOf(String(r[i]).trim().toLowerCase()) + 1).padStart(2, '0'), r[i + 1]]);
+  }
+  if (out.length < 60) throw new Error('formato');
+  return out;
+};
 async function ultimosIndec() {
-  const [sup, may, cc, uc] = await Promise.allSettled([
+  const [sup, may, cc, uc, ipi, isac] = await Promise.allSettled([
     planillaIndec('/ftp/cuadros/economia/serie_supermercados.xlsx').then(ventasIndec),
     planillaIndec('/ftp/cuadros/economia/serie_autoservicios_mayoristas.xlsx').then(ventasIndec),
     planillaIndec(null, { pagina: '/Nivel4/Tema/3/1/36', re: /\/ftp\/cuadros\/economia\/sh_compras_\d{2}_\d{2}\.xls/ }).then(ventasIndec),
     planillaIndec(null, { pagina: '/Nivel4/Tema/3/6/15', re: /\/ftp\/cuadros\/economia\/sh_capacidad_\d{2}_\d{2}\.xls/ }).then(capacidadIndec),
+    planillaIndec(null, IPI_INDEC).then(cuadro1Indec),
+    planillaIndec(null, ISAC_INDEC).then(cuadro1Indec),
   ]);
   const ok = r => (r.status === 'fulfilled' ? r.value : []);
-  return { super: ok(sup), mayoristas: ok(may), shoppings: ok(cc), capacidad: ok(uc) };
+  return { super: ok(sup), mayoristas: ok(may), shoppings: ok(cc), capacidad: ok(uc), ipi: ok(ipi), isac: ok(isac) };
+}
+// ?industria=1: IPI manufacturero e ISAC para el panel de actividad. El portal de datos abiertos tarda días o semanas en
+// cargar el último mes (el 12/11/2026 seguía en agosto, con septiembre publicado el 6/11): encima van los archivos del INDEC.
+async function industria(req, res) {
+  const [rp, ri, rc] = await Promise.allSettled([
+    fetch('https://apis.datos.gob.ar/series/api/series/?format=json&limit=1000&start_date=2017-01-01&ids=' + SECTORES.ipi + ',' + SECTORES.isac, { signal: AbortSignal.timeout(15000) })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+    planillaIndec(null, IPI_INDEC).then(cuadro1Indec),
+    planillaIndec(null, ISAC_INDEC).then(cuadro1Indec),
+  ]);
+  const portal = k => (rp.status === 'fulfilled' ? rp.value.data.filter(f => Number.isFinite(f[k])).map(f => [f[0].slice(0, 7), f[k]]) : []);
+  const unir = (base, r) => { const m = Object.fromEntries(base); if (r.status === 'fulfilled') for (const [p, v] of r.value) if (p >= '2017-01') m[p] = v; return Object.entries(m).sort((a, b) => (a[0] < b[0] ? -1 : 1)); };
+  const ipi = unir(portal(1), ri), isac = unir(portal(2), rc);
+  if (ipi.length < 24 && isac.length < 24) return res.status(502).json({ error: 'No se pudieron leer la industria y la construcción' });
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=604800');
+  return res.status(200).json({ fuente: 'INDEC (IPI manufacturero e ISAC, serie original) y portal de datos abiertos', ipi, isac });
 }
 async function sectores(req, res) {
   try {
@@ -1156,6 +1190,7 @@ export default async function handler(req, res) {
   if (req.query.precios) return precios(req, res);
   if (req.query.alquileres) return alquileres(req, res);
   if (req.query.emae) return emae(req, res);
+  if (req.query.industria) return industria(req, res);
   if (req.query.canasta) return canasta(req, res);
   if (req.query.pobreza) return pobreza(req, res);
   if (req.query.calendario) return calendario(req, res);

@@ -144,7 +144,7 @@
     <section class="container bb-faq" aria-labelledby="sv-como-t">
       <h2 id="sv-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
       <p>El punto de comparación es el <strong>RIPTE</strong>, la remuneración imponible promedio de los trabajadores estables que publica la Secretaría de Seguridad Social: el sueldo bruto promedio de los asalariados registrados que trabajan hace al menos 13 meses con el mismo empleador. La calculadora divide tu sueldo bruto por ese valor.</p>
-      <p>Por ejemplo, con el RIPTE de agosto de 2026 ($1.982.518): un sueldo bruto de $1.500.000 está un 24% por debajo del promedio (1.500.000 / 1.982.518 = 0,76). Si cargás el sueldo de bolsillo, primero se estima el bruto: $1.500.000 de bolsillo son unos $1.807.229 brutos (1.500.000 / 0,83).</p>
+      <p>Por ejemplo, con el RIPTE de <span id="ej-mes">agosto de 2026</span> (<span id="ej-ripte">$2.022.244</span>): un sueldo bruto de $1.500.000 está un <span id="ej-pct">26%</span> por debajo del promedio (1.500.000 / <span id="ej-ripte2">2.022.244</span> = <span id="ej-ratio">0,74</span>). Si cargás el sueldo de bolsillo, primero se estima el bruto: $1.500.000 de bolsillo son unos $1.807.229 brutos (1.500.000 / 0,83).</p>
       <details><summary>¿Por qué se compara el bruto y no el de bolsillo?</summary><p>Porque el RIPTE y el salario mínimo son montos brutos. Para pasar de uno a otro se usan los aportes habituales de un asalariado: 11% de jubilación, 3% de PAMI y 3% de obra social, 17% en total. Es una aproximación: no incluye el impuesto a las ganancias, la cuota sindical ni el tope máximo de aportes, que cambian el resultado en sueldos altos.</p></details>
       <details><summary>¿Ganar menos que el promedio es ganar poco?</summary><p>No necesariamente. Como es un promedio, los sueldos más altos lo tiran para arriba: la mayoría de los asalariados registrados cobra menos que el RIPTE. Además, los sueldos cambian mucho según el sector, la provincia, la experiencia y las horas trabajadas. Sirve como referencia general, no como medida de cuánto deberías ganar.</p></details>
       <details><summary>¿Cómo se calcula la línea de pobreza de mi hogar?</summary><p>Con la canasta básica total del INDEC del último mes publicado, multiplicada por los adultos equivalentes del hogar. La compara con tu sueldo de bolsillo, porque la línea de pobreza se mide contra el ingreso que entra al hogar. Si en tu casa hay otros ingresos, la <a href="linea-de-pobreza">calculadora de línea de pobreza</a> permite cargarlos todos y elegir la región.</p></details>
@@ -179,7 +179,7 @@
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, pesos = P.pesos;
     const APORTES = 0.17;   // 11% jubilación + 3% PAMI + 3% obra social
     // Respaldo por si las fuentes no responden: RIPTE de agosto de 2026, salario mínimo de octubre de 2026 y canasta de septiembre de 2026
-    let ripte = { p: '2026-08', v: 1982518.19 }, minimo = { p: '2026-10', v: 391200 }, canasta = { fecha: '2026-09', cbt: 528318.67 }, tend = null;
+    let ripte = { p: '2026-08', v: 2022244.09 }, minimo = { p: '2026-10', v: 391200 }, canasta = { fecha: '2026-09', cbt: 528318.67 }, tend = null;
     let tipo = 'bruto', uae = 1;
 
     const ent = $('sv-sueldo');
@@ -228,7 +228,14 @@
     const hoyM = P.hoyISO().slice(0, 7);
     Promise.all([P.API.salarios(), P.API.ipc()]).then(([s, ipc]) => {
       if (!s) return;
-      if (s.ripte && s.ripte.length) ripte = s.ripte.at(-1);
+      if (s.ripte && s.ripte.length) {
+        ripte = s.ripte.at(-1);
+        // El ejemplo de "Cómo se calcula" sigue al último RIPTE publicado
+        const r = Math.round(ripte.v), q = 1500000 / ripte.v;
+        [['ej-mes', P.mesLargo(ripte.p)], ['ej-ripte', '$' + r.toLocaleString('es-AR')], ['ej-ripte2', r.toLocaleString('es-AR')], ['ej-ratio', P.num(q, 2)], ['ej-pct', Math.round(Math.abs(1 - q) * 100) + '%']]
+          .forEach(([id, t]) => { const el = document.getElementById(id); if (el) el.textContent = t; });
+        const ej = document.getElementById('ej-pct'); if (ej && q > 1) ej.nextSibling.textContent = ' por encima del promedio (1.500.000 / ';
+      }
       const m = (s.minimo || []).filter(x => x.p <= hoyM).at(-1); if (m) minimo = m;
       // Cómo vino el promedio en el último año, contra la inflación
       const R = s.ripte || [], u = R.at(-1), a = u && R.find(x => x.p === (+u.p.slice(0, 4) - 1) + u.p.slice(4));

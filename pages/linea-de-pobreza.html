@@ -155,7 +155,7 @@
     <section class="container bb-faq" aria-labelledby="lp-como-t">
       <h2 id="lp-como-t" style="font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-0.01em;margin:0 0 0.75rem">Cómo se calcula</h2>
       <p>Es la misma cuenta que hace el INDEC. Primero, cada persona del hogar se convierte en <strong>adultos equivalentes</strong> según su sexo y su edad, con la tabla oficial: un varón de entre 30 y 60 años vale 1; una mujer de entre 30 y 45, 0,77; un chico de 6 años, 0,64. Después, la suma se multiplica por el valor de la canasta de un adulto. Así salen la <strong>línea de indigencia</strong> (canasta alimentaria) y la <strong>línea de pobreza</strong> (canasta básica total) de tu hogar.</p>
-      <p>Por ejemplo, con la canasta de septiembre de 2026: una pareja de 35 y 31 años con dos hijos de 6 y 8 suma 1 + 0,77 + 0,64 + 0,68 = <strong>3,09 adultos equivalentes</strong>. Su línea de pobreza es 3,09 × $528.318,67 = <strong>$1.632.505</strong>, y la de indigencia, 3,09 × $239.058,22 = $738.690. Son los mismos valores que publica el INDEC para ese hogar.</p>
+      <p>Por ejemplo, con la canasta de <span id="ej-mes">septiembre de 2026</span>: una pareja de 35 y 31 años con dos hijos de 6 y 8 suma 1 + 0,77 + 0,64 + 0,68 = <strong>3,09 adultos equivalentes</strong>. Su línea de pobreza es 3,09 × <span id="ej-cbt">$528.318,67</span> = <strong id="ej-lp">$1.632.505</strong>, y la de indigencia, 3,09 × <span id="ej-cba">$239.058,22</span> = <span id="ej-li">$738.690</span>. Son los mismos valores que publica el INDEC para ese hogar.</p>
       <details><summary>¿Y si vivo fuera del Gran Buenos Aires?</summary><p>El INDEC valoriza todos los meses la canasta del Gran Buenos Aires. Para las otras cinco regiones publica la canasta de cada mes junto con el informe de pobreza, que sale por semestre. Para tu región, la calculadora toma la relación entre esa canasta y la del Gran Buenos Aires en el último mes publicado y la aplica a la canasta de este mes. Es una estimación: el valor oficial de cada región se conoce con el informe semestral.</p></details>
       <details><summary>¿Qué ingreso hay que poner?</summary><p>Todo lo que entra al hogar en el mes, de todos los integrantes: sueldos de bolsillo (después de descuentos), jubilaciones y pensiones, asignaciones como la AUH, planes, changas, alquileres que se cobren y cualquier otro ingreso regular. Es lo que el INDEC llama ingreso total familiar.</p></details>
       <details><summary>¿Por qué el resultado no es una clasificación oficial?</summary><p>Porque el INDEC mide la pobreza con su encuesta, que releva ingresos de un semestre entero en 31 ciudades. La calculadora aplica la misma regla a tus datos de un mes, como referencia para entender dónde está tu hogar respecto de las líneas, no para reemplazar la medición oficial.</p></details>
@@ -312,6 +312,10 @@
     P.API.canasta().then(c => {
       if (c && c.serie && c.serie.length) {
         canasta = c.serie.at(-1);
+        // El ejemplo de "Cómo se calcula" sigue a la canasta del último mes publicado
+        const dos = v => '$' + v.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), ent = v => '$' + Math.round(v).toLocaleString('es-AR');
+        [['ej-mes', P.mesLargo(canasta.fecha)], ['ej-cbt', dos(canasta.cbt)], ['ej-lp', ent(3.09 * canasta.cbt)], ['ej-cba', dos(canasta.cba)], ['ej-li', ent(3.09 * canasta.cba)]]
+          .forEach(([id, t]) => { const el = document.getElementById(id); if (el) el.textContent = t; });
         if (Array.isArray(c.equivalencias) && c.equivalencias.length >= 20 && c.equivalencias.every(r => rango(r.edad))) tabla = c.equivalencias.map(r => [r.edad, r.mujer, r.varon]);
         pintarPersonas(); calcular();
       }

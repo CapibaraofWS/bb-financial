@@ -653,8 +653,10 @@
       const t = Array.isArray(d) ? Math.max(0, ...d.map(x => x && x.tnaClientes > 0 ? x.tnaClientes : 0)) : 0;
       if (t) poner('pf', pct(t * 100));
     });
-    get('/api/argentinadatos?path=finanzas/indices/inflacion').then(d => {
-      const u = Array.isArray(d) && d[d.length - 1];
+    // El INDEC publica primero (su CSV se actualiza a las 16 h); ArgentinaDatos puede tardar uno o dos días: se usa el mes más nuevo
+    Promise.all([get('/api/indec?ipc=1'), get('/api/argentinadatos?path=finanzas/indices/inflacion')]).then(([i, d]) => {
+      const a = i && Array.isArray(i.general) && i.general[i.general.length - 1], b = Array.isArray(d) && d[d.length - 1];
+      const u = a && Number.isFinite(a.m) && (!b || a.p >= String(b.fecha).slice(0, 7)) ? { fecha: a.p, valor: a.m } : b;
       if (!u) return;
       poner('ipc', pct(u.valor));
       const mes = new Date(Number(String(u.fecha).slice(0, 4)), Number(String(u.fecha).slice(5, 7)) - 1, 15).toLocaleDateString('es-AR', { month: 'long' });

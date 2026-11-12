@@ -220,7 +220,10 @@
     // ---- Inflación
     if (Array.isArray(inf) && inf.length > 13) {
       const u = inf.at(-1), p = inf.at(-2), mes = String(u.fecha).slice(0, 7), anio = mes.slice(0, 4);
-      const ia = P.variable(b, 28), rem = P.variable(b, 29);
+      const rem = P.variable(b, 29);
+      // Interanual: el del INDEC del mismo mes (sale el día del dato); el del Banco Central (variable 28) llega unos días después
+      const gI = ipcI && ipcI.general && ipcI.general.at(-1), b28 = P.variable(b, 28);
+      const ia = gI && gI.p === mes && Number.isFinite(gI.a) ? { p: gI.p, v: gI.a } : b28 ? { p: b28.ultFechaInformada.slice(0, 7), v: b28.ultValorInformado } : null;
       const cbt = can && can.serie && can.serie.length > 1 ? (can.serie.at(-1).cbt / can.serie.at(-2).cbt - 1) * 100 : null;
       tarjeta('t-inflacion', {
         titulo: '📈 Inflación', que: 'Índice de precios al consumidor · variación mensual',
@@ -229,7 +232,7 @@
         spark: P.sparkline(inf.slice(-24).map(x => x.valor), { color: '#e8c97a' }) +
           '<div class="pa-tira" aria-hidden="true">' + inf.slice(-12).map(x => '<span class="n' + nivel(x.valor) + '" title="' + P.mesAnio(String(x.fecha).slice(0, 7)) + ': ' + num(x.valor) + '%"></span>').join('') + '</div><div class="pa-tira-ley"><span>' + P.mesAnio(String(inf.at(-12).fecha).slice(0, 7)) + '</span><span>últimos 12 meses</span><span>' + P.mesAnio(mes) + '</span></div>',
         filas: [
-          ia ? ['Últimos 12 meses', P.mesAnio(ia.ultFechaInformada.slice(0, 7)), num(ia.ultValorInformado) + '%'] : null,
+          ia ? ['Últimos 12 meses', P.mesAnio(ia.p), num(ia.v) + '%'] : null,
           rem ? ['Esperada próximos 12 meses', 'Encuesta REM del Banco Central', num(rem.ultValorInformado) + '%'] : null,
           cbt !== null ? ['Canasta básica total', 'Variación de ' + P.mesAnio(can.serie.at(-1).fecha), P.signo(cbt) + '%'] : null,
         ].filter(Boolean),

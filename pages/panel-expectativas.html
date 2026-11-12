@@ -149,7 +149,10 @@
   <script>
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num, esc = P.esc;
-    const D = await P.json('/api/agenda?source=ar-mercado');
+    const [D, ipcI] = await Promise.all([P.json('/api/agenda?source=ar-mercado'), P.API.ipc()]);
+    // Último dato de inflación: el del INDEC si es más nuevo que el del Banco Central, que lo carga unos días después
+    const gI = ipcI && Array.isArray(ipcI.general) ? ipcI.general.at(-1) : null;
+    if (D && gI && Number.isFinite(gI.m) && (!D.ipc || gI.p > String(D.ipc.fecha).slice(0, 7))) D.ipc = { valor: gI.m, fecha: gI.p + '-01' };
     if (!D || (!(D.cer || []).length && !(D.dolar || []).length)) {
       $('kpis').innerHTML = '<p style="color:var(--text-subtle);font-size:0.85rem">No se pudieron cargar los precios de los bonos. Probá de nuevo en un rato.</p>';
       return;

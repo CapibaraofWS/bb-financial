@@ -75,13 +75,20 @@
     },
 
     async inflacion() {
-      const bcra = await json('/api/bcra?endpoint=Monetarias&categoria=Principales%20Variables').catch(() => null);
-      const mensual = bcraVar(bcra, 27), anual = bcraVar(bcra, 28), rem = bcraVar(bcra, 29);
+      const [bcra, ipc] = await Promise.all([json('/api/bcra?endpoint=Monetarias&categoria=Principales%20Variables').catch(() => null), json('/api/indec?ipc=1').catch(() => null)]);
+      let mensual = bcraVar(bcra, 27), anual = bcraVar(bcra, 28);
+      const rem = bcraVar(bcra, 29), g = ipc && Array.isArray(ipc.general) ? ipc.general[ipc.general.length - 1] : null;
+      // El INDEC publica primero; el Banco Central carga el dato unos días después
+      if (g && Number.isFinite(g.m) && (!mensual || g.p >= String(mensual.ultFechaInformada).slice(0, 7))) {
+        mensual = { ultValorInformado: g.m, ultFechaInformada: g.p };
+        if (Number.isFinite(g.a)) anual = { ultValorInformado: g.a, ultFechaInformada: g.p };
+      }
       if (!mensual && !anual) return null;
+      const mes = f => new Date(String(f).slice(0, 7) + '-15T12:00:00').toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
       return {
         titulo: 'La inflación hoy',
         filas: [
-          mensual ? { k: 'Último mes', v: num(mensual.ultValorInformado, 1) + '%', nota: mensual.ultFechaInformada, destacado: true } : null,
+          mensual ? { k: 'Último mes', v: num(mensual.ultValorInformado, 1) + '%', nota: mes(mensual.ultFechaInformada), destacado: true } : null,
           anual   ? { k: 'Últimos 12 meses', v: num(anual.ultValorInformado, 1) + '%' } : null,
           rem     ? { k: 'Esperada a 12 meses (REM)', v: num(rem.ultValorInformado, 1) + '%', nota: 'lo que proyectan los economistas' } : null,
         ].filter(Boolean),

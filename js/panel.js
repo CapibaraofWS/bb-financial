@@ -35,6 +35,7 @@ window.BBPanel = (function () {
     dolar: () => json('/api/dolar'),
     ipc: () => json('/api/indec?ipc=1'),
     emae: () => json('/api/indec?emae=1'),
+    industria: () => json('/api/indec?industria=1'),
     cotiz: (casa, dias) => json('/api/argentinadatos?path=cotizaciones/dolares/' + casa + '&dias=' + dias),
     riesgo: dias => json('/api/argentinadatos?path=finanzas/indices/riesgo-pais&dias=' + dias),
     caucion: () => json('/api/agenda?source=caucion'),
@@ -120,7 +121,10 @@ window.BBPanel = (function () {
   // ---- "Últimos datos y lo que viene"
   // Para los datos que el sitio ya tiene, la tarjeta muestra el valor; para el resto, el enlace al informe.
   async function valoresConocidos() {
-    const [inf, can, b] = await Promise.all([API.inflacion(), API.canasta(), API.bcra()]);
+    const [infAD, can, b, ipcI] = await Promise.all([API.inflacion(), API.canasta(), API.bcra(), API.ipc()]);
+    // El INDEC publica primero; ArgentinaDatos puede tardar uno o dos días: se usa la serie que tenga el mes más nuevo
+    const g = ipcI && Array.isArray(ipcI.general) ? ipcI.general : [], ad = Array.isArray(infAD) ? infAD : [];
+    const inf = g.length >= 2 && (!ad.length || g.at(-1).p >= String(ad.at(-1).fecha).slice(0, 7)) ? g.map(x => ({ fecha: x.p, valor: x.m })) : ad;
     const v = {};
     if (Array.isArray(inf) && inf.length >= 2) {
       const u = inf.at(-1), p = inf.at(-2);

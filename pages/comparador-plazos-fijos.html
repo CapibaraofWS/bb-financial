@@ -377,10 +377,12 @@
     cargar();
 
     // La inflación es un extra: si no llega, la calculadora funciona igual
-    fetch('/api/argentinadatos?path=finanzas/indices/inflacion', { signal: AbortSignal.timeout(9000) })
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
-        const u = Array.isArray(d) && d[d.length - 1];
+    // El INDEC publica primero; ArgentinaDatos puede tardar uno o dos días: se usa el mes más nuevo de los dos
+    const traer = u => fetch(u, { signal: AbortSignal.timeout(9000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+    Promise.all([traer('/api/indec?ipc=1'), traer('/api/argentinadatos?path=finanzas/indices/inflacion')])
+      .then(([i, d]) => {
+        const a = i && Array.isArray(i.general) && i.general[i.general.length - 1], b = Array.isArray(d) && d[d.length - 1];
+        const u = a && Number.isFinite(a.m) && (!b || a.p >= String(b.fecha).slice(0, 7)) ? { fecha: a.p, valor: a.m } : b;
         if (!u || !Number.isFinite(u.valor)) return;
         const mes = new Date(String(u.fecha).slice(0, 7) + '-15').toLocaleDateString('es-AR', { month: 'long' });
         inflacion = { valor: u.valor / 100, mes };

@@ -165,13 +165,11 @@
   (async function () {
     const P = BBPanel, $ = id => document.getElementById(id), num = P.num;
     const pIcc = P.API.icc();
-    const [em, rIpi, rIsac, cal] = await Promise.all([
-      P.API.emae(),
-      P.API.gob('453.1_SERIE_ORIGNAL_0_0_14_46', 40), P.API.gob('33.2_ISAC_NIVELRAL_0_M_18_63', 40), P.API.calendario(),
-    ]);
-    // EMAE del archivo del INDEC (en %); industria y construcción del portal de datos abiertos
+    const [em, ind, cal] = await Promise.all([P.API.emae(), P.API.industria(), P.API.calendario()]);
+    // EMAE del archivo del INDEC (en %); industria y construcción de los archivos del INDEC, sobre el portal de datos abiertos
     const es = (em && em.serie) || [], col = k => es.filter(x => Number.isFinite(x[k])).map(x => ({ fecha: x.fecha, valor: x[k] }));
-    const idx = col('desest'), mm = col('mm'), ia = col('ia'), ipi = P.gobCols(rIpi, 0), isac = P.gobCols(rIsac, 0);
+    const serieInd = k => ((ind && ind[k]) || []).slice(-40).map(([fecha, valor]) => ({ fecha, valor }));
+    const idx = col('desest'), mm = col('mm'), ia = col('ia'), ipi = serieInd('ipi'), isac = serieInd('isac');
     const IND = P.fuente('https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-9-48', 'INDEC');
     // Próxima publicación según el calendario del INDEC
     const proximo = re => { const e = cal && cal.eventos && cal.eventos.find(x => re.test(x.titulo) && x.fecha >= P.hoyISO()); return e ? 'Próximo dato: ' + P.fechaCorta(e.fecha) : ''; };
