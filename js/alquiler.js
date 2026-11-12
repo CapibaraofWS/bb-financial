@@ -112,20 +112,31 @@ window.BBAlquiler = (function () {
     if (ini < claves[0]) return pone({ estado: 'Revisá la fecha', txt: 'Este índice tiene datos desde ' + mes(claves[0]) + '.' });
     // Mes de inicio y de fin del índice para un ajuste en el mes a
     // A principio de mes: termina en el último dato publicado el día 1 (rezago meses antes). Cuando sale el dato: uno más nuevo
-    const corre = est.modo === 'despues' ? 1 : 0;
-    const ventana = a => (diario ? [sumar(a, -n), a] : [sumar(a, -n - I.rezago + corre), sumar(a, -I.rezago + corre)]);
-    // Todos los ajustes desde el inicio: cada uno se aplica sobre el monto que dejó el anterior
-    let a = sumar(ini, n), actual = M; const pasos = [];
-    while (a <= hoy) {
-      const [d, h] = ventana(a);
-      if (!serie[d] || !serie[h]) break;
-      const antes = actual; actual *= serie[h] / serie[d];
-      pasos.push({ a, f: serie[h] / serie[d], antes, actual, d, h });
-      a = sumar(a, n);
-    }
-    const u = pasos.at(-1), ev = I.re && cal && cal.eventos && cal.eventos.find(e => I.re.test(e.titulo) && e.fecha >= P.hoyISO());
+    // Todos los ajustes desde el inicio: cada uno se aplica sobre el monto que dejó el anterior. c = 1 corre todas las ventanas un mes.
     // El ajuste que se muestra: el de este mes si ya está; si no, el que sigue
-    const [vd, vh] = ventana(a), aj = u && u.a === hoy ? u : { a, antes: actual, d: vd, h: vh, f: serie[vd] && serie[vh] ? serie[vh] / serie[vd] : null };
+    const cadena = c => {
+      const ventana = a => (diario ? [sumar(a, -n), a] : [sumar(a, -n - I.rezago + c), sumar(a, -I.rezago + c)]);
+      let a = sumar(ini, n), actual = M; const pasos = [];
+      while (a <= hoy) {
+        const [d, h] = ventana(a);
+        if (!serie[d] || !serie[h]) break;
+        const antes = actual; actual *= serie[h] / serie[d];
+        pasos.push({ a, f: serie[h] / serie[d], antes, actual, d, h });
+        a = sumar(a, n);
+      }
+      const u = pasos.at(-1), [vd, vh] = ventana(a);
+      return { pasos, a, u, aj: u && u.a === hoy ? u : { a, antes: actual, d: vd, h: vh, f: serie[vd] && serie[vh] ? serie[vh] / serie[vd] : null } };
+    };
+    const corre = est.modo === 'despues' ? 1 : 0, { pasos, a, u, aj } = cadena(corre);
+    // La otra opción para el mismo mes: cambia este ajuste y también los anteriores, así que se compara el monto final
+    const otra = diario ? null : cadena(1 - corre).aj, alt = otra && otra.a === aj.a && otra.f ? otra : null;
+    const ev = I.re && cal && cal.eventos && cal.eventos.find(e => I.re.test(e.titulo) && e.fecha >= P.hoyISO());
+    // Lo que queda con la otra opción: el monto final y sobre qué base, porque un porcentaje más alto puede dar menos plata
+    const otraOpcion = pub => {
+      if (!alt) return pub ? 'Si se cobra cuando sale el dato del mes, ese número todavía no se conoce.' : '';
+      return 'Si se cobra ' + (pub ? 'cuando sale el dato del mes' : 'a principio de mes') + ', queda en ' + pesos(alt.antes * alt.f) + ': ' + P.signo((alt.f - 1) * 100) + '% sobre ' + pesos(alt.antes) +
+        (Math.abs(alt.antes - aj.antes) > 0.5 ? ', porque los ajustes anteriores también cuentan un mes ' + (pub ? 'más tarde' : 'antes') + '.' : '.');
+    };
     const fechas = x => (diario ? '1 ' : '') + P.mesAnio(x), fila = (t, v, e) => '<li><span>' + t + (e ? '<em>' + e + '</em>' : '') + '</span><span>' + v + '</span></li>';
     const filas = pasos.concat(aj === u ? [] : [aj]).map(p => (p.f ? fila(Mes(p.a) + ' · ' + P.signo((p.f - 1) * 100) + '%', pesos(p.antes * p.f), num(serie[p.h], 2) + ' ÷ ' + num(serie[p.d], 2) + ' (' + fechas(p.h) + ' ÷ ' + fechas(p.d) + ')') : fila(Mes(p.a), '—', 'Todavía no se sabe')));
     const fuente = 'Fuente: <a href="' + I.web + '" target="_blank" rel="noopener">' + I.fuente + '</a>, datos hasta ' + mes(fin) + '.';
@@ -137,23 +148,17 @@ window.BBAlquiler = (function () {
       let cuenta = '';
       if (!diario) {
         const que = { ipc: 'la inflación', is: 'el índice de salarios' }[est.indice] || 'el ' + I.t, pub = est.modo === 'publicados';
-        const [od, oh] = [sumar(aj.d, pub ? 1 : -1), sumar(aj.h, pub ? 1 : -1)];   // la ventana del otro criterio: un mes corrida
-        const fo = serie[od] && serie[oh] ? serie[oh] / serie[od] : null;
-        cuenta = 'Cuenta ' + que + ' de ' + tramo(aj.d, aj.h) + (pub ? ', lo último publicado al 1 de ' + mes(aj.a) + '. ' : ': el dato de ' + P.MESES[+aj.h.slice(5) - 1] + ' sale en ' + mes(aj.a) + '. ') +
-          (pub ? 'Si se cobra cuando sale el dato de ' + P.MESES[+oh.slice(5) - 1] + ' (' + tramo(od, oh) + ')' + (fo ? ', sube ' + num((fo - 1) * 100) + '%.' : ', ese número todavía no se conoce.')
-            : (fo ? 'Si se cobra a principio de mes (' + tramo(od, oh) + '), sube ' + num((fo - 1) * 100) + '%.' : ''));
+        cuenta = 'Cuenta ' + que + ' de ' + tramo(aj.d, aj.h) + (pub ? ', lo último publicado al 1 de ' + mes(aj.a) + '. ' : ': el dato de ' + P.MESES[+aj.h.slice(5) - 1] + ' sale en ' + mes(aj.a) + '. ') + otraOpcion(pub);
       }
       return pone({ ...comun, g: pesos(nuevo), txt: 'Sube ' + suba + ': son ' + pesos(nuevo - aj.antes) + ' más por mes.', prox: [cuenta, aj === u ? 'Próximo ajuste: ' + mes(a) + '.' : ''].filter(Boolean).join(' ') });
     }
     // Falta el dato final: lo acumulado se dice como tal, no como si fuera el aumento
     const { d, h } = aj, lleva = serie[d] && fin > d && fin < h ? serie[fin] / serie[d] : null;
-    // Cobrando cuando sale el dato, mientras no sale: lo que da a principio de mes, con el último publicado
-    const pd = sumar(d, -1), ph = sumar(h, -1), alt = !diario && est.modo === 'despues' && serie[pd] && serie[ph] ? serie[ph] / serie[pd] : null;
     resultado = { titulo: comun.antesT, valor: aj.antes, linea: 'Ajuste de ' + mes(aj.a) + ' por ' + I.t + ': falta el dato', texto: comun.antesT + ' el alquiler sigue en ' + pesos(aj.antes) + '. El ajuste de ' + mes(aj.a) + ' por ' + I.t + ' todavía no se conoce.' };
     return pone({ ...comun, g: 'Todavía no se sabe', pendiente: true,
       txt: lleva ? 'El índice lleva ' + P.signo((lleva - 1) * 100) + '% en ' + entre(d, fin) + ' de ' + n + ' meses.' : '',
       prox: diario ? 'Se conoce a mediados de ' + mes(sumar(h, -1)) + ', cuando el Banco Central publique el ' + I.t + ' del 1 de ' + mes(h) + '.' : 'Se conoce cuando salga el dato de ' + mes(h) + '.' + (ev ? ' El próximo dato sale el ' + dia(ev.fecha) + '.' : '') +
-        (alt ? ' Si se cobra a principio de mes (' + tramo(pd, ph) + '), sube ' + num((alt - 1) * 100) + '%: ' + pesos(aj.antes * alt) + '.' : '') });
+        (est.modo === 'despues' && alt ? ' Mientras tanto, a principio de mes queda en ' + pesos(alt.antes * alt.f) + ' (' + P.signo((alt.f - 1) * 100) + '% sobre ' + pesos(alt.antes) + ').' : '') });
   }
 
   // ---- Enlace con los datos cargados: en el fragmento (#), que no viaja a ningún servidor al abrirlo
